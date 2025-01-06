@@ -1,1 +1,1 @@
-# bitLabs_Mobile_App
+# bitLabs-mobileapp
