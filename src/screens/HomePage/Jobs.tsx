@@ -250,13 +250,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   jobTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    color: '#121212', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontSize: 16, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '700', // Font weight
+    lineHeight: 16, // Adjust line height as needed
+    textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
-    fontSize: 14,
-    color: '#888',
+    fontSize: 12,
+    fontFamily: "Plus Jakarta Sans",
+    fontStyle: 'normal',
+    fontWeight:600,
+    color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
   tagRow: {
@@ -290,8 +297,12 @@ const styles = StyleSheet.create({
     fontSize: 8
   },
   postedOn: {
-    fontSize: 10,
-    color: '#888',
+    color: '#979696', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontSize: 8, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '500', // Font weight
+    lineHeight: 23.76, // Line height (in points, not percentage)
   },
   tabs: {
     flexDirection: 'row',

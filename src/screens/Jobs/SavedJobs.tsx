@@ -30,9 +30,13 @@ const SavedJobs = () => {
   if (error || savedJobs.length === 0) {
     return <Text style={styles.placeholderText}>No saved jobs available!</Text>;
   }
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${day}-${month}-${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
   return (
     <ScrollView style={styles.container}>
@@ -91,13 +95,28 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 10,
    
-    marginHorizontal: 8,
+    marginHorizontal: 6,
   },
   row: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   companyLogo: { width: 50, height: 50, borderRadius: 15, marginRight: 16 },
   jobDetails: { flex: 1 },
-  jobTitle: { fontSize: 16, fontWeight: 'bold' },
-  companyName: { fontSize: 14, color: '#888' },
+  jobTitle: { 
+    color: '#121212', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontSize: 16, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '700', // Font weight
+    lineHeight: 16, // Adjust line height as needed
+    textTransform: 'capitalize', // Capitalize text
+  },
+  companyName: { 
+    fontSize: 12,
+    fontFamily: "Plus Jakarta Sans",
+    fontStyle: 'normal',
+    fontWeight:600,
+    color: 'rgba(83, 83, 83, 0.80)',
+    marginVertical: 4,
+  },
   tagRow: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 8 },
   tag: {
     backgroundColor: '#f6f6f6',
@@ -107,23 +126,31 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 8,
     marginBottom: 8,
-    fontSize: 10,
+    fontSize: 8,
   },
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6',
+    backgroundColor: '#f6f6f6', // Background color for the oval
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 50,
-    marginRight: 8,
+    borderRadius: 50, // Makes the container oval
+    marginBottom: 8,
+    marginRight: 6
   },
   ovalText: { fontSize: 9, color: 'black' },
-  brieficon: { height: 10, width: 10, marginRight: 8 },
+  brieficon: { height: 8, width: 8, marginRight: 8 },
   locationContainer: { flexDirection: 'row', alignItems: 'center' },
-  locationIcon: { width: 10, height: 10, marginRight: 6 },
-  locationText: { fontSize: 10, color: 'black' },
-  postedOn: { fontSize: 12, color: '#888', marginTop: 8 },
+  locationIcon: { width: 8, height: 8, marginRight: 6},
+  locationText: { fontSize: 9, color: 'black' },
+  postedOn: { 
+    color: '#979696', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontSize: 8, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '500', // Font weight
+    lineHeight: 23.76, // Line height (in points, not percentage)
+  },
 });
 
 export default SavedJobs;

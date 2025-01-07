@@ -49,9 +49,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON": require('../../assests/Images/python.png'),
   };
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${day}-${month}-${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
 
   const courseUrlMap: Record<string, any> = {
@@ -320,7 +324,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             style={[styles.button, styles.saveButton]}
             onPress={handleRemoveJob}
           >
-            <Text style={styles.buttonText}>Remove Job</Text>
+            <Text style={styles.buttonText}>Remove</Text>
           </TouchableOpacity>
         )}
 
@@ -570,8 +574,8 @@ const styles = StyleSheet.create({
   saveButton: {
     backgroundColor: 'white',
     marginRight: 5,
-    borderColor: 'orange',
-    borderWidth: 2,
+    borderColor: '#F46F16',
+    borderWidth: 1,
     borderRadius: 8,
   },
   applyButton: {
@@ -584,7 +588,7 @@ const styles = StyleSheet.create({
     width:'100%'
   },
   buttonText: {
-    color: 'orange',
+    color: '#F46F16',
     fontWeight: 'bold',
   },
   locationIcon: {

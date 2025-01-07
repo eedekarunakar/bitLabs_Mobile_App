@@ -93,11 +93,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: screenWidth * 0.02,
         backgroundColor: "#fff",
-        elevation: 3,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
+   
         height: screenHeight * 0.08,
       },
       logo1Image: {
@@ -160,11 +156,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 20,
         paddingHorizontal: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
+       
     },
     customButton: {
         width: '100%',

@@ -133,7 +133,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
-            options={{ title: '' }}
+            options={{ headerShown: false}}
           />
 
           <Stack.Screen
