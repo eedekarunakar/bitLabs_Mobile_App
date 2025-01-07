@@ -65,13 +65,21 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
     fetchJobStatus();
   }, [job, userToken]);
 
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   const formatDate = (dateArray: [number, number, number]): string => {
+    const [year, month, day] = dateArray;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
+  };
+  const formatDates= (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
     const date = new Date(year, month - 1, day);
     return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
   };
-
   return (
+    <View style={{ flex: 1 }}>
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
       {loading ? (
         <View style={styles.loader}>
@@ -111,17 +119,21 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                 ₹ {job.minSalary} - {job.maxSalary} LPA
               </Text>
               <Text style={styles.tag}>{job.employeeType}</Text>
-              <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
+              <Text style={styles.postedOn}>
+                Posted on {formatDate(job.creationDate)}
+              </Text>
             </View>
           </View>
-
+  
           <View style={styles.statusContainer}>
             <Text style={styles.statusHeader}>Status History</Text>
             {jobStatus.length > 0 ? (
               <View style={styles.statusTable}>
                 {jobStatus.map((status, index) => (
                   <View key={index} style={styles.statusRow}>
-                    <Text style={styles.statusDate}>{formatDate(status.changeDate)}</Text>
+                    <Text style={styles.statusDate}>
+                      {formatDates(status.changeDate)}
+                    </Text>
                     <View style={styles.iconWrapper}>
                       {status.status === 'Completed' ? (
                         <Icon name="check-circle" size={24} color="#4CAF50" />
@@ -132,34 +144,43 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                         <View style={styles.verticalLine} />
                       )}
                     </View>
-                    <Text style={styles.statusText}>{status.status === 'New' ? 'Job Applied' : status.status}</Text>
+                    <Text style={styles.statusText}>
+                      {status.status === 'New' ? 'Job Applied' : status.status}
+                    </Text>
                   </View>
                 ))}
               </View>
             ) : (
-              <Text style={styles.placeholderText}>No status history available!</Text>
+              <Text style={styles.placeholderText}>
+                No status history available!
+              </Text>
             )}
           </View>
         </View>
       )}
-
-      <View style={styles.footer}>
-        <TouchableOpacity style={[styles.button, styles.viewJobButton]}
-          onPress={() => {
-            console.log('Navigating to JobDetails with job:', job);
-            navigation.navigate('ViewJobDetails', { job });
-          }}>
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={[styles.button, styles.applyButtonGradient]}
-          >
-            <Text style={styles.viewJobText}>View Job</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
     </ScrollView>
+  
+    {/* Footer outside ScrollView */}
+    <View style={styles.footer}>
+      <TouchableOpacity
+        style={[styles.button, styles.viewJobButton]}
+        onPress={() => {
+          console.log('Navigating to JobDetails with job:', job);
+          navigation.navigate('ViewJobDetails', { job });
+        }}
+      >
+        <LinearGradient
+          colors={['#F97316', '#FAA729']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.button, styles.applyButtonGradient]}
+        >
+          <Text style={styles.viewJobText}>View Job</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </View>
+  </View>
+  
   );
 };
 
@@ -182,9 +203,10 @@ const styles = StyleSheet.create({
   },
   jobCard: {
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 8,
     padding: 16,
     marginBottom: 10,
+    marginLeft: 6,
 
   },
   oval: {
@@ -217,6 +239,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 50,
     marginRight: 8,
+    marginBottom:8,
     fontSize: 8,
   },
   locationContainer: {
@@ -247,21 +270,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   jobTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#121212', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontSize: 16, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '700', // Font weight
+    lineHeight: 16, // Adjust line height as needed
+    textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
-    fontSize: 14,
-    color: '#888',
-    fontFamily: 'Plus Jakarta Sans',
-    fontWeight: 'bold',
-    lineHeight: 20.16,
-    textAlign: 'left',
+    fontSize: 12,
+    fontFamily: "Plus Jakarta Sans",
+    fontStyle: 'normal',
+    fontWeight:600,
+    color: 'rgba(83, 83, 83, 0.80)',
+    marginVertical: 4,
   },
   tagRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 8,
+    justifyContent: 'flex-start',
+    marginBottom: 12,
+    marginTop: 6
   },
   description: {
     fontSize: 14,
@@ -269,9 +299,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   postedOn: {
-    fontSize: 12,
-    color: '#888',
-    marginBottom: 8,
+    color: '#979696', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontSize:10,
+    fontStyle: 'normal', // Font style
+    fontWeight: '500', // Font weight
+    lineHeight: 23.76, // Line height (in points, not percentage)
   },
   statusHeader: {
     fontSize: 18,
@@ -280,10 +313,11 @@ const styles = StyleSheet.create({
     color: '#F46F16',
   },
   statusContainer: {
-    marginTop: 16,
+    marginTop: 10,
     backgroundColor: '#fff',
     padding: 16,
-    borderRadius: 8,
+    borderRadius:8,
+    marginLeft:2,
 
     marginBottom: 60,
   },

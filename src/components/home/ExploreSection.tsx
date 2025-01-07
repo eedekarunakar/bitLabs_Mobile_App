@@ -82,11 +82,7 @@ const styles = StyleSheet.create({
         padding: screenWidth * 0.05,
         marginRight: screenWidth * 0.03,
         borderRadius: screenWidth * 0.04,
-        elevation: 4,
-        shadowColor: "#000",
-       shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1,
+       
         fontFamily: "PlusJakartaSans",
         width: screenWidth * 0.7,
         alignItems: "center",

@@ -46,9 +46,15 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON":require('../../assests/Images/python.png'),
   };
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+ 
+  // Format creation date
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${day}-${month}-${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
 
   const courseUrlMap:Record<string,any> = {
