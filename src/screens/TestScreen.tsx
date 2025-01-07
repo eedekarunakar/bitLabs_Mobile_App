@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert,ScrollView } from 'react-native';
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using
 import Header from '../components/CustomHeader/Header';
 import { submitTestResult } from '../services/Test/testService';
 import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
+import NetInfo from '@react-native-community/netinfo';
 
 
 const { width } = Dimensions.get('window');
@@ -23,6 +24,9 @@ const TestScreen = ({ route, navigation }: any) => {
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message state
   const [testData, setTestData] = useState<{ questions: any[] }>({ questions: [] });
   const [testStatus, settestStatus] = useState<string>('');
+  const [isNetworkAvailable, setIsNetworkAvailable] = useState<boolean>(true); // Default to true // Network state
+  const [disconnectedTime, setDisconnectedTime] = useState<number>(0); // Time duration of network disconnection
+  const [hasExceededTimeout, setHasExceededTimeout] = useState(false);
   const {
     submitSkillTest,
   } = useSkillTestViewModel(userId, userToken, testName);
@@ -50,6 +54,40 @@ const TestScreen = ({ route, navigation }: any) => {
     console.log('Test Name received in TestScreen:', testName);
   }, [testName]);
 
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setIsNetworkAvailable(state.isConnected ?? false); // Use false if `state.isConnected` is null
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
+    if (!isNetworkAvailable) {
+      setDisconnectedTime((prevTime) => prevTime + 1);
+    } else if (disconnectedTime >= 60) {
+      setHasExceededTimeout(true); // Mark that the timeout was exceeded
+    } else {
+      setDisconnectedTime(0);
+    }
+  }, [isNetworkAvailable]);
+  
+  useEffect(() => {
+    if (disconnectedTime >= 60) {
+      clearInterval(timerInterval);
+      handleModalConfirm();
+      setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
+    }
+  }, [disconnectedTime]);
+  
+  useEffect(() => {
+    if (isNetworkAvailable && hasExceededTimeout) {
+      handleModalConfirm(); // Call again if needed
+    }
+  }, [isNetworkAvailable, hasExceededTimeout]);
+  
   useEffect(() => {
     if (isTestComplete || showEarlySubmissionModal) {
       clearInterval(timerInterval);
@@ -104,7 +142,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Cpp':
         fetchedTestData = require('../models/data/Cpp.json');
         break;
-      case 'CSharp':
+      case 'C Sharp':
         fetchedTestData = require('../models/data/CSharp.json');
         break;
       case 'CSS':
@@ -134,7 +172,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Manual Testing':
         fetchedTestData = require('../models/data/ManualTesting.json');
         break;
-      case 'MongoDB':
+      case 'Mongo DB':
         fetchedTestData = require('../models/data/MongoDB.json');
         break;
       case 'Python':
@@ -269,9 +307,19 @@ const TestScreen = ({ route, navigation }: any) => {
       }
     }
   };
-
+  if (!isNetworkAvailable) {
+    return (
+      <SafeAreaView style={styles.container1}>
+        <View style={{backgroundColor:'#FFF',justifyContent:'center',borderRadius:10,padding:20}}>
+        <Text style={styles.errorText1}>Your test has been interrupted.Kindly try again later.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+ 
   return (
     <SafeAreaView style={styles.container}>
+     
       <Header
         onBackPress={() => {
           setShowEarlySubmissionModal(true);
@@ -565,7 +613,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
     alignItems: 'center',
-    width: 175
+    width: 180
   },
   modalButton1: {
     borderRadius: 7.68,
@@ -585,6 +633,19 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     zIndex: 10,
+  },
+  container1: {
+    flex: 1,
+    justifyContent:'center',
+    padding: 20,
+    backgroundColor:'#F0F0F0',
+    borderRadius:10,
+  },
+  errorText1: {
+    fontFamily:'Plus Jakarta Sans',
+    fontSize: 18,
+    color: 'grey',
+    textAlign: 'center',
   },
 });
 export default TestScreen;

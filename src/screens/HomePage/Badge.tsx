@@ -48,7 +48,7 @@ const Badge = ({ route, navigation }: any) => {
     JavaScript: require('../../assests/Images/Test/JavaScript.png'),
     Jsp: require('../../assests/Images/Test/JSP.png'),
     'Manual Testing': require('../../assests/Images/Test/ManualTesting.png'),
-    MongoDB: require('../../assests/Images/Test/MongoDB.png'),
+    'Mongo DB': require('../../assests/Images/Test/MongoDB.png'),
     Python: require('../../assests/Images/Test/Python.png'),
     React: require('../../assests/Images/Test/React.png'),
     'Regression Testing': require('../../assests/Images/Test/RegressionTesting.png'),

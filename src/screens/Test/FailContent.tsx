@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 const Fail = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
@@ -45,7 +45,7 @@ export default Fail;
 const styles = StyleSheet.create({
   container: {
     width: width * 0.92,
-    height: '95%',
+    height: height*0.85,
     marginTop: 20,
     marginLeft: 16,
     backgroundColor: '#FFFFFF',

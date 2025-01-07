@@ -30,9 +30,6 @@ export const useSkillTestViewModel = (userId: number | any, jwtToken: string | n
       if (response==='ApplicantSkillBadge saved successfully') {
         setIsTestComplete(true);
 
-        // Submit the skill badge for skill tests regardless of score
-        await submitSkillBadge(userId, testName,testStatus, jwtToken);
-
         // Navigate based on skill test result
         if (finalScore >= 70) {
           navigation.navigate('passContent',{finalScore,testName});
