@@ -170,7 +170,7 @@ const Test = ({ route, navigation }: any) => {
         case 'Manual Testing':
           setTestData(ManualTestingData);
           break;
-        case 'MongoDB':
+        case 'Mongo DB':
           setTestData(MongoData);
           break;
         case 'React':

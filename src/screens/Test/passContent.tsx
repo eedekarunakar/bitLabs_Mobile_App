@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '../../context/Authcontext';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { RootStackParamList } from '../../../New';
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 
 const Pass = ({ navigation }: any) => {
   const route = useRoute();
@@ -150,7 +150,7 @@ export default Pass;
 const styles = StyleSheet.create({
   container: {
     width: width * 0.92,
-    height: '90%',
+    height: height*0.85,
     marginTop: 50,
     marginLeft: 16,
     backgroundColor: '#FFFFFF',
