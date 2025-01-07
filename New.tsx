@@ -99,7 +99,7 @@ const Appnavigator = () => {
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPassword}
-          options={{ title: '' }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     );
