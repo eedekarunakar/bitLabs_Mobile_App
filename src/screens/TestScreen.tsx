@@ -620,7 +620,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
     alignItems: 'center',
-    
   },
   modalButton1: {
     borderRadius: 7.68,

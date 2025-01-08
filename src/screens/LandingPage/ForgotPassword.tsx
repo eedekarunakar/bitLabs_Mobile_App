@@ -7,6 +7,8 @@ import { RootStackParamList } from '../../../New';
 import useOtpManager from '../../hooks/useOtpManager';
 import { sendOtp, verifyOtp, resetPassword } from '../../services/login/ForgotPasswordService';
 import { ForgotErrors } from '../../models/Autherrors';
+import Icon from 'react-native-vector-icons/AntDesign';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -16,15 +18,15 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [isResetPasswordVisible, setIsResetPasswordVisible] = useState(false);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const showToast = (type: 'success' | 'error', message: string) => {
     Toast.show({
       type: type,
       text1: message,
       position: 'bottom',
-      visibilityTime: 5000,
+      visibilityTime: 3000,
     });
   };
 
@@ -133,10 +135,22 @@ const ForgotPassword = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Image source={require('../../assests/LandingPage/forgotpasslogo.png')} style={{ alignSelf: 'center', height: 50, width: 50, marginBottom: 16 }} />
+        <View style={styles.navbar}>
+          <Image source={require('../../assests/Images/logo.png')} style={styles.logo} />
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.headerContainer}>
+          {/* Back Arrow */}
+          <TouchableOpacity onPress={() => { navigation.navigate('LandingPage') }} style={styles.backButton}>
+            <Icon name="left" size={24} color="#495057" />
+          </TouchableOpacity>
 
+          {/* Screen Name */}
+          <Text style={styles.title}>Forgot Password</Text>
+        </View>
+        <View style={styles.separator} />
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -149,11 +163,11 @@ const ForgotPassword = () => {
           isOtpVerified ? (
             <View style={styles.form}>
               <View style={styles.passwordContainer}>
-              <TextInput
+                <TextInput
                   placeholder="New Password"
                   style={styles.passwordInput}
                   secureTextEntry={!isPasswordVisible}
-                  onBlur={()=>{setIsPasswordVisible(false)}}
+                  onBlur={() => { setIsPasswordVisible(false) }}
                   value={newPassword}
                   onChangeText={setNewPassword}
                 />
@@ -170,18 +184,18 @@ const ForgotPassword = () => {
               </View>
               {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
               <View style={styles.passwordContainer}>
-              <TextInput
+                <TextInput
                   placeholder="Confirm Password"
                   style={styles.passwordInput}
                   secureTextEntry={!isResetPasswordVisible}
                   value={confirmPassword}
-                  onBlur={()=>{setIsResetPasswordVisible(false)}}
+                  onBlur={() => { setIsResetPasswordVisible(false) }}
                   onChangeText={setConfirmPassword}
                 />
-                <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                <TouchableOpacity onPress={() => setIsResetPasswordVisible(!isResetPasswordVisible)}>
                   <Image
                     source={
-                      isPasswordVisible
+                      isResetPasswordVisible
                         ? require('../../assests/LandingPage/openeye.png')
                         : require('../../assests/LandingPage/closedeye.png')
                     }
@@ -189,9 +203,6 @@ const ForgotPassword = () => {
                   />
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.button} onPress={resetUserPassword}>
-                <Text style={styles.buttonText}>Reset Password</Text>
-              </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.form}>
@@ -207,32 +218,70 @@ const ForgotPassword = () => {
                   <TouchableOpacity onPress={sendOTP}>
                     <Text style={styles.resendText}>Resend OTP</Text>
                   </TouchableOpacity>)}
-
               </View>
               {otpReceived && !isOtpExpired &&
                 <Text style={styles.timerText}>Please verify OTP within {timer} seconds</Text>
               }
-              <TouchableOpacity style={styles.button} onPress={verifyOTP}>
-                <Text style={styles.buttonText}>Verify OTP</Text>
-              </TouchableOpacity>
             </View>
           )
-        ) : (
-          <TouchableOpacity style={styles.button} onPress={sendOTP}>
-            <Text style={styles.buttonText}>Send OTP</Text>
+        ) : null}
+        <View style={[styles.buttonContainer, { alignSelf: 'center' }]}>
+          <TouchableOpacity style={styles.backButtonBottom} onPress={() => navigation.navigate('LandingPage')}>
+            <Text style={{
+              color: '#F46F16',
+              fontSize: 15,
+              fontWeight: 'bold',
+            }}>Back
+            </Text>
           </TouchableOpacity>
-        )}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={otpReceived ? (isOtpVerified ? resetUserPassword : verifyOTP) : sendOTP}
+          >
+            <LinearGradient
+              colors={['#F97316', '#FAA729']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[ styles.applyButtonGradient]}
+            >
+              <Text style={styles.buttonText}>
+                {otpReceived ? (isOtpVerified ? 'Save' : 'Verify OTP') : 'Send OTP'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView >
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#D3D3D3',
+    width: '100%',
+    marginTop: 8,
+  },
+  logo: {
+    width: 120,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 15,
+  },
+  navbar: {
+    height: 25,
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    marginBottom: 16,
   },
   headerText: {
     fontSize: 24,
@@ -240,11 +289,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
+  headerContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 50,
+    backgroundColor: '#FFF',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#495057',
+    lineHeight: 25,
+    marginLeft: 50,
+  },
   input: {
-    height: 40,
+    height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
+    marginTop: 20,
     paddingHorizontal: 10,
     borderRadius: 5,
     width: '95%',
@@ -263,20 +325,38 @@ const styles = StyleSheet.create({
   },
   timerText: {
     color: 'red',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   resendText: {
     color: '#F97316',
   },
+  applyButtonGradient: {
+    height: 50,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
   button: {
-    backgroundColor: '#F97316',
-    height: 40,
+    height: 50,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 8,
+    width:'50%' // Add consistent spacing
+  },
+  backButtonBottom: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#F46F16',
+    height: 50,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
-    width: '45%',
-    alignSelf: 'center',
+    flex: 1,
+    marginHorizontal: 8,
+    width:'50%' // Add consistent spacing
   },
   buttonText: {
     color: '#fff',
@@ -285,8 +365,10 @@ const styles = StyleSheet.create({
   form: {
     width: '100%',
     alignItems: 'center',
+    marginTop: 16,
   },
   passwordContainer: {
+    
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: '#ccc',
@@ -300,12 +382,24 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     height: 40,
+    
   },
   eyeImage: {
     height: 20,
     width: 20,
     resizeMode: 'contain',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly', // Distribute space evenly
+    alignItems: 'center',
+    position: 'absolute',
+    width: '100%',
+    bottom: 20,
+    paddingHorizontal: 16,
+   
 
   },
 });
+
 export default ForgotPassword;
