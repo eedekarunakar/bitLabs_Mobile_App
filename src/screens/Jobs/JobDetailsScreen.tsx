@@ -127,6 +127,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   
           <View style={styles.statusContainer}>
             <Text style={styles.statusHeader}>Status History</Text>
+            <ScrollView style={styles.statusScrollView}>
             {jobStatus.length > 0 ? (
               <View style={styles.statusTable}>
                 {jobStatus.map((status, index) => (
@@ -155,6 +156,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                 No status history available!
               </Text>
             )}
+            </ScrollView>
           </View>
         </View>
       )}
@@ -318,8 +320,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius:8,
     marginLeft:2,
-
-    marginBottom: 60,
+    marginBottom: 10,
   },
   statusTable: {
     borderWidth: 0,
@@ -389,6 +390,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+    
   },
   button: {
     paddingVertical: 10,
@@ -421,7 +423,10 @@ const styles = StyleSheet.create({
     flex:1,
     width:'100%',
     padding:20
-  }
+  },
+  statusScrollView: {
+    maxHeight: 250, // Allow status history to scroll if it's too long
+  },
 });
 
 export default JobDetailsScreen;

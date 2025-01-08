@@ -117,6 +117,13 @@ const TestScreen = ({ route, navigation }: any) => {
       return () => backHandler.remove();
     }, [])
   );
+  const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
 
   useEffect(() => {
     if (!testName) return; // Ensure testName is available before fetching data
@@ -211,7 +218,8 @@ const TestScreen = ({ route, navigation }: any) => {
     }
 
     if (fetchedTestData) {
-      setTestData(fetchedTestData); // Set the fetched test data
+      const shuffledQuestions = shuffleArray(fetchedTestData.questions); // Shuffle questions
+      setTestData({ questions: shuffledQuestions });
       const durationString = fetchedTestData?.duration || "30 mins"; // Default duration
       const durationInSeconds = parseDuration(durationString); // Convert duration to seconds
       setTimeLeft(durationInSeconds); // Set time left
@@ -433,7 +441,7 @@ const TestScreen = ({ route, navigation }: any) => {
                     colors={['#F97316', '#FAA729']} // Gradient colors
                     start={{ x: 0, y: 0 }} // Gradient start point
                     end={{ x: 1, y: 1 }}   // Gradient end point
-                    style={[styles.modalButton, { borderRadius: 5 }]} // Ensure borderRadius matches your button's design
+                    style={[styles.modalButton, { borderRadius: 10,width:width*0.41 }]} // Ensure borderRadius matches your button's design
                   >
                     <Text style={styles.modalButtonText}>Yes</Text>
                   </LinearGradient>
@@ -519,20 +527,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    padding: 16,
+
     height: 93,
     backgroundColor: '#FFF'
   },
   backButton: {
     width: 161.25,
-    padding: 12,
+    padding: 10,
     borderRadius: 7.68,
     borderWidth: 0.96,
     borderColor: '#F97316',
     alignItems: 'center',
-    marginLeft: 20
+    marginLeft: '2%'
   },
   navigationButtonText1: {
     fontSize: 14,
@@ -542,7 +550,7 @@ const styles = StyleSheet.create({
     width: 162.21,
     padding: 12,
     borderRadius: 8,
-    marginRight: 20
+  
   },
   navigationButtonText: {
     fontSize: 14,
@@ -603,7 +611,6 @@ const styles = StyleSheet.create({
   modalOptions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
     marginTop: 30
   },
   modalButton: {
@@ -613,7 +620,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
     alignItems: 'center',
-    width: 180
   },
   modalButton1: {
     borderRadius: 7.68,

@@ -147,10 +147,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
               <Text style={styles.browseText}>Browse</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.orText}>Or</Text>
-          <TouchableOpacity style={styles.buildButton}>
-            <Text style={styles.buildText}>Build Your Resume</Text>
-          </TouchableOpacity>
+         
         </View>
       </View>
  
@@ -202,11 +199,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
     marginBottom: 40,
   },
   header: {
@@ -234,18 +226,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
+    padding: 15,
     marginBottom: 15,
-    backgroundColor: "#E5E4E2",
+   
   },
   browseButton: {
     backgroundColor: "#F97316",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    flexDirection: "row",
+    padding: 10,
+    marginLeft:7,
     borderRadius: 5,
+    marginBottom: 10,
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   browseText: {
     color: "white",
@@ -272,7 +265,7 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 17,
     backgroundColor: "#fff",
-    borderTopWidth: 1,
+   
     borderTopColor: "#ccc",
   },
   buttonContainer: {

@@ -197,7 +197,8 @@ const styles = StyleSheet.create({
     marginLeft: 22,
     fontWeight: 'bold',
     marginBottom: 10,
-    marginTop:12
+    marginTop:12,
+    fontFamily:'Inter',
   },
   jobstextcon:{
     backgroundColor:'white'

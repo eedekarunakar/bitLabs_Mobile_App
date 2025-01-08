@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image,ScrollView } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { saveJob, applyJob } from '../../services/Jobs/JobDetails'; // Import API functions
@@ -11,7 +11,7 @@ import { ProfileService } from '../../services/profile/ProfileService';
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
 import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { ScrollView } from 'react-native-gesture-handler';
+
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -43,7 +43,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "JAVASCRIPT": require('../../assests/Images/JavaScript.png'),
     "MYSQL": require('../../assests/Images/Mysqll.png'),
     "REACT": require('../../assests/Images/React.png'),
-    "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
+    "SPRING BOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON":require('../../assests/Images/python.png'),
   };
   const monthNames = [
@@ -89,8 +89,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
        
         const matchPercentage =jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-        const matchskill = jobData.matchedSkills.map(skill =>skill.skillName.toUpperCase());
-        console.log("matchskill",matchskill);
+        // const matchskill = jobData.matchedSkills.map(skill =>skill.skillName.toUpperCase());
+        // console.log("matchskill",matchskill);
         console.log("skillsrequired",skillsRequired);
         
 
@@ -101,7 +101,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
     
   
-         setPerfectMatchSkills(matchskill);
+        //  setPerfectMatchSkills(matchskill);
+        setPerfectMatchSkills(jobData.matchedSkills.map((skill:any)=>skill.skillName));
          setUnmatchedSkills(skillsRequired);
       //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
         console.log(matchPercentage);
@@ -209,27 +210,40 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
   )}
 
-  {/* Unmatched Skills */}
-  {unmatchedSkills.length > 0 && (
-    <View style={styles.skillRow}>
-        {unmatchedSkills.map((skill, index) => (
-          
-          <Text key={index} style={[styles.skillTag, styles.unmatchedSkill]}>
-            {skill}
-          </Text>
-        ))}
-      </View>
+   {/* Unmatched Skills */}
+              {unmatchedSkills.length > 0 && (
+                <View style={styles.skillRow}>
+                  {unmatchedSkills.map((skill, index) => (
+                    <View key={index} style={styles.unmatchedSkillContainer}>
+                      {/* Add an image before the skill text */}
+                      <Image
+                        source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
+                        style={styles.unmatchedSkillIcon} // Define this style as needed
+                      />
+                      <Text style={styles.unmatchedSkill}>
+                        {skill}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
   
-  )}
-</View>
-
-      </View>
+  
+  
+            </View>
+  
+          </View>
+          
       <View style={styles.jobCard}>
-        <Text style={styles.jobdestitle}>Full Job Description</Text>
-        <Text style={styles.description}>
-          {job.description.replace(/<[^>]+>/g, '')}
-        </Text>
+      <Text style={styles.jobdestitle}>Full Job Description</Text>
+<ScrollView style={styles.descriptionContainer}>
+  <Text style={styles.description}>
+    {job.description.replace(/<[^>]+>/g, '')}
+  </Text>
+</ScrollView>
+        
       </View>
+     
 
          {/* Suggested Courses Container */}
          {suggestedCourses && suggestedCourses.length > 0 && (
@@ -265,7 +279,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     </View>
   );
 };
-
+  
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -296,10 +310,10 @@ const styles = StyleSheet.create({
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6', // Background color for the oval
+    backgroundColor: '#f6f6f6', 
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 50, // Makes the container oval
+    borderRadius: 50, 
     marginBottom: 8,
     marginRight: 6
   },
@@ -609,6 +623,25 @@ const styles = StyleSheet.create({
     backgroundColor :'#BF2308',
     fontSize:12,
   },
+  unmatchedSkillContainer: {
+    flexDirection: 'row', // Align image and text side by side
+    alignItems: 'center', // Vertically center image and text
+    backgroundColor: '#BF2308', // Red background
+    paddingHorizontal: 8, // Add padding to the sides
+    paddingVertical: 4, // Add padding to the top and bottom
+    borderRadius: 10, // Rounded corners
+    marginRight: 8, // Space between skill tags
+    marginBottom: 4, // Space between rows of skills
+  },
+  unmatchedSkillIcon: {
+    width: 16, // Adjust width as needed
+    height: 16, // Adjust height as needed
+    marginRight: 8, // Space between image and text
+  },
+  descriptionContainer: {
+    maxHeight: 150, // Set max height for the scrollable container
+  }
+  
   
 
 });

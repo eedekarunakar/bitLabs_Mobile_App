@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView,ActivityIndicator} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -36,6 +36,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
 
   const courseImages: Record<string, any> = {
@@ -87,8 +88,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
         const matchPercentage = jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-        const matchskill = jobData.matchedSkills.map(skill => skill.skillName.toUpperCase());
-        console.log("matchskill", matchskill);
+        // const matchskill = jobData.matchedSkills.map(skill => skill.skillName.toUpperCase());
+        // console.log("matchskill", matchskill);
         console.log("skillsrequired", skillsRequired);
 
 
@@ -99,13 +100,15 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
 
 
-        setPerfectMatchSkills(matchskill);
+        setPerfectMatchSkills(jobData.matchedSkills.map((skill:any)=>skill.skillName));
         setUnmatchedSkills(skillsRequired);
         //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
         console.log(matchPercentage);
         setPercent(matchPercentage);
       } catch (error) {
         console.error('Error fetching profile data:', error);
+      }finally {
+        setIsLoading(false);
       }
     };
 
@@ -159,12 +162,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       });
     }
   };
+  <View style={isLoading ? styles.loader : null}>
+  {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
+</View>
 
   // const percentageMatch = matchPercentage;
 
   return (
 
     <View style={styles.container}>
+    
       <ScrollView>
       <View style={styles.jobCard}>
         <View style={styles.row}>
@@ -255,26 +262,37 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           )}
 
           {/* Unmatched Skills */}
-          {unmatchedSkills.length > 0 && (
-            <View style={styles.skillRow}>
-              {unmatchedSkills.map((skill, index) => (
+{unmatchedSkills.length > 0 && (
+  <View style={styles.skillRow}>
+    {unmatchedSkills.map((skill, index) => (
+      <View key={index} style={styles.unmatchedSkillContainer}>
+        {/* Add an image before the skill text */}
+        <Image
+          source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
+          style={styles.unmatchedSkillIcon} // Define this style as needed
+        />
+        <Text style={styles.unmatchedSkill}>
+          {skill}
+        </Text>
+      </View>
+    ))}
+  </View>
+)}
 
-                <Text key={index} style={[styles.skillTag, styles.unmatchedSkill]}>
-                  {skill}
-                </Text>
-              ))}
-            </View>
 
-          )}
+       
         </View>
 
       </View>
       <View style={styles.jobCard}>
-        <Text style={styles.jobdestitle}>Full Job Description</Text>
+            <Text style={styles.jobdestitle}>Full Job Description</Text>
+      <ScrollView style={styles.descriptionContainer}>
         <Text style={styles.description}>
           {job.description.replace(/<[^>]+>/g, '')}
         </Text>
-      </View>
+      </ScrollView>
+              
+            </View>
 
       {/* Suggested Courses Container */}
       {suggestedCourses && suggestedCourses.length > 0 && (
@@ -358,6 +376,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f6f6f6',
+    justifyContent:'space-between',
   },
   jobdestitle: {
     color: '#F46F16',
@@ -380,6 +399,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
+    flexShrink:1,
   },
   oval: {
     flexDirection: 'row',
@@ -407,6 +427,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 16,
+    flexGrow:1,
   },
   progressContainer: {
     flexDirection: 'row',
@@ -435,6 +456,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(236, 78, 29, 0.7)',
   },
   jobCard: {
     backgroundColor: '#fff',
@@ -548,7 +570,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flexDirection: 'row',
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     width: '100%',
     backgroundColor: 'white',
@@ -695,7 +717,7 @@ const styles = StyleSheet.create({
 
   unmatchedSkill: {
     color: '#fff',
-    backgroundColor: '#BF2308',
+   
     fontSize: 12,
   },
   buttonContent: {
@@ -707,6 +729,31 @@ const styles = StyleSheet.create({
     height: 20, // Set the desired height
     marginRight: 8, // Add some space between the image and text
   },
+  unmatchedSkillIcon: {
+    width: 16, // Adjust width as needed
+    height: 16, // Adjust height as needed
+    marginRight: 8, // Space between image and text
+  },
+  skillContainer: {
+    flexDirection: 'row', // Ensures image and text are side by side
+    alignItems: 'center', // Aligns items vertically in the center
+    marginBottom: 8, // Space between skill items
+  },
+  unmatchedSkillContainer: {
+    flexDirection: 'row', // Align image and text side by side
+    alignItems: 'center', // Vertically center image and text
+    backgroundColor: '#BF2308', // Red background
+    paddingHorizontal: 8, // Add padding to the sides
+    paddingVertical: 4, // Add padding to the top and bottom
+    borderRadius: 10, // Rounded corners
+    marginRight: 8, // Space between skill tags
+    marginBottom: 4, // Space between rows of skills
+  },
+  descriptionContainer: {
+    maxHeight: 150, // Set max height for the scrollable container
+  }
+  
+
 
 });
 
