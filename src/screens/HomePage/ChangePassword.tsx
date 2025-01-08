@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image,Keyboard, TouchableWithoutFeedback } from 'react-native';
 import axios, { AxiosError } from 'axios';
 import * as CryptoJS from 'crypto-js';
 import { useAuth } from '../../context/Authcontext';
@@ -32,10 +32,19 @@ const ChangePasswordScreen = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
+  const [visibleField, setVisibleField] = useState<string | null>(null);
+
   const { userId } = useAuth();
   const navigation = useNavigation();
   const handleBackButton = (): void => {
     navigation.goBack();
+  };
+  const handleKeyboardDismiss = () => {
+    setVisibleField(null); // Hide all password fields when dismissing the keyboard
+    Keyboard.dismiss();
+  };
+  const handleFocus = (field:any) => {
+    setVisibleField(field); // Set the current field as visible
   };
   const handleChangePassword = async (): Promise<void> => {
     if (newPassword !== reEnterPassword) {
@@ -114,23 +123,24 @@ const ChangePasswordScreen = () => {
   const renderPasswordField = (  
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
-    isPasswordVisible: boolean,
-    togglePasswordVisibility: () => void,
+    field: string,
     placeholder: string
   ) => (
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          secureTextEntry={!isPasswordVisible}
+          secureTextEntry={visibleField !== field}
           value={value}
           onChangeText={setValue}
+          onFocus={() => handleFocus(field)}
           placeholder={placeholder} // Add placeholder here
           placeholderTextColor="#A9A9A9" // Adjust placeholder text color
+          
         />
-        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
+       <TouchableOpacity onPress={() => setVisibleField(visibleField === field ? null : field)} style={styles.eyeIcon}>
           <Image
             source={
-              isPasswordVisible
+              visibleField !== field
                 ? require('../../assests/LandingPage/openeye.png') // Replace with your open eye image path
                 : require('../../assests/LandingPage/closedeye.png') // Replace with your closed eye image path
             }
@@ -142,6 +152,7 @@ const ChangePasswordScreen = () => {
   );
  
   return (
+    <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
     <View style={styles.container}>
       <View style={styles.navbar}>
         <Image
@@ -171,24 +182,21 @@ const ChangePasswordScreen = () => {
  
         oldPassword,
         setOldPassword,
-        showOldPassword,
-        () => setShowOldPassword(!showOldPassword),
+        'OldPassword',  
         'Type Old Password'
       )}
  
       {renderPasswordField(
         newPassword,
         setNewPassword,
-        showNewPassword,
-        () => setShowNewPassword(!showNewPassword),
+        'NewPassword',
         'Enter New Password',
       )}
  
       {renderPasswordField(
         reEnterPassword,
         setReEnterPassword,
-        showReEnterPassword,
-        () => setShowReEnterPassword(!showReEnterPassword),
+        'showReEnterPassword',
         'Confirm New Password',
       )}
  
@@ -212,6 +220,7 @@ const ChangePasswordScreen = () => {
       </TouchableOpacity>
     </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
  
