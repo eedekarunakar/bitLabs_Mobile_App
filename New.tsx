@@ -57,6 +57,7 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+
 const Appnavigator = () => {
   const { isAuthenticated, userToken, userId, userEmail } = useAuth(); // Assuming AuthProvider provides these
   console.log('userToken', userToken);
@@ -133,7 +134,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
-            options={{ headerShown: false}}
+            options={{headerShown:false}}
           />
 
           <Stack.Screen
@@ -203,10 +204,10 @@ const Appnavigator = () => {
 
 const AppWithProfileProvider = () => {
   const { userToken, userId } = useAuth();
-   // Access token and user ID from AuthProvider
+
     return (
     <ProfilePhotoProvider userToken={userToken} userId={userId}>
-      <NavigationContainer>
+      <NavigationContainer >
        <Appnavigator />
        <Toast />
         </NavigationContainer>

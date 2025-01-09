@@ -343,7 +343,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
         {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
 
         <TextInput
-          placeholder="*Experience in Years"
+          placeholder="*Experience in Years" placeholderTextColor="#0D0D0D"
           style={styles.input}
           value={formData.experience}
           onChangeText={text =>

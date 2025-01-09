@@ -80,7 +80,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   };
   return (
     <View style={{ flex: 1 }}>
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom:80 }}>
       {loading ? (
         <View style={styles.loader}>
           <ActivityIndicator size="large" color="#FF8C00" />
@@ -127,7 +127,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   
           <View style={styles.statusContainer}>
             <Text style={styles.statusHeader}>Status History</Text>
-            <ScrollView style={styles.statusScrollView}>
+           
             {jobStatus.length > 0 ? (
               <View style={styles.statusTable}>
                 {jobStatus.map((status, index) => (
@@ -156,12 +156,12 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                 No status history available!
               </Text>
             )}
-            </ScrollView>
+
           </View>
         </View>
       )}
     </ScrollView>
-  
+  <View style={{height:20}}/>
     {/* Footer outside ScrollView */}
     <View style={styles.footer}>
       <TouchableOpacity
@@ -385,6 +385,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: '#fff',
+    paddingVertical: 10, // Adjust padding for better spacing
+    paddingHorizontal: 16,
     padding: 13,
     flexDirection: 'row',
     position: 'absolute',
@@ -392,6 +394,7 @@ const styles = StyleSheet.create({
     width: '100%',
     
   },
+ 
   button: {
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -424,9 +427,8 @@ const styles = StyleSheet.create({
     width:'100%',
     padding:20
   },
-  statusScrollView: {
-    maxHeight: 250, // Allow status history to scroll if it's too long
-  },
+  
+
 });
 
 export default JobDetailsScreen;

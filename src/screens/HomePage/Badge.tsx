@@ -677,6 +677,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 20,
+    color:'#0D0D0D',
   },
   progressContainer: {
     flexDirection: 'row',

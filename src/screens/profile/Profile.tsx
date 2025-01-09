@@ -507,20 +507,20 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             }}>
                             <View style={styles.modalView}>
                                 <View style={styles.modalCard}>
-                                    <TextInput placeholder='FirstName' style={styles.input}
+                                    <TextInput placeholder='FirstName'placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.firstName}
                                         onChangeText={(text) => handleInputChange('firstName', (text))} />
                                     {formErrors?.firstName && (
                                         <Text style={styles.errorText}>{formErrors.firstName}</Text>
                                     )}
-                                    <TextInput placeholder='LastName' style={styles.input}
+                                    <TextInput placeholder='LastName'placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.lastName}
                                         onChangeText={(text) => handleInputChange('lastName', (text))} />
                                     {formErrors?.lastName && (
                                         <Text style={styles.errorText}>{formErrors.lastName}</Text>
                                     )}
-                                    <TextInput placeholder={basicDetails?.email || 'Email'} editable={false} style={styles.input} />
-                                    <TextInput placeholder='+91*******' style={styles.input}
+                                    <TextInput placeholder={basicDetails?.email || 'Email'}placeholderTextColor="#B1B1B1" editable={false} style={styles.input} />
+                                    <TextInput placeholder='+91*******' style={styles.input}placeholderTextColor="#B1B1B1"
                                         value={personalDetails.alternatePhoneNumber}
                                         onChangeText={(text) => handleInputChange('alternatePhoneNumber', (text))} />
                                     {formErrors?.alternatePhoneNumber && (
@@ -569,6 +569,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                 <TextInput
                                     style={styles.input1}
                                     placeholder='Search from device'
+                                    placeholderTextColor="#B1B1B1"
                                     value={resumeText} // Ensure string type
                                     onChangeText={setResumeText}
                                 />
@@ -649,7 +650,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         paddingHorizontal: 10,
         borderRadius: 2,
-        backgroundColor: '#E5E5E5'
+        backgroundColor: '#E5E5E5',
+        color:'#0D0D0D',
  
     },
     skillContainer: {
@@ -678,11 +680,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#fff',
         borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
+       
     },
     container: {
         alignItems: 'center',

@@ -236,11 +236,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           
       <View style={styles.jobCard}>
       <Text style={styles.jobdestitle}>Full Job Description</Text>
-<ScrollView style={styles.descriptionContainer}>
+
   <Text style={styles.description}>
     {job.description.replace(/<[^>]+>/g, '')}
   </Text>
-</ScrollView>
+
         
       </View>
      
@@ -638,9 +638,7 @@ const styles = StyleSheet.create({
     height: 16, // Adjust height as needed
     marginRight: 8, // Space between image and text
   },
-  descriptionContainer: {
-    maxHeight: 150, // Set max height for the scrollable container
-  }
+  
   
   
 
