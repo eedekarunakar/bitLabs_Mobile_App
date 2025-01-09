@@ -10,20 +10,24 @@ const useRecommendedJobsViewModel = () => {
   const [jobs, setJobs] = useState<JobData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const loadJobs = async () => {
-      try {
-        const data = await fetchRecommendedJobs(userId, userToken);
-        setJobs(data);
-      } catch (error) {
-        Alert.alert('Error', 'Failed to fetch job data');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Function to load jobs from the API
+  const loadJobs = async () => {
+    setLoading(true); // Start loading
+    try {
+      const data = await fetchRecommendedJobs(userId, userToken);
+      setJobs(data);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch job data');
+    } finally {
+      setLoading(false); // End loading
+    }
+  };
 
+  // Initial load of jobs when the component is mounted
+  useEffect(() => {
     loadJobs();
   }, []);
+
 
   const getJobDetails = async (jobId: number): Promise<JobData | null> => {
     try {
@@ -33,8 +37,11 @@ const useRecommendedJobsViewModel = () => {
       return null;
     }
   };
+  const reloadJobs = () => {
+    loadJobs();
+  };
 
-  return { jobs, loading, getJobDetails };
+  return { jobs, loading, getJobDetails ,reloadJobs};
 };
 
 export default useRecommendedJobsViewModel;

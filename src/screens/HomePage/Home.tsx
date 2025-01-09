@@ -40,7 +40,8 @@ function Dashboard() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading job data...</Text>
+        <Text style={{ color: '#0D0D0D' }}>Loading job data...</Text>
+
       </View>
     );
   }
@@ -119,6 +120,8 @@ loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    color:'#0D0D0D'
+
 },
 navbar: {
     flexDirection: "row",

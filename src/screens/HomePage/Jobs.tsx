@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,26 +8,37 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../New' // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '../../models/Jobs/ApplyJobmodel'// Your JobData interface
- 
+
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
  
 const RecommendedJobs = () => {
-  const { jobs, loading } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
+  const { jobs, loading,reloadJobs } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
   const [activeTab, setActiveTab] = useState<'recommended' | 'applied' | 'saved'>('recommended');
   const navigation = useNavigation<RecommendedJobsNavigationProp>();
   const [appliedJobs, setAppliedJobs] = useState<JobData[]>([]); // State to store applied jobs
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
- 
- 
- 
+  const isFocused = useIsFocused();
+
+
+  useEffect(() => {
+    if (isFocused && activeTab === 'recommended') {
+      reloadJobs(); // Reload jobs when the screen is focused and tab is 'recommended'
+    }
+  }, [isFocused, activeTab]);
+
+  // Handle tab press
+  const handleTabPress = () => {
+    setActiveTab('recommended');
+   // Trigger reload when "Recommended" tab is pressed
+  };
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -130,7 +141,7 @@ const RecommendedJobs = () => {
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'recommended' && styles.activeTab]}
-          onPress={() => setActiveTab('recommended')}
+          onPress={handleTabPress}
         >
           <Text
             style={[
@@ -199,6 +210,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop:12,
     fontFamily:'Inter',
+    color:'#0D0D0D',
   },
   jobstextcon:{
     backgroundColor:'white'

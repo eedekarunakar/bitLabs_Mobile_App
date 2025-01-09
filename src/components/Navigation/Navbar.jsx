@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
         fontWeight: 400,
         fontSize: 18,
         fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        color:'#2F2F2F'
     },
     buttonText: {
         color: 'black',

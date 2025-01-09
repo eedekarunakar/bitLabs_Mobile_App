@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
+    color:'#0D0D0D'
   },
   modalButtons: {
     flexDirection: 'row',
