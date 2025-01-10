@@ -178,7 +178,6 @@ function ProfileComponent() {
                 height: 1920, // Set the image dimensions
             };
    
-            console.log('Resolved Default Image File:', defaultImageFile);
    
             // Upload the default image
             const result = await ProfileService.uploadProfilePhoto(userToken, userId, defaultImageFile);

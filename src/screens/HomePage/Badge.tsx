@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { ProfileService } from '../../services/profile/ProfileService';
 import { useAuth } from '../../context/Authcontext';
+import API_BASE_URL from '../../services/API_Service';
 
 
 const { width } = Dimensions.get('window');
@@ -31,7 +32,7 @@ const Badge = ({ route, navigation }: any) => {
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const [skillBadges, setSkillBadges] = useState<any[]>([]); // For storing the fetched skill badges data
   const [skillLoading, setSkillLoading] = useState(true); // Loading state for skill badges
-  const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com';
+  
 
   const testImage: Record<string, any> = {
     Angular: require('../../assests/Images/Test/Angular.png'),
@@ -41,7 +42,7 @@ const Badge = ({ route, navigation }: any) => {
     'C Sharp': require('../../assests/Images/Test/CSharp.png'),
     CSS: require('../../assests/Images/Test/CSS.png'),
     Django: require('../../assests/Images/Test/Django.png'),
-    DotNet: require('../../assests/Images/Test/Dot Net.png'),
+    '.Net': require('../../assests/Images/Test/Dot Net.png'),
     Flask: require('../../assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
     HTML: require('../../assests/Images/Test/HTML.png'),

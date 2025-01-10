@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { JobData } from '../../models/Jobs/ApplyJobmodel';
-const API_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com/applyjob/applicant';
+import API_BASE_URL from '../API_Service';
+const API_URL = `${API_BASE_URL}/applyjob/applicant`;
 
 export interface JobAlert {
   alertsId: string;
@@ -82,7 +83,7 @@ const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
 export const fetchJobDetails = async (jobId: number|null, userToken: string | null,apply:number) => {
   try {
     const response = await axios.get(
-      `https://g23jza8mtp.ap-south-1.awsapprunner.com/viewjob/applicant/viewjob/${jobId}`,
+      `${API_BASE_URL}/viewjob/applicant/viewjob/${jobId}`,
       {
         headers: { Authorization: `Bearer ${userToken}` },
       }

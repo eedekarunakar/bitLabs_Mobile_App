@@ -13,6 +13,7 @@ import {RootStackParamList} from '../../../New';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import {useAuth} from '../../context/Authcontext';
+import API_BASE_URL from '../../services/API_Service';
 type Step2ScreenRouteProp = RouteProp<RootStackParamList, 'Step2'>;
 
 
@@ -223,7 +224,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
       });
       try {
         const response = await fetch(
-          `https://g23jza8mtp.ap-south-1.awsapprunner.com/applicantprofile/createprofile/${userId}`,
+          `${API_BASE_URL}/applicantprofile/createprofile/${userId}`,
           {
             method: 'POST',
             headers: {

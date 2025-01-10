@@ -1,8 +1,8 @@
 import axios from 'axios';
-
+import API_BASE_URL from '../API_Service';
 // Create Axios instance
 const apiClient = axios.create({
-  baseURL: 'https://g23jza8mtp.ap-south-1.awsapprunner.com',
+  baseURL: API_BASE_URL,
 });
 
 export const fetchJobCounts = async (applicantId: number|null,jwtToken:string|null) => {

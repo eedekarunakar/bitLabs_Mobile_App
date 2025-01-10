@@ -158,7 +158,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Django':
         fetchedTestData = require('../models/data/Django.json');
         break;
-      case 'DotNet':
+      case '.Net':
         fetchedTestData = require('../models/data/DotNet.json');
         break;
       case 'Flask':
@@ -415,7 +415,7 @@ const TestScreen = ({ route, navigation }: any) => {
                 style={styles.closeIcon}
                 onPress={() => setShowEarlySubmissionModal(false)} // Close the modal
               >
-                <Icon name="close" size={20} />
+                <Icon name="close" size={20} color={'#0D0D0D'}/>
               </TouchableOpacity>
               <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
               <Text style={styles.modalText}>Are you sure you want to quit?</Text>

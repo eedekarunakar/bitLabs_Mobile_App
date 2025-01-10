@@ -21,11 +21,12 @@ import { JobData } from '../../models/Jobs/ApplyJobmodel';
 import ViewJobDetails from './ViewJobDetails';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { applyJob } from '../../services/Jobs/JobDetails';
+import API_BASE_URL from '../../services/API_Service';
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
 };
 
-const apiUrl = 'https://g23jza8mtp.ap-south-1.awsapprunner.com/applyjob';
+
 
 const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   const { job } = route.params;
@@ -38,7 +39,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
     const fetchJobStatus = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/recruiters/applyjob-status-history/${job.applyJobId}`,
+          `${API_BASE_URL}/recruiters/applyjob-status-history/${job.applyJobId}`,
           {
             headers: {
               Authorization: `Bearer ${userToken}`,

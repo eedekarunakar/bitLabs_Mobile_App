@@ -1,8 +1,8 @@
 import axios from 'axios';
-
+import API_BASE_URL from '../API_Service';
 // Create Axios instance with base URL
 const apiClient = axios.create({
-  baseURL: 'https://g23jza8mtp.ap-south-1.awsapprunner.com', // Your base API URL
+  baseURL:API_BASE_URL, // Your base API URL
 });
 
 // Function to submit test results
