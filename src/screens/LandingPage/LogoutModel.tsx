@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     lineHeight: 26,
     textAlign: 'center',
+    color:'#0D0D0D'
+
   },
   modalButtons: {
     flexDirection: 'row',

@@ -37,6 +37,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  
 
 
   const courseImages: Record<string, any> = {
@@ -45,7 +46,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "JAVASCRIPT": require('../../assests/Images/JavaScript.png'),
     "MYSQL": require('../../assests/Images/Mysqll.png'),
     "REACT": require('../../assests/Images/React.png'),
-    "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
+    "SPRING BOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON": require('../../assests/Images/python.png'),
   };
   const monthNames = [
@@ -278,21 +279,15 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     ))}
   </View>
 )}
-
-
-       
-        </View>
-
-      </View>
+      
+</View>
+</View>
       <View style={styles.jobCard}>
             <Text style={styles.jobdestitle}>Full Job Description</Text>
-      <ScrollView style={styles.descriptionContainer}>
         <Text style={styles.description}>
           {job.description.replace(/<[^>]+>/g, '')}
         </Text>
-      </ScrollView>
-              
-            </View>
+      </View>
 
       {/* Suggested Courses Container */}
       {suggestedCourses && suggestedCourses.length > 0 && (
@@ -325,7 +320,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         </View>
       )}
 </ScrollView>
-
+      <View style={{ height: 20 }} />
       <View style={styles.footerContainer}>
         {/* Save Job Button */}
         {isJobSaved ? (
@@ -749,9 +744,7 @@ const styles = StyleSheet.create({
     marginRight: 8, // Space between skill tags
     marginBottom: 4, // Space between rows of skills
   },
-  descriptionContainer: {
-    maxHeight: 150, // Set max height for the scrollable container
-  }
+  
   
 
 

@@ -277,7 +277,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.qualification ? styles.errorInput : {}]}
-                  placeholder="Qualification"
+                  placeholder="Qualification" placeholderTextColor="#B1B1B1"
                   value={qualificationQuery}
                   onFocus={toggleQualificationDropdown}
                   onChangeText={(text) => {
@@ -316,7 +316,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.specialization ? styles.errorInput : {}]}
-                  placeholder="Specialization"
+                  placeholder="Specialization" placeholderTextColor="#B1B1B1"
                   value={specializationQuery}
                   onFocus={toggleSpecializationDropdown}
                   onChangeText={(text) => {
@@ -356,7 +356,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.skills ? styles.errorInput : {}]}
-                  placeholder="Search Skills"
+                  placeholder="Search Skills" placeholderTextColor="#0D0D0D"
                   value={skillQuery}
                   onFocus={toggleSkillsDropdown}
                   onChangeText={setSkillQuery}
@@ -405,7 +405,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.locations ? styles.errorInput : {}]}
-                  placeholder="Search Locations"
+                  placeholder="Search Locations" placeholderTextColor="#0D0D0D"
                   value={locationQuery}
                   onFocus={toggleLocationDropdown}
                   onChangeText={setLocationQuery}
@@ -447,7 +447,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.experience ? styles.errorInput : {}]}
-                  placeholder="Experience"
+                  placeholder="Experience" placeholderTextColor="#B1B1B1"
                   value={experienceQuery}
                   onFocus={toggleExperienceDropdown}
                   onChangeText={(text) => {
@@ -505,15 +505,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    
   },
   inputContainer: {
     position: 'relative',
     marginBottom: 20,
+    
   },
   modalTitle: {
     fontSize: 24,
@@ -528,6 +525,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     padding: 10,
+    color:'#0D0D0D',
   },
   errorInput: {
     borderColor: 'red',
@@ -550,6 +548,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     overflow: 'hidden',
     elevation: 5, // Added elevation for better visibility
+   
   },
   suggestionItem: {
     padding: 10,
@@ -557,6 +556,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    color:'#0D0D0D'
   },
   autocompleteItem: {
     padding: 10,
@@ -564,6 +564,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    color:'#0D0D0D'
   },
   noMatchText: {
     padding: 10,

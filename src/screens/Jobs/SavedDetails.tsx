@@ -284,11 +284,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         </View>
       <View style={styles.jobCard}>
             <Text style={styles.jobdestitle}>Full Job Description</Text>
-      <ScrollView style={styles.descriptionContainer}>
+      
         <Text style={styles.description}>
           {job.description.replace(/<[^>]+>/g, '')}
         </Text>
-      </ScrollView>
+      
               
             </View>
 
@@ -325,6 +325,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         )}
 
       </ScrollView>
+      <View style={{ height: 20 }} />
       <View style={styles.footerContainer}>
         {/* Save Job Button */}
         {isJobSaved ? (
@@ -742,11 +743,6 @@ const styles = StyleSheet.create({
     marginRight: 8, // Space between skill tags
     marginBottom: 4, // Space between rows of skills
   },
-  descriptionContainer: {
-    maxHeight: 150, // Set max height for the scrollable container
-  }
-  
-
 
 });
 

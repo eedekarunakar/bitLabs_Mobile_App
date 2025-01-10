@@ -106,7 +106,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         />
  
         <TextInput
-          placeholder="First Name"
+          placeholder="First Name" placeholderTextColor="#B1B1B1"
           style={styles.input}
           value={formData.firstName}
           onChangeText={(text) =>
@@ -118,7 +118,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         ) : null}
  
         <TextInput
-          placeholder="Last Name"
+          placeholder="Last Name" placeholderTextColor="#B1B1B1"
           style={styles.input}
           value={formData.lastName}
           onChangeText={(text) =>
@@ -136,7 +136,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           editable={false}
         />
         <TextInput
-          placeholder="WhatsApp Number"
+          placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1"
           style={styles.input}
           value={formData.whatsappNumber}
           onChangeText={(text) =>

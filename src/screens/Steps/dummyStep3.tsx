@@ -135,7 +135,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
           <Text style={styles.label}>Resume</Text>
           <View style={styles.uploadContainer}>
             <TextInput
-              placeholder="Upload your resume"
+              placeholder="Upload your resume" placeholderTextColor="#B1B1B1"
               style={styles.textInput}
               editable={false}
               value={resumeText}
