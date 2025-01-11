@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
     color: '#495057',
   },
   box1: {
-    width: '90%',
+    width: width*0.95,
     alignSelf: 'center',
     marginTop: 10,
     marginHorizontal: 16,
@@ -677,7 +677,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 20,
-    color:'#0D0D0D',
   },
   progressContainer: {
     flexDirection: 'row',
@@ -781,7 +780,6 @@ const styles = StyleSheet.create({
     height: 335
   },
   badge: {
-    marginLeft: 10,
     alignItems: 'center',
     justifyContent: 'center'
   },

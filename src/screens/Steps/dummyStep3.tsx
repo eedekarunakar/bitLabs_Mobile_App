@@ -9,6 +9,7 @@ import DocumentPicker, {
 import { ToastAndroid } from 'react-native';
 import { useAuth } from '../../context/Authcontext';
 import { ProfileService } from '../../services/profile/ProfileService';
+import { SafeAreaView } from "react-native-safe-area-context";
  
  
 interface Step3Props {
@@ -115,6 +116,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
  
  
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.screen}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
@@ -135,7 +137,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
           <Text style={styles.label}>Resume</Text>
           <View style={styles.uploadContainer}>
             <TextInput
-              placeholder="Upload your resume" placeholderTextColor="#B1B1B1"
+              placeholder="Upload your resume"
               style={styles.textInput}
               editable={false}
               value={resumeText}
@@ -166,6 +168,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

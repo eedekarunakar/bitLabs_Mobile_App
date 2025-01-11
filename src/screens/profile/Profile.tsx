@@ -733,14 +733,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         margin: 10,
         borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 5,
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
         padding: 20
- 
- 
     },
     cap: {
         margin: 2,
@@ -769,13 +762,6 @@ const styles = StyleSheet.create({
             'white',
         borderRadius: 10,
         padding: 20,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
         elevation: 5,
     },
  
@@ -801,12 +787,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row', // Horizontally align the text and the button
         justifyContent: 'space-between', // Space between the text and logo
         alignItems: 'center', // Vertically center the content inside the card
-        borderRadius: 10, // Rounded corners for the card
-        shadowColor: '#000', // Shadow color
-        shadowOffset: { width: 0, height: 2 }, // Shadow offset
-        shadowOpacity: 0.8, // Shadow opacity
-        shadowRadius: 2, // Shadow blur radius
-        elevation: 5, // Elevation for Android
+        borderRadius: 10, // Rounded corners for the card // Elevation for Android
         marginVertical: 10, // Space between cards
         height: 100, // Increase height of the card
     },
@@ -836,11 +817,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
     },
  
     // Modal Title
@@ -886,11 +862,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 20, // Padding for top and bottom, reducing the space inside the modal
         paddingHorizontal: 20, // Horizontal padding to keep space on sides
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
     },
  
     customButton: {

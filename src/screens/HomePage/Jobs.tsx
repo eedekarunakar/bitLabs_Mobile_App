@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,37 +8,27 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../New' // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '../../models/Jobs/ApplyJobmodel'// Your JobData interface
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+ 
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
  
 const RecommendedJobs = () => {
-  const { jobs, loading,reloadJobs } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
+  const { jobs, loading } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
   const [activeTab, setActiveTab] = useState<'recommended' | 'applied' | 'saved'>('recommended');
   const navigation = useNavigation<RecommendedJobsNavigationProp>();
   const [appliedJobs, setAppliedJobs] = useState<JobData[]>([]); // State to store applied jobs
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
-  const isFocused = useIsFocused();
-
-
-  useEffect(() => {
-    if (isFocused && activeTab === 'recommended') {
-      reloadJobs(); // Reload jobs when the screen is focused and tab is 'recommended'
-    }
-  }, [isFocused, activeTab]);
-
-  // Handle tab press
-  const handleTabPress = () => {
-    setActiveTab('recommended');
-   // Trigger reload when "Recommended" tab is pressed
-  };
+ 
+ 
+ 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -134,6 +124,7 @@ const RecommendedJobs = () => {
   };
  
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.container}>
       <View style={styles.jobstextcon}>
         <Text style={styles.Jobstext}>Jobs</Text>
@@ -141,7 +132,7 @@ const RecommendedJobs = () => {
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'recommended' && styles.activeTab]}
-          onPress={handleTabPress}
+          onPress={() => setActiveTab('recommended')}
         >
           <Text
             style={[
@@ -181,14 +172,15 @@ const RecommendedJobs = () => {
       </View>
       <ScrollView style={styles.scrollContainer}>{renderContent()}</ScrollView>
     </View>
+    </SafeAreaView>
   );
 };
  
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#f6f6f6',
     top: 0,
+    marginBottom:20
   },
   oval: {
     flexDirection: 'row',
@@ -210,7 +202,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop:12,
     fontFamily:'Inter',
-    color:'#0D0D0D',
   },
   jobstextcon:{
     backgroundColor:'white'

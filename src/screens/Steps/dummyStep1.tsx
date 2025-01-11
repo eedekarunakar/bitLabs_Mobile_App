@@ -11,6 +11,7 @@ import {
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import ProgressBar from '../../components/progessBar/ProgressBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
  
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
  
@@ -84,6 +85,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
   };
  
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollView}>
       <Image
@@ -106,7 +108,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         />
  
         <TextInput
-          placeholder="First Name" placeholderTextColor="#B1B1B1"
+          placeholder="First Name"
           style={styles.input}
           value={formData.firstName}
           onChangeText={(text) =>
@@ -118,7 +120,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         ) : null}
  
         <TextInput
-          placeholder="Last Name" placeholderTextColor="#B1B1B1"
+          placeholder="Last Name"
           style={styles.input}
           value={formData.lastName}
           onChangeText={(text) =>
@@ -136,7 +138,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           editable={false}
         />
         <TextInput
-          placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1"
+          placeholder="WhatsApp Number"
           style={styles.input}
           value={formData.whatsappNumber}
           onChangeText={(text) =>
@@ -158,6 +160,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
  

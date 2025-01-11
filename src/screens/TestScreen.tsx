@@ -12,7 +12,7 @@ import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 
 
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 
 const TestScreen = ({ route, navigation }: any) => {
   const { testName } = route.params;
@@ -441,7 +441,7 @@ const TestScreen = ({ route, navigation }: any) => {
                     colors={['#F97316', '#FAA729']} // Gradient colors
                     start={{ x: 0, y: 0 }} // Gradient start point
                     end={{ x: 1, y: 1 }}   // Gradient end point
-                    style={[styles.modalButton, { borderRadius: 10,width:width*0.41 }]} // Ensure borderRadius matches your button's design
+                    style={[styles.modalButton, { borderRadius: 10,width:width*0.41,height:height*0.5 }]} // Ensure borderRadius matches your button's design
                   >
                     <Text style={styles.modalButtonText}>Yes</Text>
                   </LinearGradient>
@@ -529,7 +529,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-
     height: 93,
     backgroundColor: '#FFF'
   },
@@ -548,8 +547,9 @@ const styles = StyleSheet.create({
   },
   gradientBackground: {
     width: 162.21,
-    padding: 12,
+    height:height*0.060,
     borderRadius: 8,
+    justifyContent:'center'
   
   },
   navigationButtonText: {
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    marginTop: 50,
+    marginTop: width*0.21,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -614,12 +614,12 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   modalButton: {
-    padding: 10,
+    height:height*0.050,
     borderRadius: 8,
-    backgroundColor: '#F97316',
     flex: 1,
     marginHorizontal: 4,
     alignItems: 'center',
+    justifyContent:'center'
   },
   modalButton1: {
     borderRadius: 7.68,

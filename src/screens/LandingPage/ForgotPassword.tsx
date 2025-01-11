@@ -9,6 +9,7 @@ import { sendOtp, verifyOtp, resetPassword } from '../../services/login/ForgotPa
 import { ForgotErrors } from '../../models/Autherrors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -135,6 +136,7 @@ const ForgotPassword = () => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}}>
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.navbar}>
@@ -252,6 +254,7 @@ const ForgotPassword = () => {
         </View>
       </View>
     </KeyboardAvoidingView >
+    </SafeAreaView>
   );
 };
 

@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Dimensions
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,6 +22,7 @@ import { JobData } from '../../models/Jobs/ApplyJobmodel';
 import ViewJobDetails from './ViewJobDetails';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { applyJob } from '../../services/Jobs/JobDetails';
+const { width,height } = Dimensions.get('window');
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
 };
@@ -402,6 +404,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     marginHorizontal: 8,
+
   },
   saveJobButton: {
     backgroundColor: 'white',
@@ -425,7 +428,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex:1,
     width:'100%',
-    padding:20
+    height:height*0.09,
+    alignSelf:'center'
   },
   
 

@@ -32,7 +32,7 @@ import TSData from '../models/data/TS.json';
 import SpringData from '../models/data/Spring.json';
 import SQLData from '../models/data/SQL.json'
 
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 
 // Define the type for the test data
 interface TestData {
@@ -320,7 +320,7 @@ export default Test;
 
 const styles = StyleSheet.create({
   container: {
-    width: '93%',
+    width: width*0.93,
     height: 650,
     marginTop: 20,
     marginLeft: 13,
@@ -402,8 +402,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
   },
   footer: {
-    height: 93,
-    marginTop: 100,
+    height: 75,
     gap: 15,
     backgroundColor: '#FFF',
     justifyContent: 'center',

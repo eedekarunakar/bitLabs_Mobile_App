@@ -7,6 +7,7 @@ import * as Keychain from 'react-native-keychain';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const apiUrl = 'https://g23jza8mtp.ap-south-1.awsapprunner.com';
 const secretKey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
  
@@ -152,6 +153,7 @@ const ChangePasswordScreen = () => {
   );
  
   return (
+    <SafeAreaView style ={{flex:1}}>
     <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
     <View style={styles.container}>
       <View style={styles.navbar}>
@@ -221,6 +223,7 @@ const ChangePasswordScreen = () => {
     </View>
     </View>
     </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
  

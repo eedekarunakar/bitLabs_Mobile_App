@@ -13,6 +13,7 @@ import {RootStackParamList} from '../../../New';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import {useAuth} from '../../context/Authcontext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 type Step2ScreenRouteProp = RouteProp<RootStackParamList, 'Step2'>;
 
 
@@ -267,6 +268,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.screen}>
       <Image
         style={styles.logo}
@@ -343,7 +345,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
         {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
 
         <TextInput
-          placeholder="*Experience in Years" placeholderTextColor="#0D0D0D"
+          placeholder="*Experience in Years"
           style={styles.input}
           value={formData.experience}
           onChangeText={text =>
@@ -387,6 +389,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
