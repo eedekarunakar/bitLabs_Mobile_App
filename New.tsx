@@ -28,6 +28,9 @@ import ViewJobDetails from './src/screens/Jobs/ViewJobDetails';
 import Notification from './src/screens/alert/Notification';
 import SavedDetails from './src/screens/Jobs/SavedDetails';
 import { ProfilePhotoProvider } from './src/context/ProfilePhotoContext';
+import ResumeBuilder from './src/screens/profile/ResumeBuilder';
+import Drives from './src/screens/HomePage/Drives';
+import Badge from './src/screens/HomePage/Badge';
 
 export type RootStackParamList = {
   ForgotPassword: undefined,
@@ -38,11 +41,11 @@ export type RootStackParamList = {
   Step3: { updateShouldShowStep1: React.Dispatch<React.SetStateAction<boolean>> };
   TestInstruction: { testName: string };
   TestScreen: { questions: any[] };
-  Jobs: undefined;
+  Jobs: { tab: 'recommended' | 'applied' | 'saved'};
   JobDetails: { job: any }; // Pass job data to the JobDetails screen
   JobDetailsScreen: { job: any };
-  ViewJobDetails: {job:any};
-  AppliedJobs: {job:any};
+  ViewJobDetails: { job: any };
+  AppliedJobs: { job: any };
   SavedDetails: { job: any };
   SavedJobs: undefined;
   Profile: { retake?: boolean } | undefined
@@ -50,12 +53,17 @@ export type RootStackParamList = {
   passContent: { finalScore: number; testName: string };
   FailContent: undefined;
   TimeUp: undefined;
-  Badge: { skillName: string; testType: string };
+  Badge: { skillName: string; testType: string } | undefined;
   ChangePassword: undefined;
-  Notification:undefined;
+  Notification: undefined;
+  ResumeBuilder: undefined;
+  Drives:undefined;
+  MyResume:undefined;
+  Home:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
+
 
 const Appnavigator = () => {
   const { isAuthenticated, userToken, userId, userEmail } = useAuth(); // Assuming AuthProvider provides these
@@ -99,7 +107,7 @@ const Appnavigator = () => {
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPassword}
-          options={{ title: '' }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     );
@@ -133,7 +141,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
-            options={{ title: '' }}
+            options={{ headerShown: false }}
           />
 
           <Stack.Screen
@@ -151,12 +159,12 @@ const Appnavigator = () => {
             component={JobDetailsScreen}
             options={{ title: 'Job Details' }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="ViewJobDetails"
             component={ViewJobDetails}
-          
+
           />
-           <Stack.Screen
+          <Stack.Screen
             name="SavedDetails"
             component={SavedDetails}
             options={{ title: 'Job Details' }}
@@ -192,9 +200,20 @@ const Appnavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-          name="Notification"
-          component={Notification}
-        />
+            name="Notification"
+            component={Notification}
+          />
+          <Stack.Screen
+            name="ResumeBuilder"
+            component={ResumeBuilder}
+            options={{ title: 'Resume Builder' }}
+          />
+          <Stack.Screen
+            name="Drives"
+            component={Drives}
+           
+          />
+        
         </>
       )}
     </Stack.Navigator>
@@ -203,24 +222,24 @@ const Appnavigator = () => {
 
 const AppWithProfileProvider = () => {
   const { userToken, userId } = useAuth();
-   // Access token and user ID from AuthProvider
-    return (
+
+  return (
     <ProfilePhotoProvider userToken={userToken} userId={userId}>
-      <NavigationContainer>
-       <Appnavigator />
-       <Toast />
-        </NavigationContainer>
-         </ProfilePhotoProvider>
-          );
-         };
+      <NavigationContainer >
+        <Appnavigator />
+        <Toast />
+      </NavigationContainer>
+    </ProfilePhotoProvider>
+  );
+};
 
 const App = () => {
 
- return (
-   <AuthProvider>
-     <AppWithProfileProvider />
-   </AuthProvider>
- );
+  return (
+    <AuthProvider>
+      <AppWithProfileProvider />
+    </AuthProvider>
+  );
 };
 
 export default App;

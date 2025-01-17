@@ -8,13 +8,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { ProfileService } from '../../services/profile/ProfileService';
 import { useAuth } from '../../context/Authcontext';
-
+import API_BASE_URL from '../../services/API_Service';
 
 const { width } = Dimensions.get('window');
 
 
 
-const Badge = ({ route, navigation }: any) => {
+const Badge = ({ route,navigation }: any) => {
   const { isTestComplete } = route.params || { isTestComplete: false }; // Default to false if not passed
   const [selectedStep, setSelectedStep] = useState(1); // Default to Step 1 for new users
   const [timer, setTimer] = useState<null | { days: number, hours: number, minutes: number }>(null); // Set the initial timer in seconds
@@ -31,7 +31,7 @@ const Badge = ({ route, navigation }: any) => {
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const [skillBadges, setSkillBadges] = useState<any[]>([]); // For storing the fetched skill badges data
   const [skillLoading, setSkillLoading] = useState(true); // Loading state for skill badges
-  const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com';
+  
 
   const testImage: Record<string, any> = {
     Angular: require('../../assests/Images/Test/Angular.png'),
@@ -41,14 +41,14 @@ const Badge = ({ route, navigation }: any) => {
     'C Sharp': require('../../assests/Images/Test/CSharp.png'),
     CSS: require('../../assests/Images/Test/CSS.png'),
     Django: require('../../assests/Images/Test/Django.png'),
-    DotNet: require('../../assests/Images/Test/Dot Net.png'),
+   '.Net':require('../../assests/Images/Test/Dot Net.png'),
     Flask: require('../../assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
     HTML: require('../../assests/Images/Test/HTML.png'),
     JavaScript: require('../../assests/Images/Test/JavaScript.png'),
     Jsp: require('../../assests/Images/Test/JSP.png'),
     'Manual Testing': require('../../assests/Images/Test/ManualTesting.png'),
-    MongoDB: require('../../assests/Images/Test/MongoDB.png'),
+    'Mongo DB': require('../../assests/Images/Test/MongoDB.png'),
     Python: require('../../assests/Images/Test/Python.png'),
     React: require('../../assests/Images/Test/React.png'),
     'Regression Testing': require('../../assests/Images/Test/RegressionTesting.png'),
@@ -58,7 +58,8 @@ const Badge = ({ route, navigation }: any) => {
     TypeScript: require('../../assests/Images/Test/TypeScript.png'),
     Spring: require('../../assests/Images/Test/Spring.png'),
     SQL: require('../../assests/Images/Test/MySQL.png'),
-    Css: require('../../assests/Images/Test/CSS.png')
+    Css: require('../../assests/Images/Test/CSS.png'),
+    MySQL: require('../../assests/Images/Test/MySQL.png'),
   };
 
     const fetchTestStatus = async () => {
@@ -677,6 +678,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 20,
+    color:'#0D0D0D',
   },
   progressContainer: {
     flexDirection: 'row',

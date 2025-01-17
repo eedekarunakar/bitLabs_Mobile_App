@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { JobData } from '../../models/Jobs/ApplyJobmodel';
-const API_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com/applyjob/applicant';
+import API_BASE_URL from '../API_Service';
+const API_URL = API_BASE_URL;
 
 export interface JobAlert {
   alertsId: string;
@@ -15,7 +16,7 @@ export interface JobAlert {
 
 export const fetchJobAlerts = async (userId: number|null, userToken: string|null): Promise<JobAlert[]> => {
   try {
-    const response = await axios.get(`${API_URL}/job-alerts/${userId}`, {
+    const response = await axios.get(`${API_URL}/applyjob/applicant/job-alerts/${userId}`, {
       headers: { Authorization: `Bearer ${userToken}` },
     });
     return response.data;
@@ -28,7 +29,7 @@ export const fetchJobAlerts = async (userId: number|null, userToken: string|null
 export const markAlertAsSeen = async (alertId: string, userToken: string|null): Promise<void> => {
   try {
     await axios.put(
-      `${API_URL}/mark-alert-as-seen/${alertId}`,
+      `${API_URL}/applyjob/applicant/mark-alert-as-seen/${alertId}`,
       {},
       { headers: { Authorization: `Bearer ${userToken}` } }
     );
@@ -82,7 +83,7 @@ const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
 export const fetchJobDetails = async (jobId: number|null, userToken: string | null,apply:number) => {
   try {
     const response = await axios.get(
-      `https://g23jza8mtp.ap-south-1.awsapprunner.com/viewjob/applicant/viewjob/${jobId}`,
+      `${API_URL}/viewjob/applicant/viewjob/${jobId}`,
       {
         headers: { Authorization: `Bearer ${userToken}` },
       }

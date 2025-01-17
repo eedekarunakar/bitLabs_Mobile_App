@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { saveJob, applyJob } from '../../services/Jobs/JobDetails'; // Import API functions
@@ -11,7 +11,7 @@ import { ProfileService } from '../../services/profile/ProfileService';
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
 import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { ScrollView } from 'react-native-gesture-handler';
+
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -32,10 +32,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const [skills, setSkills] = useState<string[]>([]); // Explicitly setting the type as string[]
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
   const [matchedSkills, setMatchedSkills] = useState<string[]>([]);
-  const [percent, setPercent] = useState<number>(0); 
+  const [percent, setPercent] = useState<number>(0);
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
-  const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);   
+  const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
 
   const courseImages: Record<string, any> = {
     "HTML&CSS": require('../../assests/Images/Html&Css.png'),
@@ -43,26 +43,32 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "JAVASCRIPT": require('../../assests/Images/JavaScript.png'),
     "MYSQL": require('../../assests/Images/Mysqll.png'),
     "REACT": require('../../assests/Images/React.png'),
-    "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
-    "PYTHON":require('../../assests/Images/python.png'),
+    "SPRING BOOT": require('../../assests/Images/SpringBoot.png'),
+    "PYTHON": require('../../assests/Images/python.png'),
   };
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  // Format creation date
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${day}-${month}-${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
 
-  const courseUrlMap:Record<string,any> = {
+  const courseUrlMap: Record<string, any> = {
     "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
     "JAVA": "https://upskill.bitlabs.in/course/view.php?id=22",
     "PYTHON": "https://upskill.bitlabs.in/course/view.php?id=7",
     "MYSQL": "https://upskill.bitlabs.in/course/view.php?id=8",
     "JAVASCRIPT": "https://upskill.bitlabs.in/course/view.php?id=47",
     "REACT": "https://upskill.bitlabs.in/course/view.php?id=21",
-    "SPRING BOOT":"https://upskill.bitlabs.in/course/view.php?id=23"
+    "SPRING BOOT": "https://upskill.bitlabs.in/course/view.php?id=23"
   };
-  
+
   useEffect(() => {
-    
+
     const fetchProfileData = async () => {
       try {
         const profileData = await ProfileService.fetchProfile(userToken, userId);
@@ -70,109 +76,110 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           skill.skillName.toUpperCase()
         );
 
-      // Storing applicant skills
-      console.log("Applicant Skills:", applicantSkills);
+        // Storing applicant skills
+        console.log("Applicant Skills:", applicantSkills);
         const jobData = await fetchJobDetails(job.id, userId, userToken);
         console.log(jobData);
-        setSkillProgressText(jobData.matchStatus); 
+        setSkillProgressText(jobData.matchStatus);
         const Scourse = jobData.sugesstedCourses;
-        
+
         // setSkills(job.skillsRequired.map((skill:any) => skill.skillName as string));
-        setSkills(job.skillsRequired.map((skill:{skillName:string})=>skill.skillName.toUpperCase()));
+        setSkills(job.skillsRequired.map((skill: { skillName: string }) => skill.skillName.toUpperCase()));
         setSuggestedCourses(Scourse);
-       
-        const matchPercentage =jobData.matchPercentage;
+
+        const matchPercentage = jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-        const matchskill = jobData.matchedSkills.map(skill =>skill.skillName.toUpperCase());
-        console.log("matchskill",matchskill);
-        console.log("skillsrequired",skillsRequired);
-        
+        // const matchskill = jobData.matchedSkills.map(skill =>skill.skillName.toUpperCase());
+        // console.log("matchskill",matchskill);
+        console.log("skillsrequired", skillsRequired);
 
-        
-      //   const perfectMatchedSkills = applicantSkills.filter((skill:any) => combinedSkills.includes(skill));
 
-      // // Find unmatched skills
-      // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
-    
-  
-         setPerfectMatchSkills(matchskill);
-         setUnmatchedSkills(skillsRequired);
-      //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
+
+        //   const perfectMatchedSkills = applicantSkills.filter((skill:any) => combinedSkills.includes(skill));
+
+        // // Find unmatched skills
+        // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
+
+
+        //  setPerfectMatchSkills(matchskill);
+        setPerfectMatchSkills(jobData.matchedSkills.map((skill: any) => skill.skillName));
+        setUnmatchedSkills(skillsRequired);
+        //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
         console.log(matchPercentage);
         setPercent(matchPercentage);
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
     };
-  
-    fetchProfileData();  
-  }, [job.id,userId ,userToken]);
-  
+
+    fetchProfileData();
+  }, [job.id, userId, userToken]);
+
 
   // const percentageMatch = matchPercentage;
 
   return (
-    
+
     <View style={styles.container}>
       <ScrollView>
-      <View style={styles.jobCard}>
-        <View style={styles.row}>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/50' }} // Replace with actual company logo URL
-            style={styles.companyLogo}
-          />
-          <View style={styles.jobDetails}>
-            <Text style={styles.jobTitle}>{job.jobTitle}</Text>
-            <Text style={styles.companyName}>{job.companyname}</Text>
-          </View>
-        </View>
-        <View style={styles.tagRow}>
-          <View style={[styles.tag, styles.locationContainer]}>
+        <View style={styles.jobCard}>
+          <View style={styles.row}>
             <Image
-              source={require('../../assests/Images/rat/loc.png')}
-              style={styles.locationIcon}
+              source={require('../../assests/Images/company.png')}
+              style={styles.companyLogo}
             />
-            <Text style={styles.locationText}>{job.location}</Text>
-          </View>
-          <View style={styles.oval}>
-            <Image
-              source={require('../../assests/Images/rat/exp.png')}
-              style={styles.brieficon}
-            />
-            <Text style={styles.ovalText}>
-              Exp: {job.minimumExperience} - {job.maximumExperience} years
-            </Text>
-          </View>
-          <Text style={styles.tag}>
-            ₹ {job.minSalary} - ₹ {job.maxSalary} LPA
-          </Text>
-          <Text style={styles.tag}>{job.employeeType}</Text>
-        </View>
-        <Text style={styles.postedOn}>
-          Posted on {formatDate(job.creationDate)}
-        </Text>
-      </View>
-      <View style={styles.jobCard}>
-        <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
-        <Text style={styles.message}>
-          The more the probability, the more are the chances to get hired.
-        </Text>
-        <SemiCircleProgress percentage ={percent}/>
-       
-        <View>
-           <View style={styles.centeredView}>
-                <Text style={styles.centeredText}>{skillProgressText}</Text>
+            <View style={styles.jobDetails}>
+              <Text style={styles.jobTitle}>{job.jobTitle}</Text>
+              <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
+          </View>
+          <View style={styles.tagRow}>
+            <View style={[styles.tag, styles.locationContainer]}>
+              <Image
+                source={require('../../assests/Images/rat/loc.png')}
+                style={styles.locationIcon}
+              />
+              <Text style={styles.locationText}>{job.location}</Text>
+            </View>
+            <View style={styles.oval}>
+              <Image
+                source={require('../../assests/Images/rat/exp.png')}
+                style={styles.brieficon}
+              />
+              <Text style={styles.ovalText}>
+                Exp: {job.minimumExperience} - {job.maximumExperience} years
+              </Text>
+            </View>
+            <Text style={styles.tag}>
+              ₹ {job.minSalary} - ₹ {job.maxSalary} LPA
+            </Text>
+            <Text style={styles.tag}>{job.employeeType}</Text>
+          </View>
+          <Text style={styles.postedOn}>
+            Posted on {formatDate(job.creationDate)}
+          </Text>
         </View>
+        <View style={styles.jobCard}>
+          <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
+          <Text style={styles.message}>
+            The more the probability, the more are the chances to get hired.
+          </Text>
+          <SemiCircleProgress percentage={percent} />
 
-        {/* <View style={styles.skillsContainer}>
+          <View>
+            <View style={styles.centeredView}>
+              <Text style={styles.centeredText}>{skillProgressText}</Text>
+            </View>
+          </View>
+
+          {/* <View style={styles.skillsContainer}>
           {skills.map((skill: string, index: number) => (
             <Text key={index} style={matchedSkills.includes(skill) ? [styles.skillTag, styles.matchedSkill] : styles.skillTag}>
               {skill}
             </Text>
           ))}
         </View> */}
-        {/* <View style={styles.skillsContainer}>
+          {/* <View style={styles.skillsContainer}>
   {skills
     .filter(skill => perfectMatchSkills.includes(skill))
     .map((skill, index) => (
@@ -190,72 +197,66 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     ))}
 </View> */}
 
-<View style={styles.skillsContainer}>
-  {/* Perfectly Matched Skills */}
-  {perfectMatchSkills.length > 0 && (
-    <View style={styles.skillRow}>
-        {perfectMatchSkills.map((skill, index) => (
-          <Text key={index} style={[styles.skillTag, styles.matchedSkills]}>
-           {skill}
-          </Text>
-        ))}
-      </View>
-
-  )}
-
-  {/* Unmatched Skills */}
-  {unmatchedSkills.length > 0 && (
-    <View style={styles.skillRow}>
-        {unmatchedSkills.map((skill, index) => (
-          
-          <Text key={index} style={[styles.skillTag, styles.unmatchedSkill]}>
-            {skill}
-          </Text>
-        ))}
-      </View>
-  
-  )}
-</View>
-
-      </View>
-      <View style={styles.jobCard}>
-        <Text style={styles.jobdestitle}>Full Job Description</Text>
-        <Text style={styles.description}>
-          {job.description.replace(/<[^>]+>/g, '')}
-        </Text>
-      </View>
-
-         {/* Suggested Courses Container */}
-         {suggestedCourses && suggestedCourses.length > 0 && (
-  <View style={styles.jobCard}>
-    <Text style={styles.jobdestitle}>Suggested Courses</Text>
-    <View>
-      {suggestedCourses.map((course, index) => (
-        <View key={index} style={styles.courseCard}>
-          {/* Check if the course has a matching image */}
-          {courseImages[course] ? (
-            <TouchableOpacity
-            style={styles.imageRow}
-            onPress={() => Linking.openURL(courseUrlMap[course])}
-          >
-            <Image
-              source={courseImages[course]}
-              style={styles.courseImage}
-            />  
-            <Image source={require('../../assests/Images/external-link2.png')} style={styles.externalLinkIcon}/>
-        
-            </TouchableOpacity>
-          ) : (
-            <Text style={styles.fallbackText}>Image not found</Text>
-          )}
-          <Toast/>
+          <View style={styles.skillsContainer}>
+            {perfectMatchSkills.map((skill, index) => (
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
+                {skill}
+              </Text>
+            ))}
+            {unmatchedSkills.map((skill, index) => (
+              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
+                <Image
+                  source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
+                  style={styles.unmatchedSkillIcon} // Define this style as needed
+                />
+                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-        
-      ))}
-    </View>
-  </View>
-)}
-</ScrollView>
+
+        <View style={styles.jobCard}>
+          <Text style={styles.jobdestitle}>Full Job Description</Text>
+
+          <Text style={styles.description}>
+            {job.description.replace(/<[^>]+>/g, '')}
+          </Text>
+
+
+        </View>
+
+
+        {/* Suggested Courses Container */}
+        {suggestedCourses && suggestedCourses.length > 0 && (
+          <View style={styles.jobCard}>
+            <Text style={styles.jobdestitle}>Suggested Courses</Text>
+            <View>
+              {suggestedCourses.map((course, index) => (
+                <View key={index} style={styles.courseCard}>
+                  {/* Check if the course has a matching image */}
+                  {courseImages[course] ? (
+                    <TouchableOpacity
+                      style={styles.imageRow}
+                      onPress={() => Linking.openURL(courseUrlMap[course])}
+                    >
+                      <Image
+                        source={courseImages[course]}
+                        style={styles.courseImage}
+                      />
+                      <Image source={require('../../assests/Images/external-link2.png')} style={styles.externalLinkIcon} />
+
+                    </TouchableOpacity>
+                  ) : (
+                    <Text style={styles.fallbackText}>Image not found</Text>
+                  )}
+                  <Toast />
+                </View>
+
+              ))}
+            </View>
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -290,10 +291,10 @@ const styles = StyleSheet.create({
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6', // Background color for the oval
+    backgroundColor: '#f6f6f6',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 50, // Makes the container oval
+    borderRadius: 50,
     marginBottom: 8,
     marginRight: 6
   },
@@ -330,10 +331,10 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   matchedSkill: {
-    backgroundColor:'#498C07',
-    
+    backgroundColor: '#498C07',
+
   },
-  
+
   circleProgress: {
     transform: [{ rotate: '0deg' }], // Rotate to start progress from the bottom
   },
@@ -414,15 +415,15 @@ const styles = StyleSheet.create({
   courseImage: {
     // width: '70%',                  // Adjust width to fit the image
     height: 50,                 // Maintain aspect ratio
-    resizeMode: 'contain', 
-          // Ensures the image covers the full area
+    resizeMode: 'contain',
+    // Ensures the image covers the full area
   },
   imageRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'space-between',
-    width:'100%',
-    paddingRight:10,
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingRight: 10,
   },
   postedOn: {
     fontSize: 12,
@@ -547,19 +548,18 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Vertically center items
   },
   skillTag: {
-    flex:0,
+    flex: 0,
     backgroundColor: '#F46F16',
     color: 'white',
-    paddingVertical: 4,
-    paddingHorizontal: 4,
+    padding:5,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,
     fontSize: 14,
-    textAlign:'center',
+    textAlign: 'center',
   },
   skillRow: {
-    flex:0,
+    flex: 0,
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 6,
@@ -579,9 +579,9 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   centeredView: {
-    justifyContent:"center",
-    alignSelf:"center",
-    marginLeft:-20,
+    justifyContent: "center",
+    alignSelf: "center",
+    marginLeft: -20,
 
   },
   centeredText: {
@@ -590,20 +590,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 35.27,
     textAlign: 'left',
-    color:'#000000',
+    color: '#000000',
   },
   matchedSkills: {
-    color:'#fff',
-    backgroundColor:'#498C07',
-    fontSize:12,
+    color: '#fff',
+    backgroundColor: '#498C07',
+    fontSize: 12,
   },
-  
+
   unmatchedSkill: {
     color: '#fff',
-    backgroundColor :'#BF2308',
-    fontSize:12,
+    backgroundColor: '#BF2308',
+    fontSize: 12,
   },
-  
+  unmatchedSkillContainer: {
+    flexDirection: 'row', // Align image and text side by side
+    alignItems: 'center', // Vertically center image and text
+    backgroundColor: '#BF2308', // Red background
+    padding:3, // Add padding to the top and bottom
+    borderRadius: 10, // Rounded corners
+    marginRight: 8, // Space between skill tags
+    marginBottom: 4, // Space between rows of skills
+  },
+  unmatchedSkillIcon: {
+    width: 16, // Adjust width as needed
+    height: 16, // Adjust height as needed
+    marginRight: 8, // Space between image and text
+  },
+
+
+
 
 });
 

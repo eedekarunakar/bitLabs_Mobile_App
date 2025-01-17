@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { JobData } from '../../models/Jobs/ApplyJobmodel';
+import API_BASE_URL from '../API_Service';
+
 
 const API_URLS = {
   recommendedJobs: (userId: number |null) =>
-    `https://g23jza8mtp.ap-south-1.awsapprunner.com/recommendedjob/findrecommendedjob/${userId}`,
+    `${API_BASE_URL}/recommendedjob/findrecommendedjob/${userId}`,
   jobDetails: (jobId: number, userId: number|null) =>
-    `https://g23jza8mtp.ap-south-1.awsapprunner.com/viewjob/applicant/viewjob/${jobId}/${userId}`,
+    `${API_BASE_URL}/viewjob/applicant/viewjob/${jobId}/${userId}`,
 };
 
 export const fetchRecommendedJobs = async (userId: number| null, userToken: string|null): Promise<JobData[]> => {

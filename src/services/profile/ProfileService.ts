@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { DocumentPickerResponse } from 'react-native-document-picker';
+import API_BASE_URL from '../API_Service';
 
-
-const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com'; // Replace with actual API base URL
+// const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com'; // Replace with actual API base URL
 
 export const ProfileService = {
   async fetchProfile(userToken: string | null, userId: number | null) {

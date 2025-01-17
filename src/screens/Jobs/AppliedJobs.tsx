@@ -21,10 +21,14 @@ const AppliedJobs = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList, 'AppliedJobs'>>();
  
-  const formatDate = (dateArray: [number, number, number]): string => {
-    const [year, month, day] = dateArray;
-    return `${day}-${month}-${year}`;
-  };
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const formatDate = (dateArray: [number, number, number]): string => {
+      const [year, month, day] = dateArray;
+      return `${monthNames[month - 1]} ${day}, ${year}`;
+    };;
  
   const renderJobs = () => {
     if (loading) {
@@ -51,7 +55,7 @@ const AppliedJobs = () => {
       >
         <View style={styles.row}>
           <Image
-            source={{ uri: job.logoFile || 'https://via.placeholder.com/50' }}
+            source={require('../../assests/Images/company.png')}
             style={styles.companyLogo}
           />
           <View style={styles.jobDetails}>
@@ -178,12 +182,21 @@ locationIcon: {
     flex: 1,
   },
   jobTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#121212', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontSize: 16, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '700', // Font weight
+    lineHeight: 16, // Adjust line height as needed
+    textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
-    fontSize: 14,
-    color: '#888',
+    fontSize: 12,
+    fontFamily: "Plus Jakarta Sans",
+    fontStyle: 'normal',
+    fontWeight:600,
+    color: 'rgba(83, 83, 83, 0.80)',
+    marginVertical: 4,
   },
   tagRow: {
     flexDirection: 'row',
@@ -203,8 +216,12 @@ locationIcon: {
     marginBottom: 8,
   },
   postedOn: {
-    fontSize: 12,
-    color: '#888',
+    color: '#979696', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontSize: 8, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '500', // Font weight
+    lineHeight: 23.76, // Line height (in points, not percentage)
   },
 });
  

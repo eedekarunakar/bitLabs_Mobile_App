@@ -1,9 +1,9 @@
 import axios, { AxiosError } from 'axios';
-
+import API_BASE_URL from '../API_Service';
 export const fetchProfileId = async (id: number, token: string): Promise<{ success: boolean; profileid?: number }> => {
     try {
         const response = await axios.get(
-            `https://g23jza8mtp.ap-south-1.awsapprunner.com/applicantprofile/${id}/profileid`,
+            `${API_BASE_URL}/applicantprofile/${id}/profileid`,
             {
                 headers: { Authorization: `Bearer ${token}` },
             }

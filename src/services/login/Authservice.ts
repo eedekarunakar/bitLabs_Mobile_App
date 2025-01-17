@@ -2,6 +2,7 @@ import axios, {AxiosError} from 'axios';
 import * as Keychain from 'react-native-keychain';
  
 import * as CryptoJS from 'crypto-js';
+import API_BASE_URL from '../API_Service';
  
 export interface AuthResponse {
   success: boolean;
@@ -23,7 +24,30 @@ const encryptPassword = (password: string, secretkey: string) => {
   ).toString();
   return {encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64)};
 };
- 
+export const handleLoginWithEmail = async (email: string): Promise<AuthResponse> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/applicant/applicantLogin`, { email:email });
+    if (response.status === 200) {
+      const token = response.data.data.jwt;
+      const id = response.data.id;
+
+      if (token && id) {
+        return { success: true, data: { token, id } };
+      }
+      return { success: false, message: 'Invalid response data' };
+    }
+    return { success: false, message: 'Login failed' };
+  } catch (error) {
+    console.error('Error occurred during login:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('API Error:', error.response.data);
+      return { success: false, message: error.response.data };
+    } else {
+      return { success: false, message: 'Unknown error' };
+    }
+  }
+};
+
 export const handleLogin = async (
   loginemail: string,
   loginpassword: string,
@@ -33,9 +57,9 @@ export const handleLogin = async (
  
     console.log('Encrypted Password:', encryptedPassword);
     const response = await axios.post(
-      'https://g23jza8mtp.ap-south-1.awsapprunner.com/applicant/applicantLogin',
+      `${API_BASE_URL}/applicant/applicantLogin`,
       {
-        email: loginemail,
+        email: loginemail.toLowerCase(),
         password: encryptedPassword,
         iv: iv,
       }
@@ -70,9 +94,9 @@ export const handleSignup = async (
 ): Promise<AuthResponse> => {
   try {
     const response = await axios.post(
-      'https://g23jza8mtp.ap-south-1.awsapprunner.com/applicant/applicantsendotp',
+      `${API_BASE_URL}/applicant/applicantsendotp`,
       {
-        email: signupEmail,
+        email: signupEmail.toLowerCase(),
         mobilenumber: signupNumber,
       },
     );
@@ -100,16 +124,16 @@ export const handleOTP = async (
 ): Promise<AuthResponse> => {
   try {
     const response = await axios.post(
-      'https://g23jza8mtp.ap-south-1.awsapprunner.com/applicant/applicantverify-otp',
+      `${API_BASE_URL}/applicant/applicantverify-otp`,
       {
         otp: otp,
-        email: signupEmail,
+        email: signupEmail.toLowerCase(),
       },
     );
  
     if (response.status === 200) {
       const registeruser = await axios.post(
-        'https://g23jza8mtp.ap-south-1.awsapprunner.com/applicant/saveApplicant',
+        `${API_BASE_URL}/applicant/saveApplicant`,
         {
           name: signupName,
           email: signupEmail,

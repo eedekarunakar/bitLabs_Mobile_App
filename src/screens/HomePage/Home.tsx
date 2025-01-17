@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import RecommendedJobs from './Jobs';
 import {RootStackParamList }from '../../../New';
 import  { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import Drives from './Drives';
 //import { AuthContext } from './AuthContext'
 import {
     View,
@@ -34,13 +35,16 @@ function Dashboard() {
   const { jobCounts, loading, error } = useJobCounts(userId,userToken);
 
   const {profileData} = useProfileViewModel(userToken,userId);
-  const {applicant} = profileData||[];
+  const {basicDetails} = profileData||[];
+  console.log('prof',basicDetails)
   const navigation = useNavigation<NavigationProp>();
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading job data...</Text>
+        <Text style={{ color: '#0D0D0D' }}>Loading job data...</Text>
+
       </View>
     );
   }
@@ -59,14 +63,14 @@ function Dashboard() {
       <ScrollView 
   contentContainerStyle={{ paddingBottom: screenHeight * 0.04 }} // Add bottom padding
 >
-        <Text style={styles.textBelowNavbar}>Hello, {applicant?.name
-    ? applicant.name.charAt(0).toUpperCase() + applicant.name.slice(1)
+        <Text style={styles.textBelowNavbar}>Hello, {basicDetails?.firstName
+    ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
     : 'Guest'}</Text>
         <Text style={styles.textBelowNavbar1}>Welcome Back</Text>
 
         <View style={styles.cardContainer}>
           <View style={styles.row}>
-            <TouchableOpacity style={[styles.card, { borderColor: "#49C722", borderWidth: 1, backgroundColor: "#F3FFEF" }]}  onPress={() => navigation.navigate('Jobs')}>
+            <TouchableOpacity style={[styles.card, { borderColor: "#49C722", borderWidth: 1, backgroundColor: "#F3FFEF" }]}  onPress={() => navigation.navigate('Jobs', { tab: 'recommended' })}>
               <View style={[styles.cardLogoContainer, { backgroundColor: "#0A89101A" }]}>
                 <Image source={require('../../assests/Images/Recommendedjobs.png')} style={styles.cardLogo} />
               </View>
@@ -74,7 +78,7 @@ function Dashboard() {
               <Text style={styles.cardNumber}>{jobCounts?.recommendedJobs ?? '0'}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.card, { borderColor: "#FFBF4F", borderWidth: 1, backgroundColor: "#FFF7E9" }]}>
+            <TouchableOpacity style={[styles.card, { borderColor: "#FFBF4F", borderWidth: 1, backgroundColor: "#FFF7E9" }]} onPress={() => navigation.navigate('Jobs', { tab: 'saved' })}>
               <View style={[styles.cardLogoContainer, { backgroundColor: "#FFB3211A" }]}>
                 <Image source={require('../../assests/Images/Savedjobs.png')} style={styles.cardLogo} />
               </View>
@@ -84,7 +88,7 @@ function Dashboard() {
           </View>
 
           <View style={styles.row}>
-            <TouchableOpacity  style={[styles.card, { borderColor: "#FF9F7E", borderWidth: 1, backgroundColor: "#FFEEE9" }]}>
+            <TouchableOpacity  style={[styles.card, { borderColor: "#FF9F7E", borderWidth: 1, backgroundColor: "#FFEEE9" }]}onPress={() => navigation.navigate('Jobs', { tab: 'applied' })}>
               <View style={[styles.cardLogoContainer, { backgroundColor: "#FFDCD0" }]}>
                 <Image source={require('../../assests/Images/Apply.png')} style={styles.cardLogo} />
               </View>
@@ -92,7 +96,7 @@ function Dashboard() {
               <Text style={styles.cardNumber}>{jobCounts?.appliedJobs ?? '0'}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.card, { borderColor: "#A075FB", borderWidth: 1, backgroundColor: "#F0E9FF" }]}>
+            <TouchableOpacity style={[styles.card, { borderColor: "#A075FB", borderWidth: 1, backgroundColor: "#F0E9FF" }]}  onPress={() => navigation.navigate('Drives')}>
               <View style={[styles.cardLogoContainer, { backgroundColor: "#E5D9FF" }]}>
                 <Image source={require('../../assests/Images/Drive.png')} style={styles.cardLogo} />
               </View>
@@ -119,6 +123,8 @@ loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    color:'#0D0D0D'
+
 },
 navbar: {
     flexDirection: "row",

@@ -1,82 +1,87 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+ 
+const screenWidth = Dimensions.get('window').width;
+ 
 type ProgressBarProps = {
   currentStep: number;
   onStepPress?: (step: number) => void;
 };
-
+ 
 const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, onStepPress }) => {
   const steps = [
-    { id: 1, label: 'Personal       Info' },
+    { id: 1, label: '  Personal    Info' },
     { id: 2, label: 'Professional Details' },
     { id: 3, label: 'Upload Resume' },
   ];
-
+ 
+  // Calculate dynamic line width based on screen size and number of steps
+  const dynamicLineWidth = (screenWidth - steps.length * 60) / (steps.length - 1);
+ 
   return (
-    <View style={styles.container}>
-      <View style={styles.progressContainer}>
+<View style={styles.container}>
+<View style={styles.progressContainer}>
         {steps.map((step, index) => {
           const isActive = step.id === currentStep;
           const isCompleted = step.id < currentStep;
           const isLastStep = index === steps.length - 1;
-
+ 
           return (
-            <View key={step.id} style={styles.stepWrapper}>
+<View key={step.id} style={styles.stepWrapper}>
               {/* Step Circle */}
-              <TouchableOpacity
+<TouchableOpacity
                 onPress={() => onStepPress?.(step.id)}
                 style={[
                   styles.stepCircle,
                   isActive && styles.activeStepCircle,
-                  isCompleted && styles.completedStepCircle, // Add style for completed step
+                  isCompleted && styles.completedStepCircle,
                   isActive || isCompleted ? { borderColor: 'transparent' } : {},
                 ]}
-              >
-                <Text
+>
+<Text
                   style={[
                     styles.stepText,
                     isActive && styles.activeStepText,
-                    isCompleted && styles.completedStepText, // Text style for completed step
+                    isCompleted && styles.completedStepText,
                   ]}
-                >
+>
                   {step.id}
-                </Text>
-              </TouchableOpacity>
-
+</Text>
+</TouchableOpacity>
+ 
               {/* Connecting Line */}
               {!isLastStep && (
-                <View
+<View
                   style={[
                     styles.line,
-                    isCompleted && styles.completedLine, // Green line for completed steps
-                    isActive && styles.activeLine, // Orange line for current step
+                    { width: dynamicLineWidth }, // Dynamic width
+                    isCompleted && styles.completedLine,
+                    isActive && styles.activeLine,
                   ]}
                 />
               )}
-
+ 
               {/* Step Label */}
-              <Text style={styles.stepLabel}>{step.label}</Text>
-            </View>
+<Text style={styles.stepLabel}>{step.label}</Text>
+</View>
           );
         })}
-      </View>
-    </View>
+</View>
+</View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 0,
     padding: 20,
     backgroundColor: '#fff',
-    width: '100%', // Ensure container takes full width of screen
+    width: '100%',
   },
   progressContainer: {
     flexDirection: 'row',
-    alignItems: 'center', // Center the circles along the row
-    justifyContent: 'space-between', // Space the circles evenly without overflow
-    width: '100%', // Ensures the container spans the full width
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   stepWrapper: {
     alignItems: 'center',
@@ -93,13 +98,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#F97316',
     zIndex: 1,
-    alignSelf: 'center', 
+    alignSelf: 'center',
   },
   activeStepCircle: {
-    backgroundColor: '#F97316', // Orange for active step
+    backgroundColor: '#F97316',
   },
   completedStepCircle: {
-    backgroundColor: 'green', // Green for completed steps
+    backgroundColor: 'green',
   },
   stepText: {
     fontSize: 16,
@@ -107,11 +112,11 @@ const styles = StyleSheet.create({
   },
   activeStepText: {
     fontWeight: 'bold',
-    color: '#fff', // White text for active step
+    color: '#fff',
   },
   completedStepText: {
     fontWeight: 'bold',
-    color: '#fff', // White text for completed steps
+    color: '#fff',
   },
   stepLabel: {
     marginTop: 8,
@@ -124,17 +129,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: '50%',
-    width: 100, // Adjust width to prevent overflow
     height: 2,
-    backgroundColor: '#F97316', // Orange line for active step
+    backgroundColor: '#F97316',
     zIndex: 0,
   },
   activeLine: {
     backgroundColor: '#F97316',
   },
   completedLine: {
-    backgroundColor: 'green', // Green line for completed steps
+    backgroundColor: 'green',
   },
 });
-
+ 
 export default ProgressBar;
+ 

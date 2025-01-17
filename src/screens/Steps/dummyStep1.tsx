@@ -6,18 +6,20 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import ProgressBar from '../../components/progessBar/ProgressBar';
-
+import LinearGradient from 'react-native-linear-gradient';
+ 
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
-
+ 
 interface Step1Props {
   route: Step1ScreenRouteProp;
   navigation: any;
 }
-
+ 
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
   const { email } = route.params;
   const [step, setStep] = useState(1);
@@ -26,13 +28,13 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     lastName: '',
     whatsappNumber: '',
   });
-
+ 
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
     whatsappNumber: '',
   });
-
+ 
   const newErrors = {
     firstName: '',
     lastName: '',
@@ -45,19 +47,19 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       lastName: '',
       whatsappNumber: '',
     };
-
+ 
     // Validate first name
     if (!formData.firstName || formData.firstName.length < 3) {
       newErrors.firstName = 'First name should be at least 3 characters long.';
       isValid = false;
     }
-
+ 
     // Validate last name
     if (!formData.lastName || formData.lastName.length < 3) {
       newErrors.lastName = 'Last name should be at least 3 characters long.';
       isValid = false;
     }
-
+ 
     // Validate WhatsApp number
     const whatsappRegex = /^[6-9]\d{9}$/;
     if (!whatsappRegex.test(formData.whatsappNumber)) {
@@ -65,11 +67,11 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         'Should be 10 digits and start with 6, 7, 8, or 9.';
       isValid = false;
     }
-
+ 
     setErrors(newErrors);
     return isValid;
   };
-
+ 
   const handleNext = () => {
     if (validateForm()) {
       console.log('Form Data:', { ...formData, email });
@@ -81,14 +83,15 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       }); // Proceed to next step
     }
   };
-
+ 
   return (
     <View style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
       <Image
         style={styles.logo}
         source={require('../../assests/Images/rat/logo.png')} // Replace with your actual logo path
       />
-
+ 
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.completeProfile}>Complete Your Profile</Text>
@@ -96,15 +99,15 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             Fill the form fields to go next step
           </Text>
         </View>
-
+ 
         {/* ProgressBar with currentStep */}
         <ProgressBar
           currentStep={step}
           onStepPress={(stepId) => setStep(stepId)}
         />
-
+ 
         <TextInput
-          placeholder="First Name"
+          placeholder="First Name" placeholderTextColor="#B1B1B1"
           style={styles.input}
           value={formData.firstName}
           onChangeText={(text) =>
@@ -114,9 +117,9 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         {errors.firstName ? (
           <Text style={styles.errorText}>{errors.firstName}</Text>
         ) : null}
-
+ 
         <TextInput
-          placeholder="Last Name"
+          placeholder="Last Name" placeholderTextColor="#B1B1B1"
           style={styles.input}
           value={formData.lastName}
           onChangeText={(text) =>
@@ -126,7 +129,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         {errors.lastName ? (
           <Text style={styles.errorText}>{errors.lastName}</Text>
         ) : null}
-
+ 
         {/* Prefilled, non-editable Email field */}
         <TextInput
           value={email}
@@ -134,7 +137,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           editable={false}
         />
         <TextInput
-          placeholder="WhatsApp Number"
+          placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1"
           style={styles.input}
           value={formData.whatsappNumber}
           onChangeText={(text) =>
@@ -145,19 +148,27 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           <Text style={styles.errorText}>{errors.whatsappNumber}</Text>
         ) : null}
       </View>
-
+      </ScrollView>
+ 
       {/* Footer with Back and Next Buttons */}
       <View style={styles.footer}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.buttonContainer}>
+  <LinearGradient
+    colors={['#F97316', '#FAA729']}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 0 }}
+    style={[styles.nextButton, styles.applyButtonGradient]}
+  >
+    <TouchableOpacity style={styles.gradientTouchable} onPress={handleNext}>
+      <Text style={styles.nextButtonText}>Next</Text>
+    </TouchableOpacity>
+  </LinearGradient>
+</View>
       </View>
     </View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -166,6 +177,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
     paddingBottom: 75,
+  },
+  scrollView: {
+    flexGrow: 1,
+    paddingBottom: 100, // Adds padding to avoid initial overlap
   },
   logo: {
     width: 200,
@@ -178,11 +193,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
+   
     marginBottom: 40,
   },
   footer: {
@@ -192,7 +203,7 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 15,
     backgroundColor: '#fff',
-    borderTopWidth: 1,
+    
     borderTopColor: '#ccc',
   },
   buttonContainer: {
@@ -242,6 +253,14 @@ const styles = StyleSheet.create({
     marginTop: -8,
     marginBottom: 8,
   },
+  applyButtonGradient: {
+    width: '45%', // Adjust this if necessary
+  },
+  gradientTouchable: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
-
+ 
 export default Dummystep1;

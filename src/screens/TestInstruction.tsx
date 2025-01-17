@@ -31,6 +31,7 @@ import SpringBootData from '../models/data/Spring Boot.json';
 import TSData from '../models/data/TS.json';
 import SpringData from '../models/data/Spring.json';
 import SQLData from '../models/data/SQL.json'
+import API_BASE_URL from '../services/API_Service';
 
 const { width } = Dimensions.get('window');
 
@@ -73,7 +74,7 @@ const Test = ({ route, navigation }: any) => {
     const fetchTestStatus = async () => {
       try {
         const response = await fetch(
-          `https://g23jza8mtp.ap-south-1.awsapprunner.com/applicant1/tests/${userId}`,
+          `${API_BASE_URL}/applicant1/tests/${userId}`,
           {
             method: 'GET',
             headers: {
@@ -146,7 +147,7 @@ const Test = ({ route, navigation }: any) => {
         case 'Django':
           setTestData(DjangoData);
           break;
-        case 'DotNet':
+        case '.Net':
           setTestData(DotNetData);
           break;
         case 'Flask':
@@ -170,7 +171,7 @@ const Test = ({ route, navigation }: any) => {
         case 'Manual Testing':
           setTestData(ManualTestingData);
           break;
-        case 'MongoDB':
+        case 'Mongo DB':
           setTestData(MongoData);
           break;
         case 'React':
@@ -199,6 +200,9 @@ const Test = ({ route, navigation }: any) => {
           break;
         case 'Css':
           setTestData(CSSData)
+          break;
+        case 'MySQL':
+          setTestData(SQLData);
           break;
         default:
           setTestData({
@@ -261,7 +265,7 @@ const Test = ({ route, navigation }: any) => {
                 <Text style={styles.text1}>{testData.numberOfQuestions || 0}</Text>
               </View>
             </View>
-            <Text>Topics Covered</Text>
+            <Text style={{color:'#0D0D0D'}}>Topics Covered</Text>
             <Text style={{ lineHeight: 27, color: 'black' }}>
               {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
                 ? `${testData.topicsCovered.join(', ')}`
@@ -317,10 +321,9 @@ const Test = ({ route, navigation }: any) => {
 
 export default Test;
 
-
 const styles = StyleSheet.create({
   container: {
-    width: '93%',
+    width: width*0.93,
     height: 650,
     marginTop: 20,
     marginLeft: 13,
@@ -402,8 +405,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
   },
   footer: {
-    height: 93,
-    marginTop: 100,
+    height: 75,
     gap: 15,
     backgroundColor: '#FFF',
     justifyContent: 'center',

@@ -49,9 +49,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON": require('../../assests/Images/python.png'),
   };
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${day}-${month}-${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
 
   const courseUrlMap: Record<string, any> = {
@@ -86,8 +90,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
         const matchPercentage = jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-        const matchskill = jobData.matchedSkills.map(skill => skill.skillName.toUpperCase());
-        console.log("matchskill", matchskill);
+        // const matchskill = jobData.matchedSkills.map(skill => skill.skillName.toUpperCase());
+        // console.log("matchskill", matchskill);
         console.log("skillsrequired", skillsRequired);
 
 
@@ -98,7 +102,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
 
 
-        setPerfectMatchSkills(matchskill);
+        setPerfectMatchSkills(jobData.matchedSkills.map((skill: any) => skill.skillName));
         setUnmatchedSkills(skillsRequired);
         //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
         console.log(matchPercentage);
@@ -120,7 +124,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           position: 'bottom',
           text1: 'Success',
           text2: 'Job removed successfully!',
-          visibilityTime:5000,
+          visibilityTime: 5000,
         });
         navigation.goBack(); // Navigate back after removal
       }
@@ -131,7 +135,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         position: 'bottom',
         text1: 'Error',
         text2: 'Failed to remove job.',
-        visibilityTime:5000,
+        visibilityTime: 5000,
       });
     }
   };
@@ -167,64 +171,64 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
     <View style={styles.container}>
       <ScrollView>
-      <View style={styles.jobCard}>
-        <View style={styles.row}>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/50' }} // Replace with actual company logo URL
-            style={styles.companyLogo}
-          />
-          <View style={styles.jobDetails}>
-            <Text style={styles.jobTitle}>{job.jobTitle}</Text>
-            <Text style={styles.companyName}>{job.companyname}</Text>
-          </View>
-        </View>
-        <View style={styles.tagRow}>
-          <View style={[styles.tag, styles.locationContainer]}>
+        <View style={styles.jobCard}>
+          <View style={styles.row}>
             <Image
-              source={require('../../assests/Images/rat/loc.png')}
-              style={styles.locationIcon}
+              source={require('../../assests/Images/company.png')}
+              style={styles.companyLogo}
             />
-            <Text style={styles.locationText}>{job.location}</Text>
+            <View style={styles.jobDetails}>
+              <Text style={styles.jobTitle}>{job.jobTitle}</Text>
+              <Text style={styles.companyName}>{job.companyname}</Text>
+            </View>
           </View>
-          <View style={styles.oval}>
-            <Image
-              source={require('../../assests/Images/rat/exp.png')}
-              style={styles.brieficon}
-            />
-            <Text style={styles.ovalText}>
-              Exp: {job.minimumExperience} - {job.maximumExperience} years
+          <View style={styles.tagRow}>
+            <View style={[styles.tag, styles.locationContainer]}>
+              <Image
+                source={require('../../assests/Images/rat/loc.png')}
+                style={styles.locationIcon}
+              />
+              <Text style={styles.locationText}>{job.location}</Text>
+            </View>
+            <View style={styles.oval}>
+              <Image
+                source={require('../../assests/Images/rat/exp.png')}
+                style={styles.brieficon}
+              />
+              <Text style={styles.ovalText}>
+                Exp: {job.minimumExperience} - {job.maximumExperience} years
+              </Text>
+            </View>
+            <Text style={styles.tag}>
+              ₹ {job.minSalary} - ₹ {job.maxSalary} LPA
             </Text>
+            <Text style={styles.tag}>{job.employeeType}</Text>
           </View>
-          <Text style={styles.tag}>
-            ₹ {job.minSalary} - ₹ {job.maxSalary} LPA
+          <Text style={styles.postedOn}>
+            Posted on {formatDate(job.creationDate)}
           </Text>
-          <Text style={styles.tag}>{job.employeeType}</Text>
         </View>
-        <Text style={styles.postedOn}>
-          Posted on {formatDate(job.creationDate)}
-        </Text>
-      </View>
-      <View style={styles.jobCard}>
-        <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
-        <Text style={styles.message}>
-          The more the probability, the more are the chances to get hired.
-        </Text>
-        <SemiCircleProgress percentage={percent} />
+        <View style={styles.jobCard}>
+          <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
+          <Text style={styles.message}>
+            The more the probability, the more are the chances to get hired.
+          </Text>
+          <SemiCircleProgress percentage={percent} />
 
-        <View>
-          <View style={styles.centeredView}>
-            <Text style={styles.centeredText}>{skillProgressText}</Text>
+          <View>
+            <View style={styles.centeredView}>
+              <Text style={styles.centeredText}>{skillProgressText}</Text>
+            </View>
           </View>
-        </View>
 
-        {/* <View style={styles.skillsContainer}>
+          {/* <View style={styles.skillsContainer}>
           {skills.map((skill: string, index: number) => (
             <Text key={index} style={matchedSkills.includes(skill) ? [styles.skillTag, styles.matchedSkill] : styles.skillTag}>
               {skill}
             </Text>
           ))}
         </View> */}
-        {/* <View style={styles.skillsContainer}>
+          {/* <View style={styles.skillsContainer}>
   {skills
     .filter(skill => perfectMatchSkills.includes(skill))
     .map((skill, index) => (
@@ -242,73 +246,69 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     ))}
 </View> */}
 
-        <View style={styles.skillsContainer}>
-          {/* Perfectly Matched Skills */}
-          {perfectMatchSkills.length > 0 && (
-            <View style={styles.skillRow}>
-              {perfectMatchSkills.map((skill, index) => (
-                <Text key={index} style={[styles.skillTag, styles.matchedSkills]}>
-                  {skill}
-                </Text>
-              ))}
-            </View>
-
-          )}
-
-          {/* Unmatched Skills */}
-          {unmatchedSkills.length > 0 && (
-            <View style={styles.skillRow}>
-              {unmatchedSkills.map((skill, index) => (
-
-                <Text key={index} style={[styles.skillTag, styles.unmatchedSkill]}>
-                  {skill}
-                </Text>
-              ))}
-            </View>
-
-          )}
-        </View>
-
-      </View>
-      <View style={styles.jobCard}>
-        <Text style={styles.jobdestitle}>Full Job Description</Text>
-        <Text style={styles.description}>
-          {job.description.replace(/<[^>]+>/g, '')}
-        </Text>
-      </View>
-
-      {/* Suggested Courses Container */}
-      {suggestedCourses && suggestedCourses.length > 0 && (
-        <View style={styles.jobCard}>
-          <Text style={styles.jobdestitle}>Suggested Courses</Text>
-          <View>
-            {suggestedCourses.map((course, index) => (
-              <View key={index} style={styles.courseCard}>
-                {/* Check if the course has a matching image */}
-                {courseImages[course] ? (
-                  <TouchableOpacity
-                    style={styles.imageRow}
-                    onPress={() => Linking.openURL(courseUrlMap[course])}
-                  >
-                    <Image
-                      source={courseImages[course]}
-                      style={styles.courseImage}
-                    />
-                    <Image source={require('../../assests/Images/external-link2.png')} style={styles.externalLinkIcon} />
-
-                  </TouchableOpacity>
-                ) : (
-                  <Text style={styles.fallbackText}>Image not found</Text>
-                )}
-                <Toast />
+          <View style={styles.skillsContainer}>
+            {perfectMatchSkills.map((skill, index) => (
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
+                {skill}
+              </Text>
+            ))}
+            {unmatchedSkills.map((skill, index) => (
+              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
+                <Image
+                  source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
+                  style={styles.unmatchedSkillIcon} // Define this style as needed
+                />
+                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
               </View>
-
             ))}
           </View>
-        </View>
-      )}
 
-</ScrollView>
+
+        </View>
+        <View style={styles.jobCard}>
+          <Text style={styles.jobdestitle}>Full Job Description</Text>
+
+          <Text style={styles.description}>
+            {job.description.replace(/<[^>]+>/g, '')}
+          </Text>
+
+
+        </View>
+
+
+        {/* Suggested Courses Container */}
+        {suggestedCourses && suggestedCourses.length > 0 && (
+          <View style={styles.jobCard}>
+            <Text style={styles.jobdestitle}>Suggested Courses</Text>
+            <View>
+              {suggestedCourses.map((course, index) => (
+                <View key={index} style={styles.courseCard}>
+                  {/* Check if the course has a matching image */}
+                  {courseImages[course] ? (
+                    <TouchableOpacity
+                      style={styles.imageRow}
+                      onPress={() => Linking.openURL(courseUrlMap[course])}
+                    >
+                      <Image
+                        source={courseImages[course]}
+                        style={styles.courseImage}
+                      />
+                      <Image source={require('../../assests/Images/external-link2.png')} style={styles.externalLinkIcon} />
+
+                    </TouchableOpacity>
+                  ) : (
+                    <Text style={styles.fallbackText}>Image not found</Text>
+                  )}
+                  <Toast />
+                </View>
+
+              ))}
+            </View>
+          </View>
+        )}
+
+      </ScrollView>
+      <View style={{ height: 20 }} />
       <View style={styles.footerContainer}>
         {/* Save Job Button */}
         {isJobSaved ? (
@@ -320,7 +320,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             style={[styles.button, styles.saveButton]}
             onPress={handleRemoveJob}
           >
-            <Text style={styles.buttonText}>Remove Job</Text>
+            <Text style={styles.buttonText}>Remove</Text>
           </TouchableOpacity>
         )}
 
@@ -353,6 +353,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f6f6f6',
+    justifyContent: 'space-between',
   },
   jobdestitle: {
     color: '#F46F16',
@@ -375,6 +376,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
+    flexShrink: 1,
   },
   oval: {
     flexDirection: 'row',
@@ -402,6 +404,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 16,
+    flexGrow: 1,
   },
   progressContainer: {
     flexDirection: 'row',
@@ -410,7 +413,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   progressText: {
-    marginRight:30,
+    marginRight: 30,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
@@ -430,6 +433,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(236, 78, 29, 0.7)',
   },
   jobCard: {
     backgroundColor: '#fff',
@@ -543,7 +547,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flexDirection: 'row',
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     width: '100%',
     backgroundColor: 'white',
@@ -553,11 +557,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: -2 },
-    elevation: 5,
+
   },
   button: {
     flex: 1,
@@ -570,8 +570,8 @@ const styles = StyleSheet.create({
   saveButton: {
     backgroundColor: 'white',
     marginRight: 5,
-    borderColor: 'orange',
-    borderWidth: 2,
+    borderColor: '#F46F16',
+    borderWidth: 1,
     borderRadius: 8,
   },
   applyButton: {
@@ -580,11 +580,11 @@ const styles = StyleSheet.create({
   },
   applyButtonGradient: {
     borderRadius: 10,
-    flex:1,
-    width:'100%'
+    flex: 1,
+    width: '100%'
   },
   buttonText: {
-    color: 'orange',
+    color: '#F46F16',
     fontWeight: 'bold',
   },
   locationIcon: {
@@ -643,8 +643,7 @@ const styles = StyleSheet.create({
     flex: 0,
     backgroundColor: '#F46F16',
     color: 'white',
-    paddingVertical: 4,
-    paddingHorizontal: 4,
+    padding:5,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,
@@ -682,8 +681,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     lineHeight: 35.27,
-    
-    marginRight:'5%',
+
+    marginRight: '5%',
     color: '#000000',
   },
   matchedSkills: {
@@ -694,10 +693,37 @@ const styles = StyleSheet.create({
 
   unmatchedSkill: {
     color: '#fff',
-    backgroundColor: '#BF2308',
+
     fontSize: 12,
   },
-
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  buttonImage: {
+    width: 20, // Set the desired width
+    height: 20, // Set the desired height
+    marginRight: 8, // Add some space between the image and text
+  },
+  unmatchedSkillIcon: {
+    width: 16, // Adjust width as needed
+    height: 16, // Adjust height as needed
+    marginRight: 8, // Space between image and text
+  },
+  skillContainer: {
+    flexDirection: 'row', // Ensures image and text are side by side
+    alignItems: 'center', // Aligns items vertically in the center
+    marginBottom: 8, // Space between skill items
+  },
+  unmatchedSkillContainer: {
+    flexDirection: 'row', // Align image and text side by side
+    alignItems: 'center', // Vertically center image and text
+    backgroundColor: '#BF2308', // Red background
+    padding:3, // Add padding to the top and bottom
+    borderRadius: 10, // Rounded corners
+    marginRight: 8, // Space between skill tags
+    marginBottom: 4, // Space between rows of skills
+  },
 
 });
 

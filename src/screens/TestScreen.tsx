@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert,ScrollView } from 'react-native';
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using
 import Header from '../components/CustomHeader/Header';
 import { submitTestResult } from '../services/Test/testService';
 import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
+import NetInfo from '@react-native-community/netinfo';
 
 
 const { width } = Dimensions.get('window');
@@ -23,6 +24,9 @@ const TestScreen = ({ route, navigation }: any) => {
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message state
   const [testData, setTestData] = useState<{ questions: any[] }>({ questions: [] });
   const [testStatus, settestStatus] = useState<string>('');
+  const [isNetworkAvailable, setIsNetworkAvailable] = useState<boolean>(true); // Default to true // Network state
+  const [disconnectedTime, setDisconnectedTime] = useState<number>(0); // Time duration of network disconnection
+  const [hasExceededTimeout, setHasExceededTimeout] = useState(false);
   const {
     submitSkillTest,
   } = useSkillTestViewModel(userId, userToken, testName);
@@ -50,6 +54,40 @@ const TestScreen = ({ route, navigation }: any) => {
     console.log('Test Name received in TestScreen:', testName);
   }, [testName]);
 
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setIsNetworkAvailable(state.isConnected ?? false); // Use false if `state.isConnected` is null
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
+    if (!isNetworkAvailable) {
+      setDisconnectedTime((prevTime) => prevTime + 1);
+    } else if (disconnectedTime >= 60) {
+      setHasExceededTimeout(true); // Mark that the timeout was exceeded
+    } else {
+      setDisconnectedTime(0);
+    }
+  }, [isNetworkAvailable]);
+  
+  useEffect(() => {
+    if (disconnectedTime >= 60) {
+      clearInterval(timerInterval);
+      handleModalConfirm();
+      setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
+    }
+  }, [disconnectedTime]);
+  
+  useEffect(() => {
+    if (isNetworkAvailable && hasExceededTimeout) {
+      handleModalConfirm(); // Call again if needed
+    }
+  }, [isNetworkAvailable, hasExceededTimeout]);
+  
   useEffect(() => {
     if (isTestComplete || showEarlySubmissionModal) {
       clearInterval(timerInterval);
@@ -79,6 +117,13 @@ const TestScreen = ({ route, navigation }: any) => {
       return () => backHandler.remove();
     }, [])
   );
+  const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
 
   useEffect(() => {
     if (!testName) return; // Ensure testName is available before fetching data
@@ -104,7 +149,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Cpp':
         fetchedTestData = require('../models/data/Cpp.json');
         break;
-      case 'CSharp':
+      case 'C Sharp':
         fetchedTestData = require('../models/data/CSharp.json');
         break;
       case 'CSS':
@@ -113,7 +158,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Django':
         fetchedTestData = require('../models/data/Django.json');
         break;
-      case 'DotNet':
+      case '.Net':
         fetchedTestData = require('../models/data/DotNet.json');
         break;
       case 'Flask':
@@ -134,7 +179,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Manual Testing':
         fetchedTestData = require('../models/data/ManualTesting.json');
         break;
-      case 'MongoDB':
+      case 'Mongo DB':
         fetchedTestData = require('../models/data/MongoDB.json');
         break;
       case 'Python':
@@ -167,13 +212,17 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Css':
         fetchedTestData = require('../models/data/CSS.json');
         break;
+      case 'MySQL':
+        fetchedTestData = require('../models/data/SQL.json');
+        break;
       default:
         console.error(`No data found for test: ${testName}`);
         return;
     }
 
     if (fetchedTestData) {
-      setTestData(fetchedTestData); // Set the fetched test data
+      const shuffledQuestions = shuffleArray(fetchedTestData.questions); // Shuffle questions
+      setTestData({ questions: shuffledQuestions });
       const durationString = fetchedTestData?.duration || "30 mins"; // Default duration
       const durationInSeconds = parseDuration(durationString); // Convert duration to seconds
       setTimeLeft(durationInSeconds); // Set time left
@@ -269,9 +318,19 @@ const TestScreen = ({ route, navigation }: any) => {
       }
     }
   };
-
+  if (!isNetworkAvailable) {
+    return (
+      <SafeAreaView style={styles.container1}>
+        <View style={{backgroundColor:'#FFF',justifyContent:'center',borderRadius:10,padding:20}}>
+        <Text style={styles.errorText1}>Your test has been interrupted.Kindly try again later.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+ 
   return (
     <SafeAreaView style={styles.container}>
+     
       <Header
         onBackPress={() => {
           setShowEarlySubmissionModal(true);
@@ -359,7 +418,7 @@ const TestScreen = ({ route, navigation }: any) => {
                 style={styles.closeIcon}
                 onPress={() => setShowEarlySubmissionModal(false)} // Close the modal
               >
-                <Icon name="close" size={20} />
+                <Icon name="close" size={20} color ={'0D0D0D'} />
               </TouchableOpacity>
               <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
               <Text style={styles.modalText}>Are you sure you want to quit?</Text>
@@ -385,7 +444,7 @@ const TestScreen = ({ route, navigation }: any) => {
                     colors={['#F97316', '#FAA729']} // Gradient colors
                     start={{ x: 0, y: 0 }} // Gradient start point
                     end={{ x: 1, y: 1 }}   // Gradient end point
-                    style={[styles.modalButton, { borderRadius: 5 }]} // Ensure borderRadius matches your button's design
+                    style={[styles.modalButton, { borderRadius: 10,width:width*0.41 }]} // Ensure borderRadius matches your button's design
                   >
                     <Text style={styles.modalButtonText}>Yes</Text>
                   </LinearGradient>
@@ -471,20 +530,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    padding: 16,
+
     height: 93,
     backgroundColor: '#FFF'
   },
   backButton: {
     width: 161.25,
-    padding: 12,
+    padding: 10,
     borderRadius: 7.68,
     borderWidth: 0.96,
     borderColor: '#F97316',
     alignItems: 'center',
-    marginLeft: 20
+    marginLeft: '2%'
   },
   navigationButtonText1: {
     fontSize: 14,
@@ -494,7 +553,7 @@ const styles = StyleSheet.create({
     width: 162.21,
     padding: 12,
     borderRadius: 8,
-    marginRight: 20
+  
   },
   navigationButtonText: {
     fontSize: 14,
@@ -555,7 +614,6 @@ const styles = StyleSheet.create({
   modalOptions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
     marginTop: 30
   },
   modalButton: {
@@ -565,7 +623,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
     alignItems: 'center',
-    width: 175
   },
   modalButton1: {
     borderRadius: 7.68,
@@ -585,6 +642,19 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     zIndex: 10,
+  },
+  container1: {
+    flex: 1,
+    justifyContent:'center',
+    padding: 20,
+    backgroundColor:'#F0F0F0',
+    borderRadius:10,
+  },
+  errorText1: {
+    fontFamily:'Plus Jakarta Sans',
+    fontSize: 18,
+    color: 'grey',
+    textAlign: 'center',
   },
 });
 export default TestScreen;

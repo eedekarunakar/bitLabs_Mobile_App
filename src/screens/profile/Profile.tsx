@@ -18,8 +18,9 @@ import { ProfileService } from '../../services/profile/ProfileService';
 import { ToastAndroid } from 'react-native';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
- 
+import { base64Image } from '../../services/base64Image';
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
+import axios from 'axios';
 
  
  
@@ -83,6 +84,17 @@ function ProfileComponent() {
         }
         return true; // For iOS or platforms other than Android
     };
+    const [key, setKey] = useState(0);
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+             console.log('Profile screen is focused');
+              setKey(prevKey => prevKey + 1);
+         // Change the key to force re-render
+         });
+          return unsubscribe;
+         }, [navigation]);
+
+
     useEffect(() => {
         if (userId && userToken) {
             fetchProfilePhoto(userToken, userId);
@@ -161,30 +173,26 @@ function ProfileComponent() {
  
     };
     const removePhoto = async () => {
-        if(photo === DEFAULT_PROFILE_IMAGE){
+        if (photo === DEFAULT_PROFILE_IMAGE) {
             showToast('No photo to remove.');
             return;
         }
         setIsLoading(true);
         try {
-            // Resolve the local path of the default image
-            const resolvedImage = await Image.resolveAssetSource(require('../../assests/profile/profile.png'));
+            // Prepare the default image file object
             const defaultImageFile = {
-                uri: resolvedImage.uri, // This will give a local path (e.g., file://path/to/image)
+                uri: base64Image,
                 type: 'image/png', // Correct MIME type
-                fileName: 'default_profile.png', // Match the file name
-               
-                width: 1440, // Set the image dimensions
-                height: 1920, // Set the image dimensions
+                fileName: 'default_profile.png',
             };
    
-            console.log('Resolved Default Image File:', defaultImageFile);
+            console.log('Default Image File:', defaultImageFile);
    
             // Upload the default image
             const result = await ProfileService.uploadProfilePhoto(userToken, userId, defaultImageFile);
    
             if (result.success) {
-                fetchProfilePhoto(userToken,userId);
+                await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
                 console.log('Default photo uploaded successfully');
                 showToast('Default image set successfully!');
             } else {
@@ -192,12 +200,15 @@ function ProfileComponent() {
                 showToast('Failed to remove photo.');
             }
         } catch (error) {
-            console.error('Error setting default photo:', error);
+            if (axios.isAxiosError(error)) {
+                console.error('Error setting default photo:', error.message);
+            }
             showToast('Error removing photo. Please try again.');
         } finally {
             setIsLoading(false);
         }
     };
+   
    
    
  
@@ -336,7 +347,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
     };
  
     return (
-        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} >
+        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} key={key}>
             <ScrollView>
                 <View>
                     <View style={styles.card}>
@@ -507,20 +518,20 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             }}>
                             <View style={styles.modalView}>
                                 <View style={styles.modalCard}>
-                                    <TextInput placeholder='FirstName' style={styles.input}
+                                    <TextInput placeholder='FirstName'placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.firstName}
                                         onChangeText={(text) => handleInputChange('firstName', (text))} />
                                     {formErrors?.firstName && (
                                         <Text style={styles.errorText}>{formErrors.firstName}</Text>
                                     )}
-                                    <TextInput placeholder='LastName' style={styles.input}
+                                    <TextInput placeholder='LastName'placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.lastName}
                                         onChangeText={(text) => handleInputChange('lastName', (text))} />
                                     {formErrors?.lastName && (
                                         <Text style={styles.errorText}>{formErrors.lastName}</Text>
                                     )}
-                                    <TextInput placeholder={basicDetails?.email || 'Email'} editable={false} style={styles.input} />
-                                    <TextInput placeholder='+91*******' style={styles.input}
+                                    <TextInput placeholder={basicDetails?.email || 'Email'}placeholderTextColor="#B1B1B1" editable={false} style={styles.input} />
+                                    <TextInput placeholder='+91*******' style={styles.input}placeholderTextColor="#B1B1B1"
                                         value={personalDetails.alternatePhoneNumber}
                                         onChangeText={(text) => handleInputChange('alternatePhoneNumber', (text))} />
                                     {formErrors?.alternatePhoneNumber && (
@@ -561,7 +572,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                         <View style={styles.modalCard1}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                                 <Text style={styles.modalTitle1}>Resume</Text>
-                                <TouchableOpacity onPress={() => setResumeModalVisible(false)}>
+                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{marginLeft:'70%'}}>
                                     <Text style={{ fontSize: 16, color: 'red', top: -10 }}>X</Text>
                                 </TouchableOpacity>
                             </View>
@@ -569,6 +580,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                 <TextInput
                                     style={styles.input1}
                                     placeholder='Search from device'
+                                    placeholderTextColor="#B1B1B1"
                                     value={resumeText} // Ensure string type
                                     onChangeText={setResumeText}
                                 />
@@ -583,6 +595,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             <View style={styles.resumeModal}>
                                 <TouchableOpacity
                                     style={[styles.uploadButton, { marginRight: 10 }]}
+                                    onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
                                     <Text style={styles.saveButtonText}>Build your Resume</Text>
                                 </TouchableOpacity>
@@ -621,12 +634,15 @@ const styles = StyleSheet.create({
  
     },
     skillBadge: {
-        backgroundColor: '#334584',
-        borderRadius: 15,
-        margin: 5,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 8,
+        height: 30,
+    flexDirection: 'row',
+    alignItems: 'center', // Align children vertically
+    justifyContent: 'center', // Center children horizontally
+    paddingHorizontal: 8, // Consistent padding inside badges
+    backgroundColor: '#334584', // Default background color
+    borderRadius: 15,
+    marginRight: 8,
+    marginBottom: 5, 
  
     },
     skillBadgeText: {
@@ -649,16 +665,14 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         paddingHorizontal: 10,
         borderRadius: 2,
-        backgroundColor: '#E5E5E5'
+        backgroundColor: '#E5E5E5',
+        color:'#0D0D0D',
  
     },
     skillContainer: {
         marginTop: 5,
         flexDirection: 'row',
         flexWrap: 'wrap',
-       
- 
- 
     },
     skillcolor: {
         height: 30,
@@ -678,11 +692,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#fff',
         borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
+       
     },
     container: {
         alignItems: 'center',
@@ -909,7 +919,7 @@ const styles = StyleSheet.create({
  
         fontWeight: 400,
         fontSize: 18,
- 
+        color: '#0D0D0D',
         fontFamily: 'JakartaSans', // Set font to Jakarta Sans
     },
  

@@ -1,4 +1,4 @@
-package com.bitlabs
+package com.bigtimes
 
 import android.app.Application
 import com.facebook.react.PackageList

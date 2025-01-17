@@ -5,6 +5,7 @@ import { useAuth } from "../../context/Authcontext";
 import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel';
 import ProfileService from '../../services/profile/ProfileService';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
+import useGoogleSignIn from '../../services/google/google';
  
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
  
@@ -15,12 +16,14 @@ const Navbar = () => {
     const { authData, logout, userId, userToken } = useAuth();
     const { unseenCount, handleMarkAsSeen } = useJobAlerts();
     const {photo} = useProfilePhoto();
+    const{signOut} = useGoogleSignIn();
 
  
     const handleProfilePress = () => {
         setModalVisible(true);
     };
  
+    const handleLogout = () => {logout(); signOut();};    
     return (
         <View style={styles.navbar}>
  
@@ -72,7 +75,7 @@ const Navbar = () => {
                                     <Text style={styles.buttonText1}>Change Password</Text>
                                 </TouchableOpacity>
                                 <View style={styles.separator}></View>
-                                <TouchableOpacity style={styles.modalButton7} onPress={logout} >
+                                <TouchableOpacity style={styles.modalButton7} onPress={handleLogout} >
                                     <Text style={styles.modalButtonText7}>Logout</Text>
                                 </TouchableOpacity>
                             </View>
@@ -93,11 +96,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: screenWidth * 0.02,
         backgroundColor: "#fff",
-        elevation: 3,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
+   
         height: screenHeight * 0.08,
       },
       logo1Image: {
@@ -160,11 +159,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 20,
         paddingHorizontal: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
+       
     },
     customButton: {
         width: '100%',
@@ -193,6 +188,7 @@ const styles = StyleSheet.create({
         fontWeight: 400,
         fontSize: 18,
         fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        color:'#2f2f2f'
     },
     buttonText: {
         color: 'black',

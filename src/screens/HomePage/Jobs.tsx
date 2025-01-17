@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,26 +8,48 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../New' // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '../../models/Jobs/ApplyJobmodel'// Your JobData interface
- 
+import { useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
+type JobsRouteProp = RouteProp<RootStackParamList, 'Jobs'>;
  
 const RecommendedJobs = () => {
-  const { jobs, loading } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
+  const route = useRoute<JobsRouteProp>(); // Specify the route type
+  const { tab = 'recommended'} = route.params|| {}; // Now TypeScript knows about 'tab'
+  const { jobs, loading,reloadJobs } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
   const [activeTab, setActiveTab] = useState<'recommended' | 'applied' | 'saved'>('recommended');
   const navigation = useNavigation<RecommendedJobsNavigationProp>();
   const [appliedJobs, setAppliedJobs] = useState<JobData[]>([]); // State to store applied jobs
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
+  const isFocused = useIsFocused();
+
  
- 
- 
+  useEffect(() => {
+    if (route.params?.tab) {
+      setActiveTab(route.params.tab); // Set the active tab from the passed parameter
+    }
+  }, [route.params?.tab]);
+  
+  useEffect(() => {
+    if (isFocused && activeTab === 'recommended') {
+      reloadJobs(); // Reload jobs when the screen is focused and tab is 'recommended'
+    }
+  }, [isFocused, activeTab]);
+
+  // Handle tab press
+  const handleTabPress = (tab: 'recommended' | 'applied' | 'saved') => {
+    setActiveTab(tab);
+  };
+
+
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -70,7 +92,7 @@ const RecommendedJobs = () => {
         <TouchableOpacity onPress={() => handleJobPress(job)}>
           <View style={styles.row}>
             <Image
-              source={{ uri: 'https://via.placeholder.com/50' }} // Placeholder image
+              source={require('../../assests/Images/company.png')} // Placeholder image
               style={styles.companyLogo}
             />
             <View style={styles.jobDetails}>
@@ -130,7 +152,7 @@ const RecommendedJobs = () => {
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'recommended' && styles.activeTab]}
-          onPress={() => setActiveTab('recommended')}
+          onPress={() => handleTabPress('recommended')}
         >
           <Text
             style={[
@@ -143,7 +165,7 @@ const RecommendedJobs = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'applied' && styles.activeTab]}
-          onPress={() => setActiveTab('applied')}
+          onPress={() => handleTabPress('applied')}
         >
           <Text
             style={[
@@ -156,7 +178,7 @@ const RecommendedJobs = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'saved' && styles.activeTab]}
-          onPress={() => setActiveTab('saved')}
+          onPress={() => handleTabPress('saved')}
         >
           <Text
             style={[
@@ -197,7 +219,9 @@ const styles = StyleSheet.create({
     marginLeft: 22,
     fontWeight: 'bold',
     marginBottom: 10,
-    marginTop:12
+    marginTop:12,
+    fontFamily:'Inter',
+    color:'#0D0D0D',
   },
   jobstextcon:{
     backgroundColor:'white'
@@ -250,13 +274,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   jobTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    color: '#121212', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontSize: 16, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '700', // Font weight
+    lineHeight: 16, // Adjust line height as needed
+    textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
-    fontSize: 14,
-    color: '#888',
+    fontSize: 12,
+    fontFamily: "Plus Jakarta Sans",
+    fontStyle: 'normal',
+    fontWeight:600,
+    color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
   tagRow: {
@@ -290,8 +321,12 @@ const styles = StyleSheet.create({
     fontSize: 8
   },
   postedOn: {
-    fontSize: 10,
-    color: '#888',
+    color: '#979696', // Text color
+    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontSize: 8, // Font size
+    fontStyle: 'normal', // Font style
+    fontWeight: '500', // Font weight
+    lineHeight: 23.76, // Line height (in points, not percentage)
   },
   tabs: {
     flexDirection: 'row',
