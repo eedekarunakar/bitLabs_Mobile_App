@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: '#fff',
-    paddingVertical: 10, // Adjust padding for better spacing
+    paddingVertical: 7, // Adjust padding for better spacing
     paddingHorizontal: 16,
     padding: 13,
     flexDirection: 'row',
@@ -428,8 +428,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex:1,
     width:'100%',
-    height:height*0.09,
-    alignSelf:'center'
+    height:height*0.075,
+    justifyContent:'center'
   },
   
 

@@ -1684,6 +1684,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNPermissions (5.2.3):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNReanimated (3.16.3):
     - DoubleConversion
     - glog
@@ -1935,6 +1956,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -2086,6 +2108,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -2166,6 +2190,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 8542667cb39fff458c1a1a3f9e70205042636129
   RNGestureHandler: e1dcb274c17ca0680a04d7ff357e35e37c384185
   RNKeychain: 2c8ed1dc7a077aa51869fbd8f9114754e03837d9
+  RNPermissions: 1108b4d744afaa59cb691daa8bb7a15e1daa80ed
   RNReanimated: 4335a2d4b358c01a28fe1881db59d897e8724681
   RNScreens: 06e1f09654d2da4ff95dee6621b2b13b033e9c5a
   RNSVG: 35e5be7217865b96ae4678cf42090623311bb9d0

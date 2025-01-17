@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
   },
   gradientBackground: {
     width: 162.21,
-    height:height*0.060,
+    height:height*0.048,
     borderRadius: 8,
     justifyContent:'center'
   

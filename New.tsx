@@ -28,6 +28,12 @@ import ViewJobDetails from './src/screens/Jobs/ViewJobDetails';
 import Notification from './src/screens/alert/Notification';
 import SavedDetails from './src/screens/Jobs/SavedDetails';
 import { ProfilePhotoProvider } from './src/context/ProfilePhotoContext';
+import ExploreSection from './src/components/home/ExploreSection';
+import Badge from './src/screens/HomePage/Badge';
+import Drives from './src/screens/HomePage/Drives';
+
+import { useMessageContext } from './src/screens/welcome';
+import { MessageProvider } from './src/screens/welcome';
 
 export type RootStackParamList = {
   ForgotPassword: undefined,
@@ -41,18 +47,21 @@ export type RootStackParamList = {
   Jobs: undefined;
   JobDetails: { job: any }; // Pass job data to the JobDetails screen
   JobDetailsScreen: { job: any };
-  ViewJobDetails: {job:any};
-  AppliedJobs: {job:any};
+  ViewJobDetails: { job: any };
+  AppliedJobs: { job: any };
   SavedDetails: { job: any };
-  SavedJobs: undefined;
+  SavedJobs: undefined;       
   Profile: { retake?: boolean } | undefined
   ImagePreview: { uri: string; retake?: boolean }
   passContent: { finalScore: number; testName: string };
   FailContent: undefined;
   TimeUp: undefined;
-  Badge: { skillName: string; testType: string };
+  Badge: { skillName: string; testType: string }| undefined;
   ChangePassword: undefined;
-  Notification:undefined;
+  Notification: undefined;
+  Drives:undefined;
+  MyResume:undefined;
+  Home:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -65,6 +74,8 @@ const Appnavigator = () => {
   const [profileChecked, setProfileChecked] = useState(false);
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
 
+  const { setSetmsg } = useMessageContext();
+
   useEffect(() => {
     const checkProfileId = async () => {
       if (isAuthenticated && userToken && userId) {
@@ -75,6 +86,8 @@ const Appnavigator = () => {
             // Show Step1 if profileid is 0, otherwise show Dashboard
             console.log('Profile ID:', result.profileid);
             setShouldShowStep1(result.profileid === 0);
+            result.profileid==0?setSetmsg(true):setSetmsg(false)
+            console.log(result.profileid)
           } else {
             console.error('Failed to fetch profile details');
           }
@@ -86,7 +99,7 @@ const Appnavigator = () => {
     };
 
     checkProfileId();
-  }, [isAuthenticated, userToken, userId]);
+  }, [isAuthenticated, userToken, userId,setSetmsg]);
 
   if (!isAuthenticated || !profileChecked) {
     // Show LandingPage while checking profile or if not authenticated
@@ -108,15 +121,25 @@ const Appnavigator = () => {
 
   return (
     <Stack.Navigator>
+      
       {shouldShowStep1 ? (
         <>
           <Stack.Screen name="Step1" component={Dummystep1} initialParams={{ email: userEmail }} options={{ headerShown: false }} />
           <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
-          <Stack.Screen name="Step3" component={dummyStep3} options={{ headerShown: false }} initialParams={{ updateShouldShowStep1: setShouldShowStep1 }} />
+          <Stack.Screen name="Step3" component={dummyStep3}  options={{ headerShown: false }} initialParams={{ updateShouldShowStep1: setShouldShowStep1 }} />
+
         </>
+        
       ) : (
         <>
-          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
+          <Stack.Screen
+            name="BottomTab"
+            component={BottomTab}
+            options={{
+              headerShown: false,      // Ensure the header is shown
+              headerTitle: '',        // Remove the title (no text)
+            }}
+          />
 
           {/* Test Instruction Screen */}
           <Stack.Screen
@@ -134,7 +157,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
-            options={{headerShown:false}}
+            options={{ headerShown: false }}
           />
 
           <Stack.Screen
@@ -152,12 +175,15 @@ const Appnavigator = () => {
             component={JobDetailsScreen}
             options={{ title: 'Job Details' }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="ViewJobDetails"
             component={ViewJobDetails}
-          
+            options={{
+              headerShown: true,      // Ensure the header is shown
+              headerTitle: '',        // Remove the title (no text)
+            }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="SavedDetails"
             component={SavedDetails}
             options={{ title: 'Job Details' }}
@@ -193,9 +219,17 @@ const Appnavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-          name="Notification"
-          component={Notification}
-        />
+            name="Notification"
+            component={Notification}
+          />
+          <Stack.Screen
+            name="Badge"
+            component={Badge}
+          />
+          <Stack.Screen
+            name="Drives"
+            component={Drives}
+          />
         </>
       )}
     </Stack.Navigator>
@@ -205,23 +239,25 @@ const Appnavigator = () => {
 const AppWithProfileProvider = () => {
   const { userToken, userId } = useAuth();
 
-    return (
-    <ProfilePhotoProvider userToken={userToken} userId={userId}>
-      <NavigationContainer >
-       <Appnavigator />
-       <Toast />
+  return (
+    <MessageProvider>
+      <ProfilePhotoProvider userToken={userToken} userId={userId}>
+        <NavigationContainer>
+          <Appnavigator />
+          <Toast />
         </NavigationContainer>
-         </ProfilePhotoProvider>
-          );
-         };
+      </ProfilePhotoProvider>
+    </MessageProvider>
+  );
+};
 
 const App = () => {
 
- return (
-   <AuthProvider>
-     <AppWithProfileProvider />
-   </AuthProvider>
- );
+  return (
+    <AuthProvider>
+      <AppWithProfileProvider />
+    </AuthProvider>
+  );
 };
 
 export default App;

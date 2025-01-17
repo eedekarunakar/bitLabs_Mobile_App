@@ -11,6 +11,7 @@ import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 //import { AuthContext } from './AuthContext'
+
 import {
   View,
   Image,
@@ -25,6 +26,10 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useMessageContext } from '../welcome';
+
+
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
 
 
@@ -37,6 +42,9 @@ function Dashboard() {
   const { profileData } = useProfileViewModel(userToken, userId);
   const { applicant } = profileData || [];
   const navigation = useNavigation<NavigationProp>();
+
+  const { setmsg } = useMessageContext();
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -64,7 +72,9 @@ function Dashboard() {
           <Text style={styles.textBelowNavbar}>Hello, {applicant?.name
             ? applicant.name.charAt(0).toUpperCase() + applicant.name.slice(1)
             : 'Guest'}</Text>
-          <Text style={styles.textBelowNavbar1}>Welcome Back</Text>
+          <Text style={styles.textBelowNavbar1}>
+            {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
+          </Text>
 
           <View style={styles.cardContainer}>
             <View style={styles.row}>
@@ -232,17 +242,12 @@ const styles = StyleSheet.create({
     textAlign: "left", // Align text to the left
     marginBottom: screenHeight * 0.006, // Space between text and number
   },
-
-
   cardNumber: {
-
     fontSize: screenWidth * 0.05, // Scales number size with screen width
     fontWeight: "bold",
     fontFamily: "PlusJakartaSans",
     color: "#000",
     textAlign: "left", // Align number to the left
   },
-
-
 });
 export default Dashboard;
