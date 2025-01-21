@@ -35,7 +35,7 @@ import Badge from './src/screens/HomePage/Badge';
 export type RootStackParamList = {
   ForgotPassword: undefined,
   LandingPage: undefined;
-  BottomTab: undefined;
+  BottomTab: {shouldShowStep1: boolean; welcome:string }| undefined;
   Step1: { email: string | null }; // Specify that Step1 expects an email parameter
   Step2: undefined;
   Step3: { updateShouldShowStep1: React.Dispatch<React.SetStateAction<boolean>> };
@@ -59,7 +59,7 @@ export type RootStackParamList = {
   ResumeBuilder: undefined;
   Drives:undefined;
   MyResume:undefined;
-  Home:undefined;
+  Home: { welcome:string }| undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -120,6 +120,7 @@ const Appnavigator = () => {
           <Stack.Screen name="Step1" component={Dummystep1} initialParams={{ email: userEmail }} options={{ headerShown: false }} />
           <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
           <Stack.Screen name="Step3" component={dummyStep3} options={{ headerShown: false }} initialParams={{ updateShouldShowStep1: setShouldShowStep1 }} />
+          <Stack.Screen name="ResumeBuilder" component={ResumeBuilder} />
         </>
       ) : (
         <>

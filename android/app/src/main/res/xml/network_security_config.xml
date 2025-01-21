@@ -9,7 +9,7 @@
         <domain includeSubdomains="true">192.168.86.101</domain>
         <!-- Add more domains for HTTPS traffic if needed -->
         <trust-anchors>
-            <certificates src="@raw/resume_bitlabs_in"/> <!-- Update with correct file name if changed -->
+            <certificates src="@raw/certificate"/> 
         </trust-anchors>
     </domain-config>
 </network-security-config>

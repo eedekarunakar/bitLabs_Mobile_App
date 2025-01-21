@@ -9,7 +9,7 @@ import DocumentPicker, {
 import { ToastAndroid } from 'react-native';
 import { useAuth } from '../../context/Authcontext';
 import { ProfileService } from '../../services/profile/ProfileService';
- 
+import ResumeBuilder from "../profile/ResumeBuilder";
  
 interface Step3Props {
   step: number;
@@ -49,7 +49,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     //navigation.navigate("Step1"); // Navigate wherever you want after saving
     updateShouldShowStep1(false);
     setTimeout(() => {
-      navigation.navigate("BottomTab", { shouldShowStep1: false });
+      navigation.navigate("BottomTab", { shouldShowStep1: false,welcome:"Welcome"});
     }, 100);
   };
  
@@ -147,7 +147,9 @@ const Step3: React.FC = ({ route, navigation }: any) => {
               <Text style={styles.browseText}>Browse</Text>
             </TouchableOpacity>
           </View>
-         
+          <TouchableOpacity style={styles.buildButton} onPress={() => navigation.navigate("ResumeBuilder")}>  
+    <Text style={styles.buildText}>Build Your Resume</Text>
+  </TouchableOpacity>
         </View>
       </View>
  
@@ -249,11 +251,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   buildButton: {
+    width:142,
     backgroundColor: "#F97316",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    padding:10,
     borderRadius: 5,
     marginTop: 10,
+    alignSelf:'center',
   },
   buildText: {
     color: "white",
