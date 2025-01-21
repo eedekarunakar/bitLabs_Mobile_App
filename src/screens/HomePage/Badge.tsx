@@ -742,8 +742,8 @@ const styles = StyleSheet.create({
   cardImage: {
     width: 100,
     height: 90,
-    marginVertical: 10,
-    resizeMode: 'cover',
+    padding: 15,
+    resizeMode: 'contain',
     borderRadius: 10,
     marginTop: 30
   },

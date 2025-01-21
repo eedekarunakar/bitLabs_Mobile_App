@@ -295,7 +295,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
                   ) : (
                     <Text style={styles.fallbackText}>Image not found</Text>
                   )}
-                  <Toast />
                 </View>
 
               ))}
@@ -303,8 +302,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
         )}
       </ScrollView>
+      <Toast />
       <View style={{ height: 20 }} />
       <View style={styles.footerContainer}>
+
         {/* Save Job Button */}
         {isJobSaved ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
@@ -644,7 +645,7 @@ const styles = StyleSheet.create({
     flex: 0,
     backgroundColor: '#F46F16',
     color: 'white',
-    padding:5,
+    padding:3,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,

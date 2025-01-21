@@ -153,7 +153,7 @@ const ForgotPassword = () => {
         <View style={styles.separator} />
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="Email"  placeholderTextColor="#B1B1B1" 
           value={email}
           onChangeText={setEmail}
           editable={!isOtpVerified}
@@ -164,7 +164,7 @@ const ForgotPassword = () => {
             <View style={styles.form}>
               <View style={styles.passwordContainer}>
                 <TextInput
-                  placeholder="New Password"
+                  placeholder="New Password"  placeholderTextColor="#B1B1B1" 
                   style={styles.passwordInput}
                   secureTextEntry={!isPasswordVisible}
                   onBlur={() => { setIsPasswordVisible(false) }}
@@ -185,7 +185,7 @@ const ForgotPassword = () => {
               {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
               <View style={styles.passwordContainer}>
                 <TextInput
-                  placeholder="Confirm Password"
+                  placeholder="Confirm Password"  placeholderTextColor="#B1B1B1" 
                   style={styles.passwordInput}
                   secureTextEntry={!isResetPasswordVisible}
                   value={confirmPassword}
@@ -208,7 +208,7 @@ const ForgotPassword = () => {
             <View style={styles.form}>
               <TextInput
                 style={styles.input}
-                placeholder="Enter OTP"
+                placeholder="Enter OTP"  placeholderTextColor="#B1B1B1" 
                 value={otp}
                 onChangeText={setOtp}
               />

@@ -88,7 +88,7 @@ function ProfileComponent() {
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
              console.log('Profile screen is focused');
-              setKey(prevKey => prevKey + 1);
+             setKey(prevKey => (prevKey + 1) % 1000);
          // Change the key to force re-render
          });
           return unsubscribe;
