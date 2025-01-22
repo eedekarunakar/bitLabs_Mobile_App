@@ -92,7 +92,7 @@ const LandingPage = () => {
                                         <Text style={[styles.buttonText, styles.activeButtonText]}>Sign Up</Text>
                                     </LinearGradient>
                                 ) : (
-                                    <Text style={styles.buttonText}>Signup</Text>
+                                    <Text style={styles.buttonText}>SignUp</Text>
                                 )}
                             </TouchableOpacity>
                         </View>
@@ -102,7 +102,7 @@ const LandingPage = () => {
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
                                 <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} />
-                                {loginErrors.username && <Text style={{ color: 'red' }}>{loginErrors.username}</Text>}
+                                {loginErrors.username && <Text style={{ color: 'red'}}>{loginErrors.username}</Text>}
  
                                 <View style={styles.passwordContainer}>
                                     <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}} />
@@ -113,15 +113,17 @@ const LandingPage = () => {
                                     </TouchableOpacity>
  
                                 </View>
-                                <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('ForgotPassword')} >
-                                    <Text style={{ color: '#0E8CFF' }}>Forgot password?</Text>
- 
-                                </TouchableOpacity>
+                               
  
                                 {loginErrors.password && <Text style={{ color: 'red' }} >{loginErrors.password}</Text>}
                                 <View style={{ alignItems: 'center' }}>
                                     {loginMessage && <Text style={{ color: 'red' }}>{loginMessage}</Text>}
                                 </View>
+
+                                <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('ForgotPassword')} >
+                                    <Text style={{ color: '#0E8CFF' }}>Forgot password?</Text>
+ 
+                                </TouchableOpacity>
  
                             </View>
  
@@ -144,13 +146,13 @@ const LandingPage = () => {
                                 {signUpErrors.password && <Text style={styles.errorText}>{signUpErrors.password}</Text>}
                                 {otpReceived === true && (
                                     <View >
-                                        <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
+                                        <Text style={{ color: 'green' }}>Otp sent to your mail, Please check and enter below:</Text>
                                         <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
  
                                         {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>Invalid OTP</Text></View>}
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
-                                                <Text style={{ color: '#0E8CFF' }}>Resend OTP</Text>
+                                                <Text style={{ color: '#0E8CFF',fontWeight:'bold' }}>Resend OTP</Text>
                                             </TouchableOpacity>
                                             : <View style={{ alignItems: 'center' }}>
                                                 <Text style={{ color: 'red' }}>Please verify OTP within {timer} seconds</Text>
@@ -344,12 +346,8 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     passwordContainer: {
- 
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
-       
- 
  
     },
     eyeContainer: {
