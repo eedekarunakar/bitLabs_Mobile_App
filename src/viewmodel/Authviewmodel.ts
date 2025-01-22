@@ -96,38 +96,49 @@ const useSignupViewModel = () => {
     })
   }
 
-  const validateSignup = () => {
-    const errors: SignupErrors = {};
-    if (!signupName) errors.name = 'Name is required';
-    if (!signupEmail) {
-      errors.email = 'E-mail is required';
-    } else if (!isValidEmail(signupEmail)) {
-      errors.email = 'Please enter a valid email address';
+
+  
+  const validateSignup = (field?: 'name' | 'email' | 'whatsappnumber' | 'password'): boolean => {
+    const errors: SignupErrors = { ...signUpErrors };
+  
+    if (field === 'name' || !field) {
+      if (!signupName) errors.name = 'Name is required';
+      else if (signupName.length < 3) errors.name = 'Full name should be at least three characters long';
+      else if (!/^[A-Za-z]+$/.test(signupName)) errors.name = 'Name should only contain alphabetic characters';
+      else delete errors.name;
     }
-    if (!signupNumber) {
-      errors.whatsappnumber = 'Whatsapp Number is required';
-    } else if (signupNumber.length < 10) {
-      errors.whatsappnumber = 'Please enter a valid 10 digit mobile number';
-    } else if (!/^[6-9][0-9]{9}$/.test(signupNumber)) {
-      errors.whatsappnumber = 'Mobile number should begin with 6, 7, 8, or 9';
+  
+    if (field === 'email' || !field) {
+      if (!signupEmail) errors.email = 'E-mail is required';
+      else if (!isValidEmail(signupEmail)) errors.email = 'Please enter a valid email address';
+      else delete errors.email;
     }
-    if (!signupPassword) {
-      errors.password = 'Password is required';
-    } else if (signupPassword.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
-    } else if (!/[A-Z]/.test(signupPassword)) {
-      errors.password = 'Password must contain at least one uppercase letter';
-    } else if (!/[!@#$%^&*]/.test(signupPassword)) {
-      errors.password = 'Password must contain at least one special character';
-    } else if (!/\d/.test(signupPassword)) {
-      errors.password = 'Password must contain at least one digit';
-    } else if (/\s/.test(signupPassword)) {
-      errors.password = 'Password cannot contain any spaces';
+  
+    if (field === 'whatsappnumber' || !field) {
+      if (!signupNumber) errors.whatsappnumber = 'Whatsapp Number is required';
+      else if (signupNumber.length < 10) errors.whatsappnumber = 'Please enter a valid 10 digit mobile number';
+      else if (!/^[6-9][0-9]{9}$/.test(signupNumber)) errors.whatsappnumber = 'Mobile number should begin with 6, 7, 8, or 9';
+      else delete errors.whatsappnumber;
     }
+  
+    if (field === 'password' || !field) {
+      if (!signupPassword) errors.password = 'Password is required';
+      else if (signupPassword.length < 6) errors.password = 'Password must be at least 6 characters long';
+      else if (!/[A-Z]/.test(signupPassword)) errors.password = 'Password must contain at least one uppercase letter';
+      else if (!/[!@#$%^&*]/.test(signupPassword)) errors.password = 'Password must contain at least one special character';
+      else if (!/\d/.test(signupPassword)) errors.password = 'Password must contain at least one digit';
+      else if (/\s/.test(signupPassword)) errors.password = 'Password cannot contain any spaces';
+      else delete errors.password;
+    }
+  
     setSignUpErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
+  
+  
+  
+  
+  
   const isValidEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);

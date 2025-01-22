@@ -23,14 +23,14 @@ const LandingPage = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const {
         loginUserName, setLoginUserName, loginPassword, setLoginPassword,
-        loginErrors, loginMessage, validateAndLogin
+        loginErrors, loginMessage, validateAndLogin,validateLogin
     } = useLoginViewModel();
  
     const {
         signupName, setSignupName, signupEmail, setSignupEmail, signupNumber, setSignupNumber,
         signupPassword, setSignupPassword, signUpErrors, otp, setOtp, otpReceived, registration,
         isOtpExpired, timer, isOtpValid,
-        validateAndSignup, handleOtp
+        validateAndSignup, handleOtp,validateSignup
     } = useSignupViewModel();
  
     const { userInfo, isSignedIn, signIn, signOut } = useGoogleSignIn();
@@ -92,7 +92,7 @@ const LandingPage = () => {
                                         <Text style={[styles.buttonText, styles.activeButtonText]}>Sign Up</Text>
                                     </LinearGradient>
                                 ) : (
-                                    <Text style={styles.buttonText}>Signup</Text>
+                                    <Text style={styles.buttonText}>Sign Up</Text>
                                 )}
                             </TouchableOpacity>
                         </View>
@@ -101,11 +101,11 @@ const LandingPage = () => {
                         {registration && <Text style={{ color: 'green' ,marginTop:10}}>Registration Successful</Text>}
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
-                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} />
-                                {loginErrors.username && <Text style={{ color: 'red' }}>{loginErrors.username}</Text>}
+                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} onBlur={()=>{validateLogin()}}/>
+                                {loginErrors.username && <Text style={styles.errorText}>{loginErrors.username}</Text>}
  
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false);validateLogin()}} />
                                     <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
  
                                         <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -118,23 +118,23 @@ const LandingPage = () => {
  
                                 </TouchableOpacity>
  
-                                {loginErrors.password && <Text style={{ color: 'red' }} >{loginErrors.password}</Text>}
+                                {loginErrors.password && <Text style={{ color: 'red',top:'-10%' ,fontSize:12}} >{loginErrors.password}</Text>}
                                 <View style={{ alignItems: 'center' }}>
-                                    {loginMessage && <Text style={{ color: 'red' }}>{loginMessage}</Text>}
+                                    {loginMessage && <Text style={styles.errorText}>{loginMessage}</Text>}
                                 </View>
  
                             </View>
  
                         ) :
                             <View style={styles.formContainer}>
-                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName} />
+                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName} onBlur={()=>{validateSignup('name')}}/>
                                 {signUpErrors.name && <Text style={styles.errorText}>{signUpErrors.name}</Text>}
-                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))} />
+                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))} onBlur={()=>{validateSignup('email')}}/>
                                 {signUpErrors.email && <Text style={styles.errorText}>{signUpErrors.email}</Text>}
-                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))} />
+                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))} onBlur={()=>{validateSignup('whatsappnumber')}}/>
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false)}}/>
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false);validateSignup('password')}}/>
                                     <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!IsSignupPasswordVisible)}>
  
                                         <Image source={IsSignupPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -147,7 +147,7 @@ const LandingPage = () => {
                                         <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
                                         <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
  
-                                        {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>Invalid OTP</Text></View>}
+                                        {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={styles.errorText}>Invalid OTP</Text></View>}
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
                                                 <Text style={{ color: '#0E8CFF' }}>Resend OTP</Text>
@@ -162,7 +162,7 @@ const LandingPage = () => {
  
                                 )
                                 }
-                                {signUpErrors.userRegistered && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>{signUpErrors.userRegistered}</Text></View>}
+                                {signUpErrors.userRegistered && <View style={{ alignItems: 'center' }}><Text style={styles.errorText}>{signUpErrors.userRegistered}</Text></View>}
  
  
                             </View>
@@ -453,7 +453,8 @@ const styles = StyleSheet.create({
  
     dividerText: { marginHorizontal: 10, color: '#000', marginVertical: 10 },
     errorText: {
-        color: 'red'
+        color: 'red',
+        fontSize: 12,
     }
  
 });
