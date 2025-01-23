@@ -25,7 +25,7 @@ const LandingPage = () => {
         loginUserName, setLoginUserName, loginPassword, setLoginPassword,
         loginErrors, loginMessage, validateAndLogin
     } = useLoginViewModel();
- 
+
     const {
         signupName, setSignupName, signupEmail, setSignupEmail, signupNumber, setSignupNumber,
         signupPassword, setSignupPassword, signUpErrors, otp, setOtp, otpReceived, registration,
@@ -101,11 +101,11 @@ const LandingPage = () => {
                         {registration && <Text style={{ color: 'green' ,marginTop:10}}>Registration Successful</Text>}
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
-                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} />
+                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName}  onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))}  allowFontScaling={false} />
                                 {loginErrors.username && <Text style={{ color: 'red' }}>{loginErrors.username}</Text>}
  
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}}  allowFontScaling={false} />
                                     <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
  
                                         <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -127,14 +127,14 @@ const LandingPage = () => {
  
                         ) :
                             <View style={styles.formContainer}>
-                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName} />
+                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName}  allowFontScaling={false}/>
                                 {signUpErrors.name && <Text style={styles.errorText}>{signUpErrors.name}</Text>}
-                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))} />
+                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))}  allowFontScaling={false}/>
                                 {signUpErrors.email && <Text style={styles.errorText}>{signUpErrors.email}</Text>}
-                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))} />
+                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))}  allowFontScaling={false}/>
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false)}}/>
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false)}}  allowFontScaling={false}/>
                                     <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!IsSignupPasswordVisible)}>
  
                                         <Image source={IsSignupPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -145,7 +145,7 @@ const LandingPage = () => {
                                 {otpReceived === true && (
                                     <View >
                                         <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
-                                        <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
+                                        <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} allowFontScaling={false}/>
  
                                         {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>Invalid OTP</Text></View>}
                                         {isOtpExpired && otpReceived ?
@@ -293,7 +293,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginVertical: 10,
         marginHorizontal: 10,
-        color:'#0D0D0D'
+        color:'#0D0D0D',
+        fontFamily:'Plus Jukarta Sans'
  
     },
     buttonContainer: {
@@ -328,6 +329,7 @@ const styles = StyleSheet.create({
         padding: 4,
         marginVertical: 4,
         color:'#0D0D0D',
+        fontFamily:'Plus Jukarta Sans'
  
     },
     formContainer: {
@@ -370,11 +372,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         color:'#0D0D0D',
+        fontSize:13.34,
+        fontWeight:400,
+        fontFamily:'Plus Jukarta Sans',
+        lineHeight:15.29
     },
     googleSignUp: {
  
         fontWeight: 'bold',
         color:'#0D0D0D',
+        fontFamily:'Plus Jukarta Sans'
  
     },
     login: {
@@ -399,7 +406,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
-        padding: 8
+        padding: 8,
+        fontFamily:'Plus Jukarta Sans'
     },
  
  
@@ -407,11 +415,13 @@ const styles = StyleSheet.create({
     orangeText: {
         color: '#f28907',
         fontWeight: 'bold',
+        fontFamily:'Plus Jukarta Sans'
  
     },
     whiteText: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily:'Plus Jukarta Sans'
     },
     textlocation: {
         fontSize: height * 0.02,
@@ -420,6 +430,7 @@ const styles = StyleSheet.create({
         bottom: '20%',
         left: '40%',
         textAlign: 'center',
+        fontFamily:'Plus Jukarta Sans'
  
  
     },

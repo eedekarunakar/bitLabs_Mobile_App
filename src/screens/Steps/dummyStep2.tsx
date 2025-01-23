@@ -141,7 +141,7 @@ interface Step2Props {
 
 const Dummystep2: React.FC = ({ route, navigation }: any) => {
   //   const { email } = route.params;
-  const [step, setStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState({
     qualification: '',
     specialization: '',
@@ -248,6 +248,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
         if (response.ok) {
           const data = await response.json();
           console.log('Profile created successfully:', data);
+          setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
           // Navigate to Step3 after successful API call
           //navigation.navigate('Step3');
         } else {
@@ -272,113 +273,112 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
 
   return (
     <View style={styles.screen}>
-      
+
       <Image
         style={styles.logo}
         source={require('../../assests/Images/rat/logo.png')}
       />
-<ScrollView>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.completeProfile}>Complete Your Profile</Text>
-          <Text style={styles.subHeader}>
-            Fill the form fields to go next step
-          </Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.completeProfile}>Complete Your Profile</Text>
+            <Text style={styles.subHeader}>
+              Fill the form fields to go next step
+            </Text>
+          </View>
+
+          <ProgressBar initialStep={currentStep} />
+
+          <DropDownPicker
+            open={openQualificationDropdown}
+            value={qualification}
+            items={[
+              { label: 'B.Tech', value: 'B.Tech' },
+              { label: 'MCA', value: 'MCA' },
+              { label: 'Degree', value: 'Degree' },
+              { label: 'Intermediate', value: 'Intermediate' },
+              { label: 'Diploma', value: 'Diploma' },
+            ]}
+            setOpen={setOpenQualificationDropdown}
+            setValue={setQualification}
+            //onChangeValue={() => {setSpecialization;}} // Reset specialization on qualification change
+            placeholder="*Select Qualification"
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            zIndex={1000}
+          />
+          {errors.qualification && (
+            <Text style={styles.errorText}>{errors.qualification}</Text>
+          )}
+
+          <DropDownPicker
+            open={openSpecializationDropdown}
+            items={getSpecializationOptions(qualification).map(spec => ({
+              label: spec,
+              value: spec,
+            }))}
+            value={specialization}
+            setOpen={setOpenSpecializationDropdown}
+            setValue={setSpecialization}
+            placeholder="*Select Specialization"
+            disabled={!qualification} // Disable dropdown if qualification is not selected
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            zIndex={990}
+          />
+          {errors.specialization && (
+            <Text style={styles.errorText}>{errors.specialization}</Text>
+          )}
+
+          <DropDownPicker
+            multiple={true}
+            open={openSkillsDropdown}
+            value={selectedSkills}
+            items={skillOptions.map(skill => ({ label: skill, value: skill }))}
+            setOpen={setOpenSkillsDropdown}
+            setValue={setSelectedSkills}
+            placeholder="*Skills"
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            zIndex={900}
+            mode="BADGE"
+          />
+          {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
+
+          <TextInput
+            placeholder="*Experience in Years" placeholderTextColor="#0D0D0D"
+            style={styles.input}
+            value={formData.experience}
+            onChangeText={text =>
+              setFormData(prev => ({ ...prev, experience: text }))
+            }
+          />
+          {errors.experience && (
+            <Text style={styles.errorText}>{errors.experience}</Text>
+          )}
+
+          <DropDownPicker
+            multiple={true} // Allow multiple selection
+            open={openLocationDropdown}
+            value={selectedLocations} // Array of selected locations
+            items={locationOptions.map(location => ({
+              label: location,
+              value: location,
+            }))}
+            setOpen={setOpenLocationDropdown}
+            setValue={setSelectedLocations}
+            placeholder="*Preferred Job Locations"
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            zIndex={800}
+            mode="BADGE"
+          />
+          {errors.preferredLocation && (
+            <Text style={styles.errorText}>{errors.preferredLocation}</Text>
+          )}
         </View>
+        <View style={{ height: 100 }} />
 
-        <ProgressBar
-          currentStep={step}
-          onStepPress={stepId => setStep(stepId)}
-        />
-
-        <DropDownPicker
-          open={openQualificationDropdown}
-          value={qualification}
-          items={[
-            { label: 'B.Tech', value: 'B.Tech' },
-            { label: 'MCA', value: 'MCA' },
-            { label: 'Degree', value: 'Degree' },
-            { label: 'Intermediate', value: 'Intermediate' },
-            { label: 'Diploma', value: 'Diploma' },
-          ]}
-          setOpen={setOpenQualificationDropdown}
-          setValue={setQualification}
-          //onChangeValue={() => {setSpecialization;}} // Reset specialization on qualification change
-          placeholder="*Select Qualification"
-          style={styles.dropdown}
-          dropDownContainerStyle={styles.dropdownContainer}
-          zIndex={1000}
-        />
-        {errors.qualification && (
-          <Text style={styles.errorText}>{errors.qualification}</Text>
-        )}
-
-        <DropDownPicker
-          open={openSpecializationDropdown}
-          items={getSpecializationOptions(qualification).map(spec => ({
-            label: spec,
-            value: spec,
-          }))}
-          value={specialization}
-          setOpen={setOpenSpecializationDropdown}
-          setValue={setSpecialization}
-          placeholder="*Select Specialization"
-          disabled={!qualification} // Disable dropdown if qualification is not selected
-          style={styles.dropdown}
-          dropDownContainerStyle={styles.dropdownContainer}
-          zIndex={990}
-        />
-        {errors.specialization && (
-          <Text style={styles.errorText}>{errors.specialization}</Text>
-        )}
-
-        <DropDownPicker
-          multiple={true}
-          open={openSkillsDropdown}
-          value={selectedSkills}
-          items={skillOptions.map(skill => ({ label: skill, value: skill }))}
-          setOpen={setOpenSkillsDropdown}
-          setValue={setSelectedSkills}
-          placeholder="*Skills"
-          style={styles.dropdown}
-          dropDownContainerStyle={styles.dropdownContainer}
-          zIndex={900}
-          mode="BADGE"
-        />
-        {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
-
-        <TextInput
-          placeholder="*Experience in Years" placeholderTextColor="#0D0D0D"
-          style={styles.input}
-          value={formData.experience}
-          onChangeText={text =>
-            setFormData(prev => ({ ...prev, experience: text }))
-          }
-        />
-        {errors.experience && (
-          <Text style={styles.errorText}>{errors.experience}</Text>
-        )}
-
-        <DropDownPicker
-          multiple={true} // Allow multiple selection
-          open={openLocationDropdown}
-          value={selectedLocations} // Array of selected locations
-          items={locationOptions.map(location => ({
-            label: location,
-            value: location,
-          }))}
-          setOpen={setOpenLocationDropdown}
-          setValue={setSelectedLocations}
-          placeholder="*Preferred Job Locations"
-          style={styles.dropdown}
-          dropDownContainerStyle={styles.dropdownContainer}
-          zIndex={800}
-          mode="BADGE"
-        />
-        {errors.preferredLocation && (
-          <Text style={styles.errorText}>{errors.preferredLocation}</Text>
-        )}
-      </View>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -387,16 +387,16 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
 
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.nextButton}
-          >
-            <TouchableOpacity onPress={handleNext}>
+          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={handleNext}>
+            <LinearGradient
+              colors={['#F97316', '#FAA729']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[styles.nextButton, { borderRadius: 6 }]} // Apply border radius to match
+            >
               <Text style={styles.nextButtonText}>Next</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -417,12 +417,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   container: {
-    flex: 1,
     width: '100%',
+    height:'100%',
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
-
     marginBottom: 40,
   },
   footer: {
@@ -431,14 +430,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 17,
-    backgroundColor: '#fff',
-
     borderTopColor: '#ccc',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    justifyContent: 'center',
+    gap:13
+    
   },
   header: {
     marginBottom: 20,
@@ -465,9 +463,6 @@ const styles = StyleSheet.create({
   backButton: {
     borderWidth: 1,
     borderColor: '#F97316',
-    backgroundColor: 'white',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
@@ -479,12 +474,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   nextButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    padding:10,
+    borderRadius: 6, // Consistent with backButton
     alignItems: 'center',
     justifyContent: 'center',
-    width: '45%',
+    width: '100%', // Ensure it fits the wrapping TouchableOpacity
   },
   gradientTouchable: {
     flex: 1,
