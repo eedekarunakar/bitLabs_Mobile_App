@@ -89,9 +89,10 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollView}>
+
         <Image
           style={styles.logo}
-          source={require('../../assests/Images/rat/logo.png')} // Replace with your actual logo path
+          source={require('../../assests/Images/logo.png')} // Replace with your actual logo path
         />
 
         <View style={styles.container}>
@@ -149,6 +150,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             <Text style={styles.errorText}>{errors.whatsappNumber}</Text>
           ) : null}
         </View>
+
       </ScrollView>
 
       {/* Footer with Back and Next Buttons */}
@@ -184,9 +186,10 @@ const styles = StyleSheet.create({
     paddingBottom: 100, // Adds padding to avoid initial overlap
   },
   logo: {
-    width: 200,
-    height: 60,
+    width: 150, // Decreased width
+    height: 45,
     marginBottom: 20,
+    alignSelf: 'center',
   },
   container: {
     width: '100%',
@@ -231,6 +234,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 8,
+    fontFamily: 'Plus Jakarta Sans',
   },
   subHeader: {
     fontSize: 11,
@@ -238,11 +242,11 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E5E4E2',
+    borderColor: '#E5E5E5',
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5F5F5',
     color: 'black',
   },
   errorText: {

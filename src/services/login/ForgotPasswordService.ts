@@ -35,7 +35,9 @@ const sendOtp = async (forgotemail :string ): Promise<AuthResponse> => {
 };
 
 const verifyOtp = async(otp:string,signupEmail:string ): Promise<AuthResponse> => {
-     try {
+
+console.log('verification otpp sent',otp)
+  try {
         const response = await axios.post(
           `${API_BASE_URL}/applicant/applicantverify-otp`,
           {
@@ -44,7 +46,7 @@ const verifyOtp = async(otp:string,signupEmail:string ): Promise<AuthResponse> =
           },
         );
         console.log(response)
-       
+       console.log('this is the response',response)
         return { success: true, data: response.data };
        
     }catch(error){

@@ -45,12 +45,7 @@ const ForgotPassword = () => {
   }, [otpReceived, timer, isOtpExpired, setTimer, setIsOtpExpired]);
 
   useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const timer = setTimeout(() => {
-        setErrors({});
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+
   }, [errors]);
 
   const isValidEmail = (email: string) => {
@@ -382,6 +377,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     height: 40,
+    color:'black'
     
   },
   eyeImage: {
