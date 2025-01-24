@@ -1,38 +1,36 @@
 import React, { useState, useEffect } from 'react';
- 
+
 import {
     View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, ScrollView,
     KeyboardAvoidingView, Platform,
- 
+
 } from 'react-native';
 import { useLoginViewModel, useSignupViewModel } from '../../viewmodel/Authviewmodel';
 import LinearGradient from 'react-native-linear-gradient';
 // import ForgotPassword from './ForgotPassword';
-import { useNavigation ,NavigationProp} from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
-import useGoogleSignIn  from '../../services/google/google'
+import useGoogleSignIn from '../../services/google/google'
 
- 
- 
- 
+
 const { width, height } = Dimensions.get('window');
- 
- 
- 
+
+
+
 const LandingPage = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const {
         loginUserName, setLoginUserName, loginPassword, setLoginPassword,
-        loginErrors, loginMessage, validateAndLogin
+        loginErrors, loginMessage, validateAndLogin, validateLogin
     } = useLoginViewModel();
- 
+
     const {
         signupName, setSignupName, signupEmail, setSignupEmail, signupNumber, setSignupNumber,
         signupPassword, setSignupPassword, signUpErrors, otp, setOtp, otpReceived, registration,
         isOtpExpired, timer, isOtpValid,
-        validateAndSignup, handleOtp
+        validateAndSignup, handleOtp, validateSignup
     } = useSignupViewModel();
- 
+
     const { userInfo, isSignedIn, signIn, signOut } = useGoogleSignIn();
     useEffect(() => {
         if (registration) {
@@ -40,10 +38,30 @@ const LandingPage = () => {
         }
     }, [registration]
     );
- 
+
     const [activeButton, setActiveButton] = useState('login');
     const [IsPasswordVisible, SetIsPasswordVisible] = useState(false);
     const [IsSignupPasswordVisible, SetIsSignupPasswordVisible] = useState(false);
+
+
+    const handleChange = (field: 'name' | 'email' | 'whatsappnumber' | 'password', text: string) => {
+        
+        const updateFunctions: { [key: string]: React.Dispatch<React.SetStateAction<string>> } = {
+            name: setSignupName,
+            email: setSignupEmail,
+            whatsappnumber: setSignupNumber,
+            password: setSignupPassword
+        };
+
+        updateFunctions[field](text);
+
+        // Validate the current field with the updated text
+        validateSignup(field, text);
+    };
+
+
+
+
  
     const resetLoginFields = () => {
         setLoginUserName('');
@@ -61,6 +79,7 @@ const LandingPage = () => {
         }
     }, [activeButton]);
  
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <View style={{ flex: 1 }}>
@@ -68,9 +87,9 @@ const LandingPage = () => {
                     <View style={styles.innercontainer}>
                         <View style={styles.header}>
                             <Image source={require('../../assests/LandingPage/logo.png')} style={styles.logo} />
- 
+
                         </View>
- 
+
                         <View style={styles.welcome}>
                             <Text style={styles.welcomeText}>{activeButton === 'login' ? 'Welcome Back' : 'Create Account'}</Text>
                         </View>
@@ -106,64 +125,82 @@ const LandingPage = () => {
                                         <Text style={[styles.buttonText, styles.activeButtonText]}>Sign Up</Text>
                                     </LinearGradient>
                                 ) : (
-                                    <Text style={styles.buttonText}>SignUp</Text>
+
+                                    <Text style={styles.buttonText}>Sign Up</Text>
+
                                 )}
                             </TouchableOpacity>
                         </View>
- 
- 
-                        {registration && <Text style={{ color: 'green' ,marginTop:10}}>Registration Successful</Text>}
+
+
+                        {registration && <Text style={{ color: 'green', marginTop: 10 }}>Registration Successful</Text>}
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
-                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} />
-                                {loginErrors.username && <Text style={{ color: 'red'}}>{loginErrors.username}</Text>}
- 
+
+                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} onBlur={() => { validateLogin() }} />
+                                {loginErrors.username && <Text style={styles.errorText}>{loginErrors.username}</Text>}
+
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={() => { SetIsPasswordVisible(false); validateLogin() }} />
                                     <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
- 
+
                                         <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
- 
+
                                     </TouchableOpacity>
- 
-                                </View>
-                               
- 
-                                {loginErrors.password && <Text style={{ color: 'red' }} >{loginErrors.password}</Text>}
-                                <View style={{ alignItems: 'center' }}>
-                                    {loginMessage && <Text style={{ color: 'red' }}>{loginMessage}</Text>}
+
                                 </View>
 
-                                <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('ForgotPassword')} >
+                                <TouchableOpacity style={styles.forgotPassword} onPress={() => navigation.navigate('ForgotPassword')} >
                                     <Text style={{ color: '#0E8CFF' }}>Forgot password?</Text>
- 
+
                                 </TouchableOpacity>
+
+                                {loginErrors.password && <Text style={{ color: 'red', top: '-10%', fontSize: 12 }} >{loginErrors.password}</Text>}
+
+                               
  
+                         
+
+                                <View style={{ alignItems: 'center' }}>
+                                    {loginMessage && <Text style={styles.errorText}>{loginMessage}</Text>}
+                                </View>
                             </View>
- 
+
                         ) :
                             <View style={styles.formContainer}>
-                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName} />
+                                <TextInput
+                                    placeholder="Name"
+                                    placeholderTextColor="#B1B1B1"
+                                    style={styles.input}
+                                    value={signupName}
+                                    onChangeText={(text) => {
+                                        setSignupName(text);
+                                        handleChange('name', text); // Concurrent validation
+                                    }}
+                                />
+
                                 {signUpErrors.name && <Text style={styles.errorText}>{signUpErrors.name}</Text>}
-                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))} />
+                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => {setSignupEmail(text.replace(/\s/g, ''));handleChange('email',text)}  }/>
                                 {signUpErrors.email && <Text style={styles.errorText}>{signUpErrors.email}</Text>}
-                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))} />
+                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => {setSignupNumber(text.replace(/[^0-9]/g, ''));handleChange('whatsappnumber',text)}}  />
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false)}}/>
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={(text)=>{setSignupPassword;handleChange('password',text)}} onBlur={() => { SetIsSignupPasswordVisible(false) }} />
                                     <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!IsSignupPasswordVisible)}>
- 
+
                                         <Image source={IsSignupPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
- 
+
                                     </TouchableOpacity>
                                 </View>
                                 {signUpErrors.password && <Text style={styles.errorText}>{signUpErrors.password}</Text>}
                                 {otpReceived === true && (
                                     <View >
-                                        <Text style={{ color: 'green' }}>Otp sent to your mail, Please check and enter below:</Text>
-                                        <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
- 
-                                        {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>Invalid OTP</Text></View>}
+
+                                        <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
+                                        <TextInput placeholder='Enter OTP' placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
+
+                                        {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={styles.errorText}>Invalid OTP</Text></View>}
+
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
                                                 <Text style={{ color: '#0E8CFF',fontWeight:'bold' }}>Resend OTP</Text>
@@ -171,19 +208,19 @@ const LandingPage = () => {
                                             : <View style={{ alignItems: 'center' }}>
                                                 <Text style={{ color: 'red' }}>Please verify OTP within {timer} seconds</Text>
                                             </View>
- 
+
                                         }
- 
+
                                     </View>
- 
+
                                 )
                                 }
-                                {signUpErrors.userRegistered && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>{signUpErrors.userRegistered}</Text></View>}
- 
- 
+                                {signUpErrors.userRegistered && <View style={{ alignItems: 'center' }}><Text style={styles.errorText}>{signUpErrors.userRegistered}</Text></View>}
+
+
                             </View>
- 
- 
+
+
                         }
                         <View style={styles.googlePosition}>
                             <View style={styles.dividerContainer}>
@@ -194,10 +231,10 @@ const LandingPage = () => {
                                 <Text style={styles.googleSignUp}>Continue with Google</Text>
                             </TouchableOpacity>
                         </View>
-                       
- 
+
+
                     </View>
- 
+
                 </ScrollView>
                 {activeButton === 'login' ? (
                     <View style={styles.bottomContainer}>
@@ -226,26 +263,26 @@ const LandingPage = () => {
                         </TouchableOpacity>
                     </View>
                 )}
- 
+
             </View>
- 
+
         </KeyboardAvoidingView>
     );
 };
 const styles = StyleSheet.create({
     gradientBackground: {
         flex: 1,
- 
+
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
         width: '100%',
- 
+
     },
     bottomContainer: {
         justifyContent: 'flex-end', paddingBottom: 20, width: '90%',
-        alignSelf:'center'
-       
+        alignSelf: 'center'
+
     },
     header: {
         height: 63,
@@ -254,13 +291,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         justifyContent: 'center'
- 
+
     },
     logo: {
         height: 36,
         width: 122,
         resizeMode: 'contain'
- 
+
     },
     notificationContainer: {
         position: 'absolute',
@@ -290,14 +327,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         paddingBottom: 20
- 
- 
+
+
     },
     resendotp: {
         marginTop: 15
     },
- 
- 
+
+
     welcome: {
         marginVertical: 15,
         alignSelf: 'flex-start',
@@ -309,21 +346,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginVertical: 10,
         marginHorizontal: 10,
-        color:'#0D0D0D'
- 
+        color: '#0D0D0D'
+
     },
     buttonContainer: {
         flexDirection: 'row',
- 
+
         width: '90%',
         borderRadius: 10,
         borderColor: '#d7dade',
         borderWidth: 1,
- 
+
     },
     activeButtonText: {
         color: '#FFFFFF',
-        
+
     },
     button: {
         flex: 1,
@@ -332,8 +369,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         overflow: 'hidden',
- 
- 
+
+
     },
     activeButton: {
         borderWidth: 0,
@@ -343,26 +380,27 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         padding: 4,
         marginVertical: 4,
-        color:'#0D0D0D',
- 
+        color: '#0D0D0D',
+
     },
     formContainer: {
         width: '90%',
         marginTop: 10,
         position: 'relative',
- 
+
     },
     googlePosition: {
         flex: 1,
         width: '90%',
         position: 'relative',
- 
+
         marginTop: 20
     },
     passwordContainer: {
+
         flexDirection: 'row',
         alignItems: 'center',
- 
+
     },
     eyeContainer: {
         height: 20,
@@ -381,31 +419,31 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
-        color:'#0D0D0D',
+        color: '#0D0D0D',
     },
     googleSignUp: {
- 
+
         fontWeight: 'bold',
-        color:'#0D0D0D',
- 
+        color: '#0D0D0D',
+
     },
     login: {
- 
+
         flex: 1,
         justifyContent: 'flex-end',
         width: '100%',
         bottom: 20,
- 
- 
+
+
     },
     submitButton: {
-        height:50,
-        width:'100%',
+        height: 50,
+        width: '100%',
         overflow: 'hidden',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
- 
+
     },
     submitButtonText: {
         color: '#fff',
@@ -413,13 +451,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         padding: 8
     },
- 
- 
- 
+
+
+
     orangeText: {
         color: '#f28907',
         fontWeight: 'bold',
- 
+
     },
     whiteText: {
         color: 'white',
@@ -432,8 +470,8 @@ const styles = StyleSheet.create({
         bottom: '20%',
         left: '40%',
         textAlign: 'center',
- 
- 
+
+
     },
     googlelogoStyle: {
         marginRight: 10,
@@ -452,23 +490,24 @@ const styles = StyleSheet.create({
         padding: 10
     },
     dividerContainer: {
- 
+
         alignItems: 'center',
         width: '100%',
- 
+
     },
     loginsubmit: {
- 
+
         alignItems: 'flex-end'
     },
- 
- 
+
+
     dividerText: { marginHorizontal: 10, color: '#000', marginVertical: 10 },
     errorText: {
-        color: 'red'
+        color: 'red',
+        fontSize: 12,
     }
- 
+
 });
- 
+
 export default LandingPage;
- 
+

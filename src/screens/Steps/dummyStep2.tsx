@@ -170,7 +170,32 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
   const [openLocationDropdown, setOpenLocationDropdown] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const { userToken, userId } = useAuth();
+  const handleOpenQualification =() => {
+    setOpenLocationDropdown(false);
+    setOpenSkillsDropdown(false);
+    setOpenSpecializationDropdown(false);
+    
+  }
+  const handleOpenSpecialization =() => {
+    setOpenLocationDropdown(false);
+    setOpenSkillsDropdown(false);
+    setOpenQualificationDropdown(false);
+    
+  }
+  const handleOpenSkills =() => {
+    setOpenLocationDropdown(false);
+    setOpenQualificationDropdown(false);
+    setOpenSpecializationDropdown(false);
+    
+  }
+  const handleOpenLocation =() => {
+    setOpenQualificationDropdown(false);
+    setOpenSkillsDropdown(false);
+    setOpenSpecializationDropdown(false);
+    
+  }
 
+  
 
   useEffect(() => { setFormData((prev) => ({ ...prev, qualification, specialization, })); }, [qualification, specialization]);
   const validateForm = () => {
@@ -294,6 +319,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
 
         <DropDownPicker
           open={openQualificationDropdown}
+          onOpen={handleOpenQualification}
           value={qualification}
           items={[
             { label: 'B.Tech', value: 'B.Tech' },
@@ -316,6 +342,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
 
         <DropDownPicker
           open={openSpecializationDropdown}
+          onOpen={handleOpenSpecialization}
           items={getSpecializationOptions(qualification).map(spec => ({
             label: spec,
             value: spec,
@@ -336,6 +363,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
         <DropDownPicker
           multiple={true}
           open={openSkillsDropdown}
+          onOpen={handleOpenSkills}
           value={selectedSkills}
           items={skillOptions.map(skill => ({ label: skill, value: skill }))}
           setOpen={setOpenSkillsDropdown}
@@ -363,6 +391,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
         <DropDownPicker
           multiple={true} // Allow multiple selection
           open={openLocationDropdown}
+          onOpen={handleOpenLocation}
           value={selectedLocations} // Array of selected locations
           items={locationOptions.map(location => ({
             label: location,
