@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Text, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
@@ -31,6 +32,8 @@ import { ProfilePhotoProvider } from './src/context/ProfilePhotoContext';
 import ResumeBuilder from './src/screens/profile/ResumeBuilder';
 import Drives from './src/screens/HomePage/Drives';
 import Badge from './src/screens/HomePage/Badge';
+
+
 
 export type RootStackParamList = {
   ForgotPassword: undefined,

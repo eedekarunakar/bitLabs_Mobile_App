@@ -137,12 +137,12 @@ const LandingPage = () => {
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
 
-                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} onBlur={() => { validateLogin() }} />
-                                {loginErrors.username && <Text style={styles.errorText}>{loginErrors.username}</Text>}
-
+                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName}  onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))}  allowFontScaling={false} />
+                                {loginErrors.username && <Text style={{ color: 'red' }}>{loginErrors.username}</Text>}
+ 
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={() => { SetIsPasswordVisible(false); validateLogin() }} />
-                                    <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}}  allowFontScaling={false} />
+             <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
 
                                         <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
 
@@ -168,24 +168,16 @@ const LandingPage = () => {
 
                         ) :
                             <View style={styles.formContainer}>
-                                <TextInput
-                                    placeholder="Name"
-                                    placeholderTextColor="#B1B1B1"
-                                    style={styles.input}
-                                    value={signupName}
-                                    onChangeText={(text) => {
-                                        setSignupName(text);
-                                        handleChange('name', text); // Concurrent validation
-                                    }}
-                                />
 
+                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName}  allowFontScaling={false}/>
                                 {signUpErrors.name && <Text style={styles.errorText}>{signUpErrors.name}</Text>}
-                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => {setSignupEmail(text.replace(/\s/g, ''));handleChange('email',text)}  }/>
+                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))}  allowFontScaling={false}/>
                                 {signUpErrors.email && <Text style={styles.errorText}>{signUpErrors.email}</Text>}
-                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => {setSignupNumber(text.replace(/[^0-9]/g, ''));handleChange('whatsappnumber',text)}}  />
+                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))}  allowFontScaling={false}/>
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={(text)=>{setSignupPassword;handleChange('password',text)}} onBlur={() => { SetIsSignupPasswordVisible(false) }} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false)}}  allowFontScaling={false}/>
+
                                     <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!IsSignupPasswordVisible)}>
 
                                         <Image source={IsSignupPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -197,9 +189,10 @@ const LandingPage = () => {
                                     <View >
 
                                         <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
-                                        <TextInput placeholder='Enter OTP' placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
 
-                                        {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={styles.errorText}>Invalid OTP</Text></View>}
+                                        <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} allowFontScaling={false}/>
+ 
+                                        {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={{ color: 'red' }}>Invalid OTP</Text></View>}
 
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
@@ -346,7 +339,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginVertical: 10,
         marginHorizontal: 10,
-        color: '#0D0D0D'
+
+        color:'#0D0D0D',
+        fontFamily:'Plus Jukarta Sans'
+ 
 
     },
     buttonContainer: {
@@ -380,7 +376,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         padding: 4,
         marginVertical: 4,
-        color: '#0D0D0D',
+
+        color:'#0D0D0D',
+        fontFamily:'Plus Jukarta Sans'
+ 
 
     },
     formContainer: {
@@ -419,12 +418,21 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
-        color: '#0D0D0D',
+
+        color:'#0D0D0D',
+        fontSize:13.34,
+        fontWeight:400,
+        fontFamily:'Plus Jukarta Sans',
+        lineHeight:15.29
+
     },
     googleSignUp: {
 
         fontWeight: 'bold',
-        color: '#0D0D0D',
+
+        color:'#0D0D0D',
+        fontFamily:'Plus Jukarta Sans'
+ 
 
     },
     login: {
@@ -449,7 +457,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
-        padding: 8
+        padding: 8,
+        fontFamily:'Plus Jukarta Sans'
     },
 
 
@@ -458,10 +467,14 @@ const styles = StyleSheet.create({
         color: '#f28907',
         fontWeight: 'bold',
 
+        fontFamily:'Plus Jukarta Sans'
+ 
+
     },
     whiteText: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily:'Plus Jukarta Sans'
     },
     textlocation: {
         fontSize: height * 0.02,
@@ -470,6 +483,8 @@ const styles = StyleSheet.create({
         bottom: '20%',
         left: '40%',
         textAlign: 'center',
+
+        fontFamily:'Plus Jukarta Sans'
 
 
     },

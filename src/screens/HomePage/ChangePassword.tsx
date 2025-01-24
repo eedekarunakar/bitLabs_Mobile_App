@@ -105,10 +105,11 @@ const ChangePasswordScreen = () => {
  
     try {
       const result = await Keychain.getGenericPassword();
-      const jwtToken = result ? result.password : null;
-      console.log("Jwt token",result);
-   
-      if (jwtToken) {
+
+      const jwtToken = result ? result.password : null; // Retrieve JWT token from keychain
+ 
+      if (!jwtToken) {
+
         const response = await axios.post(
           `${API_BASE_URL}/applicant/authenticateUsers/${userId}`,
           formData,
