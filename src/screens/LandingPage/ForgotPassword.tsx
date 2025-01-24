@@ -382,6 +382,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     height: 40,
+    color:'black'
     
   },
   eyeImage: {

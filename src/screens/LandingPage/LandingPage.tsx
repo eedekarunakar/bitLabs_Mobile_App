@@ -45,7 +45,21 @@ const LandingPage = () => {
     const [IsPasswordVisible, SetIsPasswordVisible] = useState(false);
     const [IsSignupPasswordVisible, SetIsSignupPasswordVisible] = useState(false);
  
-    
+    const resetLoginFields = () => {
+        setLoginUserName('');
+        setLoginPassword('');
+        setSignupName('');
+        setSignupEmail('' );
+        setSignupNumber('');
+        setSignupPassword('');
+        setOtp('');
+    };
+
+    useEffect(() => {
+        if (activeButton === 'signup') {
+            resetLoginFields();
+        }
+    }, [activeButton]);
  
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>

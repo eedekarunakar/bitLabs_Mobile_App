@@ -199,10 +199,11 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
       newErrors.experience = 'Experience must be a number.';
       isValid = false;
     }
-    if (!formData.preferredLocation) {
+    if (selectedLocations.length === 0) {
       newErrors.preferredLocation = 'Preferred location is required.';
       isValid = false;
     }
+
 
     setErrors(newErrors);
     return isValid;
@@ -275,7 +276,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
       
       <Image
         style={styles.logo}
-        source={require('../../assests/Images/rat/logo.png')}
+        source={require('../../assests/Images/logo.png')}
       />
 <ScrollView>
       <View style={styles.container}>
@@ -412,8 +413,8 @@ const styles = StyleSheet.create({
     paddingBottom: 75,
   },
   logo: {
-    width: 200,
-    height: 60,
+    width: 150, // Decreased width
+    height: 45,
     marginBottom: 20,
   },
   container: {
@@ -455,12 +456,12 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#E5E5E5',
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
     color: 'black',
-    backgroundColor: '#E5E4E2',
+    backgroundColor: '#F5F5F5',
   },
   backButton: {
     borderWidth: 1,
@@ -504,14 +505,16 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#E5E5E5',
     borderRadius: 5,
     marginVertical: 10,
-    backgroundColor: '#E5E4E2',
+    backgroundColor: '#F5F5F5',
   },
   dropdownContainer: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#E5E5E5',
+    backgroundColor: '#F5F5F5',
+    
   },
 });
 
