@@ -13,8 +13,6 @@ import { RootStackParamList } from '../../../New';
 import useGoogleSignIn from '../../services/google/google'
 
 
-
-
 const { width, height } = Dimensions.get('window');
 
 
@@ -45,6 +43,7 @@ const LandingPage = () => {
     const [IsPasswordVisible, SetIsPasswordVisible] = useState(false);
     const [IsSignupPasswordVisible, SetIsSignupPasswordVisible] = useState(false);
 
+
     const handleChange = (field: 'name' | 'email' | 'whatsappnumber' | 'password', text: string) => {
         
         const updateFunctions: { [key: string]: React.Dispatch<React.SetStateAction<string>> } = {
@@ -61,6 +60,25 @@ const LandingPage = () => {
     };
 
 
+
+
+ 
+    const resetLoginFields = () => {
+        setLoginUserName('');
+        setLoginPassword('');
+        setSignupName('');
+        setSignupEmail('' );
+        setSignupNumber('');
+        setSignupPassword('');
+        setOtp('');
+    };
+
+    useEffect(() => {
+        if (activeButton === 'signup') {
+            resetLoginFields();
+        }
+    }, [activeButton]);
+ 
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
@@ -107,7 +125,9 @@ const LandingPage = () => {
                                         <Text style={[styles.buttonText, styles.activeButtonText]}>Sign Up</Text>
                                     </LinearGradient>
                                 ) : (
+
                                     <Text style={styles.buttonText}>Sign Up</Text>
+
                                 )}
                             </TouchableOpacity>
                         </View>
@@ -116,6 +136,7 @@ const LandingPage = () => {
                         {registration && <Text style={{ color: 'green', marginTop: 10 }}>Registration Successful</Text>}
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
+
                                 <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={loginUserName} onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))} onBlur={() => { validateLogin() }} />
                                 {loginErrors.username && <Text style={styles.errorText}>{loginErrors.username}</Text>}
 
@@ -128,16 +149,21 @@ const LandingPage = () => {
                                     </TouchableOpacity>
 
                                 </View>
+
                                 <TouchableOpacity style={styles.forgotPassword} onPress={() => navigation.navigate('ForgotPassword')} >
                                     <Text style={{ color: '#0E8CFF' }}>Forgot password?</Text>
 
                                 </TouchableOpacity>
 
                                 {loginErrors.password && <Text style={{ color: 'red', top: '-10%', fontSize: 12 }} >{loginErrors.password}</Text>}
+
+                               
+ 
+                         
+
                                 <View style={{ alignItems: 'center' }}>
                                     {loginMessage && <Text style={styles.errorText}>{loginMessage}</Text>}
                                 </View>
-
                             </View>
 
                         ) :
@@ -169,13 +195,15 @@ const LandingPage = () => {
                                 {signUpErrors.password && <Text style={styles.errorText}>{signUpErrors.password}</Text>}
                                 {otpReceived === true && (
                                     <View >
+
                                         <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
                                         <TextInput placeholder='Enter OTP' placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} />
 
                                         {!isOtpValid && <View style={{ alignItems: 'center' }}><Text style={styles.errorText}>Invalid OTP</Text></View>}
+
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
-                                                <Text style={{ color: '#0E8CFF' }}>Resend OTP</Text>
+                                                <Text style={{ color: '#0E8CFF',fontWeight:'bold' }}>Resend OTP</Text>
                                             </TouchableOpacity>
                                             : <View style={{ alignItems: 'center' }}>
                                                 <Text style={{ color: 'red' }}>Please verify OTP within {timer} seconds</Text>
@@ -372,9 +400,6 @@ const styles = StyleSheet.create({
 
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
-
-
 
     },
     eyeContainer: {
