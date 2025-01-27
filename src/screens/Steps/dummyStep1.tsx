@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,9 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import ProgressBar from '../../components/progessBar/ProgressBar';
 import LinearGradient from 'react-native-linear-gradient';
+import {getMobileNumber} from '../../services/mobile';
+import { useAuth } from '../../context/Authcontext';
+
 
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
 
@@ -23,6 +26,8 @@ interface Step1Props {
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(1);
+  const{userId}=useAuth();
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -34,12 +39,20 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     lastName: '',
     whatsappNumber: '',
   });
+  const [loading, setLoading] = useState(true); 
+  useEffect(() => {
+    // Fetch mobile number from API
+    const fetchMobileNumber = async () => {
+      const mobileNumber = await getMobileNumber(userId);
+      if (mobileNumber) {
+        setFormData((prev) => ({ ...prev, whatsappNumber: mobileNumber }));
+      }
+      setLoading(false); // Mark API call as complete
+    };
 
-  const newErrors = {
-    firstName: '',
-    lastName: '',
-    whatsappNumber: '',
-  };
+    fetchMobileNumber();
+  }, []);
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
@@ -112,8 +125,12 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             placeholder="First Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.firstName}
-            onChangeText={(text) =>
+            onChangeText={(text) => {
               setFormData((prev) => ({ ...prev, firstName: text }))
+              if (text.length >= 3) {
+                setErrors((prev) => ({ ...prev, firstName: '' }))
+              }
+            }
             }
           />
           {errors.firstName ? (
@@ -124,8 +141,12 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             placeholder="Last Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.lastName}
-            onChangeText={(text) =>
+            onChangeText={(text) => {
               setFormData((prev) => ({ ...prev, lastName: text }))
+              if (text.length >= 3) {
+                setErrors((prev) => ({ ...prev, lastName: '' }))
+              }
+            }
             }
           />
           {errors.lastName ? (
@@ -142,8 +163,13 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.whatsappNumber}
-            onChangeText={(text) =>
+            onChangeText={(text) => {
               setFormData((prev) => ({ ...prev, whatsappNumber: text }))
+              const whatsappRegex = /^[6-9]\d{9}$/;
+              if (whatsappRegex.test(text)) {
+                setErrors((prev) => ({ ...prev, whatsappNumber: '' }));
+              }
+            }
             }
           />
           {errors.whatsappNumber ? (
@@ -156,15 +182,15 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       {/* Footer with Back and Next Buttons */}
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.gradientTouchable} onPress={handleNext}>
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={[styles.nextButton, styles.applyButtonGradient]}
-          >
+          <TouchableOpacity style={styles.gradientTouchable} onPress={handleNext}>
+            <LinearGradient
+              colors={['#F97316', '#FAA729']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[styles.nextButton, styles.applyButtonGradient]}
+            >
               <Text style={styles.nextButtonText}>Next</Text>
-          </LinearGradient>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
       </View>
@@ -196,7 +222,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
-    height:'98%',
+    height: '98%',
     marginBottom: 40,
   },
   footer: {
@@ -260,7 +286,7 @@ const styles = StyleSheet.create({
   },
   gradientTouchable: {
     flex: 1,
-    width:'50%'
+    width: '50%'
   },
 });
 

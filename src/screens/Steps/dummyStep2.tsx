@@ -326,7 +326,10 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               { label: 'Diploma', value: 'Diploma' },
             ]}
             setOpen={setOpenQualificationDropdown}
-            setValue={setQualification}
+            setValue={value => {
+              setQualification(value);
+              setErrors(prev => ({ ...prev, qualification: '' })); // Clear the error if input is valid
+            }}
             //onChangeValue={() => {setSpecialization;}} // Reset specialization on qualification change
             placeholder="*Select Qualification"
             style={styles.dropdown}
@@ -345,7 +348,10 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             }))}
             value={specialization}
             setOpen={setOpenSpecializationDropdown}
-            setValue={setSpecialization}
+            setValue={value => {
+              setSpecialization(value);
+              setErrors(prev => ({ ...prev, specialization: '' })); // Clear error dynamically
+            }}
             placeholder="*Select Specialization"
             disabled={!qualification} // Disable dropdown if qualification is not selected
             style={styles.dropdown}
@@ -362,7 +368,13 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             value={selectedSkills}
             items={skillOptions.map(skill => ({ label: skill, value: skill }))}
             setOpen={setOpenSkillsDropdown}
-            setValue={setSelectedSkills}
+            setValue={value => {
+              setSelectedSkills(value);
+              setErrors(prev => ({
+                ...prev,
+                skills: value.length > 0 ? '' : 'Skills are required.',
+              })); // Clear error dynamically
+            }}
             placeholder="*Skills"
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropdownContainer}
@@ -375,9 +387,12 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             placeholder="*Experience in Years" placeholderTextColor="#0D0D0D"
             style={styles.input}
             value={formData.experience}
-            onChangeText={text =>
-              setFormData(prev => ({ ...prev, experience: text }))
-            }
+            onChangeText={text => {
+              setFormData(prev => ({ ...prev, experience: text }));
+              if (text && !isNaN(Number(text))) {
+                setErrors(prev => ({ ...prev, experience: '' })); // Clear the error if input is valid
+              }
+            }}
           />
           {errors.experience && (
             <Text style={styles.errorText}>{errors.experience}</Text>
@@ -392,7 +407,13 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               value: location,
             }))}
             setOpen={setOpenLocationDropdown}
-            setValue={setSelectedLocations}
+            setValue={value => {
+              setSelectedLocations(value);
+              setErrors(prev => ({
+                ...prev,
+                preferredLocation: value.length > 0 ? '' : 'Preferred location is required.',
+              })); // Clear error dynamically
+            }}
             placeholder="*Preferred Job Locations"
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropdownContainer}

@@ -11,7 +11,7 @@ import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp,useFocusEffect,useIsFocused  } from '@react-navigation/native';
 //import { AuthContext } from './AuthContext'
 import {
   View,
@@ -32,6 +32,7 @@ type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 //const applicantId = '2'; // Your applicant ID
 
 function Dashboard() {
+ 
   const { userId, userToken, } = useAuth();
   const route = useRoute<HomeScreenRouteProp>();
   useEffect(() => {
