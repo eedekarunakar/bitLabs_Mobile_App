@@ -3,7 +3,6 @@ import { Text, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
-// Replace with actual path
 import BottomTab from './src/routes/BottomNavigation';
 import Dummystep1 from './src/screens/Steps/dummyStep1'; // Replace with actual path
 import Dummystep2 from './src/screens/Steps/dummyStep2';
@@ -33,8 +32,6 @@ import ResumeBuilder from './src/screens/profile/ResumeBuilder';
 import Drives from './src/screens/HomePage/Drives';
 import Badge from './src/screens/HomePage/Badge';
 
-
-
 export type RootStackParamList = {
   ForgotPassword: undefined,
   LandingPage: undefined;
@@ -62,17 +59,13 @@ export type RootStackParamList = {
   ResumeBuilder: undefined;
   Drives:undefined;
   MyResume:undefined;
-  Home: { welcome:string }| undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-
 const Appnavigator = () => {
-  const { isAuthenticated, userToken, userId, userEmail } = useAuth(); // Assuming AuthProvider provides these
-  console.log('userToken', userToken);
-  console.log('userId', userId);
-  const [profileChecked, setProfileChecked] = useState(false);
+  const { isAuthenticated, userToken, userId, userEmail } = useAuth(); 
+  const [profileChecked, setProfileChecked] = useState(isAuthenticated);
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
 
   useEffect(() => {
@@ -80,10 +73,7 @@ const Appnavigator = () => {
       if (isAuthenticated && userToken && userId) {
         try {
           const result = await fetchProfileId(userId, userToken);
-          console.log(result)
           if (result.success) {
-            // Show Step1 if profileid is 0, otherwise show Dashboard
-            console.log('Profile ID:', result.profileid);
             setShouldShowStep1(result.profileid === 0);
           } else {
             console.error('Failed to fetch profile details');
@@ -92,14 +82,15 @@ const Appnavigator = () => {
           console.error('Error fetching profile ID:', error);
         }
       }
-      setProfileChecked(true); // Set profileChecked to true after the profile check is done
+      setProfileChecked(true);
     };
 
-    checkProfileId();
-  }, [isAuthenticated, userToken, userId]);
+    if (!profileChecked && isAuthenticated) {
+      checkProfileId();
+    }
+  }, [isAuthenticated, userToken, userId, profileChecked]);
 
-  if (!isAuthenticated || !profileChecked) {
-    // Show LandingPage while checking profile or if not authenticated
+  if (!isAuthenticated) {
     return (
       <Stack.Navigator>
         <Stack.Screen
@@ -116,9 +107,14 @@ const Appnavigator = () => {
     );
   }
 
+  if (!profileChecked) {
+    // Add a loading screen or spinner here if necessary
+    return null;
+  }
+
   return (
     <Stack.Navigator>
-      {shouldShowStep1 ? (
+      {!shouldShowStep1 ? (
         <>
           <Stack.Screen name="Step1" component={Dummystep1} initialParams={{ email: userEmail }} options={{ headerShown: false }} />
           <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
@@ -166,7 +162,6 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ViewJobDetails"
             component={ViewJobDetails}
-
           />
           <Stack.Screen
             name="SavedDetails"
@@ -215,9 +210,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="Drives"
             component={Drives}
-           
           />
-        
         </>
       )}
     </Stack.Navigator>
@@ -238,7 +231,6 @@ const AppWithProfileProvider = () => {
 };
 
 const App = () => {
-
   return (
     <AuthProvider>
       <AppWithProfileProvider />

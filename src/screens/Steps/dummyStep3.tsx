@@ -133,7 +133,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     <View style={styles.screen}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("../../assests/Images/rat/logo.png")} />
+        <Image style={styles.logo} source={require("../../assests/Images/logo.png")} />
       </View>
 
       <View style={styles.container}>
@@ -161,7 +161,8 @@ const Step3: React.FC = ({ route, navigation }: any) => {
             >
               <Text style={styles.browseText}>Browse</Text>
             </TouchableOpacity>
-          </View>
+          </View>                 
+          <Text style={styles.label}>Or</Text>              
           <TouchableOpacity style={styles.buildButton} onPress={() => navigation.navigate("ResumeBuilder")}>
             <Text style={styles.buildText}>Build Your Resume</Text>
           </TouchableOpacity>
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 3,
     width: '80%',
     paddingLeft: 10,
   },
@@ -214,9 +215,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    width: 200,
-    height: 60,
+    width: 150, // Decreased width
+    height: 45,
     marginBottom: 20,
+    
   },
   container: {
     flex: 1,
@@ -246,21 +248,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "black",
     marginBottom: 8,
+    fontWeight: "bold",
   },
   uploadContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    padding: 15,
-    marginBottom: 15,
+    
+    padding: 5,
+    marginBottom: 10,
 
   },
   browseButton: {
-    backgroundColor: "#F97316",
+    backgroundColor: "gray",
     flexDirection: "row",
     padding: 10,
     marginLeft: 7,
-    borderRadius: 5,
+    borderRadius: 10,
     marginBottom: 10,
     alignItems: "center",
     justifyContent: "space-between",
@@ -275,11 +278,11 @@ const styles = StyleSheet.create({
   },
   buildButton: {
     width: 142,
-    backgroundColor: "#F97316",
+    backgroundColor: "gray",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
     marginTop: 10,
-    alignSelf: 'center',
+    
   },
   buildText: {
     color: "white",
@@ -299,6 +302,14 @@ const styles = StyleSheet.create({
     paddingVertical:10,
     gap:10
   },
+  line: {
+    width: '40%',
+    height: 1,
+    backgroundColor: '#D8D8D8',
+    position: 'static',
+    top: '60%',
+    marginBottom: 10,
+},
   backButton: {
     borderWidth: 1,
     borderColor: '#F97316',

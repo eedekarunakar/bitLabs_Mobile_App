@@ -311,6 +311,7 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
     textAlign: 'center',
+    fontSize:12,
   },
   otpContainer: {
     top: -4,
