@@ -21,11 +21,12 @@ import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import { base64Image } from '../../services/base64Image';
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
 
- 
- 
- 
- 
+
+
+
+
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
     const [isProfessionalFormVisible, setProfessionalFormVisible] = useState(false);
@@ -35,13 +36,13 @@ function ProfileComponent() {
     const [isResumeModalVisible, setResumeModalVisible] = useState(false);
     const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
     const [resumeText, setResumeText] = useState<string>('');
-    const { fetchProfilePhoto,photo } = useProfilePhoto();
- 
- 
+    const { fetchProfilePhoto, photo } = useProfilePhoto();
+
+
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-   
+
     const DEFAULT_PROFILE_IMAGE = require('../../assests/profile/profile.png');
     console.log(userId, userToken)
     const {
@@ -57,9 +58,9 @@ function ProfileComponent() {
         reloadProfile
     } = useProfileViewModel(userToken, userId);
     const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
- 
- 
- 
+
+
+
     const handlePermission = async () => {
         if (Platform.OS === 'android') {
             const permissions = Platform.Version >= 33
@@ -72,10 +73,10 @@ function ProfileComponent() {
             const grantedStatuses = await Promise.all(
                 permissions.map((permission) => PermissionsAndroid.check(permission))
             );
- 
- 
+
+
             const allPermissionsGranted = grantedStatuses.every((status) => status);
- 
+
             if (!allPermissionsGranted) {
                 const granted = await PermissionsAndroid.requestMultiple(permissions);
                 return Object.values(granted).every(status => status === PermissionsAndroid.RESULTS.GRANTED);
@@ -87,12 +88,12 @@ function ProfileComponent() {
     const [key, setKey] = useState(0);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-             console.log('Profile screen is focused');
-             setKey(prevKey => (prevKey + 1) % 1000);
-         // Change the key to force re-render
-         });
-          return unsubscribe;
-         }, [navigation]);
+            console.log('Profile screen is focused');
+            setKey(prevKey => (prevKey + 1) % 1000);
+            // Change the key to force re-render
+        });
+        return unsubscribe;
+    }, [navigation]);
 
 
     useEffect(() => {
@@ -100,29 +101,29 @@ function ProfileComponent() {
             fetchProfilePhoto(userToken, userId);
         }
     }, [userId, userToken]);
-    
+
     const showToast = (message: string) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
     };
- 
+
     const validatePhoto = (photoFile: any) => {
         const allowedTypes = ['image/jpeg', 'image/png'];
         const maxSize = 1048576; // 1 MB in bytes
- 
+
         if (!allowedTypes.includes(photoFile.type)) {
             showToast('Only JPEG and PNG files are allowed.');
             return false;
         }
- 
+
         if (photoFile.fileSize > maxSize) {
             showToast('File size must be less than 1 MB.');
             return false;
         }
- 
+
         return true;
     };
- 
- 
+
+
     const uploadProfilePhoto = async (photoFile: any) => {
         setIsLoading(true);
         try {
@@ -141,7 +142,7 @@ function ProfileComponent() {
             setIsLoading(false);
         }
     };
- 
+
     const handleCamera = async () => {
         const isPermissionGranted = await handlePermission();
         if (!isPermissionGranted) {
@@ -170,7 +171,7 @@ function ProfileComponent() {
             }
             setCameraOptionsVisible(false);
         });
- 
+
     };
     const removePhoto = async () => {
         if (photo === DEFAULT_PROFILE_IMAGE) {
@@ -185,12 +186,12 @@ function ProfileComponent() {
                 type: 'image/png', // Correct MIME type
                 fileName: 'default_profile.png',
             };
-   
+
             console.log('Default Image File:', defaultImageFile);
-   
+
             // Upload the default image
             const result = await ProfileService.uploadProfilePhoto(userToken, userId, defaultImageFile);
-   
+
             if (result.success) {
                 await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
                 console.log('Default photo uploaded successfully');
@@ -208,10 +209,10 @@ function ProfileComponent() {
             setIsLoading(false);
         }
     };
-   
-   
-   
- 
+
+
+
+
     const handleLibrary = () => {
         const options: ImageLibraryOptions = {
             mediaType: 'photo',
@@ -234,10 +235,10 @@ function ProfileComponent() {
             setCameraOptionsVisible(false);
         });
     };
- 
- 
- 
- 
+
+
+
+
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
@@ -261,38 +262,38 @@ function ProfileComponent() {
     if (!profileData || !profileData.applicant) {
         setIsLoading(true)
         return (
-           
+
             <View>
-               
+
                 <Text>No Applicant Data Found</Text>
             </View>
         );
     }
- 
+
     const handleUploadResume = async () => {
         try {
             const result: DocumentPickerResponse[] = await DocumentPicker.pick({
                 type: [DocumentPicker.types.pdf], // Ensure only PDF files are shown
             });
- 
+
             if (!result || result.length === 0) {
                 showToast('No file selected.');
                 return;
             }
- 
+
             const selectedFile: DocumentPickerResponse = result[0];
             const maxSize = 1048576; // 1MB size limit
- 
+
             // Validate file size
             if (selectedFile.size && selectedFile.size > maxSize) {
                 showToast('File size exceeds the 1MB limit.');
                 return;
             }
- 
+
             // Set selected file but do not upload yet
             setResumeFile(selectedFile);
             setResumeText(selectedFile.name || '');
- 
+
             showToast('Resume selected. Remember to save changes.');
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
@@ -307,9 +308,9 @@ function ProfileComponent() {
             }
         }
     };
- 
- 
- 
+
+
+
     const handleSaveResume = async () => {
         if (resumeFile) {
             const formData = new FormData();
@@ -318,11 +319,11 @@ function ProfileComponent() {
                 type: resumeFile.type,
                 name: resumeFile.name,
             } as any);
- 
-            
- 
- 
-const response = await ProfileService.uploadResume(userToken, userId, formData);
+
+
+
+
+            const response = await ProfileService.uploadResume(userToken, userId, formData);
             if (response.success) {
                 setResumeFile(response.data.fileName);
                 showToast('Resume uploaded successfully!');
@@ -336,7 +337,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
             showToast('No file selected to upload.');
         }
     };
- 
+
     const handleSaveChanges = async () => {
         const success = await updateBasicDetails();
         if (success) {
@@ -345,7 +346,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
             reloadProfile();
         }
     };
- 
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} key={key}>
             <ScrollView>
@@ -363,13 +364,13 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                         navigation.navigate('ImagePreview', { uri: photo, retake: false });
                                     }
                                 }}>
-                                    <Image source={photo ? { uri: photo } :require('../../assests/profile/profile.png')} style={styles.image} />
+                                    <Image source={photo ? { uri: photo } : require('../../assests/profile/profile.png')} style={styles.image} />
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.cameraIcon}
                                     accessible={true} accessibilityLabel="Open Camera Options"
                                     onPress={() => setCameraOptionsVisible(true)
- 
+
                                     }
                                 >
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
@@ -378,7 +379,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             <Text style={styles.name}>
                                 {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
                             </Text>
- 
+
                             <View style={styles.infoContainer}>
                                 <View style={styles.info}>
                                     <Icon name="mail" size={24} color="#6C757D" />
@@ -408,7 +409,7 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             <Text style={styles.subheading}>Specilization</Text>
                             <Text style={styles.details}> {specialization}</Text>
                             <Text style={styles.subheading}>Skills</Text>
- 
+
                             <View style={styles.skillContainer}>
                                 {applicantSkillBadges
                                     .filter((badge: ApplicantSkillBadge) => badge.flag === 'added') // Filter badges based on flag
@@ -435,35 +436,35 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                         </View>
                                     ))
                                 }
- 
- 
+
+
                                 {skillsRequired.length > 0 && skillsRequired.map((skill: { id: number; skillName: string }, index: number) => (
                                     <Text key={index} style={styles.skillcolor}>
                                         {skill.skillName}
                                     </Text>
                                 ))}
- 
+
                                 {skillsRequired.length === 0 && applicantSkillBadges.length === 0 && (
                                     <Text>No skills added yet.</Text>
                                 )}
- 
- 
+
+
                             </View>
- 
- 
- 
- 
+
+
+
+
                             <Text style={styles.subheading}>Experience</Text>
                             <Text style={styles.details}>{experience}</Text>
                             <View>
                                 <Text style={styles.subheading}>Preferred Location</Text>
                                 {preferredJobLocations.length > 0 && (
-                                    <Text style={{ color: '#000',fontWeight:'bold' }}>
+                                    <Text style={{ color: '#000', fontWeight: 'bold' }}>
                                         {preferredJobLocations.join(', ')}
                                     </Text>
                                 )}
                             </View>
- 
+
                         </View>
                         <ProfessionalDetailsForm
                             visible={isProfessionalFormVisible}
@@ -475,9 +476,9 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             preferredJobLocations={preferredJobLocations}
                             skillBadges={applicantSkillBadges}
                             onReload={reloadProfile}
- 
+
                         />
- 
+
                         <Modal
                             transparent={true}
                             animationType="slide"
@@ -486,8 +487,8 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                         >
                             <View style={styles.modalView5}>
                                 <View style={styles.modalCard5}>
- 
- 
+
+
                                     <TouchableOpacity style={styles.customButton} onPress={handleCamera}>
                                         <Text style={styles.buttonText1}>Take a photo</Text>
                                     </TouchableOpacity>
@@ -500,13 +501,13 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                     <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
                                         <Text style={styles.modalButtonText7}>Cancel</Text>
                                     </TouchableOpacity>
- 
+
                                 </View>
- 
- 
- 
+
+
+
                             </View>
- 
+
                         </Modal>
                         <Modal
                             transparent={true}
@@ -518,26 +519,26 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                             }}>
                             <View style={styles.modalView}>
                                 <View style={styles.modalCard}>
-                                    <TextInput placeholder='FirstName'placeholderTextColor="#B1B1B1" style={styles.input}
+                                    <TextInput placeholder='FirstName' placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.firstName}
                                         onChangeText={(text) => handleInputChange('firstName', (text))} />
                                     {formErrors?.firstName && (
                                         <Text style={styles.errorText}>{formErrors.firstName}</Text>
                                     )}
-                                    <TextInput placeholder='LastName'placeholderTextColor="#B1B1B1" style={styles.input}
+                                    <TextInput placeholder='LastName' placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.lastName}
                                         onChangeText={(text) => handleInputChange('lastName', (text))} />
                                     {formErrors?.lastName && (
                                         <Text style={styles.errorText}>{formErrors.lastName}</Text>
                                     )}
-                                    <TextInput placeholder={basicDetails?.email || 'Email'}placeholderTextColor="#B1B1B1" editable={false} style={styles.input} />
-                                    <TextInput placeholder='+91*******' style={styles.input}placeholderTextColor="#B1B1B1"
+                                    <TextInput placeholder={basicDetails?.email || 'Email'} placeholderTextColor="#B1B1B1" editable={false} style={styles.input} />
+                                    <TextInput placeholder='+91*******' style={styles.input} placeholderTextColor="#B1B1B1"
                                         value={personalDetails.alternatePhoneNumber}
                                         onChangeText={(text) => handleInputChange('alternatePhoneNumber', (text))} />
                                     {formErrors?.alternatePhoneNumber && (
                                         <Text style={styles.errorText}>{formErrors.alternatePhoneNumber}</Text>
                                     )}
- 
+
                                     <View style={{ alignItems: 'flex-end' }}>
                                         <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
                                             <Text style={{ color: '#fff', fontWeight: 'bold' }}>Save Changes</Text>
@@ -546,22 +547,19 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                 </View>
                             </View>
                         </Modal>
- 
- 
- 
                     </View>
                 </View>
- 
+
                 <View style={{ flex: 1, padding: 10 }}>
                     <View style={styles.card1}>
                         <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
- 
+
                         <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
                             <Icon3 name='pencil' size={24} color='black' />
                         </TouchableOpacity>
                     </View>
                 </View>
- 
+
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -571,80 +569,102 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                     <View style={styles.modalView1}>
                         <View style={styles.modalCard1}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
-                                <Text style={styles.modalTitle1}>Resume</Text>
-                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{marginLeft:'70%'}}>
-                                    <Text style={{ fontSize: 16, color: 'red', top: -10 }}>X</Text>
+                                <Text style={styles.modalTitle1}>Upload Resume</Text>
+                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{ marginLeft: '50%' }}>
+                                    <Text style={{ fontSize: 12, color: 'gray', top: -35, fontWeight: 'bold' }}>X</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ alignItems: 'center' }}>
-                                <TextInput
-                                    style={styles.input1}
-                                    placeholder='Search from device'
-                                    placeholderTextColor="#B1B1B1"
-                                    value={resumeText} // Ensure string type
-                                    onChangeText={setResumeText}
-                                />
+                            <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 2, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
                                 <TouchableOpacity
-                                    style={styles.uploadButton}
                                     onPress={handleUploadResume}
                                 >
-                                    <Text style={styles.saveButtonText}>Upload</Text>
+                                    <Image
+                                        source={require('../../../src/assests/Images/file1.png')}
+                                        style={{ position: 'relative', left: 60, top: 40 }}
+
+                                    />
+                                    <Text style={{ padding: 50, fontWeight: 'bold' }}>Select File</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.separator} />
-                            <View style={styles.resumeModal}>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
+
+                                <View style={styles.line}></View>
+                                <Text style={{ marginTop: -10 }}> Or</Text>
+                                <View style={[styles.line, { marginLeft: 3 }]}></View>
+                            </View>
+                            <View>
                                 <TouchableOpacity
-                                    style={[styles.uploadButton, { marginRight: 10 }]}
+                                    style={styles.uploadButton}
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
-                                    <Text style={styles.saveButtonText}>Build your Resume</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>Create Resume</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'flex-end' }}>
-                                <TouchableOpacity
-                                    style={styles.button}
-                                    onPress={handleSaveResume} // Save changes and upload the file to the backend
+                                <LinearGradient
+                                    colors={['#F97316', '#FAA729']}  // Gradient colors
+                                    style={styles.button}            // Apply styles to the gradient button
+                                    start={{ x: 0, y: 0 }}           // Starting point of the gradient
+                                    end={{ x: 1, y: 0 }}             // Ending point of the gradient
                                 >
-                                    <Text style={styles.saveButtonText}>Save Changes</Text>
-                                </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={handleSaveResume}      // Save changes and upload the file to the backend
+                                        style={styles.buttonContent}
+                                    >
+                                        <Text style={[styles.saveButtonText,{fontWeight:'bold'}]}>Save Changes</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>
                             </View>
                         </View>
                     </View>
                 </Modal>
- 
- 
- 
- 
+
             </ScrollView>
         </KeyboardAvoidingView>
     )
 }
- 
- 
- 
+
+
+
 const styles = StyleSheet.create({
-    uploadButton: {
-        backgroundColor: '#778289',
-        borderRadius: 8,
-        margin: 4,
-        flexDirection: 'row',
+    line: {
+        width: '20%',
+        height: 1,
+        backgroundColor: '#D8D8D8',
+        position: 'static',
+        top: '60%',
+        marginBottom: 10,
+    },
+
+    buttonContent: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        // paddingHorizontal: 12,
-        padding: 8
- 
+      },
+
+    uploadButton: {
+        width: '100%',
+        backgroundColor: '#F8F8F8',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 30,
+        borderRadius: 5,
+        marginBottom: 55
+
     },
     skillBadge: {
         height: 30,
-    flexDirection: 'row',
-    alignItems: 'center', // Align children vertically
-    justifyContent: 'center', // Center children horizontally
-    paddingHorizontal: 8, // Consistent padding inside badges
-    backgroundColor: '#334584', // Default background color
-    borderRadius: 15,
-    marginRight: 8,
-    marginBottom: 5, 
- 
+        flexDirection: 'row',
+        alignItems: 'center', // Align children vertically
+        justifyContent: 'center', // Center children horizontally
+        paddingHorizontal: 8, // Consistent padding inside badges
+        backgroundColor: '#334584', // Default background color
+        borderRadius: 15,
+        marginRight: 8,
+        marginBottom: 5,
+
     },
+
     skillBadgeText: {
         color: 'white',
         fontSize: 14,
@@ -654,9 +674,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 30,
-        width: 120,
+        width: '100%',
         borderRadius: 5
- 
+
     },
     input: {
         height: 40,
@@ -666,8 +686,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 2,
         backgroundColor: '#E5E5E5',
-        color:'#0D0D0D',
- 
+        color: '#0D0D0D',
+
     },
     skillContainer: {
         marginTop: 5,
@@ -685,14 +705,14 @@ const styles = StyleSheet.create({
         margin: 5,
         color: '#fff',
         paddingHorizontal: 8
- 
+
     },
     card: {
         margin: 10,
         padding: 20,
         backgroundColor: '#fff',
         borderRadius: 10,
-       
+
     },
     container: {
         alignItems: 'center',
@@ -701,7 +721,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignItems: 'center', // Center the image horizontally
     },
- 
+
     pencil: {
         marginLeft: 'auto'
     },
@@ -709,7 +729,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30,
         color: '#424242'
- 
+
     },
     image: {
         width: 150,
@@ -717,7 +737,7 @@ const styles = StyleSheet.create({
         borderRadius: 75, // Ensure the image is circular
         shadowColor: 'transparent', // Remove shadow
         elevation: 0, // Remove elevation shadow
-        resizeMode:'cover'
+        resizeMode: 'cover'
     },
     cameraIcon: {
         position: 'absolute',
@@ -734,7 +754,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 4,
- 
+
     },
     text: {
         marginLeft: 10,
@@ -751,8 +771,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         padding: 20
- 
- 
+
+
     },
     cap: {
         margin: 2,
@@ -773,7 +793,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
- 
+
     },
     modalCard: {
         width: 300,
@@ -790,19 +810,19 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 5,
     },
- 
+
     resumeModal: {
         // flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
- 
+
     resumeText: {
         fontSize: 18,
         fontWeight: 'bold',
     },
     // Add the new style for the container
- 
+
     card1: {
         width: '100%', // Adjust width to 90% of the screen width
         backgroundColor: '#fff',
@@ -822,18 +842,18 @@ const styles = StyleSheet.create({
         marginVertical: 10, // Space between cards
         height: 100, // Increase height of the card
     },
- 
+
     // Style for the static Resume Text (left side)
-   
+
     // Style for the Edit Logo (right side)
-   
- 
+
+
     editLogo: {
         width: 18,
         height: 18,
     },
- 
- 
+
+
     // Modal View for the Resume Edit
     modalView1: {
         flex: 1,
@@ -841,7 +861,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
     },
- 
+
     // Modal Card Style
     modalCard1: {
         width: 300,
@@ -854,7 +874,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 5,
     },
- 
+
     // Modal Title
     modalTitle1: {
         color: '#333333',
@@ -862,7 +882,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
- 
+
     // Text Input for editing the resume
     input1: {
         height: 40,
@@ -875,22 +895,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#E5E5E5',
         // textAlignVertical: 'top', // Makes the text align from top in the input box
     },
- 
-   
- 
+
+
+
     // Save Button Text
     saveButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
+        color: 'white',
+
+
     },
- 
+
     modalView5: {
         flex: 1,
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
     },
- 
+
     modalCard5: {
         width: '95%', // Adjusts modal width
         marginHorizontal: '5%', // Centers the modal horizontally
@@ -904,7 +925,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 5,
     },
- 
+
     customButton: {
         width: '100%', // Full-width button
         backgroundColor: 'white',
@@ -914,15 +935,15 @@ const styles = StyleSheet.create({
         borderColor: '#ccc', // Divider color
         justifyContent: 'flex-start', // Align text to the left
     },
- 
+
     buttonText1: {
- 
+
         fontWeight: 400,
         fontSize: 18,
         color: '#0D0D0D',
         fontFamily: 'JakartaSans', // Set font to Jakarta Sans
     },
- 
+
     modalButton7: {
         width: '100%', // Full-width cancel button
         fontSize: 18,
@@ -931,20 +952,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         // marginTop: 5, // Reduce margin to avoid excessive space before "Cancel"
     },
- 
+
     modalButtonText7: {
         color: 'red', // Text color for the Cancel button
         fontWeight: 400,
         fontSize: 18,
         fontFamily: 'JakartaSans', // Set font to Jakarta Sans
     },
- 
+
     separator: {
         height: 1,
         width: '100%',
         backgroundColor: '#ccc', // Add a grey line as separator
         marginVertical: 15,
- 
+
     },
     errorContainer: {
         flex: 1,
@@ -961,9 +982,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 10
     },
- 
+
 });
- 
+
 export default ProfileComponent;
- 
- 
+
