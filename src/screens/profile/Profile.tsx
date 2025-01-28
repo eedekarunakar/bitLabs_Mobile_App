@@ -22,7 +22,6 @@ import { base64Image } from '../../services/base64Image';
 import LinearGradient from 'react-native-linear-gradient';
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
-import LinearGradient from 'react-native-linear-gradient';
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
@@ -998,20 +997,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 10
     },
-
-    line: {
-        width: '20%',
-        height: 1,
-        backgroundColor: '#D8D8D8',
-        position: 'static',
-        top: '60%',
-        marginBottom: 10,
-    },
-    buttonContent: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
 
 });
 

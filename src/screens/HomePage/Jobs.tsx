@@ -343,7 +343,8 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: '#FF8C00',
+    borderBottomColor: '#F97316',
+    
     
   },
   tabText: {
@@ -353,7 +354,7 @@ const styles = StyleSheet.create({
     fontFamily:'PlusJakartaSans-Bold'
   },
   activeTabText: {
-    color: '#FF8C00',
+    color: '#F97316',
     marginLeft: 12,
     fontFamily:'PlusJakartaSans-Bold'
  
