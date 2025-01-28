@@ -19,13 +19,14 @@ import ResumeIconOutline from '../assests/icons/NewpaperOutline';
 import DrivesIconSolid from '../assests/icons/RocketSolid';
 import DrivesIconOutline from '../assests/icons/RocketOutline';
 import { RootStackParamList } from '../../new';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp,useFocusEffect } from '@react-navigation/native';
 
 import { createTabScreenOptions } from '../components/Navigation/TabConfig';
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
 type BottomTabRouteProp = RouteProp<RootStackParamList, 'BottomTab'>;
 const BottomTab = ({ route }: { route: BottomTabRouteProp }) => {
+
   const welcome = route.params;
     return (
           <Tabs.Navigator

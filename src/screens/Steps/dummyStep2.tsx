@@ -287,7 +287,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               { label: 'Diploma', value: 'Diploma' },
             ]}
             setOpen={setOpenQualificationDropdown}
+
             onOpen={handleOpenQualification}
+
             setValue={value => {
               setQualification(value);
               setErrors(prev => ({ ...prev, qualification: '' })); // Clear the error if input is valid
@@ -312,7 +314,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             }))}
             value={specialization}
             setOpen={setOpenSpecializationDropdown}
+
             onOpen={handleOpenSpecialization}
+
             setValue={value => {
               setSpecialization(value);
               setErrors(prev => ({ ...prev, specialization: '' })); // Clear error dynamically
@@ -335,7 +339,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             value={selectedSkills}
             items={skillOptions.map(skill => ({ label: skill, value: skill }))}
             setOpen={setOpenSkillsDropdown}
+
             onOpen={handleOpenSkills}
+
             setValue={value => {
               setSelectedSkills(value);
               setErrors(prev => ({
@@ -377,7 +383,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               value: location,
             }))}
             setOpen={setOpenLocationDropdown}
+
             onOpen={handleOpenLocation}
+
             setValue={value => {
               setSelectedLocations(value);
               setErrors(prev => ({

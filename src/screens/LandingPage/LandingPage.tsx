@@ -137,11 +137,13 @@ const LandingPage = () => {
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
 
+
                                 <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName}  onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))}  allowFontScaling={false} />
                                 {loginErrors.username && <Text style={{ color: 'red',fontFamily:'PlusJakartaSans-Regular',fontSize:12 }}>{loginErrors.username}</Text>}
+
  
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}}  allowFontScaling={false} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false);validateLogin()}}  allowFontScaling={false} />
              <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
 
                                         <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -169,14 +171,14 @@ const LandingPage = () => {
                         ) :
                             <View style={styles.formContainer}>
 
-                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={setSignupName}  allowFontScaling={false}/>
+                                <TextInput placeholder="Name" placeholderTextColor="#B1B1B1" style={styles.input} value={signupName} onChangeText={(text)=>{setSignupName ; handleChange('name',text)}}  allowFontScaling={false}/>
                                 {signUpErrors.name && <Text style={styles.errorText}>{signUpErrors.name}</Text>}
-                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => setSignupEmail(text.replace(/\s/g, ''))}  allowFontScaling={false}/>
+                                <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => {setSignupEmail(text.replace(/\s/g, ''));handleChange('email',text)}}  allowFontScaling={false}/>
                                 {signUpErrors.email && <Text style={styles.errorText}>{signUpErrors.email}</Text>}
-                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => setSignupNumber(text.replace(/[^0-9]/g, ''))}  allowFontScaling={false}/>
+                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => {setSignupNumber(text.replace(/[^0-9]/g, ''));handleChange('whatsappnumber',text)}}  allowFontScaling={false}/>
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={setSignupPassword} onBlur={()=>{SetIsSignupPasswordVisible(false)}}  allowFontScaling={false}/>
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={(text)=>{setSignupPassword;handleChange('password',text)}} onBlur={()=>{SetIsSignupPasswordVisible(false)}}  allowFontScaling={false}/>
 
                                     <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!IsSignupPasswordVisible)}>
 
@@ -395,7 +397,7 @@ const styles = StyleSheet.create({
 
         flexDirection: 'row',
         alignItems: 'center',
-
+        
     },
     eyeContainer: {
         height: 20,

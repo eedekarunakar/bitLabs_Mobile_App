@@ -12,10 +12,10 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import ProgressBar from '../../components/progessBar/ProgressBar';
 import LinearGradient from 'react-native-linear-gradient';
+
 import { getMobileNumber } from '../../services/mobile';
 import { useAuth } from '../../context/Authcontext';
- 
- 
+
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
  
 interface Step1Props {
@@ -27,7 +27,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(1);
   const{userId}=useAuth();
- 
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -39,7 +39,9 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     lastName: '',
     whatsappNumber: '',
   });
+
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // Fetch mobile number from API
     const fetchMobileNumber = async () => {
@@ -49,10 +51,11 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       }
       setLoading(false); // Mark API call as complete
     };
+
  
     fetchMobileNumber();
   }, []);
- 
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
@@ -222,7 +225,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
-    height:'98%',
+    height: '98%',
     marginBottom: 40,
   },
   footer: {
@@ -289,7 +292,7 @@ const styles = StyleSheet.create({
   },
   gradientTouchable: {
     flex: 1,
-    width:'50%'
+    width: '50%'
   },
 });
 

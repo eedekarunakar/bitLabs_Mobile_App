@@ -57,15 +57,19 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   Notification: undefined;
   ResumeBuilder: undefined;
+
   Drives: undefined;
   MyResume: undefined;
+
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Appnavigator = () => {
+
   const { isAuthenticated, userToken, userId, userEmail } = useAuth();
   const [profileChecked, setProfileChecked] = useState(false);
+
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
 
   useEffect(() => {
@@ -114,7 +118,7 @@ const Appnavigator = () => {
 
   return (
     <Stack.Navigator>
-      {shouldShowStep1 ? (
+      {!shouldShowStep1 ? (
         <>
           <Stack.Screen name="Step1" component={Dummystep1} initialParams={{ email: userEmail }} options={{ headerShown: false }} />
           <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
@@ -180,7 +184,6 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ViewJobDetails"
             component={ViewJobDetails}
-
           />
           <Stack.Screen
             name="SavedDetails"
@@ -266,6 +269,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="Drives"
             component={Drives}
+
 
           />
 
