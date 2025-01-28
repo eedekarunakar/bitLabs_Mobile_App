@@ -109,9 +109,10 @@ const styles = StyleSheet.create({
   stepText: {
     fontSize: 16,
     color: '#F97316',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   activeStepText: {
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#fff',
   },
   completedStepText: {
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     width: 80,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   line: {
     position: 'absolute',

@@ -88,7 +88,7 @@ const SavedJobs = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f6f6f6' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  placeholderText: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 50 },
+  placeholderText: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 50 ,fontFamily:'PlusJakartaSans-Bold'},
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
@@ -102,16 +102,15 @@ const styles = StyleSheet.create({
   jobDetails: { flex: 1 },
   jobTitle: { 
     color: '#121212', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontFamily:'PlusJakartaSans-Bold',
     fontSize: 16, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '700', // Font weight
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
   },
   companyName: { 
     fontSize: 12,
-    fontFamily: "Plus Jakarta Sans",
+    fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
     fontWeight:600,
     color: 'rgba(83, 83, 83, 0.80)',
@@ -127,6 +126,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
     fontSize: 8,
+    fontFamily:'PlusJakartaSans-Medium'
   },
   oval: {
     flexDirection: 'row',
@@ -138,14 +138,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginRight: 6
   },
-  ovalText: { fontSize: 9, color: 'black' },
+  ovalText: { fontSize: 9, color: 'black',fontFamily:'PlusJakartaSans-Medium' },
   brieficon: { height: 8, width: 8, marginRight: 8 },
   locationContainer: { flexDirection: 'row', alignItems: 'center' },
   locationIcon: { width: 8, height: 8, marginRight: 6},
-  locationText: { fontSize: 9, color: 'black' },
+  locationText: { fontSize: 9, color: 'black',fontFamily:'PlusJakartaSans-Medium' },
   postedOn: { 
     color: '#979696', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 8, // Font size
     fontStyle: 'normal', // Font style
     fontWeight: '500', // Font weight

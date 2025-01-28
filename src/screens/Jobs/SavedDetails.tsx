@@ -122,8 +122,17 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         Toast.show({
           type: 'success',
           position: 'bottom',
+          bottomOffset: 80,
           text1: 'Success',
           text2: 'Job removed successfully!',
+          text1Style: {
+            fontSize: 14,
+            fontFamily:'PlusJakartaSans-Medium'
+          },
+          text2Style: {
+            fontSize: 14,
+            fontFamily:'PlusJakartaSans-Medium'
+          },
           visibilityTime: 5000,
         });
         navigation.goBack(); // Navigate back after removal
@@ -133,8 +142,18 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       Toast.show({
         type: 'error',
         position: 'bottom',
+        bottomOffset: 80,
         text1: 'Error',
         text2: 'Failed to remove job.',
+        text1Style: {
+          fontSize: 14,
+          fontFamily:'PlusJakartaSans-Medium'
+        },
+        text2Style: {
+          fontSize: 14,
+           fontFamily:'PlusJakartaSans-Medium'
+        },
+       
         visibilityTime: 5000,
       });
     }
@@ -150,6 +169,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           type: 'success',
           text1: 'Success',
           text2: 'Job application submitted successfully!',
+          text1Style: {
+            fontSize: 14,
+            fontFamily:'PlusJakartaSans-Medium'
+          },
+          text2Style: {
+            fontSize: 14,
+             fontFamily:'PlusJakartaSans-Medium'
+          },
+          position: 'bottom',
+          bottomOffset: 80,
           visibilityTime: 5000, // Set toast visibility duration to 5 seconds
         });
       }
@@ -160,6 +189,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         type: 'error',
         text1: 'Error',
         text2: 'Failed to apply for job.',
+        text1Style: {
+          fontSize: 14,
+           fontFamily:'PlusJakartaSans-Medium'
+        },
+        text2Style: {
+          fontSize: 14,
+           fontFamily:'PlusJakartaSans-Medium'
+        },
+        position: 'bottom',
+        bottomOffset: 80,
         visibilityTime: 5000, // Set toast visibility duration to 5 seconds
       });
     }
@@ -358,7 +397,7 @@ const styles = StyleSheet.create({
   },
   jobdestitle: {
     color: '#F46F16',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
     marginBottom: 8,
   },
@@ -378,6 +417,7 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 8,
     flexShrink: 1,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   oval: {
     flexDirection: 'row',
@@ -392,6 +432,8 @@ const styles = StyleSheet.create({
   ovalText: {
     fontSize: 9,
     color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium',
+    
   },
   brieficon: {
     height: 8,
@@ -461,13 +503,14 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#333',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   companyName: {
     fontSize: 14,
     color: '#888',
     marginVertical: 4,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   externalLinkIcon: {
     width: 24,
@@ -486,6 +529,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 9,
     color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   tag: {
     backgroundColor: '#f6f6f6',
@@ -495,7 +539,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 10,
     marginBottom: 8,
-    fontSize: 9
+    fontSize: 9,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   skillTags: {
     backgroundColor: '#f6f6f6',  // Light background color for the tag
@@ -521,6 +566,7 @@ const styles = StyleSheet.create({
   postedOn: {
     fontSize: 12,
     color: '#888',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   tabs: {
     flexDirection: 'row',
@@ -541,10 +587,11 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     color: '#888',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   activeTabText: {
     color: '#FF8C00',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   footerContainer: {
     flexDirection: 'row',
@@ -586,7 +633,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#F46F16',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   locationIcon: {
     width: 8,
@@ -595,7 +642,7 @@ const styles = StyleSheet.create({
   },
   applybuttonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   skillMatchContainer: {
     flexDirection: 'row',
@@ -614,7 +661,7 @@ const styles = StyleSheet.create({
 
   },
   skillMatchText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 27.27,
@@ -628,11 +675,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   requiredSkills: {
     fontSize: 14,
     color: '#333',
     fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   skillsContainer: {
     flexDirection: 'row',
@@ -666,10 +715,12 @@ const styles = StyleSheet.create({
   courseTitle: {
     fontSize: 14,
     color: '#333',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   fallbackText: {
     fontSize: 12,
     color: 'red',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   centeredView: {
     justifyContent: "center",
@@ -678,9 +729,8 @@ const styles = StyleSheet.create({
 
   },
   centeredText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 15,
-    fontWeight: 'bold',
     lineHeight: 35.27,
 
     marginRight: '5%',
@@ -690,11 +740,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     backgroundColor: '#498C07',
     fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
 
   unmatchedSkill: {
     color: '#fff',
-
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 12,
   },
   buttonContent: {

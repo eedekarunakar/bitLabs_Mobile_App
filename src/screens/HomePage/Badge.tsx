@@ -426,9 +426,9 @@ const Badge = ({ route,navigation }: any) => {
                 </View>
                 {/* Other Sections */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#434343', fontSize: 13 }}>     General{"\n"}Aptitude Test</Text>
-                  <Text style={{ color: '#434343', fontSize: 13 }}>Technical{"\n"}    Test</Text>
-                  <Text style={{ color: '#434343', fontSize: 13 }}>Verification{"\n"}    done</Text>
+                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>     General{"\n"}Aptitude Test</Text>
+                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>Technical{"\n"}    Test</Text>
+                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>Verification{"\n"}    done</Text>
                 </View>
 
                 <View style={{ marginVertical: 30, flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
     marginLeft: 24,
   },
   text: {
-    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 20,
     color: '#495057',
   },
@@ -670,15 +670,16 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
-    fontWeight: '500',
     color: '#000000',
     marginBottom: 5,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   matter1: {
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 20,
     color:'#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   progressContainer: {
     flexDirection: 'row',
@@ -698,6 +699,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '500',
     fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   stepLine: {
     width: 117,
@@ -719,8 +721,8 @@ const styles = StyleSheet.create({
   },
   progressButtonText: {
     color: '#fff',
-    fontWeight: '600',
     marginBottom: 20,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   horizontalScrollContent: {
     marginTop: 20,
@@ -749,7 +751,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#000000',
     marginTop: 10,
     textAlign: 'center',
@@ -771,6 +773,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     marginLeft: 10,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   gradientBackground1: {
     width: '95%',
@@ -793,15 +796,14 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   congratulationsMessage: {
-    fontFamily: 'Plus Jakarta Sans',
-    fontWeight: 600,
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
     lineHeight: 26,
     color: '#F67505',
     alignSelf: 'center'
   },
   name: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 400,
     fontSize: 24,
     lineHeight: 26,
@@ -833,7 +835,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   timerText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 12,
     fontWeight: 400,
     color: '#6D6D6D',
@@ -842,13 +844,13 @@ const styles = StyleSheet.create({
   },
   timerNumber: {
     fontSize: 15, // Larger size for the numbers
-    fontWeight: 700,
+    fontFamily: 'PlusJakartaSans-Bold',
     lineHeight: 26,
     color: '#F3780D',
   },
   timerUnit: {
     fontSize: 10, // Larger size for the numbers
-    fontWeight: 500,
+    fontFamily: 'PlusJakartaSans-Bold',
     lineHeight: 26,
     color: '#F3780D', // Regular weight for units
   },
@@ -856,10 +858,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#999',
     textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   cardSubtitle: {
     fontSize: 12,
     color: '#666',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   badgeStatus: {
     fontSize: 14,
@@ -870,14 +874,19 @@ const styles = StyleSheet.create({
   passed: {
     backgroundColor: '#d4edda',
     color: 'green',
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize:12
   },
   failed: {
     backgroundColor: '#f8d7da',
     color: 'red',
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize:12
   },
   badgeDate: {
     fontSize: 12,
     color: '#555',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   statusContainer: {
     position: 'absolute',
@@ -893,7 +902,7 @@ const styles = StyleSheet.create({
   },
   verifiedText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   timerContain: {
     bottom: 0,
@@ -905,7 +914,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   timerText1: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 15,
     fontWeight: 400,
     color: 'black',

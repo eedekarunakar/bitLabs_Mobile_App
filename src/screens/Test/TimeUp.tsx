@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalText: {
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
-    fontWeight: 700,
     lineHeight: 25,
     color: '#333333',
     marginTop: 10,
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     height: 124.2,
   },
   modalText1: {
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 14,
     fontWeight: 500,
     lineHeight: 25,
@@ -94,6 +95,6 @@ const styles = StyleSheet.create({
   modalButtonText: {
     fontSize: 14,
     color: '#FFF',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });

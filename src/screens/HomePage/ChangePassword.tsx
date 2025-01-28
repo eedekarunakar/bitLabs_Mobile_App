@@ -38,9 +38,7 @@ const ChangePasswordScreen = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
   const [visibleField, setVisibleField] = useState<string | null>(null);
-   const { userToken } = useAuth();
- 
-  const { userId } = useAuth();
+  const { userToken, userId } = useAuth();
   const navigation = useNavigation();
  
   const handleBackButton = (): void => {
@@ -56,34 +54,42 @@ const ChangePasswordScreen = () => {
     setVisibleField(field); // Set the current field as visible
   };
  
+  const validatePassword = (password: string, type: 'old' | 'new' | 'reEnter') => {
+    const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+ 
+    if (!password) {
+      if (type === 'old') setOldMessage('Old Password is required');
+      if (type === 'new') setNewMessage('New Password is required');
+      if (type === 'reEnter') setReEnterMessage('Confirm Password is required');
+    } else {
+      if (type === 'new' && !passwordValidationRegex.test(password)) {
+        setNewMessage(
+          'New password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, one special character, and no spaces.'
+        );
+      } else {
+        if (type === 'old') setOldMessage(null);
+        if (type === 'new') setNewMessage(null);
+      }
+    }
+ 
+    if (type === 'reEnter' && password !== newPassword) {
+      setReEnterMessage('New password and re-entered password must match');
+    } else {
+      if (type === 'reEnter') setReEnterMessage(null);
+    }
+  };
+ 
   const handleChangePassword = async (): Promise<void> => {
     setOldMessage(null);
     setNewMessage(null);
     setReEnterMessage(null);
     setMessage(null);
- // Validate password complexity for the new password
  
     // Ensure all fields are filled
-    if (!oldPassword || !newPassword && !reEnterPassword) {
+    if (!oldPassword || !newPassword || !reEnterPassword) {
       if (!oldPassword) setOldMessage('Old Password is required');
       if (!newPassword) setNewMessage('New Password is required');
       if (!reEnterPassword) setReEnterMessage('Confirm Password is required');
-      return;
-    }
-    const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
- 
-    // Check new password complexity
-    if (!passwordValidationRegex.test(newPassword)) {
-      setNewMessage(
-        'New password must be at least 6 characters long, contain one uppercase letter, one lowercase letter, one number, one special character, and no spaces.'
-      );
-      return;
-    }
-   
-   
-    // Validate re-entered password matches the new password
-    if (newPassword !== reEnterPassword) {
-      setReEnterMessage('New password and re-entered password must match');
       return;
     }
  
@@ -105,11 +111,10 @@ const ChangePasswordScreen = () => {
  
     try {
       const result = await Keychain.getGenericPassword();
-
+ 
       const jwtToken = result ? result.password : null; // Retrieve JWT token from keychain
  
       if (!jwtToken) {
-
         const response = await axios.post(
           `${API_BASE_URL}/applicant/authenticateUsers/${userId}`,
           formData,
@@ -186,7 +191,7 @@ const ChangePasswordScreen = () => {
   const renderPasswordField = (
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
-    field: string,
+    field: 'old' | 'new' | 'reEnter',
     placeholder: string
   ) => (
     <View style={styles.inputContainer}>
@@ -194,7 +199,10 @@ const ChangePasswordScreen = () => {
         style={styles.input}
         secureTextEntry={visibleField !== field}
         value={value}
-        onChangeText={setValue}
+        onChangeText={(text) => {
+          setValue(text);
+          validatePassword(text, field); // Add validation here
+        }}
         onFocus={() => handleFocus(field)}
         placeholder={placeholder}
         placeholderTextColor="#A9A9A9"
@@ -234,7 +242,7 @@ const ChangePasswordScreen = () => {
         {renderPasswordField(
           oldPassword,
           setOldPassword,
-          'OldPassword',
+          'old',
           'Type Old Password'
         )}
         {oldMessage ? (
@@ -242,11 +250,10 @@ const ChangePasswordScreen = () => {
             {oldMessage}
           </Text>
         ) : null}
- 
-        {renderPasswordField(
+                {renderPasswordField(
           newPassword,
           setNewPassword,
-          'NewPassword',
+          'new',
           'Enter New Password'
         )}
         {newMessage ? (
@@ -258,7 +265,7 @@ const ChangePasswordScreen = () => {
         {renderPasswordField(
           reEnterPassword,
           setReEnterPassword,
-          'showReEnterPassword',
+          'reEnter',
           'Confirm New Password'
         )}
         {reEnterMessage ? (
@@ -291,7 +298,7 @@ const ChangePasswordScreen = () => {
       </View>
     </TouchableWithoutFeedback>
   );
-};
+}; 
  
  
 const styles = StyleSheet.create({
@@ -334,6 +341,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#000',
     fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   eyeIcon: {
     padding: 5,
@@ -345,13 +353,16 @@ const styles = StyleSheet.create({
   message: {
     color: 'red',
     marginBottom: 8,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   successMessage: {
     color: 'green',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   errorMessage: {
     color: 'red',
     marginLeft: 20,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
  
   footerButton: {
@@ -379,12 +390,12 @@ const styles = StyleSheet.create({
   footerButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   footerbackButtonText: {
     color: '#F46F16',
     fontSize: 15,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   footerButtonBack: {
     backgroundColor: '#007BFF',
@@ -444,7 +455,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#000',
   },
  
@@ -454,7 +465,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 700,
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#495057',
     lineHeight:25,
     marginLeft:50

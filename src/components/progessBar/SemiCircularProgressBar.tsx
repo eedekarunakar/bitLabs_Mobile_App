@@ -101,7 +101,7 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
       },
       percentageText: {
         fontSize:22,
-        fontWeight: "bold",
+        fontFamily: 'PlusJakartaSans-Bold',
         color:"#F46F16",
         top: '30%',
       },
@@ -141,7 +141,7 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
         <View style={{flex:1}}>
         <Text style={styles.percentageText}>
           {percentage}
-         <Text style={{fontSize:16}}>%</Text> 
+         <Text style={{fontSize:16,  fontFamily: 'PlusJakartaSans-Medium',}}>%</Text> 
         </Text>
         </View>
         {children}

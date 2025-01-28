@@ -6,7 +6,12 @@ import Toast from 'react-native-toast-message'
       type:type,
       text1:message,
       position:'bottom',
-      visibilityTime:5000
+      bottomOffset: 80,
+      visibilityTime:5000,
+      text1Style: {
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Medium',
+      },
     })
   }
   export{showToast}

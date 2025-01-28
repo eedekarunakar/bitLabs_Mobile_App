@@ -138,7 +138,7 @@ const LandingPage = () => {
                             <View style={styles.formContainer}>
 
                                 <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName}  onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))}  allowFontScaling={false} />
-                                {loginErrors.username && <Text style={{ color: 'red' }}>{loginErrors.username}</Text>}
+                                {loginErrors.username && <Text style={{ color: 'red',fontFamily:'PlusJakartaSans-Regular',fontSize:12 }}>{loginErrors.username}</Text>}
  
                                 <View style={styles.passwordContainer}>
                                     <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}}  allowFontScaling={false} />
@@ -151,11 +151,11 @@ const LandingPage = () => {
                                 </View>
 
                                 <TouchableOpacity style={styles.forgotPassword} onPress={() => navigation.navigate('ForgotPassword')} >
-                                    <Text style={{ color: '#0E8CFF' }}>Forgot password?</Text>
+                                    <Text style={{ color: '#74A2FA',fontFamily:'PlusJakartaSans-Regular',fontSize:12 }}>Forgot password?</Text>
 
                                 </TouchableOpacity>
 
-                                {loginErrors.password && <Text style={{ color: 'red', top: '-10%', fontSize: 12 }} >{loginErrors.password}</Text>}
+                                {loginErrors.password && <Text style={{ color: 'red', top: '-10%', fontSize: 12,fontFamily:'PlusJakartaSans-Regular' }} >{loginErrors.password}</Text>}
 
                                
  
@@ -336,12 +336,10 @@ const styles = StyleSheet.create({
     },
     welcomeText: {
         fontSize: 20,
-        fontWeight: 'bold',
         marginVertical: 10,
         marginHorizontal: 10,
-
         color:'#0D0D0D',
-        fontFamily:'Plus Jukarta Sans'
+        fontFamily:'PlusJakartaSans-Bold'
  
 
     },
@@ -372,13 +370,11 @@ const styles = StyleSheet.create({
         borderWidth: 0,
     },
     buttonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: 14,
         padding: 4,
         marginVertical: 4,
-
         color:'#0D0D0D',
-        fontFamily:'Plus Jukarta Sans'
+        fontFamily:'PlusJakartaSans-Bold'
  
 
     },
@@ -422,17 +418,14 @@ const styles = StyleSheet.create({
         color:'#0D0D0D',
         fontSize:13.34,
         fontWeight:400,
-        fontFamily:'Plus Jukarta Sans',
+        fontFamily:'PlusJakartaSans-Regular',
         lineHeight:15.29
 
     },
     googleSignUp: {
-
-        fontWeight: 'bold',
-
         color:'#0D0D0D',
-        fontFamily:'Plus Jukarta Sans'
- 
+        fontFamily:'PlusJakartaSans-Bold',
+        fontSize:14
 
     },
     login: {
@@ -456,9 +449,9 @@ const styles = StyleSheet.create({
     submitButtonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: 'bold',
+      
         padding: 8,
-        fontFamily:'Plus Jukarta Sans'
+        fontFamily:'PlusJakartaSans-Bold'
     },
 
 
@@ -467,14 +460,14 @@ const styles = StyleSheet.create({
         color: '#f28907',
         fontWeight: 'bold',
 
-        fontFamily:'Plus Jukarta Sans'
+        fontFamily:'PlusJakartaSans-Bold'
  
 
     },
     whiteText: {
         color: 'white',
         fontWeight: 'bold',
-        fontFamily:'Plus Jukarta Sans'
+        fontFamily:'PlusJakartaSans-Bold'
     },
     textlocation: {
         fontSize: height * 0.02,
@@ -484,7 +477,7 @@ const styles = StyleSheet.create({
         left: '40%',
         textAlign: 'center',
 
-        fontFamily:'Plus Jukarta Sans'
+        fontFamily:'PlusJakartaSans-Regular'
 
 
     },
@@ -516,10 +509,11 @@ const styles = StyleSheet.create({
     },
 
 
-    dividerText: { marginHorizontal: 10, color: '#000', marginVertical: 10 },
+    dividerText: { marginHorizontal: 10, color: '#000', marginVertical: 10 ,fontFamily:'PlusJakartaSans-Regular'},
     errorText: {
         color: 'red',
         fontSize: 12,
+        fontFamily:'PlusJakartaSans-Regular'
     }
 
 });
