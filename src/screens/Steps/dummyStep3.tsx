@@ -387,14 +387,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 10
   },
-  line: {
-    width: '40%',
-    height: 1,
-    backgroundColor: '#D8D8D8',
-    position: 'static',
-    top: '60%',
-    marginBottom: 10,
-},
   backButton: {
     borderWidth: 1,
     borderColor: '#F97316',
