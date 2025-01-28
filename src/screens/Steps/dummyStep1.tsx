@@ -12,34 +12,36 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import ProgressBar from '../../components/progessBar/ProgressBar';
 import LinearGradient from 'react-native-linear-gradient';
-import {getMobileNumber} from '../../services/mobile';
+
+import { getMobileNumber } from '../../services/mobile';
 import { useAuth } from '../../context/Authcontext';
 
-
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
-
+ 
 interface Step1Props {
   route: Step1ScreenRouteProp;
   navigation: any;
 }
-
+ 
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(1);
   const{userId}=useAuth();
-  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     whatsappNumber: '',
   });
-
+ 
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
     whatsappNumber: '',
   });
-  const [loading, setLoading] = useState(true); 
+
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // Fetch mobile number from API
     const fetchMobileNumber = async () => {
@@ -50,6 +52,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       setLoading(false); // Mark API call as complete
     };
 
+ 
     fetchMobileNumber();
   }, []);
 
@@ -60,19 +63,19 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       lastName: '',
       whatsappNumber: '',
     };
-
+ 
     // Validate first name
     if (!formData.firstName || formData.firstName.length < 3) {
       newErrors.firstName = 'First name should be at least 3 characters long.';
       isValid = false;
     }
-
+ 
     // Validate last name
     if (!formData.lastName || formData.lastName.length < 3) {
       newErrors.lastName = 'Last name should be at least 3 characters long.';
       isValid = false;
     }
-
+ 
     // Validate WhatsApp number
     const whatsappRegex = /^[6-9]\d{9}$/;
     if (!whatsappRegex.test(formData.whatsappNumber)) {
@@ -80,11 +83,11 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         'Should be 10 digits and start with 6, 7, 8, or 9.';
       isValid = false;
     }
-
+ 
     setErrors(newErrors);
     return isValid;
   };
-
+ 
   const handleNext = () => {
     if (validateForm()) {
       console.log('Form Data:', { ...formData, email });
@@ -98,16 +101,16 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       }); // Proceed to next step
     }
   };
-
+ 
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-
+ 
         <Image
           style={styles.logo}
           source={require('../../assests/Images/logo.png')} // Replace with your actual logo path
         />
-
+ 
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
@@ -115,12 +118,12 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
               Fill the form fields to go next step
             </Text>
           </View>
-
+ 
           {/* ProgressBar with currentStep */}
           <ProgressBar
             initialStep={currentStep}
           />
-
+ 
           <TextInput
             placeholder="First Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
@@ -136,7 +139,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           {errors.firstName ? (
             <Text style={styles.errorText}>{errors.firstName}</Text>
           ) : null}
-
+ 
           <TextInput
             placeholder="Last Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
@@ -152,7 +155,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           {errors.lastName ? (
             <Text style={styles.errorText}>{errors.lastName}</Text>
           ) : null}
-
+ 
           {/* Prefilled, non-editable Email field */}
           <TextInput
             value={email}
@@ -176,9 +179,9 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             <Text style={styles.errorText}>{errors.whatsappNumber}</Text>
           ) : null}
         </View>
-
+ 
       </ScrollView>
-
+ 
       {/* Footer with Back and Next Buttons */}
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
@@ -250,21 +253,22 @@ const styles = StyleSheet.create({
   nextButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   header: {
     marginBottom: 20,
   },
   completeProfile: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: 'black',
     marginBottom: 8,
-    fontFamily: 'Plus Jakarta Sans',
+
   },
   subHeader: {
     fontSize: 11,
     color: 'black',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   input: {
     borderWidth: 1,
@@ -274,12 +278,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#F5F5F5',
     color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   errorText: {
     color: 'red',
     fontSize: 12,
     marginTop: -8,
     marginBottom: 8,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   applyButtonGradient: {
     width: '100%', // Adjust this if necessary

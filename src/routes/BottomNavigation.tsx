@@ -50,6 +50,7 @@ const BottomTab = ({ route }: { route: BottomTabRouteProp }) => {
                     color: focused ? 'black' : 'grey',
                     fontSize: 10,
                     marginBottom: 30,
+                    fontFamily:'PlusJakartaSans-Bold'
                   }}
                 >
                   {route.name}

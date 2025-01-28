@@ -72,7 +72,7 @@ const Navbar = () => {
                                     <Text style={styles.buttonText1}>View Profile</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate('ChangePassword')} >
-                                    <Text style={styles.buttonText1}>Change Password</Text>
+                                    <Text style={styles.buttonText1}>Change password</Text>
                                 </TouchableOpacity>
                                 <View style={styles.separator}></View>
                                 <TouchableOpacity style={styles.modalButton7} onPress={handleLogout} >
@@ -178,16 +178,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     modalButtonText7: {
-        color: 'red', // Text color for the Cancel button
-        fontWeight: 400,
+        color: '#E35D6A', // Text color for the Cancel button
+        fontWeight:400,
         fontSize: 18,
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
  
     buttonText1: {
-        fontWeight: 400,
+        fontWeight:400,
         fontSize: 18,
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
         color:'#2f2f2f'
     },
     buttonText: {

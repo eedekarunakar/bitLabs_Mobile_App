@@ -233,7 +233,7 @@ const Test = ({ route, navigation }: any) => {
  
 
   if (loading) {
-    return <Text>Loading test data...</Text>;
+    return <Text style={{ fontFamily: 'PlusJakartaSans-Medium',fontSize:14}}>Loading test data...</Text>;
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -265,8 +265,8 @@ const Test = ({ route, navigation }: any) => {
                 <Text style={styles.text1}>{testData.numberOfQuestions || 0}</Text>
               </View>
             </View>
-            <Text style={{color:'#0D0D0D'}}>Topics Covered</Text>
-            <Text style={{ lineHeight: 27, color: 'black' }}>
+            <Text style={{color:'#0D0D0D', fontFamily: 'PlusJakartaSans-Medium',}}>Topics Covered</Text>
+            <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Medium', }}>
               {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
                 ? `${testData.topicsCovered.join(', ')}`
                 : 'No topics available'}
@@ -343,8 +343,8 @@ const styles = StyleSheet.create({
   head: {
     color: 'orange',
     fontSize: 20,
-    fontWeight: '700',
     lineHeight: 25,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   box1: {
     width: 98,
@@ -360,11 +360,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   text: {
-    fontWeight: '700',
     fontSize: 12,
     lineHeight: 20,
     color: '#9E9E9E',
     marginLeft: 10,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   maskedView: {
     flexDirection: 'row',
@@ -374,17 +374,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text1: {
-    fontWeight: '700',
     fontSize: 16,
     lineHeight: 20,
     marginLeft: 10,
     color: '#484848',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   heading: {
     fontSize: 18,
-    fontWeight: '700',
     marginBottom: 16,
     color: '#000',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   point: {
     flexDirection: 'row',
@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
     color: 'grey',
     marginRight: 8,
     lineHeight: 22,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   instruction: {
     flex: 1,
@@ -403,6 +404,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#756E6E',
     lineHeight: 23,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   footer: {
     height: 75,
@@ -425,7 +427,7 @@ const styles = StyleSheet.create({
   },
   start: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
     lineHeight: 26,
     padding: 10,

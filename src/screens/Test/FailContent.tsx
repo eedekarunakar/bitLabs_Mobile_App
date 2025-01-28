@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     marginLeft: 49
   },
   message: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 600,
     fontSize: 22,
     lineHeight: 34,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     marginLeft: 77
   },
   text: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 600,
     fontSize: 20,
     lineHeight: 34,
@@ -97,8 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonText: {
-    fontFamily: 'Plus Jakarta Sans',
-    fontWeight: 700,
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     lineHeight: 14.4,
     alignContent: 'center',

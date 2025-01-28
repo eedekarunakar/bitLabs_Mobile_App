@@ -90,9 +90,9 @@ const styles = StyleSheet.create({
     color: "#000000",
     marginBottom: screenHeight * 0.02,
     marginLeft: screenWidth * 0.07,
-    fontFamily: "PlusJakartaSans",
+    fontFamily: "PlusJakartaSans-Bold",
     marginTop: screenHeight * 0.025,
-    fontWeight: "700",
+
   },
   scrollContainer: {
     width: "100%",
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     marginRight: screenWidth * 0.03,
     borderRadius: screenWidth * 0.04,
 
-    fontFamily: "PlusJakartaSans",
+    fontFamily: "PlusJakartaSans-Bold",
     width: screenWidth * 0.7,
     alignItems: "center",
     flexDirection: "column",
@@ -119,9 +119,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   cardTitle: {
-    fontSize: screenWidth * 0.045,
-    fontWeight: "700",
-    fontFamily: "PlusJakartaSans",
+    fontSize: screenWidth * 0.042,
+    fontFamily: "PlusJakartaSans-Bold",
     color: "#000000",
     marginBottom: screenHeight * 0.01,
   },
@@ -141,9 +140,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#FFFFFF",
-    fontWeight: "700",
     textAlign: "center",
-    fontFamily: "PlusJakartaSans",
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: screenWidth * 0.035,
   },
   lastCard: {

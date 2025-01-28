@@ -79,7 +79,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',marginVertical:3
+    marginVertical:3,
+    fontFamily:'PlusJakartaSans-Bold',
+    fontSize:16
    
   },
 });

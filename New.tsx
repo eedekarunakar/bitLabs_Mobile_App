@@ -35,13 +35,13 @@ import Badge from './src/screens/HomePage/Badge';
 export type RootStackParamList = {
   ForgotPassword: undefined,
   LandingPage: undefined;
-  BottomTab: {shouldShowStep1: boolean; welcome:string }| undefined;
+  BottomTab: { shouldShowStep1: boolean; welcome: string } | undefined;
   Step1: { email: string | null }; // Specify that Step1 expects an email parameter
   Step2: undefined;
   Step3: { updateShouldShowStep1: React.Dispatch<React.SetStateAction<boolean>> };
   TestInstruction: { testName: string };
   TestScreen: { questions: any[] };
-  Jobs: { tab: 'recommended' | 'applied' | 'saved'};
+  Jobs: { tab: 'recommended' | 'applied' | 'saved' };
   JobDetails: { job: any }; // Pass job data to the JobDetails screen
   JobDetailsScreen: { job: any };
   ViewJobDetails: { job: any };
@@ -57,15 +57,19 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   Notification: undefined;
   ResumeBuilder: undefined;
-  Drives:undefined;
-  MyResume:undefined;
+
+  Drives: undefined;
+  MyResume: undefined;
+
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Appnavigator = () => {
-  const { isAuthenticated, userToken, userId, userEmail } = useAuth(); 
-  const [profileChecked, setProfileChecked] = useState(isAuthenticated);
+
+  const { isAuthenticated, userToken, userId, userEmail } = useAuth();
+  const [profileChecked, setProfileChecked] = useState(false);
+
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
 
   useEffect(() => {
@@ -147,17 +151,35 @@ const Appnavigator = () => {
           <Stack.Screen
             name="JobDetails"
             component={JobDetails}
-            options={{ title: 'Job Details' }}
+            options={{
+              title: 'Job Details',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="AppliedJobs"
             component={AppliedJobs}
-            options={{ title: 'Applied Jobs' }}
+            options={{
+              title: 'Applied Jobs',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="JobDetailsScreen"
             component={JobDetailsScreen}
-            options={{ title: 'Job Details' }}
+            options={{
+              title: 'Job Details',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="ViewJobDetails"
@@ -166,22 +188,46 @@ const Appnavigator = () => {
           <Stack.Screen
             name="SavedDetails"
             component={SavedDetails}
-            options={{ title: 'Job Details' }}
+            options={{
+              title: 'Job Details',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="SavedJobs"
             component={SavedJobs}
-            options={{ title: 'Saved Jobs' }}
+            options={{
+              title: 'Saved Jobs',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="Profile"
             component={ProfileComponent}
-            options={{ title: 'profile' }}
+            options={{
+              title: 'profile',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="ImagePreview"
             component={ImagePreviewScreen}
-            options={{ title: 'Image Preview' }}
+            options={{
+              title: 'Image Preview',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="passContent"
@@ -201,16 +247,32 @@ const Appnavigator = () => {
           <Stack.Screen
             name="Notification"
             component={Notification}
+            options={{
+              title: 'Notification',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="ResumeBuilder"
             component={ResumeBuilder}
-            options={{ title: 'Resume Builder' }}
+            options={{
+              title: 'Resume Builder',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="Drives"
             component={Drives}
+
+
           />
+
         </>
       )}
     </Stack.Navigator>

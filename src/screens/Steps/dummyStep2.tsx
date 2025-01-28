@@ -15,11 +15,11 @@ import { RootStackParamList } from '../../../New';
 import DropDownPicker from 'react-native-dropdown-picker';
 import API_BASE_URL from '../../services/API_Service';
 import LinearGradient from 'react-native-linear-gradient';
-
+ 
 import { useAuth } from '../../context/Authcontext';
 type Step2ScreenRouteProp = RouteProp<RootStackParamList, 'Step2'>;
-
-
+ 
+ 
 const getSpecializationOptions = (qualification: string | any): string[] => {
   switch (qualification) {
     case 'B.Tech':
@@ -88,7 +88,7 @@ const getSpecializationOptions = (qualification: string | any): string[] => {
       return [];
   }
 };
-
+ 
 const skillOptions = [
   'Java',
   'C',
@@ -133,12 +133,12 @@ const locationOptions = [
   'Pune',
   'Gurgaon',
 ];
-
+ 
 interface Step2Props {
   route: Step2ScreenRouteProp;
   navigation: any;
 }
-
+ 
 const Dummystep2: React.FC = ({ route, navigation }: any) => {
   //   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(2);
@@ -149,7 +149,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
     experience: '',
     preferredLocation: [],
   });
-
+ 
   const [errors, setErrors] = useState({
     qualification: '',
     specialization: '',
@@ -157,16 +157,16 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
     experience: '',
     preferredLocation: '',
   });
-
+ 
   const [specialization, setSpecialization] = useState<string>('');
   const [qualification, setQualification] = useState<string>('');
-
+ 
   const [openQualificationDropdown, setOpenQualificationDropdown] = useState(false);
   const [openSpecializationDropdown, setOpenSpecializationDropdown] = useState(false);
-
+ 
   const [openSkillsDropdown, setOpenSkillsDropdown] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState([]);
-
+ 
   const [openLocationDropdown, setOpenLocationDropdown] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const { userToken, userId } = useAuth();
@@ -174,29 +174,29 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
     setOpenLocationDropdown(false);
     setOpenSkillsDropdown(false);
     setOpenSpecializationDropdown(false);
-    
+   
   }
   const handleOpenSpecialization =() => {
     setOpenLocationDropdown(false);
     setOpenSkillsDropdown(false);
     setOpenQualificationDropdown(false);
-    
+   
   }
   const handleOpenSkills =() => {
     setOpenLocationDropdown(false);
     setOpenQualificationDropdown(false);
     setOpenSpecializationDropdown(false);
-    
+   
   }
   const handleOpenLocation =() => {
     setOpenQualificationDropdown(false);
     setOpenSkillsDropdown(false);
     setOpenSpecializationDropdown(false);
-    
+   
   }
-
-  
-
+ 
+ 
+ 
   useEffect(() => { setFormData((prev) => ({ ...prev, qualification, specialization, })); }, [qualification, specialization]);
   const validateForm = () => {
     let isValid = true;
@@ -207,7 +207,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
       experience: '',
       preferredLocation: '',
     };
-
+ 
     if (!formData.qualification) {
       newErrors.qualification = 'Qualification is required.';
       isValid = false;
@@ -221,85 +221,46 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
       isValid = false;
     }
     if (!formData.experience || isNaN(Number(formData.experience))) {
-      newErrors.experience = 'Experience must be a number.';
+      newErrors.experience = 'Experience is required.';
       isValid = false;
     }
     if (selectedLocations.length === 0) {
       newErrors.preferredLocation = 'Preferred location is required.';
       isValid = false;
     }
-
-
+ 
+ 
     setErrors(newErrors);
     return isValid;
   };
-
-  const handleNext = async () => {
-    if (validateForm()) {
-      const basicDetails = {
-        firstName: route.params.firstName,
-        lastName: route.params.lastName,
-        alternatePhoneNumber: route.params.whatsappNumber, // Map whatsappNumber here
-        email: route.params.email,
-      };
-      console.log('Form Data:', { ...formData, skills: selectedSkills });
-      console.log('Form Data:', {
-        basicDetails,
-        skillsRequired: selectedSkills.map(skill => ({ skillName: skill })), // Assuming selectedSkills is an array
-        experience: formData.experience,
-        qualification: formData.qualification,
-        specialization: formData.specialization,
-        preferredJobLocations: selectedLocations,
-      });
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/applicantprofile/createprofile/${userId}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userToken}`, // Authorization token
-            },
-            body: JSON.stringify({
-              basicDetails,
-              skillsRequired: selectedSkills.map(skill => ({ skillName: skill })),
-              experience: formData.experience,
-              qualification: formData.qualification,
-              specialization: formData.specialization,
-              preferredJobLocations: selectedLocations,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Profile created successfully:', data);
-          setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
-          // Navigate to Step3 after successful API call
-          //navigation.navigate('Step3');
-        } else {
-          console.error('Failed to create profile', response.status);
-          // You can show an error message here if needed
-        }
-      } catch (error) {
-        console.error('Error during API call:', error);
-        // Handle error if API call fails
-      } finally {
-        // Always navigate to Step3 after the API call, regardless of success or failure
-        navigation.navigate('Step3');
+ 
+  const handleNext = () => {
+ if(validateForm()){
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
+     navigation.navigate('Step3',{
+          firstName: route.params.firstName,
+          lastName: route.params.lastName,
+          alternatePhoneNumber: route.params.whatsappNumber, // Map whatsappNumber here
+          email: route.params.email,
+          skillsRequired: selectedSkills.map(skill => ({ skillName: skill })),
+          experience: formData.experience,
+          qualification: formData.qualification,
+          specialization: formData.specialization,
+          preferredJobLocations: selectedLocations,
+           
+        })
       }
-    }
   };
-
-
-
+ 
+ 
+ 
   const handleBack = () => {
     navigation.goBack();
   };
-
+ 
   return (
     <View style={styles.screen}>
-
+ 
       <Image
         style={styles.logo}
         source={require('../../assests/Images/logo.png')}
@@ -312,9 +273,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               Fill the form fields to go next step
             </Text>
           </View>
-
+ 
           <ProgressBar initialStep={currentStep} />
-
+ 
           <DropDownPicker
             open={openQualificationDropdown}
             value={qualification}
@@ -326,6 +287,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               { label: 'Diploma', value: 'Diploma' },
             ]}
             setOpen={setOpenQualificationDropdown}
+
+            onOpen={handleOpenQualification}
+
             setValue={value => {
               setQualification(value);
               setErrors(prev => ({ ...prev, qualification: '' })); // Clear the error if input is valid
@@ -334,12 +298,14 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             placeholder="*Select Qualification"
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropdownContainer}
+            placeholderStyle={styles.placeholderText}
+            textStyle={styles.dropdownText}
             zIndex={1000}
           />
           {errors.qualification && (
             <Text style={styles.errorText}>{errors.qualification}</Text>
           )}
-
+ 
           <DropDownPicker
             open={openSpecializationDropdown}
             items={getSpecializationOptions(qualification).map(spec => ({
@@ -348,6 +314,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             }))}
             value={specialization}
             setOpen={setOpenSpecializationDropdown}
+
+            onOpen={handleOpenSpecialization}
+
             setValue={value => {
               setSpecialization(value);
               setErrors(prev => ({ ...prev, specialization: '' })); // Clear error dynamically
@@ -356,18 +325,23 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             disabled={!qualification} // Disable dropdown if qualification is not selected
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropdownContainer}
+            placeholderStyle={styles.placeholderText}
+            textStyle={styles.dropdownText}
             zIndex={990}
           />
           {errors.specialization && (
             <Text style={styles.errorText}>{errors.specialization}</Text>
           )}
-
+ 
           <DropDownPicker
             multiple={true}
             open={openSkillsDropdown}
             value={selectedSkills}
             items={skillOptions.map(skill => ({ label: skill, value: skill }))}
             setOpen={setOpenSkillsDropdown}
+
+            onOpen={handleOpenSkills}
+
             setValue={value => {
               setSelectedSkills(value);
               setErrors(prev => ({
@@ -378,11 +352,13 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             placeholder="*Skills"
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropdownContainer}
+            placeholderStyle={styles.placeholderText}
+            textStyle={styles.dropdownText}
             zIndex={900}
             mode="BADGE"
           />
           {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
-
+ 
           <TextInput
             placeholder="*Experience in Years" placeholderTextColor="#0D0D0D"
             style={styles.input}
@@ -397,7 +373,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
           {errors.experience && (
             <Text style={styles.errorText}>{errors.experience}</Text>
           )}
-
+ 
           <DropDownPicker
             multiple={true} // Allow multiple selection
             open={openLocationDropdown}
@@ -407,6 +383,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               value: location,
             }))}
             setOpen={setOpenLocationDropdown}
+
+            onOpen={handleOpenLocation}
+
             setValue={value => {
               setSelectedLocations(value);
               setErrors(prev => ({
@@ -417,6 +396,8 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             placeholder="*Preferred Job Locations"
             style={styles.dropdown}
             dropDownContainerStyle={styles.dropdownContainer}
+            placeholderStyle={styles.placeholderText}
+            textStyle={styles.dropdownText}
             zIndex={800}
             mode="BADGE"
           />
@@ -425,16 +406,16 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
           )}
         </View>
         <View style={{ height: 100 }} />
-
-
+ 
+ 
       </ScrollView>
-
+ 
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
-
+ 
           <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={handleNext}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
@@ -491,13 +472,14 @@ const styles = StyleSheet.create({
   },
   completeProfile: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: 'black',
     marginBottom: 8,
   },
   subHeader: {
     fontSize: 11,
     color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   input: {
     borderWidth: 1,
@@ -507,6 +489,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: 'black',
     backgroundColor: '#F5F5F5',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   backButton: {
     borderWidth: 1,
@@ -519,7 +502,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#F97316',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   nextButton: {
     padding:10,
@@ -527,6 +510,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%', // Ensure it fits the wrapping TouchableOpacity
+    
   },
   gradientTouchable: {
     flex: 1,
@@ -536,13 +520,14 @@ const styles = StyleSheet.create({
   nextButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   errorText: {
     color: 'red',
     fontSize: 12,
     marginTop: -8,
     marginBottom: 8,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   dropdown: {
     borderWidth: 1,
@@ -550,12 +535,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     backgroundColor: '#F5F5F5',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   dropdownContainer: {
     borderWidth: 1,
     borderColor: '#E5E5E5',
     backgroundColor: '#F5F5F5',
     
+  },
+  placeholderText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 14,
+   
+  },
+  dropdownText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 14,
+   
   },
 });
 
