@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   nameText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 700,
     fontSize: 28,
     lineHeight: 27,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     marginLeft: '27.5%'
   },
   scoreText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 700,
     fontSize: 28,
     lineHeight: 28,
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   message: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 31,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     marginLeft: 62
   },
   text: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 500,
     fontSize: 24,
     lineHeight: 36,
@@ -230,8 +230,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonText: {
-    fontFamily: 'Plus Jakarta Sans',
-    fontWeight: 700,
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     lineHeight: 14.4,
     alignContent: 'center',
@@ -246,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   laterText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 700,
     fontSize: 14,
     lineHeight: 14.4,
@@ -256,6 +255,7 @@ const styles = StyleSheet.create({
   maskedText: {
     color: 'black', // The text acts as a mask and is not visible
     backgroundColor: 'transparent',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   gradientBackground: {
     height: 25, // Ensure the height matches or exceeds the text height

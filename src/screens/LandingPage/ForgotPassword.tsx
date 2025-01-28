@@ -45,12 +45,7 @@ const ForgotPassword = () => {
   }, [otpReceived, timer, isOtpExpired, setTimer, setIsOtpExpired]);
 
   useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const timer = setTimeout(() => {
-        setErrors({});
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+
   }, [errors]);
 
   const isValidEmail = (email: string) => {
@@ -230,7 +225,7 @@ const ForgotPassword = () => {
             <Text style={{
               color: '#F46F16',
               fontSize: 15,
-              fontWeight: 'bold',
+              fontFamily: 'PlusJakartaSans-Bold',
             }}>Back
             </Text>
           </TouchableOpacity>
@@ -296,8 +291,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   title: {
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
-    fontWeight: '700',
     color: '#495057',
     lineHeight: 25,
     marginLeft: 50,
@@ -311,11 +306,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '95%',
     alignSelf: 'center',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   errorText: {
     color: 'red',
     marginBottom: 10,
     textAlign: 'center',
+
+    fontFamily: 'PlusJakartaSans-Medium',
+
+    fontSize:12,
+
   },
   otpContainer: {
     top: -4,
@@ -326,9 +327,11 @@ const styles = StyleSheet.create({
   timerText: {
     color: 'red',
     alignSelf: 'center',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   resendText: {
     color: '#F97316',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   applyButtonGradient: {
     height: 50,
@@ -360,7 +363,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   form: {
     width: '100%',
@@ -382,6 +385,8 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     height: 40,
+    color:'black',
+    fontFamily: 'PlusJakartaSans-Medium',
     
   },
   eyeImage: {

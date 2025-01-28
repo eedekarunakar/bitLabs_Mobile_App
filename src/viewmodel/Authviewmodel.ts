@@ -96,38 +96,64 @@ const useSignupViewModel = () => {
     })
   }
 
-  const validateSignup = () => {
-    const errors: SignupErrors = {};
-    if (!signupName) errors.name = 'Name is required';
-    if (!signupEmail) {
-      errors.email = 'E-mail is required';
-    } else if (!isValidEmail(signupEmail)) {
-      errors.email = 'Please enter a valid email address';
+
+  
+  const validateSignup = (field?: 'name' | 'email' | 'whatsappnumber' | 'password', text?: string): boolean => {
+    const errors: SignupErrors = { ...signUpErrors };
+
+    // Remove the userRegistered error if it exists
+    if (errors.userRegistered) delete errors.userRegistered;
+
+    // Helper function for field-specific validation
+    const validateField = (field: string, value: string) => {
+        switch (field) {
+            case 'name':
+                if (!value) errors.name = 'Name is required';
+                else if (value.length < 3) errors.name = 'Full name should be at least three characters long';
+                else if (!/^[A-Za-z\s]+$/.test(value)) errors.name = 'Name should only contain alphabetic characters';
+                else delete errors.name;
+                break;
+            case 'email':
+                if (!value) errors.email = 'E-mail is required';
+                else if (!isValidEmail(value)) errors.email = 'Please enter a valid email address';
+                else delete errors.email;
+                break;
+            case 'whatsappnumber':
+                if (!value) errors.whatsappnumber = 'Whatsapp Number is required';
+                else if (value.length < 10) errors.whatsappnumber = 'Please enter a valid 10 digit mobile number';
+                else if (!/^[6-9][0-9]{9}$/.test(value)) errors.whatsappnumber = 'Mobile number should begin with 6, 7, 8, or 9';
+                else delete errors.whatsappnumber;
+                break;
+            case 'password':
+                if (!value) errors.password = 'Password is required';
+                else if (value.length < 6) errors.password = 'Password must be at least 6 characters long';
+                else if (!/[A-Z]/.test(value)) errors.password = 'Password must contain at least one uppercase letter';
+                else if (!/[!@#$%^&*]/.test(value)) errors.password = 'Password must contain at least one special character';
+                else if (!/\d/.test(value)) errors.password = 'Password must contain at least one digit';
+                else if (/\s/.test(value)) errors.password = 'Password cannot contain any spaces';
+                else delete errors.password;
+                break;
+        }
+    };
+
+    // Field-specific validation if field and text are provided
+    if (field && text !== undefined) {
+        validateField(field, text);
+    } else {
+        // Full validation for all fields
+        validateField('name', signupName);
+        validateField('email', signupEmail);
+        validateField('whatsappnumber', signupNumber);
+        validateField('password', signupPassword);
     }
-    if (!signupNumber) {
-      errors.whatsappnumber = 'Whatsapp Number is required';
-    } else if (signupNumber.length < 10) {
-      errors.whatsappnumber = 'Please enter a valid 10 digit mobile number';
-    } else if (!/^[6-9][0-9]{9}$/.test(signupNumber)) {
-      errors.whatsappnumber = 'Mobile number should begin with 6, 7, 8, or 9';
-    }
-    if (!signupPassword) {
-      errors.password = 'Password is required';
-    } else if (signupPassword.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
-    } else if (!/[A-Z]/.test(signupPassword)) {
-      errors.password = 'Password must contain at least one uppercase letter';
-    } else if (!/[!@#$%^&*]/.test(signupPassword)) {
-      errors.password = 'Password must contain at least one special character';
-    } else if (!/\d/.test(signupPassword)) {
-      errors.password = 'Password must contain at least one digit';
-    } else if (/\s/.test(signupPassword)) {
-      errors.password = 'Password cannot contain any spaces';
-    }
+
     setSignUpErrors(errors);
     return Object.keys(errors).length === 0;
-  };
+};
 
+  
+  
+  
   const isValidEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -183,6 +209,7 @@ const useSignupViewModel = () => {
     signupPassword,
     setSignupPassword,
     signUpErrors,
+    
     validateSignup,
     validateAndSignup,
     handleOtp,

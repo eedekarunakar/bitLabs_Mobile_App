@@ -11,7 +11,7 @@ import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp,useFocusEffect,useIsFocused  } from '@react-navigation/native';
 //import { AuthContext } from './AuthContext'
 import {
   View,
@@ -32,6 +32,7 @@ type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 //const applicantId = '2'; // Your applicant ID
 
 function Dashboard() {
+ 
   const { userId, userToken, } = useAuth();
   const route = useRoute<HomeScreenRouteProp>();
   useEffect(() => {
@@ -50,7 +51,7 @@ function Dashboard() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={{ color: '#0D0D0D' }}>Loading job data...</Text>
+        <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold', }}>Loading job data...</Text>
 
       </View>
     );
@@ -171,20 +172,19 @@ const styles = StyleSheet.create({
   textBelowNavbar: {
     textAlign: "left",
     fontSize: 24, // Fixed font size of 24px
-    fontWeight: "700", // Font weight set to 700
     color: "#2F2F2F",
     marginLeft: screenWidth * 0.03,
-    fontFamily: "PlusJakartaSans",
+    fontFamily: "PlusJakartaSans-Bold",
     marginTop: screenHeight * 0.025,
   },
   textBelowNavbar1: {
     textAlign: "left",
     fontSize: 14, // Fixed font size of 14px
-    fontWeight: "400", // Font weight set to 400 (normal weight)
+  
     color: "#2F2F2F",
     marginBottom: screenHeight * 0.01,
     marginLeft: screenWidth * 0.03,
-    fontFamily: "PlusJakartaSans",
+    fontFamily: "PlusJakartaSans-Regular",
   },
 
 
@@ -237,19 +237,16 @@ const styles = StyleSheet.create({
 
   cardText: {
     fontSize: 15, // Set text size to 14px
-    fontWeight: "500", // Set font weight to 500
     color: "#333", // Text color
-    fontFamily: "PlusJakartaSans", // Font family
+    fontFamily: "PlusJakartaSans-Medium", // Font family
     textAlign: "left", // Align text to the left
     marginBottom: screenHeight * 0.006, // Space between text and number
   },
 
 
   cardNumber: {
-
-    fontSize: screenWidth * 0.05, // Scales number size with screen width
-    fontWeight: "bold",
-    fontFamily: "PlusJakartaSans",
+    fontSize: screenWidth * 0.04, // Scales number size with screen width
+    fontFamily: "PlusJakartaSans-Bold",
     color: "#000",
     textAlign: "left", // Align number to the left
   },

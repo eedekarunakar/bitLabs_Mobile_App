@@ -19,6 +19,7 @@ import { ToastAndroid } from 'react-native';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import { base64Image } from '../../services/base64Image';
+import LinearGradient from 'react-native-linear-gradient';
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
@@ -355,7 +356,7 @@ function ProfileComponent() {
                         <View style={styles.container}>
                             <View style={styles.pencil}>
                                 <TouchableOpacity onPress={() => setPersonalDetailsFormVisible(true)}>
-                                    <Icon3 name='pencil' size={24} color='black' />
+                                    <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.imageContainer}>
@@ -382,11 +383,11 @@ function ProfileComponent() {
 
                             <View style={styles.infoContainer}>
                                 <View style={styles.info}>
-                                    <Icon name="mail" size={24} color="#6C757D" />
+                                    <Icon name="mail" size={16} color="#6C757D" />
                                     <Text style={styles.text}>{basicDetails?.email}</Text>
                                 </View>
                                 <View style={styles.info}>
-                                    <Icon name="phone" size={24} color="#6C757D" />
+                                    <Icon name="phone" size={16} color="#6C757D" />
                                     <Text style={styles.text}>{basicDetails?.alternatePhoneNumber}</Text>
                                 </View>
                             </View>
@@ -395,10 +396,10 @@ function ProfileComponent() {
                     <View style={styles.professional}>
                         <View style={{ flexDirection: 'row' }}>
                             <Icon2 name='graduation-cap' size={24} style={styles.cap} />
-                            <Text style={{ left: 3, fontWeight: 'bold', fontSize: 18, color: '#F97316' }}>Professional Details</Text>
+                            <Text style={{ left: 3, fontFamily: 'PlusJakartaSans-Bold', fontSize: 14, color: '#F97316' }}>Professional Details</Text>
                             <View style={styles.pencil}>
                                 <TouchableOpacity onPress={() => setProfessionalFormVisible(true)}>
-                                    <Icon3 name='pencil' size={24} color='black' />
+                                    <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -459,7 +460,11 @@ function ProfileComponent() {
                             <View>
                                 <Text style={styles.subheading}>Preferred Location</Text>
                                 {preferredJobLocations.length > 0 && (
-                                    <Text style={{ color: '#000', fontWeight: 'bold' }}>
+
+
+                                    <Text style={{ color: '#000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 12 }}>
+
+
                                         {preferredJobLocations.join(', ')}
                                     </Text>
                                 )}
@@ -541,12 +546,13 @@ function ProfileComponent() {
 
                                     <View style={{ alignItems: 'flex-end' }}>
                                         <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Save Changes</Text>
+                                            <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Medium', fontSize: 14 }}>Save Changes</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                             </View>
                         </Modal>
+
                     </View>
                 </View>
 
@@ -555,7 +561,7 @@ function ProfileComponent() {
                         <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
 
                         <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
-                            <Icon3 name='pencil' size={24} color='black' />
+                            <Icon3 name='pencil' size={18} color='black' />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -571,10 +577,14 @@ function ProfileComponent() {
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                                 <Text style={styles.modalTitle1}>Upload Resume</Text>
                                 <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{ marginLeft: '50%' }}>
-                                    <Text style={{ fontSize: 12, color: 'gray', top: -35, fontWeight: 'bold' }}>X</Text>
+
+
+                                    <Text style={{ fontSize: 12, color: 'gray', top: -35, fontFamily: 'PlusJakartaSans-Bold' }}>X</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 2, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
+                            <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 1, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
+
+
                                 <TouchableOpacity
                                     onPress={handleUploadResume}
                                 >
@@ -583,13 +593,19 @@ function ProfileComponent() {
                                         style={{ position: 'relative', left: 60, top: 40 }}
 
                                     />
-                                    <Text style={{ padding: 50, fontWeight: 'bold' }}>Select File</Text>
+
+                                    <Text style={{ padding: 50, fontFamily: 'PlusJakartaSans-Bold' }}>Select File</Text>
+
+
                                 </TouchableOpacity>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
 
                                 <View style={styles.line}></View>
-                                <Text style={{ marginTop: -10 }}> Or</Text>
+
+                                <Text style={{ marginTop: -10, fontFamily: 'PlusJakartaSans-Bold' }}> Or</Text>
+
+
                                 <View style={[styles.line, { marginLeft: 3 }]}></View>
                             </View>
                             <View>
@@ -597,7 +613,11 @@ function ProfileComponent() {
                                     style={styles.uploadButton}
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>Create Resume</Text>
+
+
+                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
+
+
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'flex-end' }}>
@@ -611,7 +631,10 @@ function ProfileComponent() {
                                         onPress={handleSaveResume}      // Save changes and upload the file to the backend
                                         style={styles.buttonContent}
                                     >
-                                        <Text style={[styles.saveButtonText,{fontWeight:'bold'}]}>Save Changes</Text>
+
+
+                                        <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+
                                     </TouchableOpacity>
                                 </LinearGradient>
                             </View>
@@ -668,6 +691,7 @@ const styles = StyleSheet.create({
     skillBadgeText: {
         color: 'white',
         fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Medium',
     },
     button: {
         backgroundColor: '#F97316',
@@ -687,6 +711,8 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         backgroundColor: '#E5E5E5',
         color: '#0D0D0D',
+        fontFamily: 'PlusJakartaSans-Medium'
+
 
     },
     skillContainer: {
@@ -704,7 +730,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 5,
         color: '#fff',
-        paddingHorizontal: 8
+
+        paddingHorizontal: 8,
+        fontFamily: 'PlusJakartaSans-Medium',
+
+
 
     },
     card: {
@@ -726,9 +756,11 @@ const styles = StyleSheet.create({
         marginLeft: 'auto'
     },
     name: {
-        fontWeight: 'bold',
-        fontSize: 30,
-        color: '#424242'
+
+        fontSize: 24,
+        color: '#424242',
+        fontFamily: 'PlusJakartaSans-Bold',
+
 
     },
     image: {
@@ -758,8 +790,9 @@ const styles = StyleSheet.create({
     },
     text: {
         marginLeft: 10,
-        fontSize: 16,
-        color: '#6C757D'
+        fontSize: 14,
+        color: '#6C757D',
+        fontFamily: 'PlusJakartaSans-Medium'
     },
     professional: {
         backgroundColor: '#fff',
@@ -781,13 +814,14 @@ const styles = StyleSheet.create({
     },
     subheading: {
         color: '#A1A1A1',
-        fontSize: 18,
-        marginTop: 10
+        fontSize: 14,
+        marginTop: 10,
+        fontFamily: 'PlusJakartaSans-Medium'
     },
     details: {
-        fontWeight: 'bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         color: '#463F3F',
-        fontSize: 18
+        fontSize: 14
     },
     modalView: {
         flex: 1,
@@ -818,8 +852,8 @@ const styles = StyleSheet.create({
     },
 
     resumeText: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Bold'
     },
     // Add the new style for the container
 
@@ -879,7 +913,7 @@ const styles = StyleSheet.create({
     modalTitle1: {
         color: '#333333',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         marginBottom: 20,
     },
 
@@ -894,6 +928,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#E5E5E5',
         // textAlignVertical: 'top', // Makes the text align from top in the input box
+        fontFamily: 'PlusJakartaSans-Medium',
     },
 
 
@@ -938,10 +973,12 @@ const styles = StyleSheet.create({
 
     buttonText1: {
 
-        fontWeight: 400,
+
+
+
         fontSize: 18,
         color: '#0D0D0D',
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
 
     modalButton7: {
@@ -954,10 +991,10 @@ const styles = StyleSheet.create({
     },
 
     modalButtonText7: {
-        color: 'red', // Text color for the Cancel button
+        color: '#E35D6A', // Text color for the Cancel button
         fontWeight: 400,
-        fontSize: 18,
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        fontSize: 16,
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
 
     separator: {

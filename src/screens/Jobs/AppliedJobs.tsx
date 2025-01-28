@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
+    fontFamily:'PlusJakartaSans-Bold'
   },
   jobCard: {
     backgroundColor: '#fff',
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
   ovalText: {
     fontSize: 9,
     color: 'black',
+    fontFamily:'PlusJakartaSans-Medium'
   },
  
   brieficon: {
@@ -152,7 +154,8 @@ tag: {
     borderRadius: 50,
     marginRight: 8,
     marginBottom: 8,
-    fontSize: 8
+    fontSize: 8,
+    fontFamily:'PlusJakartaSans-Medium'
   },
 locationContainer: {
     flexDirection: 'row',
@@ -166,6 +169,7 @@ locationIcon: {
   locationText: {
     fontSize: 9,
     color: 'black',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   row: {
     flexDirection: 'row',
@@ -183,16 +187,15 @@ locationIcon: {
   },
   jobTitle: {
     color: '#121212', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontFamily: 'PlusJakartaSans-Bold', // Custom font (ensure the font is properly linked)
     fontSize: 16, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '700', // Font weight
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
     fontSize: 12,
-    fontFamily: "Plus Jakarta Sans",
+    fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
     fontWeight:600,
     color: 'rgba(83, 83, 83, 0.80)',
@@ -217,7 +220,7 @@ locationIcon: {
   },
   postedOn: {
     color: '#979696', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 8, // Font size
     fontStyle: 'normal', // Font style
     fontWeight: '500', // Font weight

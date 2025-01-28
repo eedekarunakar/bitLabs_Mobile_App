@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView } from 'react-native';
 import Pdf from 'react-native-pdf';
@@ -22,6 +23,7 @@ const PDFExample = () => {
         console.error('Error fetching PDF:', error);
         setError('Error fetching PDF');
       }
+
     };
 
     fetchPdf();

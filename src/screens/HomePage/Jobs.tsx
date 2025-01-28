@@ -214,13 +214,13 @@ const styles = StyleSheet.create({
   ovalText: {
     fontSize: 9,
     color: 'black',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   Jobstext: {
     marginLeft: 22,
-    fontWeight: 'bold',
     marginBottom: 10,
     marginTop:12,
-    fontFamily:'Inter',
+    fontFamily:'PlusJakartaSans-Bold',
     color:'#0D0D0D',
   },
   jobstextcon:{
@@ -275,16 +275,15 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     color: '#121212', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+    fontFamily: 'PlusJakartaSans-Bold', // Custom font (ensure the font is properly linked)
     fontSize: 16, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '700', // Font weight
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
     fontSize: 12,
-    fontFamily: "Plus Jakarta Sans",
+    fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
     fontWeight:600,
     color: 'rgba(83, 83, 83, 0.80)',
@@ -309,6 +308,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 9,
     color: 'black',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   tag: {
     backgroundColor: '#f6f6f6',
@@ -318,11 +318,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 8,
     marginBottom: 8,
-    fontSize: 8
+    fontSize: 8,
+    fontFamily:'PlusJakartaSans-Medium'
   },
   postedOn: {
     color: '#979696', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 8, // Font size
     fontStyle: 'normal', // Font style
     fontWeight: '500', // Font weight
@@ -342,17 +343,20 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: '#FF8C00',
+    borderBottomColor: '#F97316',
+    
+    
   },
   tabText: {
     fontSize: 12,
     color: '#888',
-    marginLeft: 10
+    marginLeft: 10,
+    fontFamily:'PlusJakartaSans-Bold'
   },
   activeTabText: {
-    color: '#FF8C00',
-    fontWeight: 'bold',
-    marginLeft: 12
+    color: '#F97316',
+    marginLeft: 12,
+    fontFamily:'PlusJakartaSans-Bold'
  
   },
 });

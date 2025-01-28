@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#F68318',
   },
   timerContainer: {
@@ -489,6 +489,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'orange',
     marginLeft: 8,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   separator: {
     height: 1,
@@ -501,7 +502,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   questionText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 500,
     fontSize: 16,
     color: '#000000',
@@ -516,6 +517,7 @@ const styles = StyleSheet.create({
     width: width * 0.85
   },
   optionText: {
+    fontFamily: 'PlusJakartaSans-Medium',
     fontWeight: 500,
     fontSize: 14.5,
     color: '#000000',
@@ -523,6 +525,7 @@ const styles = StyleSheet.create({
     lineHeight: 25
   },
   errorText: {
+    fontFamily: 'PlusJakartaSans-Medium',
     color: 'red',
     fontSize: 14,
     marginTop: 10,
@@ -546,6 +549,7 @@ const styles = StyleSheet.create({
     marginLeft: '2%'
   },
   navigationButtonText1: {
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     color: '#F97316',
   },
@@ -556,6 +560,7 @@ const styles = StyleSheet.create({
   
   },
   navigationButtonText: {
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     color: '#FFF',
     textAlign: 'center',
@@ -591,8 +596,8 @@ const styles = StyleSheet.create({
   },
 
   modalText: {
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
-    fontWeight: 700,
     lineHeight: 25,
     color: '#333333',
     marginTop: 10,
@@ -610,6 +615,7 @@ const styles = StyleSheet.create({
     color: '#333333',
     textAlign: 'center',
     marginBottom: 16,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   modalOptions: {
     flexDirection: 'row',
@@ -635,7 +641,7 @@ const styles = StyleSheet.create({
   modalButtonText: {
     fontSize: 14,
     color: '#FFF',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   closeIcon: {
     position: 'absolute',
@@ -651,7 +657,7 @@ const styles = StyleSheet.create({
     borderRadius:10,
   },
   errorText1: {
-    fontFamily:'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
     color: 'grey',
     textAlign: 'center',

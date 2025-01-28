@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
+    fontFamily:'PlusJakartaSans-Medium'
   },
   jobCard: {
     backgroundColor: '#fff',
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
   ovalText: {
     fontSize: 9,
     color: 'black',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   brieficon: {
     height: 8,
@@ -244,6 +246,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom:8,
     fontSize: 8,
+    fontFamily:'PlusJakartaSans-Medium'
   },
   locationContainer: {
     flexDirection: 'row',
@@ -257,6 +260,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 9,
     color: 'black',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   row: {
     flexDirection: 'row',
@@ -274,16 +278,15 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     color: '#121212', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font (ensure the font is properly linked)
+     fontFamily:'PlusJakartaSans-Bold',
     fontSize: 16, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '700', // Font weight
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
   },
   companyName: {
     fontSize: 12,
-    fontFamily: "Plus Jakarta Sans",
+    fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
     fontWeight:600,
     color: 'rgba(83, 83, 83, 0.80)',
@@ -303,7 +306,7 @@ const styles = StyleSheet.create({
   },
   postedOn: {
     color: '#979696', // Text color
-    fontFamily: 'Plus Jakarta Sans', // Custom font
+    fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize:10,
     fontStyle: 'normal', // Font style
     fontWeight: '500', // Font weight
@@ -311,9 +314,9 @@ const styles = StyleSheet.create({
   },
   statusHeader: {
     fontSize: 18,
-    fontWeight: 'bold',
     marginBottom: 8,
     color: '#F46F16',
+    fontFamily:'PlusJakartaSans-Bold'
   },
   statusContainer: {
     marginTop: 10,
@@ -353,12 +356,14 @@ const styles = StyleSheet.create({
     color: 'black',
     flex: 1,
     textAlign: 'center',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   statusText: {
     fontSize: 16,
     color: '#333',
     flex: 1,
     textAlign: 'center',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   iconWrapper: {
     zIndex: 1,
@@ -417,7 +422,7 @@ const styles = StyleSheet.create({
   viewJobText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   viewJobButton: {
    

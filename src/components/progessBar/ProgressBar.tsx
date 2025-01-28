@@ -1,57 +1,57 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
- 
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+
 const screenWidth = Dimensions.get('window').width;
- 
+
 type ProgressBarProps = {
-  currentStep: number;
-  onStepPress?: (step: number) => void;
+  initialStep: number;
 };
- 
-const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, onStepPress }) => {
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ initialStep }) => {
+  const [currentStep, setCurrentStep] = useState(initialStep);
+
   const steps = [
-    { id: 1, label: '  Personal    Info' },
+    { id: 1, label: '  Personal   Info' },
     { id: 2, label: 'Professional Details' },
     { id: 3, label: 'Upload Resume' },
   ];
- 
+
   // Calculate dynamic line width based on screen size and number of steps
   const dynamicLineWidth = (screenWidth - steps.length * 60) / (steps.length - 1);
- 
+
   return (
-<View style={styles.container}>
-<View style={styles.progressContainer}>
+    <View style={styles.container}>
+      <View style={styles.progressContainer}>
         {steps.map((step, index) => {
           const isActive = step.id === currentStep;
           const isCompleted = step.id < currentStep;
           const isLastStep = index === steps.length - 1;
- 
+
           return (
-<View key={step.id} style={styles.stepWrapper}>
+            <View key={step.id} style={styles.stepWrapper}>
               {/* Step Circle */}
-<TouchableOpacity
-                onPress={() => onStepPress?.(step.id)}
+              <View
                 style={[
                   styles.stepCircle,
                   isActive && styles.activeStepCircle,
                   isCompleted && styles.completedStepCircle,
                   isActive || isCompleted ? { borderColor: 'transparent' } : {},
                 ]}
->
-<Text
+              >
+                <Text
                   style={[
                     styles.stepText,
                     isActive && styles.activeStepText,
                     isCompleted && styles.completedStepText,
                   ]}
->
-                  {step.id}
-</Text>
-</TouchableOpacity>
- 
+                >
+                  {isCompleted ? '✔' : step.id}
+                </Text>
+              </View>
+
               {/* Connecting Line */}
               {!isLastStep && (
-<View
+                <View
                   style={[
                     styles.line,
                     { width: dynamicLineWidth }, // Dynamic width
@@ -60,17 +60,17 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, onStepPress }) =
                   ]}
                 />
               )}
- 
+
               {/* Step Label */}
-<Text style={styles.stepLabel}>{step.label}</Text>
-</View>
+              <Text style={styles.stepLabel}>{step.label}</Text>
+            </View>
           );
         })}
-</View>
-</View>
+      </View>
+    </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     padding: 20,
@@ -109,9 +109,10 @@ const styles = StyleSheet.create({
   stepText: {
     fontSize: 16,
     color: '#F97316',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   activeStepText: {
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#fff',
   },
   completedStepText: {
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     width: 80,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   line: {
     position: 'absolute',
@@ -140,6 +142,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
   },
 });
- 
+
 export default ProgressBar;
- 

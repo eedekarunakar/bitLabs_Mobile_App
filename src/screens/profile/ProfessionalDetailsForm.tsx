@@ -269,7 +269,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                 <Text style={styles.modalTitle}>Professional Details</Text>
                 <TouchableOpacity onPress={onClose}>
-                  <Text style={{ fontSize: 24, color: 'red', top: -10 }}>X</Text>
+                  <Text style={{ fontSize: 24, color: 'red', top: -10,fontFamily: 'PlusJakartaSans-Bold', }}>X</Text>
                 </TouchableOpacity>
               </View>
 
@@ -447,7 +447,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.experience ? styles.errorInput : {}]}
-                  placeholder="Experience" placeholderTextColor="#B1B1B1"
+                  placeholder="Experience" placeholderTextColor="#B1B1B1" 
                   value={experienceQuery}
                   onFocus={toggleExperienceDropdown}
                   onChangeText={(text) => {
@@ -513,11 +513,11 @@ const styles = StyleSheet.create({
     
   },
   modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
     color:'#666666',
+    fontFamily:'PlusJakartaSans-Bold'
   },
   input: {
     borderWidth: 1,
@@ -526,6 +526,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     color:'#0D0D0D',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   errorInput: {
     borderColor: 'red',
@@ -556,7 +557,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    color:'#0D0D0D'
+    color:'#0D0D0D',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   autocompleteItem: {
     padding: 10,
@@ -564,12 +566,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    color:'#0D0D0D'
+    color:'#0D0D0D',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   noMatchText: {
     padding: 10,
     fontSize: 16,
     color: '#bbb',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   selectedItems: {
     flexDirection: 'row',
@@ -588,11 +592,13 @@ const styles = StyleSheet.create({
   selectedItemText: {
     color: 'white',
     fontSize: 14,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   removeText: {
     color: 'white',
     fontSize: 14,
     marginLeft: 5,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   button: {
     backgroundColor: '#F97316',
@@ -605,7 +611,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
+    fontFamily:'PlusJakartaSans-Bold'
   },
   scrollContainer: {
     maxHeight: 150,
