@@ -57,7 +57,7 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   Notification: undefined;
   ResumeBuilder: undefined;
-
+  Home: { welcome:string }| undefined;
   Drives: undefined;
   MyResume: undefined;
 
@@ -68,8 +68,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Appnavigator = () => {
 
   const { isAuthenticated, userToken, userId, userEmail } = useAuth();
-  const [profileChecked, setProfileChecked] = useState(false);
-
+  const [profileChecked, setProfileChecked] = useState(isAuthenticated);
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
 
   useEffect(() => {

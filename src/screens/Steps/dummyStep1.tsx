@@ -24,6 +24,7 @@ interface Step1Props {
 }
  
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
+ 
   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(1);
   const{userId}=useAuth();
@@ -89,15 +90,17 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
   };
  
   const handleNext = () => {
+    console.log('Route Params:', route.params);
     if (validateForm()) {
       console.log('Form Data:', { ...formData, email });
       const totalSteps = 3;
       setCurrentStep((prevStep) => Math.min(prevStep + 1, totalSteps));
       navigation.navigate('Step2', {
+        ...route.params,
         firstName: formData.firstName,
         lastName: formData.lastName,
         whatsappNumber: formData.whatsappNumber,
-        email: email,  // Use email passed from route params
+        email: email,
       }); // Proceed to next step
     }
   };
