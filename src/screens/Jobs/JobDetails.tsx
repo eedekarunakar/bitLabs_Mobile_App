@@ -12,6 +12,9 @@ import { ProfileService } from '../../services/profile/ProfileService';
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
 import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
+import Savejob from '../../assests/icons/Savejob';
+import Alertcircle from '../../assests/icons/Alertcircle';
+import Savedjob from '../../assests/icons/Savedjob';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -297,10 +300,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             ))}
             {unmatchedSkills.map((skill, index) => (
               <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Image
-                  source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
-                  style={styles.unmatchedSkillIcon} // Define this style as needed
-                />
+               <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
                 <Text style={[styles.unmatchedSkill]}>{skill}</Text>
               </View>
             ))}
@@ -350,8 +350,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
         {/* Save Job Button */}
         {isJobSaved ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>Saved</Text>
+          <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
+            <View style={styles.buttonContent}>
+            <Savedjob height={18} width={18} />
+            <Text style={styles.savedButtonText}> Saved</Text>
+            </View>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -359,11 +362,12 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             onPress={handleSaveJob}
           >
             <View style={styles.buttonContent}>
-              <Image
+              {/* <Image
                 source={require('../../assests/Images/bookmark.png')} // Replace with your image path
                 style={styles.buttonImage}
-              />
-              <Text style={styles.buttonText}>Save Job</Text>
+              /> */}
+              <Savejob height={18} width={18} />
+              <Text style={styles.buttonText}> Save Job</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -371,7 +375,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {/* Apply Now Button */}
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>Applied</Text>
+            <View>
+           
+            <Text style={styles.appliedButtonText}>✔  Applied</Text>
+            </View>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -406,14 +413,25 @@ const styles = StyleSheet.create({
     fontFamily:'PlusJakartaSans-Bold'
   },
   appliedButton: {
-    backgroundColor: '#d3d3d3', // Gray background for "Applied"
+    backgroundColor: '#08921E', // Gray background for "Applied"
     marginLeft: 5,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#a9a9a9',
+    borderColor: '#08921E',
+  },
+  savedButton: {
+    backgroundColor: 'white',
+    marginRight: 5,
+    borderColor: '#F46F16',
+    borderWidth: 1,
+    borderRadius: 8,
   },
   appliedButtonText: {
-    color: '#555', // Gray text for "Applied"
+    color: '#fff', // Gray text for "Applied"
+    fontFamily:'PlusJakartaSans-Bold'
+  },
+  savedButtonText: {
+    color: '#F46F16', // Gray text for "Applied"
     fontFamily:'PlusJakartaSans-Bold'
   },
   description: {
@@ -485,10 +503,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
-    marginBottom: 10,
-    marginLeft: 16,
-    marginTop: 10,
-    marginRight: 13
+    margin:12,
+    marginBottom: 2,
   },
   row: {
     flexDirection: 'row',
@@ -567,9 +583,10 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   postedOn: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#888',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily:'PlusJakartaSans-Medium',
+    marginBottom: 18,
   },
   tabs: {
     flexDirection: 'row',
@@ -674,7 +691,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   message: {
-    fontSize: 14,
+    fontSize: 10,
     color: '#666',
     marginBottom: 8,
     fontFamily:'PlusJakartaSans-Medium'

@@ -46,12 +46,23 @@ const ChangePasswordScreen = () => {
   };
  
   const handleKeyboardDismiss = () => {
-    setVisibleField(null); // Hide all password fields when dismissing the keyboard
+    setShowOldPassword(false);
+    setShowNewPassword(false);
+    setShowReEnterPassword(false); // Hide all password fields when dismissing the keyboard
     Keyboard.dismiss();
   };
  
   const handleFocus = (field: string) => {
-    setVisibleField(field); // Set the current field as visible
+    if (field === 'old') {
+      setShowNewPassword(false);
+      setShowReEnterPassword(false);
+    } else if (field === 'new') {
+      setShowOldPassword(false);
+      setShowReEnterPassword(false);
+    } else if (field === 'reEnter') {
+      setShowOldPassword(false);
+      setShowNewPassword(false);
+    }
   };
  
   const validatePassword = (password: string, type: 'old' | 'new' | 'reEnter') => {
@@ -192,12 +203,16 @@ const ChangePasswordScreen = () => {
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
     field: 'old' | 'new' | 'reEnter',
-    placeholder: string
+    placeholder: string,
+    showPassword: boolean,
+    setShowPassword: React.Dispatch<React.SetStateAction<boolean>>,
   ) => (
     <View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
-        secureTextEntry={visibleField !== field}
+        // secureTextEntry={visibleField !== field}
+        secureTextEntry={!showPassword}
+        
         value={value}
         onChangeText={(text) => {
           setValue(text);
@@ -207,12 +222,12 @@ const ChangePasswordScreen = () => {
         placeholder={placeholder}
         placeholderTextColor="#A9A9A9"
       />
-      <TouchableOpacity onPress={() => setVisibleField(visibleField === field ? null : field)} style={styles.eyeIcon}>
+      <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
         <Image
           source={
-            visibleField !== field
-              ? require('../../assests/LandingPage/openeye.png')
-              : require('../../assests/LandingPage/closedeye.png')
+            !showPassword
+              ? require('../../assests/LandingPage/closedeye.png')
+              : require('../../assests/LandingPage/openeye.png')
           }
           style={styles.eyeImage}
         />
@@ -243,18 +258,22 @@ const ChangePasswordScreen = () => {
           oldPassword,
           setOldPassword,
           'old',
-          'Type Old Password'
+          'Type Old Password',
+          showOldPassword,
+        setShowOldPassword,
         )}
         {oldMessage ? (
           <Text style={[styles.message, oldMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {oldMessage}
           </Text>
         ) : null}
-                {renderPasswordField(
+          {renderPasswordField(
           newPassword,
           setNewPassword,
           'new',
-          'Enter New Password'
+          'Enter New Password',
+          showNewPassword,
+        setShowNewPassword,
         )}
         {newMessage ? (
           <Text style={[styles.message, newMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
@@ -266,7 +285,9 @@ const ChangePasswordScreen = () => {
           reEnterPassword,
           setReEnterPassword,
           'reEnter',
-          'Confirm New Password'
+          'Confirm New Password',
+          showReEnterPassword,
+        setShowReEnterPassword
         )}
         {reEnterMessage ? (
           <Text style={[styles.message, reEnterMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
