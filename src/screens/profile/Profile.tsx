@@ -22,6 +22,11 @@ import { base64Image } from '../../services/base64Image';
 import LinearGradient from 'react-native-linear-gradient';
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
+
+
+
+
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
@@ -456,7 +461,9 @@ function ProfileComponent() {
                                 <Text style={styles.subheading}>Preferred Location</Text>
                                 {preferredJobLocations.length > 0 && (
 
+
                                     <Text style={{ color: '#000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 12 }}>
+
 
                                         {preferredJobLocations.join(', ')}
                                     </Text>
@@ -571,10 +578,12 @@ function ProfileComponent() {
                                 <Text style={styles.modalTitle1}>Upload Resume</Text>
                                 <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{ marginLeft: '50%' }}>
 
+
                                     <Text style={{ fontSize: 12, color: 'gray', top: -35, fontFamily: 'PlusJakartaSans-Bold' }}>X</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 1, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
+
 
                                 <TouchableOpacity
                                     onPress={handleUploadResume}
@@ -587,6 +596,7 @@ function ProfileComponent() {
 
                                     <Text style={{ padding: 50, fontFamily: 'PlusJakartaSans-Bold' }}>Select File</Text>
 
+
                                 </TouchableOpacity>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
@@ -594,6 +604,7 @@ function ProfileComponent() {
                                 <View style={styles.line}></View>
 
                                 <Text style={{ marginTop: -10, fontFamily: 'PlusJakartaSans-Bold' }}> Or</Text>
+
 
                                 <View style={[styles.line, { marginLeft: 3 }]}></View>
                             </View>
@@ -603,7 +614,9 @@ function ProfileComponent() {
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
 
+
                                     <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
+
 
                                 </TouchableOpacity>
                             </View>
@@ -618,6 +631,7 @@ function ProfileComponent() {
                                         onPress={handleSaveResume}      // Save changes and upload the file to the backend
                                         style={styles.buttonContent}
                                     >
+
 
                                         <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
 
@@ -716,8 +730,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 5,
         color: '#fff',
+
         paddingHorizontal: 8,
         fontFamily: 'PlusJakartaSans-Medium',
+
 
 
     },
@@ -740,9 +756,11 @@ const styles = StyleSheet.create({
         marginLeft: 'auto'
     },
     name: {
+
         fontSize: 24,
         color: '#424242',
         fontFamily: 'PlusJakartaSans-Bold',
+
 
     },
     image: {
@@ -954,6 +972,10 @@ const styles = StyleSheet.create({
     },
 
     buttonText1: {
+
+
+
+
         fontSize: 18,
         color: '#0D0D0D',
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
