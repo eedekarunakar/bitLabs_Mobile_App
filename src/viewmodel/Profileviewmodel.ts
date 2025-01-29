@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { ProfileService } from '../services/profile/ProfileService';
 
 export const useProfileViewModel = (userToken: string | null, userId: number | null) => {
@@ -40,6 +41,20 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     }
   };
 
+  // Ensure function doesn't recreate on every render
+  const reloadProfile = useCallback(() => {
+    loadProfile();
+  }, [userToken, userId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      reloadProfile();
+    }, [reloadProfile])
+  );
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
   // Validate Phone Number
   const validatePhoneNumber = (phone: string): boolean => {
     const phoneRegex = /^[6-9]\d{9}$/; // Adjust regex as needed

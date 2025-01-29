@@ -6,7 +6,7 @@ import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel';
 import ProfileService from '../../services/profile/ProfileService';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import useGoogleSignIn from '../../services/google/google';
- 
+import Notification from "../../assests/icons/notification";
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
  
 const Navbar = () => {
@@ -29,7 +29,7 @@ const Navbar = () => {
  
             <View style={styles.logoContainer}>
                 <Image
-                    source={require('../../assests/Images/logo.png')}
+                    source={require('../../assests/LandingPage/logo.png')}
                     style={styles.logo1Image}
                 />
             </View>
@@ -37,10 +37,7 @@ const Navbar = () => {
                 {/* Notification Bell */}
                 <View style={styles.notificationContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-                        <Image
-                            source={require('../../assests/Images/rat/notification.png')}
-                            style={styles.notification}
-                        />
+                    <Notification width={28} heigth={22}/>
                     </TouchableOpacity>
                     {unseenCount > 0 && (
                         <View style={styles.notificationBadge}>

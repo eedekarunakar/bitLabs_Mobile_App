@@ -19,7 +19,11 @@ const useLoginViewModel = () => {
       type:type,
       text1:message,
       position:'bottom',
-      visibilityTime:3000
+      visibilityTime:5000,
+      text1Style:{
+        fontFamily:'PlusJakartaSans-Medium',
+        fontSize:12
+      }
     })
   }
 
@@ -92,7 +96,11 @@ const useSignupViewModel = () => {
       type:type,
       text1:message,
       position:'bottom',
-      visibilityTime:3000
+      visibilityTime:5000,
+      text1Style:{
+        fontFamily:'PlusJakartaSans-Medium',
+        fontSize:12
+      }
     })
   }
 

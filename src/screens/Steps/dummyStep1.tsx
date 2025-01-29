@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { getMobileNumber } from '../../services/mobile';
 import { useAuth } from '../../context/Authcontext';
 
+
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
  
 interface Step1Props {
@@ -108,7 +109,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
  
         <Image
           style={styles.logo}
-          source={require('../../assests/Images/logo.png')} // Replace with your actual logo path
+          source={require('../../assests/LandingPage/logo.png')} // Replace with your actual logo path
         />
  
         <View style={styles.container}>
