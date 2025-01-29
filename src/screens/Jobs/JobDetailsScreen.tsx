@@ -22,6 +22,7 @@ import ViewJobDetails from './ViewJobDetails';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { applyJob } from '../../services/Jobs/JobDetails';
 import API_BASE_URL from '../../services/API_Service';
+
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
 };
@@ -139,8 +140,10 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                     <View style={styles.iconWrapper}>
                       {status.status === 'Completed' ? (
                         <Icon name="check-circle" size={24} color="#4CAF50" />
+                        
                       ) : (
                         <View style={styles.circle} />
+                        
                       )}
                       {index < jobStatus.length - 1 && (
                         <View style={styles.verticalLine} />
@@ -209,8 +212,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
-    marginBottom: 10,
-    marginLeft: 6,
+    margin:2,
+    marginBottom: 6,
+    
 
   },
   oval: {
@@ -313,10 +317,11 @@ const styles = StyleSheet.create({
     lineHeight: 23.76, // Line height (in points, not percentage)
   },
   statusHeader: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 8,
     color: '#F46F16',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily:'PlusJakartaSans-Bold',
+    fontWeight:700,
   },
   statusContainer: {
     marginTop: 10,
@@ -377,8 +382,8 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: '#FF9800',
-    backgroundColor: '#FF9800',
+    borderColor: '#F46F16',
+    backgroundColor: '#F46F16',
     marginLeft: -10,
   },
   verticalLine: {

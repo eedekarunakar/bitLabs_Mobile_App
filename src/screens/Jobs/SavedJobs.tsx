@@ -1,10 +1,10 @@
-import React,{useState,useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import { ScrollView, ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useSavedJobs } from '../../services/Jobs/SavedJob';
 import { JobData1 } from '../../models/Jobs/SavedJob';
-import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../New';  
+import { RootStackParamList } from '../../../New';
 
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
@@ -52,7 +52,9 @@ const SavedJobs = () => {
               style={styles.companyLogo}
             />
             <View style={styles.jobDetails}>
-              <Text style={styles.jobTitle}>{job.jobTitle}</Text>
+              <Text style={styles.jobTitle}>
+                {job.jobTitle.length > 28 ? `${job.jobTitle.substring(0, 28)}...` : job.jobTitle}
+              </Text>
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
           </View>
@@ -88,31 +90,30 @@ const SavedJobs = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f6f6f6' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  placeholderText: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 50 ,fontFamily:'PlusJakartaSans-Bold'},
+  placeholderText: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 50, fontFamily: 'PlusJakartaSans-Bold' },
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
     padding: 16,
-    marginBottom: 10,
-   
-    marginHorizontal: 6,
+    margin: 12,
+    marginBottom: 0,
   },
   row: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   companyLogo: { width: 50, height: 50, borderRadius: 15, marginRight: 16 },
   jobDetails: { flex: 1 },
-  jobTitle: { 
+  jobTitle: {
     color: '#121212', // Text color
-    fontFamily:'PlusJakartaSans-Bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16, // Font size
     fontStyle: 'normal', // Font style
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
   },
-  companyName: { 
+  companyName: {
     fontSize: 12,
     fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
-    fontWeight:600,
+    fontWeight: 600,
     color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
     fontSize: 8,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   oval: {
     flexDirection: 'row',
@@ -138,12 +139,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginRight: 6
   },
-  ovalText: { fontSize: 9, color: 'black',fontFamily:'PlusJakartaSans-Medium' },
+  ovalText: { fontSize: 9, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
   brieficon: { height: 8, width: 8, marginRight: 8 },
   locationContainer: { flexDirection: 'row', alignItems: 'center' },
-  locationIcon: { width: 8, height: 8, marginRight: 6},
-  locationText: { fontSize: 9, color: 'black',fontFamily:'PlusJakartaSans-Medium' },
-  postedOn: { 
+  locationIcon: { width: 8, height: 8, marginRight: 6 },
+  locationText: { fontSize: 9, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 8, // Font size
