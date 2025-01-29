@@ -20,6 +20,7 @@ import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-pi
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import { base64Image } from '../../services/base64Image';
 import LinearGradient from 'react-native-linear-gradient';
+import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
 
@@ -372,7 +373,7 @@ function ProfileComponent() {
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={styles.name}>
+                            <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center', width: '80%' }]}>
                                 {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
                             </Text>
 
@@ -403,7 +404,7 @@ function ProfileComponent() {
                             {/* {qualification||'no qualification details availiable !!'} */}
                             <Text style={styles.details}>{qualification}</Text>
                             <Text style={styles.subheading}>Specilization</Text>
-                            <Text style={styles.details}> {specialization}</Text>
+                            <Text style={styles.details}>{specialization}</Text>
                             <Text style={styles.subheading}>Skills</Text>
 
                             <View style={styles.skillContainer}>
@@ -567,12 +568,14 @@ function ProfileComponent() {
                 >
                     <View style={styles.modalView1}>
                         <View style={styles.modalCard1}>
+                            <View style={{ marginLeft: '95%' }}>
+                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} >
+                                   <Icon7 name="close" size={20} color ={'0D0D0D'} />
+                                </TouchableOpacity>
+                            </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                                 <Text style={styles.modalTitle1}>Upload Resume</Text>
-                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{ marginLeft: '50%' }}>
 
-                                    <Text style={{ fontSize: 12, color: 'gray', top: -35, fontFamily: 'PlusJakartaSans-Bold' }}>X</Text>
-                                </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 1, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
 
@@ -649,7 +652,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-      },
+    },
 
     uploadButton: {
         width: '100%',
@@ -803,7 +806,7 @@ const styles = StyleSheet.create({
     details: {
         fontFamily: 'PlusJakartaSans-Bold',
         color: '#463F3F',
-        fontSize: 14
+        fontSize: 14,
     },
     modalView: {
         flex: 1,
@@ -880,7 +883,7 @@ const styles = StyleSheet.create({
 
     // Modal Card Style
     modalCard1: {
-        width: 300,
+        width: 350,
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,

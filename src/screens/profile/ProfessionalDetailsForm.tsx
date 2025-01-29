@@ -10,13 +10,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Platform
-
+  Platform,
+  Dimensions
 } from 'react-native';
 import { useAuth } from '../../context/Authcontext';
 import { ProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import Toast from 'react-native-toast-message';
 import { ApplicantSkillBadge } from '../../models/profile/profile';
+import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
+
 
 interface Skill {
   id: number;
@@ -37,7 +39,7 @@ interface ProfessionalDetailsFormProps {
 }
 
 import { FlatList } from 'react-native';
-
+const { width, height } = Dimensions.get('window');
 const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   visible,
   onClose,
@@ -262,232 +264,232 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
-        <TouchableWithoutFeedback onPress={closeAllDropdowns}>
-          <View style={styles.modalView}>
-            <View style={styles.modalCard}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
-                <Text style={styles.modalTitle}>Professional Details</Text>
+        <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+          <TouchableWithoutFeedback onPress={closeAllDropdowns}>
+            <View style={styles.modalView}>
+              <View style={styles.modalCard}>
+                <View style={{ marginLeft: '95%' }}>
                 <TouchableOpacity onPress={onClose}>
-                  <Text style={{ fontSize: 24, color: 'red', top: -10,fontFamily: 'PlusJakartaSans-Bold', }}>X</Text>
+                <Icon name="close" size={20} color ={'0D0D0D'} />
                 </TouchableOpacity>
-              </View>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+                  <Text style={styles.modalTitle}>Professional Details</Text>
+                </View>
 
-              {/* Qualification */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, validationErrors.qualification ? styles.errorInput : {}]}
-                  placeholder="Qualification" placeholderTextColor="#B1B1B1"
-                  value={qualificationQuery}
-                  onFocus={toggleQualificationDropdown}
-                  onChangeText={(text) => {
-                    setQualificationQuery(text);
-                    setQualification(text);
-                    setShowQualificationList(true);
-                  }}
-                />
-                {validationErrors.qualification && (
-                  <Text style={styles.errorText}>{validationErrors.qualification}</Text>
-                )}
-                {showQualificationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                {/* Qualification */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, validationErrors.qualification ? styles.errorInput : {}]}
+                    placeholder="Qualification" placeholderTextColor="#B1B1B1"
+                    value={qualificationQuery}
+                    onFocus={toggleQualificationDropdown}
+                    onChangeText={(text) => {
+                      setQualificationQuery(text);
+                      setQualification(text);
+                      setShowQualificationList(true);
+                    }}
+                  />
+                  {validationErrors.qualification && (
+                    <Text style={styles.errorText}>{validationErrors.qualification}</Text>
+                  )}
+                  {showQualificationList && (
+                    <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
-                    <FlatList
-                      data={qualificationsOptions.filter((qual) => qual.toLowerCase().includes(qualificationQuery.toLowerCase()))}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                          setQualification(item);
-                          setQualificationQuery(item);
-                          setShowQualificationList(false);
-                        }}>
-                          <Text style={styles.suggestionItem}>{item}</Text>
-                        </TouchableOpacity>
-                      )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
-                      nestedScrollEnabled={true}
-                    />
+                      <FlatList
+                        data={qualificationsOptions.filter((qual) => qual.toLowerCase().includes(qualificationQuery.toLowerCase()))}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity onPress={() => {
+                            setQualification(item);
+                            setQualificationQuery(item);
+                            setShowQualificationList(false);
+                          }}>
+                            <Text style={styles.suggestionItem}>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                        ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
+                        nestedScrollEnabled={true}
+                      />
 
-                  </View>
-                )}
-              </View>
+                    </View>
+                  )}
+                </View>
 
-              {/* Specialization */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, validationErrors.specialization ? styles.errorInput : {}]}
-                  placeholder="Specialization" placeholderTextColor="#B1B1B1"
-                  value={specializationQuery}
-                  onFocus={toggleSpecializationDropdown}
-                  onChangeText={(text) => {
-                    setSpecializationQuery(text);
-                    setSpecialization(text);
-                    setShowSpecializationList(true);
-                  }}
-                />
-                {validationErrors.specialization && (
-                  <Text style={styles.errorText}>{validationErrors.specialization}</Text>
-                )}
-                {showSpecializationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                {/* Specialization */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, validationErrors.specialization ? styles.errorInput : {}]}
+                    placeholder="Specialization" placeholderTextColor="#B1B1B1"
+                    value={specializationQuery}
+                    onFocus={toggleSpecializationDropdown}
+                    onChangeText={(text) => {
+                      setSpecializationQuery(text);
+                      setSpecialization(text);
+                      setShowSpecializationList(true);
+                    }}
+                  />
+                  {validationErrors.specialization && (
+                    <Text style={styles.errorText}>{validationErrors.specialization}</Text>
+                  )}
+                  {showSpecializationList && (
+                    <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
-                    <FlatList
-                      data={(specializationsByQualification[qualification as keyof typeof specializationsByQualification] || [])
-                        .filter((spec: string) => spec.toLowerCase().includes(specializationQuery.toLowerCase()))}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                          setSpecialization(item);
-                          setSpecializationQuery(item);
-                          setShowSpecializationList(false);
-                        }}>
-                          <Text style={styles.suggestionItem}>{item}</Text>
-                        </TouchableOpacity>
-                      )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
-                      nestedScrollEnabled={true}
-                    />
+                      <FlatList
+                        data={(specializationsByQualification[qualification as keyof typeof specializationsByQualification] || [])
+                          .filter((spec: string) => spec.toLowerCase().includes(specializationQuery.toLowerCase()))}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity onPress={() => {
+                            setSpecialization(item);
+                            setSpecializationQuery(item);
+                            setShowSpecializationList(false);
+                          }}>
+                            <Text style={styles.suggestionItem}>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                        ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
+                        nestedScrollEnabled={true}
+                      />
 
-                  </View>
-                )}
-              </View>
+                    </View>
+                  )}
+                </View>
 
-              {/* Skills */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, validationErrors.skills ? styles.errorInput : {}]}
-                  placeholder="Search Skills" placeholderTextColor="#0D0D0D"
-                  value={skillQuery}
-                  onFocus={toggleSkillsDropdown}
-                  onChangeText={setSkillQuery}
-                />
-                {validationErrors.skills && <Text style={styles.errorText}>{validationErrors.skills}</Text>}
-                {showSkillsList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                {/* Skills */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, validationErrors.skills ? styles.errorInput : {}]}
+                    placeholder="Search Skills" placeholderTextColor="#0D0D0D"
+                    value={skillQuery}
+                    onFocus={toggleSkillsDropdown}
+                    onChangeText={setSkillQuery}
+                  />
+                  {validationErrors.skills && <Text style={styles.errorText}>{validationErrors.skills}</Text>}
+                  {showSkillsList && (
+                    <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
-                    <FlatList
-                      data={skillQuery.length > 0 ? skillsOptions.filter((s) => s.toLowerCase().includes(skillQuery.toLowerCase())) : skillsOptions}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => addSkill(item)}>
-                          <Text style={styles.autocompleteItem}>{item}</Text>
-                        </TouchableOpacity>
-                      )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
-                      nestedScrollEnabled={true}
-                    />
+                      <FlatList
+                        data={skillQuery.length > 0 ? skillsOptions.filter((s) => s.toLowerCase().includes(skillQuery.toLowerCase())) : skillsOptions}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity onPress={() => addSkill(item)}>
+                            <Text style={styles.autocompleteItem}>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                        ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
+                        nestedScrollEnabled={true}
+                      />
 
-                  </View>
-                )}
-                <View style={styles.selectedItems}>
-                  {skillBadgesState
-                    .filter((badge) => badge.flag === 'added')
-                    .map((badge) => (
-                      <View key={badge.skillBadge.id} style={[styles.selectedItem, { backgroundColor: '#4CAF50' }]}>
-                        <Text style={styles.selectedItemText}>{badge.skillBadge.name}</Text>
-                        <TouchableOpacity onPress={() => removeSkill(badge.skillBadge.id, true, badge.skillBadge.name)}>
+                    </View>
+                  )}
+                  <View style={styles.selectedItems}>
+                    {skillBadgesState
+                      .filter((badge) => badge.flag === 'added')
+                      .map((badge) => (
+                        <View key={badge.skillBadge.id} style={[styles.selectedItem, { backgroundColor: '#4CAF50' }]}>
+                          <Text style={styles.selectedItemText}>{badge.skillBadge.name}</Text>
+                          <TouchableOpacity onPress={() => removeSkill(badge.skillBadge.id, true, badge.skillBadge.name)}>
+                            <Text style={styles.removeText}>x</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                    {skills.map((skill) => (
+                      <View key={skill.id} style={[styles.selectedItem, { backgroundColor: '#4CAF50' }]}>
+                        <Text style={styles.selectedItemText}>{skill.skillName}</Text>
+                        <TouchableOpacity onPress={() => removeSkill(skill.id, false, skill.skillName)}>
                           <Text style={styles.removeText}>x</Text>
                         </TouchableOpacity>
                       </View>
                     ))}
-                  {skills.map((skill) => (
-                    <View key={skill.id} style={[styles.selectedItem, { backgroundColor: '#4CAF50' }]}>
-                      <Text style={styles.selectedItemText}>{skill.skillName}</Text>
-                      <TouchableOpacity onPress={() => removeSkill(skill.id, false, skill.skillName)}>
-                        <Text style={styles.removeText}>x</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-              </View>
-
-              {/* Locations */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, validationErrors.locations ? styles.errorInput : {}]}
-                  placeholder="Search Locations" placeholderTextColor="#0D0D0D"
-                  value={locationQuery}
-                  onFocus={toggleLocationDropdown}
-                  onChangeText={setLocationQuery}
-                />
-                {validationErrors.locations && <Text style={styles.errorText}>{validationErrors.locations}</Text>}
-                {showLocationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
-
-                    <FlatList
-                      data={locationQuery.length > 0 ? cities.filter((loc) => loc.toLowerCase().includes(locationQuery.toLowerCase())) : cities}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => addLocation(item)}>
-                          <Text style={styles.autocompleteItem}>{item}</Text>
-                        </TouchableOpacity>
-                      )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>
-
-                      }
-                      nestedScrollEnabled={true}
-                    />
-
                   </View>
-                )}
-                <View style={styles.selectedItems}>
-                  {locations.map((location) => (
-                    <View key={location} style={[styles.selectedItem, { backgroundColor: '#FF9800' }]}>
-                      <Text style={styles.selectedItemText}>{location}</Text>
-                      <TouchableOpacity onPress={() => removeLocation(location)}>
-                        <Text style={styles.removeText}>x</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
                 </View>
-              </View>
 
-              
-              {/* Experience */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, validationErrors.experience ? styles.errorInput : {}]}
-                  placeholder="Experience" placeholderTextColor="#B1B1B1" 
-                  value={experienceQuery}
-                  onFocus={toggleExperienceDropdown}
-                  onChangeText={(text) => {
-                    setExperienceQuery(text);
-                    setExperience(text);
-                    setShowExperienceList(true);
-                  }}
-                />
-                {validationErrors.experience && (
-                  <Text style={styles.errorText}>{validationErrors.experience}</Text>
-                )}
-                {showExperienceList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
-                    <FlatList
-                      data={experienceQuery.length > 0 ? experienceOptions.filter((exp) => exp.toLowerCase().includes(experienceQuery.toLowerCase())) : experienceOptions}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                          setExperience(item);
-                          setExperienceQuery(item);
-                          setShowExperienceList(false);
-                        }}>
-                          <Text style={styles.autocompleteItem}>{item}</Text>
+                {/* Locations */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, validationErrors.locations ? styles.errorInput : {}]}
+                    placeholder="Search Locations" placeholderTextColor="#0D0D0D"
+                    value={locationQuery}
+                    onFocus={toggleLocationDropdown}
+                    onChangeText={setLocationQuery}
+                  />
+                  {validationErrors.locations && <Text style={styles.errorText}>{validationErrors.locations}</Text>}
+                  {showLocationList && (
+                    <View style={[styles.dropdown, { zIndex: 1000 }]}>
+
+                      <FlatList
+                        data={locationQuery.length > 0 ? cities.filter((loc) => loc.toLowerCase().includes(locationQuery.toLowerCase())) : cities}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity onPress={() => addLocation(item)}>
+                            <Text style={styles.autocompleteItem}>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                        ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>
+
+                        }
+                        nestedScrollEnabled={true}
+                      />
+
+                    </View>
+                  )}
+                  <View style={styles.selectedItems}>
+                    {locations.map((location) => (
+                      <View key={location} style={[styles.selectedItem, { backgroundColor: '#FF9800' }]}>
+                        <Text style={styles.selectedItemText}>{location}</Text>
+                        <TouchableOpacity onPress={() => removeLocation(location)}>
+                          <Text style={styles.removeText}>x</Text>
                         </TouchableOpacity>
-                      )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
-                      nestedScrollEnabled={true}
-                    />
+                      </View>
+                    ))}
                   </View>
-                )}
+                </View>
+
+
+                {/* Experience */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, validationErrors.experience ? styles.errorInput : {}]}
+                    placeholder="Experience" placeholderTextColor="#B1B1B1"
+                    value={experienceQuery}
+                    onFocus={toggleExperienceDropdown}
+                    onChangeText={(text) => {
+                      setExperienceQuery(text);
+                      setExperience(text);
+                      setShowExperienceList(true);
+                    }}
+                  />
+                  {validationErrors.experience && (
+                    <Text style={styles.errorText}>{validationErrors.experience}</Text>
+                  )}
+                  {showExperienceList && (
+                    <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                      <FlatList
+                        data={experienceQuery.length > 0 ? experienceOptions.filter((exp) => exp.toLowerCase().includes(experienceQuery.toLowerCase())) : experienceOptions}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity onPress={() => {
+                            setExperience(item);
+                            setExperienceQuery(item);
+                            setShowExperienceList(false);
+                          }}>
+                            <Text style={styles.autocompleteItem}>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                        ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
+                        nestedScrollEnabled={true}
+                      />
+                    </View>
+                  )}
+                </View>
+                <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
+                  <Text style={styles.buttonText}>Save Changes</Text>
+                </TouchableOpacity>
               </View>
-
-
-              <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                <Text style={styles.buttonText}>Save Changes</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+          </TouchableWithoutFeedback>
+        </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -498,26 +500,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalCard: {
     width: '90%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    
   },
   inputContainer: {
     position: 'relative',
     marginBottom: 20,
-    
+
   },
   modalTitle: {
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
-    color:'#666666',
-    fontFamily:'PlusJakartaSans-Bold'
+    color: '#666666',
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   input: {
     borderWidth: 1,
@@ -525,8 +526,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     padding: 10,
-    color:'#0D0D0D',
-    fontFamily:'PlusJakartaSans-Medium'
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   errorInput: {
     borderColor: 'red',
@@ -549,7 +550,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     overflow: 'hidden',
     elevation: 5, // Added elevation for better visibility
-   
+
   },
   suggestionItem: {
     padding: 10,
@@ -557,8 +558,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    color:'#0D0D0D',
-    fontFamily:'PlusJakartaSans-Medium'
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   autocompleteItem: {
     padding: 10,
@@ -566,14 +567,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    color:'#0D0D0D',
-    fontFamily:'PlusJakartaSans-Medium'
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   noMatchText: {
     padding: 10,
     fontSize: 16,
     color: '#bbb',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   selectedItems: {
     flexDirection: 'row',
@@ -612,7 +613,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   scrollContainer: {
     maxHeight: 150,

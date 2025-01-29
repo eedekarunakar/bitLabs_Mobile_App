@@ -3,7 +3,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import Navbar from '../../components/Navigation/Navbar';
 import ExploreSection from "../../components/home/ExploreSection";
-import { useJobCounts } from '../../viewmodel/DashboardViewModel'; // Correct the path to where the hook is located
+import { useJobCounts } from '../../viewmodel/DashboardViewModel'; // Hook for fetching job counts
 import { useAuth } from '../../context/Authcontext';
 import AppliedJobs from '../Jobs/AppliedJobs';
 import { useNavigation } from '@react-navigation/native';
@@ -11,8 +11,7 @@ import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { useRoute, RouteProp,useFocusEffect,useIsFocused  } from '@react-navigation/native';
-//import { AuthContext } from './AuthContext'
+import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
 import {
   View,
   Image,
@@ -29,34 +28,36 @@ import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
-//const applicantId = '2'; // Your applicant ID
 
 function Dashboard() {
- 
-  const { userId, userToken, } = useAuth();
-  const route = useRoute<HomeScreenRouteProp>();
+  const { userId, userToken } = useAuth(); // Retrieve userId and userToken
+  const route = useRoute<HomeScreenRouteProp>(); // Handle route params
   useEffect(() => {
     console.log('Dashboard route.params:', route.params); // Debug log
   }, [route.params]);
+
   const [welcome, setWelcome] = useState(route.params?.welcome ?? 'Welcome Back');
 
+  // Use the useJobCounts hook to fetch job counts
   const { jobCounts, loading, error } = useJobCounts(userId, userToken);
 
   const { profileData } = useProfileViewModel(userToken, userId);
   const { basicDetails } = profileData || [];
-  console.log('prof', basicDetails)
+  console.log('prof', basicDetails);
+
   const navigation = useNavigation<NavigationProp>();
 
+  // Handle loading state
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold', }}>Loading job data...</Text>
-
+        <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold' }}>Loading job data...</Text>
       </View>
     );
   }
 
+  // Handle error state
   if (error) {
     return (
       <View style={styles.loadingContainer}>
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   textBelowNavbar1: {
     textAlign: "left",
     fontSize: 14, // Fixed font size of 14px
-  
+
     color: "#2F2F2F",
     marginBottom: screenHeight * 0.01,
     marginLeft: screenWidth * 0.03,

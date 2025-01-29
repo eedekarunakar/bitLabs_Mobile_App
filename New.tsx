@@ -53,13 +53,13 @@ export type RootStackParamList = {
   passContent: { finalScore: number; testName: string };
   FailContent: undefined;
   TimeUp: undefined;
-  Badge: { skillName: string; testType: string } | undefined;
+  Badges: { skillName: string; testType: string } | undefined;
   ChangePassword: undefined;
   Notification: undefined;
   ResumeBuilder: undefined;
-
+  Home: { welcome:string }| undefined;
   Drives: undefined;
-  MyResume: undefined;
+  'My Resume': undefined;
 
 };
 
@@ -68,7 +68,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Appnavigator = () => {
 
   const { isAuthenticated, userToken, userId, userEmail } = useAuth();
-  const [profileChecked, setProfileChecked] = useState(false);
+  const [profileChecked, setProfileChecked] = useState(isAuthenticated);
 
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
 
@@ -211,7 +211,7 @@ const Appnavigator = () => {
             name="Profile"
             component={ProfileComponent}
             options={{
-              title: 'profile',
+              title: 'Profile',
               headerTitleStyle: {
                 fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size

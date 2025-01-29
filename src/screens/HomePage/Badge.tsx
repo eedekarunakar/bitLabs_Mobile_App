@@ -803,7 +803,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   name: {
-    fontFamily: 'PlusJakartaSans-Medium',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontWeight: 400,
     fontSize: 24,
     lineHeight: 26,

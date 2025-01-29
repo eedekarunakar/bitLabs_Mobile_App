@@ -75,12 +75,12 @@ const BottomTab = ({ route }: { route: BottomTabRouteProp }) => {
               {...createTabScreenOptions(DrivesIconOutline, DrivesIconSolid)}
             />
             <Tabs.Screen
-              name="Badge"
+              name="Badges"
               component={Notification}
               {...createTabScreenOptions(NotificationIconOutline, NotificationIconSolid)}
             />
             <Tabs.Screen
-              name="MyResume"
+              name="My Resume"
               component={Resume}
               {...createTabScreenOptions(ResumeIconOutline, ResumeIconSolid)}
             />
