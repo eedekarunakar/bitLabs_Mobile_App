@@ -14,22 +14,22 @@ import { useAuth } from '../../context/Authcontext';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../New';
- 
+
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
   const { appliedJobs, loading, error } = useAppliedJobsViewModel(userId, userToken);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList, 'AppliedJobs'>>();
- 
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    const formatDate = (dateArray: [number, number, number]): string => {
-      const [year, month, day] = dateArray;
-      return `${monthNames[month - 1]} ${day}, ${year}`;
-    };;
- 
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const formatDate = (dateArray: [number, number, number]): string => {
+    const [year, month, day] = dateArray;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
+  };;
+
   const renderJobs = () => {
     if (loading) {
       return (
@@ -38,15 +38,15 @@ const AppliedJobs = () => {
         </View>
       );
     }
- 
+
     if (error) {
       return <Text style={styles.placeholderText}>{error}</Text>;
     }
- 
+
     if (appliedJobs.length === 0) {
       return <Text style={styles.placeholderText}>No applied jobs available!</Text>;
     }
- 
+
     return appliedJobs.map((job: JobData) => (
       <TouchableOpacity
         key={job.id}
@@ -59,32 +59,35 @@ const AppliedJobs = () => {
             style={styles.companyLogo}
           />
           <View style={styles.jobDetails}>
-            <Text style={styles.jobTitle}>{job.jobTitle}</Text>
+            {/* <Text style={styles.jobTitle}>{job.jobTitle}</Text> */}
+            <Text style={styles.jobTitle}>
+              {job.jobTitle.length > 28 ? `${job.jobTitle.substring(0, 28)}...` : job.jobTitle}
+            </Text>
             <Text style={styles.companyName}>{job.companyname}</Text>
           </View>
         </View>
         <View style={styles.tagRow}>
-            <View style={[styles.tag, styles.locationContainer]}>
-              <Image
-                source={require('../../assests/Images/rat/loc.png')}
-                style={styles.locationIcon}
-              />
-              <Text style={styles.locationText}>{job.location}</Text>
-            </View>
-            <View style={styles.oval}>
-              <Image
-                source={require('../../assests/Images/rat/exp.png')}
-                style={styles.brieficon}
-              />
-              <Text style={styles.ovalText}>
-                Exp: {job.minimumExperience} - {job.maximumExperience} years
-              </Text>
-            </View>
-            <Text style={styles.tag}>
-              ₹ {job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA
-            </Text>
-            <Text style={styles.tag}>{job.employeeType}</Text>
+          <View style={[styles.tag, styles.locationContainer]}>
+            <Image
+              source={require('../../assests/Images/rat/loc.png')}
+              style={styles.locationIcon}
+            />
+            <Text style={styles.locationText}>{job.location}</Text>
           </View>
+          <View style={styles.oval}>
+            <Image
+              source={require('../../assests/Images/rat/exp.png')}
+              style={styles.brieficon}
+            />
+            <Text style={styles.ovalText}>
+              Exp: {job.minimumExperience} - {job.maximumExperience} years
+            </Text>
+          </View>
+          <Text style={styles.tag}>
+            ₹ {job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA
+          </Text>
+          <Text style={styles.tag}>{job.employeeType}</Text>
+        </View>
         {/* <Text style={styles.description}>
           {job.description.replace(/<[^>]+>/g, '')}
         </Text> */}
@@ -92,10 +95,10 @@ const AppliedJobs = () => {
       </TouchableOpacity>
     ));
   };
- 
+
   return <ScrollView style={styles.container}>{renderJobs()}</ScrollView>;
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -111,15 +114,14 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
     padding: 16,
-    marginBottom: 10,
-  
-    marginLeft: 6,
+    margin: 12,
+    marginBottom: 0,
   },
   oval: {
     flexDirection: 'row',
@@ -134,19 +136,19 @@ const styles = StyleSheet.create({
   ovalText: {
     fontSize: 9,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
- 
+
   brieficon: {
     height: 8,
     width: 8,
     marginRight: 8,
   },
-briefcon: {
+  briefcon: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-tag: {
+  tag: {
     backgroundColor: '#f6f6f6',
     color: 'black',
     paddingVertical: 4,
@@ -155,13 +157,13 @@ tag: {
     marginRight: 8,
     marginBottom: 8,
     fontSize: 8,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
-locationContainer: {
+  locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-locationIcon: {
+  locationIcon: {
     width: 8,
     height: 8,
     marginRight: 6,
@@ -169,7 +171,7 @@ locationIcon: {
   locationText: {
     fontSize: 9,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   row: {
     flexDirection: 'row',
@@ -197,7 +199,7 @@ locationIcon: {
     fontSize: 12,
     fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
-    fontWeight:600,
+    fontWeight: 600,
     color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
@@ -227,5 +229,5 @@ locationIcon: {
     lineHeight: 23.76, // Line height (in points, not percentage)
   },
 });
- 
+
 export default AppliedJobs;

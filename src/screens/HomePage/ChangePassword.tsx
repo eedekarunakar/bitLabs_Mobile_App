@@ -212,7 +212,6 @@ const ChangePasswordScreen = () => {
         style={styles.input}
         // secureTextEntry={visibleField !== field}
         secureTextEntry={!showPassword}
-       
         value={value}
         onChangeText={(text) => {
           setValue(text);
