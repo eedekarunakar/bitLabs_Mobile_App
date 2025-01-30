@@ -46,21 +46,32 @@ const ChangePasswordScreen = () => {
   };
  
   const handleKeyboardDismiss = () => {
-    setVisibleField(null); // Hide all password fields when dismissing the keyboard
+    setShowOldPassword(false);
+    setShowNewPassword(false);
+    setShowReEnterPassword(false); // Hide all password fields when dismissing the keyboard
     Keyboard.dismiss();
   };
  
   const handleFocus = (field: string) => {
-    setVisibleField(field); // Set the current field as visible
+    if (field === 'old') {
+      setShowNewPassword(false);
+      setShowReEnterPassword(false);
+    } else if (field === 'new') {
+      setShowOldPassword(false);
+      setShowReEnterPassword(false);
+    } else if (field === 'reEnter') {
+      setShowOldPassword(false);
+      setShowNewPassword(false);
+    }
   };
  
   const validatePassword = (password: string, type: 'old' | 'new' | 'reEnter') => {
     const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
  
     if (!password) {
-      if (type === 'old') setOldMessage('Old Password is required');
-      if (type === 'new') setNewMessage('New Password is required');
-      if (type === 'reEnter') setReEnterMessage('Confirm Password is required');
+      if (type === 'old') setOldMessage('Old password is required.');
+      if (type === 'new') setNewMessage('New password is required.');
+      if (type === 'reEnter') setReEnterMessage('Confirm password is required.');
     } else {
       if (type === 'new' && !passwordValidationRegex.test(password)) {
         setNewMessage(
@@ -73,7 +84,7 @@ const ChangePasswordScreen = () => {
     }
  
     if (type === 'reEnter' && password !== newPassword) {
-      setReEnterMessage('New password and re-entered password must match');
+      setReEnterMessage('Passwords do not match.');
     } else {
       if (type === 'reEnter') setReEnterMessage(null);
     }
@@ -192,12 +203,15 @@ const ChangePasswordScreen = () => {
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
     field: 'old' | 'new' | 'reEnter',
-    placeholder: string
+    placeholder: string,
+    showPassword: boolean,
+    setShowPassword: React.Dispatch<React.SetStateAction<boolean>>,
   ) => (
     <View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
-        secureTextEntry={visibleField !== field}
+        // secureTextEntry={visibleField !== field}
+        secureTextEntry={!showPassword}
         value={value}
         onChangeText={(text) => {
           setValue(text);
@@ -207,12 +221,12 @@ const ChangePasswordScreen = () => {
         placeholder={placeholder}
         placeholderTextColor="#A9A9A9"
       />
-      <TouchableOpacity onPress={() => setVisibleField(visibleField === field ? null : field)} style={styles.eyeIcon}>
+      <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
         <Image
           source={
-            visibleField !== field
-              ? require('../../assests/LandingPage/openeye.png')
-              : require('../../assests/LandingPage/closedeye.png')
+            !showPassword
+              ? require('../../assests/LandingPage/closedeye.png')
+              : require('../../assests/LandingPage/openeye.png')
           }
           style={styles.eyeImage}
         />
@@ -243,18 +257,22 @@ const ChangePasswordScreen = () => {
           oldPassword,
           setOldPassword,
           'old',
-          'Type Old Password'
+          'Old Password',
+          showOldPassword,
+        setShowOldPassword,
         )}
         {oldMessage ? (
           <Text style={[styles.message, oldMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {oldMessage}
           </Text>
         ) : null}
-                {renderPasswordField(
+          {renderPasswordField(
           newPassword,
           setNewPassword,
           'new',
-          'Enter New Password'
+          'New Password',
+          showNewPassword,
+        setShowNewPassword,
         )}
         {newMessage ? (
           <Text style={[styles.message, newMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
@@ -266,7 +284,9 @@ const ChangePasswordScreen = () => {
           reEnterPassword,
           setReEnterPassword,
           'reEnter',
-          'Confirm New Password'
+          'Confirm Password',
+          showReEnterPassword,
+        setShowReEnterPassword
         )}
         {reEnterMessage ? (
           <Text style={[styles.message, reEnterMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
@@ -298,7 +318,7 @@ const ChangePasswordScreen = () => {
       </View>
     </TouchableWithoutFeedback>
   );
-}; 
+};
  
  
 const styles = StyleSheet.create({
@@ -347,8 +367,8 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   eyeImage: {
-    width: 12,
-    height: 12,
+    width: 20,
+    height: 20,
   },
   message: {
     color: 'red',
@@ -361,25 +381,28 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
-    marginLeft: 20,
     fontFamily: 'PlusJakartaSans-Medium',
+    paddingLeft:20,
+    paddingRight:20,
+    textAlign:'justify',
+    marginTop:-6,
   },
  
   footerButton: {
-    width: '35%',
+    width: '33%',
     height: 47,
     bottom: 20,
     borderRadius: 8,
-    marginRight:50,
+    marginRight:62,
  
    
    
   },
   footerbackButton: {
-    width: '45%',
+    width: '43%',
     height: 47,
     bottom: 20,
-    left: 16,
+    left: 28,
     borderRadius: 8,
     backgroundColor: '#fff',
     borderWidth:0.96,
@@ -473,3 +496,4 @@ const styles = StyleSheet.create({
 });
  
 export default ChangePasswordScreen;
+ 

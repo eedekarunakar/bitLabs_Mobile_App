@@ -230,7 +230,7 @@ const ForgotPassword = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.backButtonBottom}
             onPress={otpReceived ? (isOtpVerified ? resetUserPassword : verifyOTP) : sendOTP}
           >
             <LinearGradient
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
   applyButtonGradient: {
-    height: 50,
+    height: 40,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -353,13 +353,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#F46F16',
-    height: 50,
-    borderRadius: 5,
+    height: 40,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
     marginHorizontal: 8,
-    width:'50%' // Add consistent spacing
+    width:'43%' // Add consistent spacing
   },
   buttonText: {
     color: '#fff',
