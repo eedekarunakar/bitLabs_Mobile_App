@@ -14,7 +14,7 @@ import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { removeSavedJob } from '../../services/Jobs/JobDetails';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import Alertcircle from '../../assests/icons/Alertcircle';
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 
@@ -292,11 +292,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               </Text>
             ))}
             {unmatchedSkills.map((skill, index) => (
-              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Image
-                  source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
-                  style={styles.unmatchedSkillIcon} // Define this style as needed
-                />
+               <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
+               <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
                 <Text style={[styles.unmatchedSkill]}>{skill}</Text>
               </View>
             ))}
@@ -353,7 +350,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {/* Save Job Button */}
         {isJobSaved ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>Saved</Text>
+            <Text style={styles.appliedButtonText}>Removed</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -367,7 +364,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {/* Apply Now Button */}
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>Applied</Text>
+            <Text style={styles.appliedButtonText}>✔ Applied</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -402,14 +399,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   appliedButton: {
-    backgroundColor: '#d3d3d3', // Gray background for "Applied"
+    backgroundColor: '#08921E', // Gray background for "Applied"
     marginLeft: 5,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#a9a9a9',
+    borderColor: '#08921E',
   },
   appliedButtonText: {
-    color: '#555', // Gray text for "Applied"
+    color: '#fff', // Gray text for "Applied"
     fontWeight: 'bold',
   },
   description: {

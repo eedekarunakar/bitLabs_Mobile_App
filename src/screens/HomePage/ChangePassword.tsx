@@ -257,7 +257,9 @@ const ChangePasswordScreen = () => {
           oldPassword,
           setOldPassword,
           'old',
+
           'Old Password',
+
           showOldPassword,
         setShowOldPassword,
         )}
@@ -270,7 +272,9 @@ const ChangePasswordScreen = () => {
           newPassword,
           setNewPassword,
           'new',
+
           'New Password',
+
           showNewPassword,
         setShowNewPassword,
         )}
@@ -284,7 +288,9 @@ const ChangePasswordScreen = () => {
           reEnterPassword,
           setReEnterPassword,
           'reEnter',
+
           'Confirm Password',
+
           showReEnterPassword,
         setShowReEnterPassword
         )}

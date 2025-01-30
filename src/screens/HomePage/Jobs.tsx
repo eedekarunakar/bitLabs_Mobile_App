@@ -1,43 +1,43 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   Image,
+  FlatList,
 } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../New' // Import navigation types
+import { RootStackParamList } from '../../../New'; // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
-import { JobData } from '../../models/Jobs/ApplyJobmodel'// Your JobData interface
-import { useRoute } from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
+import { JobData } from '../../models/Jobs/ApplyJobmodel'; // Your JobData interface
+import { useRoute, RouteProp } from '@react-navigation/native';
+
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 type JobsRouteProp = RouteProp<RootStackParamList, 'Jobs'>;
- 
+
 const RecommendedJobs = () => {
   const route = useRoute<JobsRouteProp>(); // Specify the route type
-  const { tab = 'recommended'} = route.params|| {}; // Now TypeScript knows about 'tab'
-  const { jobs, loading,reloadJobs } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
+  const { tab = 'recommended' } = route.params || {}; // Now TypeScript knows about 'tab'
+  const { jobs, loading, reloadJobs } = useRecommendedJobsViewModel(); // Assuming jobs are passed from view model
   const [activeTab, setActiveTab] = useState<'recommended' | 'applied' | 'saved'>('recommended');
   const navigation = useNavigation<RecommendedJobsNavigationProp>();
   const [appliedJobs, setAppliedJobs] = useState<JobData[]>([]); // State to store applied jobs
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
   const isFocused = useIsFocused();
+  const [visibleJobsCount, setVisibleJobsCount] = useState(10); // Number of jobs to display initially
 
- 
   useEffect(() => {
     if (route.params?.tab) {
       setActiveTab(route.params.tab); // Set the active tab from the passed parameter
     }
   }, [route.params?.tab]);
-  
+
   useEffect(() => {
     if (isFocused && activeTab === 'recommended') {
       reloadJobs(); // Reload jobs when the screen is focused and tab is 'recommended'
@@ -49,55 +49,38 @@ const RecommendedJobs = () => {
     setActiveTab(tab);
   };
 
-
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
- 
-  // Format creation date
-  const formatDate = (dateArray: [number, number, number]): string => {
-    const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`;
-  };
- 
-  // Handle job press to navigate to JobDetails
-  const handleJobPress = (job: JobData) => {
-    navigation.navigate('JobDetails', { job });
-  };
- 
-  const filterAppliedJobs = () => {
-    return jobs.filter((job) => {
-      // Make sure both job.id and appliedJob.id are compared correctly.
+  // Filter applied and saved jobs
+  const filterAppliedJobs = (jobsToFilter: JobData[]) => {
+    return jobsToFilter.filter((job) => {
       return !appliedJobs.some((appliedJob) => appliedJob.id === job.id) &&
         !savedJobs.some((savedJob) => savedJob.id === job.id);
     });
   };
- 
+
+  // Load more jobs when the user scrolls to the bottom
+  const loadMoreJobs = () => {
+    if (visibleJobsCount < jobs.length) {
+      setVisibleJobsCount(visibleJobsCount + 10); // Load 10 more jobs
+    }
+  };
+
   // Render job cards
-  const renderJobs = () => {
-    if (loading) {
-      return (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#FF8C00"/>
-        </View>
-      );
-    }
-    if (jobs.length === 0) {
-      return <Text style={styles.placeholderText}>No recommended jobs found!</Text>;
-    }
- 
-    return filterAppliedJobs().map((job) => (
-      <View key={job.id} style={styles.jobCard}>
-        <TouchableOpacity onPress={() => handleJobPress(job)}>
+  const renderJobs = ({ item }: { item: JobData }) => {
+    return (
+      <View key={item.id} style={styles.jobCard}>
+        <TouchableOpacity onPress={() => handleJobPress(item)}>
           <View style={styles.row}>
             <Image
               source={require('../../assests/Images/company.png')} // Placeholder image
               style={styles.companyLogo}
             />
             <View style={styles.jobDetails}>
-              <Text style={styles.jobTitle}>{job.jobTitle}</Text>
-              <Text style={styles.companyName}>{job.companyname}</Text>
+              <Text style={styles.jobTitle}>
+                {item.jobTitle.length > 28
+                  ? `${item.jobTitle.substring(0, 28)}...`
+                  : item.jobTitle}
+              </Text>
+              <Text style={styles.companyName}>{item.companyname}</Text>
             </View>
           </View>
           <View style={styles.tagRow}>
@@ -106,7 +89,7 @@ const RecommendedJobs = () => {
                 source={require('../../assests/Images/rat/loc.png')}
                 style={styles.locationIcon}
               />
-              <Text style={styles.locationText}>{job.location}</Text>
+              <Text style={styles.locationText}>{item.location}</Text>
             </View>
             <View style={styles.oval}>
               <Image
@@ -114,27 +97,63 @@ const RecommendedJobs = () => {
                 style={styles.brieficon}
               />
               <Text style={styles.ovalText}>
-                Exp: {job.minimumExperience} - {job.maximumExperience} years
+                Exp: {item.minimumExperience} - {item.maximumExperience} years
               </Text>
             </View>
             <Text style={styles.tag}>
-              ₹ {job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA
+              ₹ {item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA
             </Text>
-            <Text style={styles.tag}>{job.employeeType}</Text>
+            <Text style={styles.tag}>{item.employeeType}</Text>
           </View>
           <Text style={styles.postedOn}>
-            Posted on {formatDate(job.creationDate)}
+            Posted on {formatDate(item.creationDate)}
           </Text>
         </TouchableOpacity>
       </View>
-    ));
+    );
   };
- 
+
+  // Format creation date
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const formatDate = (dateArray: [number, number, number]): string => {
+    const [year, month, day] = dateArray;
+    return `${monthNames[month - 1]} ${day}, ${year}`;
+  };
+
+  // Handle job press to navigate to JobDetails
+  const handleJobPress = (job: JobData) => {
+    navigation.navigate('JobDetails', { job });
+  };
+
+  // Get the first `visibleJobsCount` jobs
+  const visibleJobs = jobs.slice(0, visibleJobsCount);
+
   // Render content based on active tab
-  const renderContent = () => {
+  const  renderContent = () => {
     switch (activeTab) {
       case 'recommended':
-        return renderJobs();
+        return (
+          <FlatList
+            data={filterAppliedJobs(visibleJobs)} // Filter and display only visible jobs
+            renderItem={renderJobs}
+            keyExtractor={(item) => item.id.toString()}
+            onEndReached={loadMoreJobs} // Load more jobs when the user scrolls to the bottom
+            onEndReachedThreshold={0.5} // Trigger when the user is 50% from the bottom
+            ListEmptyComponent={
+              !loading && jobs.length === 0 ? (
+                <Text style={styles.placeholderText}>No recommended jobs found!</Text>
+              ) : null
+            }
+            ListFooterComponent={
+              loading ? (
+                <ActivityIndicator size="large" color="#FF8C00" />
+              ) : null
+            }
+          />
+        );
       case 'applied':
         return <AppliedJobs />;
       case 'saved':
@@ -143,7 +162,7 @@ const RecommendedJobs = () => {
         return null;
     }
   };
- 
+
   return (
     <View style={styles.container}>
       <View style={styles.jobstextcon}>
@@ -190,11 +209,11 @@ const RecommendedJobs = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.scrollContainer}>{renderContent()}</ScrollView>
+      {renderContent()}
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -250,8 +269,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 18,
     padding: 16,
-    marginBottom: 10,
-    marginLeft: 6,
+    margin:12,
+    marginBottom:0,
   },
   row: {
     flexDirection: 'row',

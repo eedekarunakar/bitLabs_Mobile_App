@@ -263,7 +263,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
  
       <Image
         style={styles.logo}
-        source={require('../../assests/Images/logo.png')}
+        source={require('../../assests/LandingPage/logo.png')}
       />
       <ScrollView>
         <View style={styles.container}>

@@ -223,7 +223,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     <View style={styles.screen}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("../../assests/Images/logo.png")} />
+        <Image style={styles.logo} source={require('../../assests/LandingPage/logo.png')}/>
       </View>
 
       <View style={styles.container}>

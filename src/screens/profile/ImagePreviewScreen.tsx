@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageContainer: {
-    height: 300,
-    width: 300,
+    height: 294,
+    width: 294,
     borderWidth: 1,
     borderRadius: 150,
     borderColor: 'gray',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   image: {
-    height: '100%',
+    height: '113%',
     width: '100%',
     resizeMode: 'cover',
   },
