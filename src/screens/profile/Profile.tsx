@@ -49,7 +49,7 @@ function ProfileComponent() {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [showBorder, setShowBorder] = useState(false);
-    const [bgcolor,setbgcolor]=useState(false)
+    const [bgcolor, setbgcolor] = useState(false)
     const [saveClicked, setSaveClicked] = useState(false);
 
 
@@ -290,8 +290,8 @@ function ProfileComponent() {
         setLoading(false);
         setProgress(0);
         showToast('Upload canceled.');
-        setShowBorder(false); 
-      };
+        setShowBorder(false);
+    };
 
     const handleUploadResume = async () => {
         try {
@@ -323,20 +323,20 @@ function ProfileComponent() {
                 setProgress(0);
                 setShowBorder(true)
                 setbgcolor(false)
-        
+
                 // Simulate upload progress
                 const interval = setInterval(() => {
-                  setProgress((prevProgress) => {
-                    const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
-                    if (newProgress >= 1) {
-                      clearInterval(interval);
-                      setLoading(false);
-                    }
-                    return newProgress;
-                  });
+                    setProgress((prevProgress) => {
+                        const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
+                        if (newProgress >= 1) {
+                            clearInterval(interval);
+                            setLoading(false);
+                        }
+                        return newProgress;
+                    });
                 }, 1000); // Update progress every 1 second
             }, 500); // 0.5 second delay before starting the progress bar
-            
+
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 console.log('User canceled the picker');
@@ -546,7 +546,7 @@ function ProfileComponent() {
                                     <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
                                         <Text style={styles.modalButtonText7}>Cancel</Text>
                                     </TouchableOpacity>
-                                
+
                                 </View>
                             </View>
 
@@ -613,98 +613,95 @@ function ProfileComponent() {
                         <View style={styles.modalCard1}>
                             <View style={{ marginLeft: '95%' }}>
                                 <TouchableOpacity onPress={() => setResumeModalVisible(false)} >
-                                   <Icon7 name="close" size={20} color ={'0D0D0D'} />
+                                    <Icon7 name="close" size={20} color={'0D0D0D'} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                                 <Text style={styles.modalTitle1}>Upload Resume</Text>
-
-                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{ marginLeft: '50%' }}>
-
-                                    <Text style={{ fontSize: 12, color: 'gray', fontFamily: 'PlusJakartaSans-Bold',position:'absolute',top:-40,left:-10 }}>X</Text>
-                                </TouchableOpacity>
                             </View>
-                            <View style={[styles.uploadContainer,{borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor? "#FFEAE7":"#E7F2FF", borderRadius: 20}]}>
+                            <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20 }]}>
                                 <TouchableOpacity onPress={handleUploadResume}>
-                                <Image
-                                    source={require('../../../src/assests/Images/file1.png')}
-                                    style={{ position: 'absolute', left: 110, top: 30 }}
-                                />
-                                <Text style={{fontWeight:'bold',fontSize:17,marginTop:75,marginLeft:90}} >Select File</Text>
-                                <View style={{ padding: 10,paddingLeft:30 }}>
-
-                                    <Text style={{color:'#6C6C6C',textAlign:'center'}}>File must be less than 1Mb</Text>
-                                    <Text style={{color:'#6C6C6C',textAlign:'center'}}>Only .doc or .PDFs are allowed.</Text>
-                                </View>
-                          
-
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Image
+                                            source={require('../../../src/assests/Images/file1.png')}
+                                            style={{ position: 'absolute', top: 30 }}
+                                        />
+                                    </View>
+                                    
+                                    <View style={{ padding: 10, paddingHorizontal: 50 }}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center' }} >Select File</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>File must be less than 1Mb</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>Only .doc or .PDFs are allowed.</Text>
+                                    </View>
+ 
+ 
                                 </TouchableOpacity>
                             </View>
-                            <View style={{marginBottom:50}}>
-                                {bgcolor?(
-                                  <Text style={{color:'red',fontWeight:'bold',marginTop:10}}>File Not selected</Text>
-                                ):(
+                            <View style={{ marginBottom: 50 }}>
+                                {bgcolor ? (
+                                    <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 10 }}>File Not selected</Text>
+                                ) : (
                                     <Text></Text>
                                 )}
                             </View>
-
+ 
                             <View style={[styles.fileContainer, showBorder && styles.showborder]}>
-                    
+ 
                                 {resumeFile && (
-                    
-                                <View style={{flexDirection:'row',}}>
-                                    <FontAwesome name="file-text-o" size={20} color="#000" />
-                                    <Text style={[styles.fileNameText,{marginLeft:12}]}>{resumeFile.name}</Text>
-                    
-                                    <TouchableOpacity
-                                    style={styles.closeIcon}
-                                    onPress={handleCancelUpload}
-                                    >
-                                    <Image source={require('../../assests/Images/x1.png')} ></Image>
-                                    </TouchableOpacity>
-                                </View>
-                                )}
-                    
-                                {loading && (
-                                    <View style={styles.progressContainer}>
-                                    <Progress.Bar
-                                        progress={progress}
-                                        width={230}
-                                        color="#F97316"  // Progress bar color
-                                        unfilledColor="#D7D6D6"  // Unfilled background color
-                                        borderColor="#D7D6D6"  // Outline color
-                                    />
+ 
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <FontAwesome name="file-text-o" size={20} color="#000" />
+                                        <Text style={[styles.fileNameText, { marginLeft: 12 }]}>{resumeFile.name}</Text>
+ 
+                                        <TouchableOpacity
+                                            style={styles.closeIcon}
+                                            onPress={handleCancelUpload}
+                                        >
+                                            <Image source={require('../../assests/Images/x1.png')} ></Image>
+                                        </TouchableOpacity>
                                     </View>
                                 )}
-                    
-                            </View>
-
-
-                            <View>
-                                {showBorder?(
-                                <View style={[styles.orContainer,{marginTop:20,marginVertical:20}]}>
-                                    <View style={styles.line}></View>
-                                    <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
-                                    <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                </View>):
-                                (
-                                <View style={[styles.orContainer,{marginTop:-20,marginVertical:20,}]}>
-                                    <View style={styles.line}></View>
-                                    <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
-                                    <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                </View>
-                                
+ 
+                                {loading && (
+                                    <View style={styles.progressContainer}>
+                                        <Progress.Bar
+                                            progress={progress}
+                                            width={230}
+                                            color="#F97316"  // Progress bar color
+                                            unfilledColor="#D7D6D6"  // Unfilled background color
+                                            borderColor="#D7D6D6"  // Outline color
+                                        />
+                                    </View>
                                 )}
-
+ 
+                            </View>
+ 
+ 
+                            <View>
+                                {showBorder ? (
+                                    <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
+                                        <View style={styles.line}></View>
+                                        <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+                                        <View style={[styles.line, { marginLeft: 3 }]}></View>
+                                    </View>) :
+                                    (
+                                        <View style={[styles.orContainer, { marginTop: -20, marginVertical: 20, }]}>
+                                            <View style={styles.line}></View>
+                                            <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+                                            <View style={[styles.line, { marginLeft: 3 }]}></View>
+                                        </View>
+ 
+                                    )}
+ 
                             </View>
                             <View>
                                 <TouchableOpacity
-                                style={styles.uploadButton}
-                                onPress={() => navigation.navigate('ResumeBuilder')}
+                                    style={styles.uploadButton}
+                                    onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
-
-                                <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
-
+ 
+                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold', fontWeight: 'bold' }}>Create Resume</Text>
+ 
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'flex-end' }}>
@@ -718,10 +715,10 @@ function ProfileComponent() {
                                         onPress={handleSaveResume}      // Save changes and upload the file to the backend
                                         style={styles.buttonContent}
                                     >
-
-
+ 
+ 
                                         <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
-
+ 
                                     </TouchableOpacity>
                                 </LinearGradient>
                             </View>
@@ -747,35 +744,35 @@ const styles = StyleSheet.create({
     },
     uploadContainer: {
         flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 5,
-        
-      },
-      fileNameText: {
+        justifyContent: "center",
+
+
+    },
+    fileNameText: {
         fontSize: 16,
         color: '#000',
-      },
+    },
     orContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        
-      },
+
+    },
     fileContainer: {
         padding: 10,
         marginBottom: 10,
-        marginTop:-30
-      },
+        marginTop: -30
+    },
     progressContainer: {
         marginTop: 10,
         alignItems: 'center',
-      },
-      showborder: {
+    },
+    showborder: {
         borderWidth: 1,
         borderColor: '#D7D6D6',
         borderRadius: 10,
-      },
+    },
     buttonContent: {
         flex: 1,
         justifyContent: 'center',
@@ -793,10 +790,10 @@ const styles = StyleSheet.create({
 
     },
     closeIcon: {
-        position:'absolute',
-        left:220,
-        
-      },
+        position: 'absolute',
+        left: 220,
+
+    },
     skillBadge: {
         height: 30,
         flexDirection: 'row',
@@ -1067,7 +1064,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
-        marginBottom:10
+        marginBottom: 10
     },
 
     modalCard5: {
@@ -1096,7 +1093,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
-        marginTop:10,
+        marginTop: 10,
     },
 
     customButton: {

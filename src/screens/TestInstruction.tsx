@@ -269,8 +269,8 @@ const Test = ({ route, navigation }: any) => {
                 <Text style={styles.text1}>{testData.numberOfQuestions || 0}</Text>
               </View>
             </View>
-            <Text style={{color:'#0D0D0D', fontFamily: 'PlusJakartaSans-Medium',}}>Topics Covered</Text>
-            <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Medium', }}>
+            <Text style={{color:'#797979', fontFamily: 'PlusJakartaSans-Medium'}}>Topics Covered</Text>
+            <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Bold', }}>
               {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
                 ? `${testData.topicsCovered.join(', ')}`
                 : 'No topics available'}

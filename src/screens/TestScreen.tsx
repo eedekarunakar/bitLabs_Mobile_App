@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert,ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert, ScrollView } from 'react-native';
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -59,7 +59,7 @@ const TestScreen = ({ route, navigation }: any) => {
     const unsubscribe = NetInfo.addEventListener((state) => {
       setIsNetworkAvailable(state.isConnected ?? false); // Use false if `state.isConnected` is null
     });
-  
+
     return () => {
       unsubscribe();
     };
@@ -73,7 +73,7 @@ const TestScreen = ({ route, navigation }: any) => {
       setDisconnectedTime(0);
     }
   }, [isNetworkAvailable]);
-  
+
   useEffect(() => {
     if (disconnectedTime >= 60) {
       clearInterval(timerInterval);
@@ -81,13 +81,13 @@ const TestScreen = ({ route, navigation }: any) => {
       setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
     }
   }, [disconnectedTime]);
-  
+
   useEffect(() => {
     if (isNetworkAvailable && hasExceededTimeout) {
       handleModalConfirm(); // Call again if needed
     }
   }, [isNetworkAvailable, hasExceededTimeout]);
-  
+
   useEffect(() => {
     if (isTestComplete || showEarlySubmissionModal) {
       clearInterval(timerInterval);
@@ -216,7 +216,7 @@ const TestScreen = ({ route, navigation }: any) => {
         fetchedTestData = require('../models/data/SQL.json');
         break;
       case 'Vue':
-        fetchedTestData=require('../models/data/Vue.json');
+        fetchedTestData = require('../models/data/Vue.json');
         break;
       default:
         console.error(`No data found for test: ${testName}`);
@@ -324,16 +324,16 @@ const TestScreen = ({ route, navigation }: any) => {
   if (!isNetworkAvailable) {
     return (
       <SafeAreaView style={styles.container1}>
-        <View style={{backgroundColor:'#FFF',justifyContent:'center',borderRadius:10,padding:20}}>
-        <Text style={styles.errorText1}>Your test has been interrupted.Kindly try again later.</Text>
+        <View style={{ backgroundColor: '#FFF', justifyContent: 'center', borderRadius: 10, padding: 20 }}>
+          <Text style={styles.errorText1}>Your test has been interrupted.Kindly try again later.</Text>
         </View>
       </SafeAreaView>
     );
   }
- 
+
   return (
     <SafeAreaView style={styles.container}>
-     
+
       <Header
         onBackPress={() => {
           setShowEarlySubmissionModal(true);
@@ -346,7 +346,7 @@ const TestScreen = ({ route, navigation }: any) => {
           Question {currentQuestionIndex + 1} / {testData?.questions?.length || 0}
         </Text>
         <View style={styles.timerContainer}>
-          <Icon name="clockcircleo" size={20} color="orange" style={{ marginLeft: 15 }} />
+          <Icon name="clockcircleo" size={20} color="#F46F16" style={{ marginLeft: 15 }} />
           <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
         </View>
       </View>
@@ -355,31 +355,34 @@ const TestScreen = ({ route, navigation }: any) => {
 
       <View style={styles.questionContainer}>
         <Text style={styles.questionText}>
-          {currentQuestion?.id}. {currentQuestion?.question}
+          {currentQuestionIndex + 1}. {currentQuestion?.question}
         </Text>
       </View>
-
       <FlatList
         data={currentQuestion?.options || []}
         keyExtractor={(item, index) => `${currentQuestion?.id}-${index}`}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            style={styles.optionContainer}
-            onPress={() => handleAnswerSelect(currentQuestionIndex, item)}
-          >
-            <RadioButton
-              value={item}
-              status={answer[currentQuestionIndex] === item ? 'checked' : 'unchecked'} // Render the selected answer for the current question
-              color="orange"
+        renderItem={({ item, index }) => {
+          const isSelected = answer[currentQuestionIndex] === item;
+
+          return (
+            <TouchableOpacity
+              style={styles.optionContainer}
               onPress={() => handleAnswerSelect(currentQuestionIndex, item)}
-            />
-            <Text style={styles.optionText}>{item}</Text>
-          </TouchableOpacity>
-        )}
+            >
+              <View style={[styles.radioButton, isSelected && styles.selectedRadioButton]}>
+                {isSelected && <View style={styles.radioDot} />}
+              </View>
+              <Text style={styles.optionText}>{item}</Text>
+            </TouchableOpacity>
+          );
+        }}
         ListFooterComponent={
           errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null
         }
       />
+
+
+
 
 
       {/* Navigation Buttons */}
@@ -421,7 +424,7 @@ const TestScreen = ({ route, navigation }: any) => {
                 style={styles.closeIcon}
                 onPress={() => setShowEarlySubmissionModal(false)} // Close the modal
               >
-                <Icon name="close" size={20} color ={'0D0D0D'} />
+                <Icon name="close" size={20} color={'0D0D0D'} />
               </TouchableOpacity>
               <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
               <Text style={styles.modalText}>Are you sure you want to quit?</Text>
@@ -447,7 +450,7 @@ const TestScreen = ({ route, navigation }: any) => {
                     colors={['#F97316', '#FAA729']} // Gradient colors
                     start={{ x: 0, y: 0 }} // Gradient start point
                     end={{ x: 1, y: 1 }}   // Gradient end point
-                    style={[styles.modalButton, { borderRadius: 10,width:width*0.41 }]} // Ensure borderRadius matches your button's design
+                    style={[styles.modalButton, { borderRadius: 10, width: width * 0.41 }]} // Ensure borderRadius matches your button's design
                   >
                     <Text style={styles.modalButtonText}>Yes</Text>
                   </LinearGradient>
@@ -465,7 +468,7 @@ const TestScreen = ({ route, navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#FFF',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -484,13 +487,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 0.96,
-    borderColor: '#F68318',
+    borderColor: '#F46F16',
     borderRadius: 4,
     padding: 5
   },
   timerText: {
     fontSize: 16,
-    color: 'orange',
+    color: '#F46F16',
     marginLeft: 8,
     fontFamily: 'PlusJakartaSans-Bold',
   },
@@ -516,7 +519,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 25,
-    marginLeft: 20,
+    marginLeft: 25,
     width: width * 0.85
   },
   optionText: {
@@ -560,7 +563,7 @@ const styles = StyleSheet.create({
     width: 162.21,
     padding: 12,
     borderRadius: 8,
-  
+
   },
   navigationButtonText: {
     fontFamily: 'PlusJakartaSans-Bold',
@@ -654,16 +657,36 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    justifyContent:'center',
+    justifyContent: 'center',
     padding: 20,
-    backgroundColor:'#F0F0F0',
-    borderRadius:10,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 10,
   },
   errorText1: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
     color: 'grey',
     textAlign: 'center',
+  },
+  radioButton: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#EAEAEA", // Grey outline
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#EAEAEA", // Initially filled with grey
+    marginRight: 10,
+  },
+  selectedRadioButton: {
+    backgroundColor: "#EAEAEA", // Keep grey when selected
+  },
+  radioDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#F68318", // Orange dot in the middle when selected
   },
 });
 export default TestScreen;

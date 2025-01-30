@@ -90,12 +90,17 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added')
   );
 
-  const showToast = (type1: 'success' | 'error', message: string) => {
+  const showToast = (type1: 'success' | 'error', message: string,) => {
     Toast.show({
       type: type1,
       text1: message,
       position: 'bottom',
-      visibilityTime: 3000,
+      onPress: () => Toast.hide(), 
+      visibilityTime: 5000,
+      text1Style:{
+        fontSize: 12,
+        fontFamily: 'PlusJakartaSans-Medium'
+      }
     });
   };
 
@@ -248,17 +253,17 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
       if (response.formErrors) {
         setValidationErrors(response.formErrors);
       } else if (response.success) {
-        showToast('success', 'Professional Details updated successfully');
+        showToast('success', 'Professional details updated successfully');
         onClose();
         onReload();
       } else {
-        showToast('error', 'Error updating Professional Details');
+        showToast('error', 'Error updating professional details');
         onClose();
         onReload();
       }
     } catch (error) {
       console.error('Internal error:', error);
-      showToast('error', 'Internal error occurred while updating Professional Details');
+      showToast('error', 'Internal error occurred while updating professional details');
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native'; // Import the useFocusEffect hook
 import Navbar from '../../components/Navigation/Navbar';
@@ -14,7 +14,7 @@ const { width } = Dimensions.get('window');
 
 
 
-const Badge = ({ route,navigation }: any) => {
+const Badge = ({ route, navigation }: any) => {
   const { isTestComplete } = route.params || { isTestComplete: false }; // Default to false if not passed
   const [selectedStep, setSelectedStep] = useState(1); // Default to Step 1 for new users
   const [timer, setTimer] = useState<null | { days: number, hours: number, minutes: number }>(null); // Set the initial timer in seconds
@@ -383,25 +383,25 @@ const Badge = ({ route,navigation }: any) => {
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 1 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 1 ? '#219734' : '#D9D9D9' },
                     ]}
                   >
                     {testName === 'General Aptitude Test' && testStatus === 'P' ? (
                       <Icon1 name="check" size={14} style={{ color: 'white' }} />
                     ) : (
-                      <Text style={styles.stepText}>1</Text>
+                      <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
                     )}
                   </View>
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 2 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#D9D9D9' },
                     ]}
                   />
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 2 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#D9D9D9' },
                     ]}
                   >
                     {testName === 'Technical Test' && testStatus === 'P' ? (
@@ -413,24 +413,36 @@ const Badge = ({ route,navigation }: any) => {
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 3 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#D9D9D9' },
                     ]}
                   />
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 3 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#D9D9D9' },
                     ]}
                   >
                     <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : 'black' }} />
                   </View>
                 </View>
                 {/* Other Sections */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>     General{"\n"}Aptitude Test</Text>
-                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>Technical{"\n"}    Test</Text>
-                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>Verification{"\n"}    done</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center' }}>
+                      General{"\n"}Aptitude Test
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center' }}>
+                      Technical{"\n"}Test
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center', marginRight: 10 }}>Verification{"\n"}Done
+                    </Text>
+                  </View>
                 </View>
+
 
                 <View style={{ marginVertical: 30, flexDirection: 'column', alignItems: 'flex-start' }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -440,7 +452,9 @@ const Badge = ({ route,navigation }: any) => {
                         A Comprehensive Assessment to{"\n"}Measure Your Analytical and{"\n"}Reasoning Skills
                       </Text>
                     </View>
-                    <Image source={require('../../assests/Images/boyimage.png')} />
+                    <View style={{marginRight:10}}>
+                      <Image source={require('../../assests/Images/boyimage.png')} style={{height:100}} />
+                    </View>
                   </View>
 
                   {/* TouchableOpacity */}
@@ -509,7 +523,7 @@ const Badge = ({ route,navigation }: any) => {
             )}
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Skill Badge</Text>
+            <Text style={styles.text}>Skill Badges</Text>
           </View>
 
           {/* Horizontal ScrollView for Cards */}
@@ -538,7 +552,7 @@ const Badge = ({ route,navigation }: any) => {
                     }
                   >
                     <Text style={styles.buttonText}>Take Test</Text>
-                    <Icon name="external-link" size={20} color="white" />
+                    <Icon name="external-link" size={20} color="white" style={{marginRight:15}}/>
                   </TouchableOpacity>
                 </View>
               ))
@@ -685,8 +699,11 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+    justifyContent: 'space-between',
+    width: '90%', // Adjusted width for better spacing
+    alignSelf: 'center',
+    marginBottom: 10,
+    marginTop: 20
   },
   stepCircle: {
     width: 20,
@@ -697,14 +714,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
   },
   stepText: {
-    color: 'white',
+    color: '#6D6969',
     fontWeight: '500',
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Medium',
   },
   stepLine: {
-    width: 117,
-    height: 3,
+    flex: 1,
+    width: 115,
+    height: 1,
     backgroundColor: '#BFBFBF',
   },
   gradientBackground: {
@@ -761,7 +779,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: 197,
-    height: 40,
+    height: 45,
     backgroundColor: '#374A70',
     alignItems: 'center',
     borderBottomStartRadius: 10,
@@ -771,7 +789,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     marginLeft: 10,
     fontFamily: 'PlusJakartaSans-Medium',
