@@ -68,10 +68,11 @@ const Navbar = () => {
                                 <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate("Profile")} >
                                     <Text style={styles.buttonText1}>View Profile</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate('ChangePassword')} >
+                                <TouchableOpacity style={styles.customButton1} onPress={() => navigation.navigate('ChangePassword')} >
                                     <Text style={styles.buttonText1}>Change password</Text>
                                 </TouchableOpacity>
-                                <View style={styles.separator}></View>
+                            </View>
+                            <View style={[styles.modalCard6,{marginTop:10,}]}>
                                 <TouchableOpacity style={styles.modalButton7} onPress={handleLogout} >
                                     <Text style={styles.modalButtonText7}>Logout</Text>
                                 </TouchableOpacity>
@@ -154,9 +155,20 @@ const styles = StyleSheet.create({
         marginHorizontal: '5%',
         backgroundColor: 'white',
         borderRadius: 10,
-        paddingVertical: 20,
-        paddingHorizontal: 20,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        paddingLeft:5
        
+    },
+    modalCard6:{
+        width:'95%',
+        marginHorizontal:'5%',
+        backgroundColor:'white',
+        borderRadius: 10,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        marginBottom:10,
+        paddingLeft:5
     },
     customButton: {
         width: '100%',
@@ -164,6 +176,15 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 10,
         borderBottomWidth: 1,
+        borderColor: '#ccc',
+        justifyContent: 'center',
+    },
+    customButton1: {
+        width: '100%',
+        backgroundColor: 'white',
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderBottomWidth: 0,
         borderColor: '#ccc',
         justifyContent: 'center',
     },
