@@ -69,9 +69,9 @@ const ChangePasswordScreen = () => {
     const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
  
     if (!password) {
-      if (type === 'old') setOldMessage('Old Password is required');
-      if (type === 'new') setNewMessage('New Password is required');
-      if (type === 'reEnter') setReEnterMessage('Confirm Password is required');
+      if (type === 'old') setOldMessage('Old password is required.');
+      if (type === 'new') setNewMessage('New password is required.');
+      if (type === 'reEnter') setReEnterMessage('Confirm password is required.');
     } else {
       if (type === 'new' && !passwordValidationRegex.test(password)) {
         setNewMessage(
@@ -84,7 +84,7 @@ const ChangePasswordScreen = () => {
     }
  
     if (type === 'reEnter' && password !== newPassword) {
-      setReEnterMessage('New password and re-entered password must match');
+      setReEnterMessage('Passwords do not match.');
     } else {
       if (type === 'reEnter') setReEnterMessage(null);
     }
@@ -257,7 +257,9 @@ const ChangePasswordScreen = () => {
           oldPassword,
           setOldPassword,
           'old',
-          'Type Old Password',
+
+          'Old Password',
+
           showOldPassword,
         setShowOldPassword,
         )}
@@ -270,7 +272,9 @@ const ChangePasswordScreen = () => {
           newPassword,
           setNewPassword,
           'new',
-          'Enter New Password',
+
+          'New Password',
+
           showNewPassword,
         setShowNewPassword,
         )}
@@ -284,7 +288,9 @@ const ChangePasswordScreen = () => {
           reEnterPassword,
           setReEnterPassword,
           'reEnter',
-          'Confirm New Password',
+
+          'Confirm Password',
+
           showReEnterPassword,
         setShowReEnterPassword
         )}
@@ -367,8 +373,8 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   eyeImage: {
-    width: 12,
-    height: 12,
+    width: 20,
+    height: 20,
   },
   message: {
     color: 'red',
@@ -381,25 +387,28 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
-    marginLeft: 20,
     fontFamily: 'PlusJakartaSans-Medium',
+    paddingLeft:20,
+    paddingRight:20,
+    textAlign:'justify',
+    marginTop:-6,
   },
  
   footerButton: {
-    width: '35%',
+    width: '33%',
     height: 47,
     bottom: 20,
     borderRadius: 8,
-    marginRight:50,
+    marginRight:62,
  
    
    
   },
   footerbackButton: {
-    width: '45%',
+    width: '43%',
     height: 47,
     bottom: 20,
-    left: 16,
+    left: 28,
     borderRadius: 8,
     backgroundColor: '#fff',
     borderWidth:0.96,
@@ -493,3 +502,4 @@ const styles = StyleSheet.create({
 });
  
 export default ChangePasswordScreen;
+ 

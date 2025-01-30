@@ -9,9 +9,12 @@ import DocumentPicker, {
 import { ToastAndroid } from 'react-native';
 import { useAuth } from '../../context/Authcontext';
 import { ProfileService } from '../../services/profile/ProfileService';
-
 import LinearGradient from 'react-native-linear-gradient';
 import API_BASE_URL from '../../services/API_Service';
+import * as Progress from 'react-native-progress';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+
 
 interface Step3Props {
   step: number;
@@ -34,6 +37,13 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
 
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showBorder, setShowBorder] = useState(false);
+  const [bgcolor,setbgcolor]=useState(false)
+  const [saveClicked, setSaveClicked] = useState(false);
+  
+
   const { userId, userToken } = useAuth();
   const saveProfile = () => {
     console.log("Profile saved!");
@@ -49,8 +59,8 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const handleSave = () => {
     // Check if the resume is uploaded
     if (!resumeFile) {
-      setErrorMessage('Please upload your resume before proceeding.'); // Set error message
-      showToast('Please upload your resume before proceeding.'); // Optional: Show toast message for immediate feedback
+      //setErrorMessage('Please upload your resume before proceeding.'); // Set error message
+      //showToast('Please upload your resume before proceeding.'); // Optional: Show toast message for immediate feedback
       return; // Prevent calling saveProfile or navigating further
     }
 
@@ -60,7 +70,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     // Proceed with saving the profile only if the resume is uploaded
     saveProfile(); // Call saveProfile when the user saves
     setCurrentStep(3); // Update the current step
-
+    
     // Update step1 visibility and navigate to BottomTab after a delay
     updateShouldShowStep1(false);
     setTimeout(() => {
@@ -108,10 +118,13 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     try {
       const result: DocumentPickerResponse[] = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf], // Allow only PDF files
+
+        
       });
 
+
       if (!result || result.length === 0) {
-        showToast("No file selected.");
+        
         return;
       }
 
@@ -124,11 +137,35 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         return;
       }
 
-      // Set selected file but do not upload yet
       setResumeFile(selectedFile);
-      setResumeText(selectedFile.name || "");
+      setResumeText(selectedFile.name || '');
 
-      showToast("Resume selected. Remember to save changes.");
+      // Show a toast message
+      showToast('Resume selected. Uploading...');
+
+      // Simulate delay to ensure the file name is displayed first
+      setTimeout(() => {
+        // Start the upload process
+        setLoading(true);
+        setProgress(0);
+        setShowBorder(true)
+        setbgcolor(false)
+
+        // Simulate upload progress
+        const interval = setInterval(() => {
+          setProgress((prevProgress) => {
+            const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
+            if (newProgress >= 1) {
+              clearInterval(interval);
+              setLoading(false);
+            }
+            return newProgress;
+          });
+        }, 1000); // Update progress every 1 second
+      }, 500); // 0.5 second delay before starting the progress bar
+    
+    
+
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log("User canceled the picker");
@@ -138,10 +175,22 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         showToast("Error selecting file. Please try again.");
       }
     }
+
+    
+  };
+
+  const handleCancelUpload = () => {
+    setResumeFile(null);
+    setResumeText('');
+    setLoading(false);
+    setProgress(0);
+    showToast('Upload canceled.');
+    setShowBorder(false); 
   };
 
   const handleSaveResume = async () => {
     if (resumeFile) {
+      setbgcolor(false)
       const formData = new FormData();
       formData.append('resume', {
         uri: resumeFile.uri,
@@ -156,13 +205,18 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         setResumeModalVisible(false)
       } else {
         console.error(response.message);
-        // showToast('Error uploading resume. Please try again later.');
+        showToast('Error uploading resume. Please try again later.');
         setResumeModalVisible(false)
       }
     } else {
-      showToast('No file selected to upload.');
+      setbgcolor(true)
     }
   };
+
+
+
+  
+
 
 
   return (
@@ -181,38 +235,94 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         {/* ProgressBar */}
         <ProgressBar initialStep={currentStep} />
         <View>
-          <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-              <Text style={styles.modalTitle1}>Upload Resume</Text>
-            </View>
-            <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 1, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
-              <TouchableOpacity
-                onPress={handleUploadResume}
-              >
-                <Image
-                  source={require('../../../src/assests/Images/file1.png')}
-                  style={{ position: 'relative', left: 60, top: 40 }}
-
-
-                />
-                <Text style={{ padding: 50, fontFamily: 'PlusJakartaSans-Bold', }}>Select File</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
-
-              <View style={styles.line}></View>
-              <Text style={{ marginTop: -10, fontWeight: 600, fontFamily: 'PlusJakartaSans-Bold', }}> Or</Text>
-              <View style={[styles.line, { marginLeft: 3 }]}></View>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={styles.uploadButton}
-                onPress={() => navigation.navigate('ResumeBuilder')}
-              >
-                <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold', }}>Create Resume</Text>
-              </TouchableOpacity>
-            </View>
+        <View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={styles.modalTitle1}>Upload Resume</Text>
+      </View>
+      <View style={[styles.uploadContainer,{borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor? "#FFEAE7":"#E7F2FF", borderRadius: 20}]}>
+        <TouchableOpacity onPress={handleUploadResume}>
+          <Image
+            source={require('../../../src/assests/Images/file1.png')}
+            style={{ position: 'relative', left: 150, top: 40 }}
+          />
+          <View style={{ padding: 50,alignItems:'center',paddingLeft:80  }}>
+            <Text style={{fontWeight:'bold',fontSize:17,marginBottom:10,}} >Select File</Text>
+            <Text style={{color:'#6C6C6C'}}>File must be less than 1Mb</Text>
+            <Text style={{color:'#6C6C6C'}}>Only .doc or .PDFs are allowed.</Text>
           </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{marginBottom:50}}>
+        {bgcolor?(
+          <Text style={{color:'red',fontWeight:'bold',marginTop:10}}>File Not selected</Text>
+        ):(
+          <Text></Text>
+        )}
+      </View>
+
+      <View style={[styles.fileContainer, showBorder && styles.showborder]}>
+
+        {resumeFile && (
+
+          <View style={{flexDirection:'row',}}>
+              <FontAwesome name="file-text-o" size={20} color="#000" />
+              <Text style={[styles.fileNameText,{marginLeft:12}]}>{resumeFile.name}</Text>
+
+              <TouchableOpacity
+                style={styles.closeIcon}
+                onPress={handleCancelUpload}
+              >
+                <Image source={require('../../assests/Images/x1.png')} ></Image>
+              </TouchableOpacity>
+          </View>
+
+
+          )}
+
+        {loading && (
+          <View style={styles.progressContainer}>
+            <Progress.Bar
+              progress={progress}
+              width={330}
+              color="#F97316"  // Progress bar color
+              unfilledColor="#D7D6D6"  // Unfilled background color
+              borderColor="#D7D6D6"  // Outline color
+            />
+          </View>
+        )}
+
+      </View>
+
+      <View>
+        {showBorder?(
+
+          <View style={[styles.orContainer,{marginTop:20,marginVertical:20}]}>
+            <View style={styles.line}></View>
+            <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+            <View style={[styles.line, { marginLeft: 3 }]}></View>
+          </View>
+
+          
+        ):(
+
+          <View style={[styles.orContainer,{marginTop:-20,marginVertical:20,}]}>
+            <View style={styles.line}></View>
+            <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+            <View style={[styles.line, { marginLeft: 3 }]}></View>
+          </View>
+          
+        )}
+      </View>
+      <View>
+        <TouchableOpacity
+          style={styles.uploadButton}
+          onPress={() => navigation.navigate('ResumeBuilder')}
+        >
+          <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
 
         </View>
 
@@ -250,11 +360,42 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   );
 };
 const styles = StyleSheet.create({
+  fileContainer: {
+    padding: 10,
+    marginBottom: 10,
+    marginTop:-30
+  },
+  showborder: {
+    borderWidth: 1,
+    borderColor: '#D7D6D6',
+    borderRadius: 10,
+  },
   modalTitle1: {
     color: '#333333',
     fontSize: 18,
     fontFamily: 'PlusJakartaSans-Bold',
     marginBottom: 20,
+  },
+  progressContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+
+  orContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+  fileNameText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  closeIcon: {
+    position:'absolute',
+    left:330,
+    
   },
   line: {
     width: '20%',
@@ -269,10 +410,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 30,
+    height: 40,
     borderRadius: 5,
-    marginBottom: 55
-
+    marginBottom: 55,
   },
   screen: {
     flex: 1,
@@ -329,18 +469,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "black",
     marginBottom: 8,
-
     fontFamily: 'PlusJakartaSans-Medium',
-
-
   },
   uploadContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    
     padding: 5,
-    marginBottom: 10,
-
+    
   },
   browseButton: {
     backgroundColor: "gray",
