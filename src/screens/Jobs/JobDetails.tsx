@@ -344,7 +344,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
         )}
       </ScrollView>
-      <Toast />
+     
      
       <View style={styles.footerContainer}>
 
