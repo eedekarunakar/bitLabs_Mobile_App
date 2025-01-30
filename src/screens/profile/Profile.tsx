@@ -24,9 +24,11 @@ import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're usin
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
 
+
+
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import LinearGradient from 'react-native-linear-gradient';
+
 
 
 
@@ -634,7 +636,7 @@ function ProfileComponent() {
                                     <Text style={{color:'#6C6C6C',textAlign:'center'}}>File must be less than 1Mb</Text>
                                     <Text style={{color:'#6C6C6C',textAlign:'center'}}>Only .doc or .PDFs are allowed.</Text>
                                 </View>
-                            </View>
+                          
 
                                 </TouchableOpacity>
                             </View>
@@ -844,7 +846,7 @@ const styles = StyleSheet.create({
         height: 30,
         width: 'auto',
         padding: 5,
-        backgroundColor: '#334584',
+        backgroundColor: '#498C07',
         borderRadius: 15,
         marginRight: 8,
         justifyContent: 'space-between',

@@ -31,7 +31,7 @@ const Badge = ({ route,navigation }: any) => {
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const [skillBadges, setSkillBadges] = useState<any[]>([]); // For storing the fetched skill badges data
   const [skillLoading, setSkillLoading] = useState(true); // Loading state for skill badges
-  
+
 
   const testImage: Record<string, any> = {
     Angular: require('../../assests/Images/Test/Angular.png'),
@@ -41,12 +41,12 @@ const Badge = ({ route,navigation }: any) => {
     'C Sharp': require('../../assests/Images/Test/CSharp.png'),
     CSS: require('../../assests/Images/Test/CSS.png'),
     Django: require('../../assests/Images/Test/Django.png'),
-   '.Net':require('../../assests/Images/Test/Dot Net.png'),
+    '.Net': require('../../assests/Images/Test/Dot Net.png'),
     Flask: require('../../assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
     HTML: require('../../assests/Images/Test/HTML.png'),
     JavaScript: require('../../assests/Images/Test/JavaScript.png'),
-    Jsp: require('../../assests/Images/Test/JSP.png'),
+    JSP: require('../../assests/Images/Test/JSP.png'),
     'Manual Testing': require('../../assests/Images/Test/ManualTesting.png'),
     'Mongo DB': require('../../assests/Images/Test/MongoDB.png'),
     Python: require('../../assests/Images/Test/Python.png'),
@@ -60,188 +60,189 @@ const Badge = ({ route,navigation }: any) => {
     SQL: require('../../assests/Images/Test/MySQL.png'),
     Css: require('../../assests/Images/Test/CSS.png'),
     MySQL: require('../../assests/Images/Test/MySQL.png'),
+    Vue: require('../../assests/Images/Test/Vue.png')
   };
 
-    const fetchTestStatus = async () => {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/applicant1/tests/${userId}`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  const fetchTestStatus = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/applicant1/tests/${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'application/json',
+          },
         }
+      );
 
-        const data = await response.json();
-        console.log('Test Data:', data);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        if (Array.isArray(data) && data.length > 0) {
-          // Assign default names for tests with empty testName
-          data.forEach(test => {
-            if (!test.testName || test.testName.trim() === '') {
-              test.testName = 'General Aptitude Test'; // Default name
-            }
-          });
-          const aptitudeTest = data.find(test => test.testName.toLowerCase().includes('aptitude'));
-          const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
-          console.log(aptitudeTest.testStatus)
-          if (aptitudeTest) {
-            if (aptitudeTest.testStatus === 'P') {
-              if (technicalTest) {
-                // If Technical Test exists, handle its status
-                if (technicalTest.testStatus === 'P') {
-                  setSelectedStep(3); // Both tests passed
-                  setTestName('');
-                  setTestStatus('');
-                } else {
-                  setSelectedStep(2); // Technical test failed
-                  setTestName('Technical Test');
-                  setTestStatus(technicalTest.testStatus);
-                  const testDateTime = new Date(
-                    technicalTest.testDateTime[0], // Year
-                    technicalTest.testDateTime[1] - 1, // Month (0-based index)
-                    technicalTest.testDateTime[2], // Day
-                    technicalTest.testDateTime[3], // Hours
-                    technicalTest.testDateTime[4], // Minutes
-                    technicalTest.testDateTime[5] // Seconds
-                  );
-                  const retakeDate = new Date(testDateTime);
-                  retakeDate.setDate(retakeDate.getDate() + 7); // Set the retake date to 7 days later
-                  retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
-                  retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+      const data = await response.json();
+      console.log('Test Data:', data);
 
-                  const calculateTimeLeft = () => {
-                    const now = new Date();
-                    const difference = retakeDate.getTime() - now.getTime();
-
-                    if (difference > 0) {
-                      const timeLeft = {
-                        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-                      };
-                      setTimer(timeLeft);
-                      setIsButtonDisabled(true);; // Timer is still counting down
-                    } else {
-                      setTimer(null); // Timer has ended
-                      setIsButtonDisabled(false);// Enable the button when timer ends
-                    }
-                  };
-
-                  // Initial call and set interval for countdown
-                  calculateTimeLeft();
-                  const timerInterval = setInterval(calculateTimeLeft, 1000);
-
-                  // Cleanup interval on component unmount
-                  return () => clearInterval(timerInterval);
-                }
-              } else {
-                // Aptitude test passed but no technical test yet
-                setSelectedStep(2);
-                setTestName('Technical Test');
+      if (Array.isArray(data) && data.length > 0) {
+        // Assign default names for tests with empty testName
+        data.forEach(test => {
+          if (!test.testName || test.testName.trim() === '') {
+            test.testName = 'General Aptitude Test'; // Default name
+          }
+        });
+        const aptitudeTest = data.find(test => test.testName.toLowerCase().includes('aptitude'));
+        const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
+        console.log(aptitudeTest.testStatus)
+        if (aptitudeTest) {
+          if (aptitudeTest.testStatus === 'P') {
+            if (technicalTest) {
+              // If Technical Test exists, handle its status
+              if (technicalTest.testStatus === 'P') {
+                setSelectedStep(3); // Both tests passed
+                setTestName('');
                 setTestStatus('');
+              } else {
+                setSelectedStep(2); // Technical test failed
+                setTestName('Technical Test');
+                setTestStatus(technicalTest.testStatus);
+                const testDateTime = new Date(
+                  technicalTest.testDateTime[0], // Year
+                  technicalTest.testDateTime[1] - 1, // Month (0-based index)
+                  technicalTest.testDateTime[2], // Day
+                  technicalTest.testDateTime[3], // Hours
+                  technicalTest.testDateTime[4], // Minutes
+                  technicalTest.testDateTime[5] // Seconds
+                );
+                const retakeDate = new Date(testDateTime);
+                retakeDate.setDate(retakeDate.getDate() + 7); // Set the retake date to 7 days later
+                retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
+                retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+
+                const calculateTimeLeft = () => {
+                  const now = new Date();
+                  const difference = retakeDate.getTime() - now.getTime();
+
+                  if (difference > 0) {
+                    const timeLeft = {
+                      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                      hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                      minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                    };
+                    setTimer(timeLeft);
+                    setIsButtonDisabled(true);; // Timer is still counting down
+                  } else {
+                    setTimer(null); // Timer has ended
+                    setIsButtonDisabled(false);// Enable the button when timer ends
+                  }
+                };
+
+                // Initial call and set interval for countdown
+                calculateTimeLeft();
+                const timerInterval = setInterval(calculateTimeLeft, 1000);
+
+                // Cleanup interval on component unmount
+                return () => clearInterval(timerInterval);
               }
             } else {
-              // Aptitude test failed
-              setSelectedStep(1);
-              setTestName('General Aptitude Test');
-              setTestStatus(aptitudeTest.testStatus);
-              const testDateTime = new Date(
-                aptitudeTest.testDateTime[0], // Year
-                aptitudeTest.testDateTime[1] - 1, // Month (0-based index)
-                aptitudeTest.testDateTime[2], // Day
-                aptitudeTest.testDateTime[3], // Hours
-                aptitudeTest.testDateTime[4], // Minutes
-                aptitudeTest.testDateTime[5] // Seconds
-              );
-              const retakeDate = new Date(testDateTime);
-              retakeDate.setDate(retakeDate.getDate() + 7); // Set retake date to 7 days later
-              retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
-              retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
-
-              const calculateTimeLeft = () => {
-                const now = new Date();
-                const difference = retakeDate.getTime() - now.getTime();
-
-                if (difference > 0) {
-                  const timeLeft = {
-                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-                  };
-                  setTimer(timeLeft);
-                  setIsButtonDisabled(true); // Disable button while timer is counting down
-                } else {
-                  setTimer(null); // Timer has ended
-                  setIsButtonDisabled(false); // Enable button when timer ends
-                }
-              };
-
-              // Initial call and set interval for countdown
-              calculateTimeLeft();
-              const timerInterval = setInterval(calculateTimeLeft, 1000);
-
-              // Cleanup interval on component unmount or when the test status changes
-              return () => {
-                clearInterval(timerInterval);
-              };
+              // Aptitude test passed but no technical test yet
+              setSelectedStep(2);
+              setTestName('Technical Test');
+              setTestStatus('');
             }
           } else {
-            // Default case if no aptitude test found
+            // Aptitude test failed
             setSelectedStep(1);
             setTestName('General Aptitude Test');
-            setTestStatus('');
+            setTestStatus(aptitudeTest.testStatus);
+            const testDateTime = new Date(
+              aptitudeTest.testDateTime[0], // Year
+              aptitudeTest.testDateTime[1] - 1, // Month (0-based index)
+              aptitudeTest.testDateTime[2], // Day
+              aptitudeTest.testDateTime[3], // Hours
+              aptitudeTest.testDateTime[4], // Minutes
+              aptitudeTest.testDateTime[5] // Seconds
+            );
+            const retakeDate = new Date(testDateTime);
+            retakeDate.setDate(retakeDate.getDate() + 7); // Set retake date to 7 days later
+            retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
+            retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+
+            const calculateTimeLeft = () => {
+              const now = new Date();
+              const difference = retakeDate.getTime() - now.getTime();
+
+              if (difference > 0) {
+                const timeLeft = {
+                  days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                  hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                  minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                };
+                setTimer(timeLeft);
+                setIsButtonDisabled(true); // Disable button while timer is counting down
+              } else {
+                setTimer(null); // Timer has ended
+                setIsButtonDisabled(false); // Enable button when timer ends
+              }
+            };
+
+            // Initial call and set interval for countdown
+            calculateTimeLeft();
+            const timerInterval = setInterval(calculateTimeLeft, 1000);
+
+            // Cleanup interval on component unmount or when the test status changes
+            return () => {
+              clearInterval(timerInterval);
+            };
           }
+        } else {
+          // Default case if no aptitude test found
+          setSelectedStep(1);
+          setTestName('General Aptitude Test');
+          setTestStatus('');
         }
-      } catch (error) {
-        setSelectedStep(1);
-        setTestName('General Aptitude Test');
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      setSelectedStep(1);
+      setTestName('General Aptitude Test');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const fetchSkillBadges = async () => {
-      if (!userId || !userToken) {
-        // Skip fetching if applicantId or jwtToken is null
-        setSkillBadges([]);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/skill-badges/${userId}/skill-badges`, // Replace with your actual API endpoint
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch skill badges');
+  const fetchSkillBadges = async () => {
+    if (!userId || !userToken) {
+      // Skip fetching if applicantId or jwtToken is null
+      setSkillBadges([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/skill-badges/${userId}/skill-badges`, // Replace with your actual API endpoint
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'application/json',
+          },
         }
+      );
 
-        const data = await response.json();
-        console.log('Skill Badge Data', data)
-        setSkillBadges(data); // Set the fetched skill badges data
-        setApplicantSkillBadges(data.applicantSkillBadges || []); // Set the fetched skill badges data
-      } catch (error) {
-        console.error('Error fetching skill badges:', error);
-      } finally {
-        setSkillLoading(false); // Set loading state to false once done
+      if (!response.ok) {
+        throw new Error('Failed to fetch skill badges');
       }
-    };
+
+      const data = await response.json();
+      console.log('Skill Badge Data', data)
+      setSkillBadges(data); // Set the fetched skill badges data
+      setApplicantSkillBadges(data.applicantSkillBadges || []); // Set the fetched skill badges data
+    } catch (error) {
+      console.error('Error fetching skill badges:', error);
+    } finally {
+      setSkillLoading(false); // Set loading state to false once done
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -253,7 +254,7 @@ const Badge = ({ route,navigation }: any) => {
       };
     }, [userId, userToken])
   );
-   // This effect runs when userId or userToken changes
+  // This effect runs when userId or userToken changes
   useEffect(() => {
     const calculateTimers = () => {
       // Go through each badge and calculate its timer if the status is 'FAILED'
@@ -321,9 +322,9 @@ const Badge = ({ route,navigation }: any) => {
 
   if (loading) {
     return (
-    <View style={styles.loaderContainer}>
-      <ActivityIndicator size="large" color="#0000ff" />
-    </View>
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     )
   }
   return (
@@ -471,7 +472,7 @@ const Badge = ({ route,navigation }: any) => {
                         disabled={isButtonDisabled} // Disable the button when the timer is running
                       >
                         <Text style={styles.progressButtonText}>
-                          Take Test
+                          {testStatus === 'F' && timer ? 'Retake Test' : 'Take Test'}
                         </Text>
                       </TouchableOpacity>
                     </LinearGradient>
@@ -678,7 +679,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 20,
-    color:'#0D0D0D',
+    color: '#0D0D0D',
     fontFamily: 'PlusJakartaSans-Medium',
   },
   progressContainer: {
@@ -738,7 +739,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
     borderRadius: 10,
     backgroundColor: '#FFFFFF',
-    
+
     alignItems: 'center',
   },
   cardImage: {
@@ -875,13 +876,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#d4edda',
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   failed: {
     backgroundColor: '#f8d7da',
     color: 'red',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   badgeDate: {
     fontSize: 12,
