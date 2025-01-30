@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { getMobileNumber } from '../../services/mobile';
 import { useAuth } from '../../context/Authcontext';
 
+
 type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
  
 interface Step1Props {

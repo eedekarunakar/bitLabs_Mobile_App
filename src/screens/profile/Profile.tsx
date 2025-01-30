@@ -20,8 +20,20 @@ import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-pi
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import { base64Image } from '../../services/base64Image';
 import LinearGradient from 'react-native-linear-gradient';
+import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
+
+
+
+import * as Progress from 'react-native-progress';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+
+
+
+
+
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
@@ -33,6 +45,12 @@ function ProfileComponent() {
     const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
     const [resumeText, setResumeText] = useState<string>('');
     const { fetchProfilePhoto, photo } = useProfilePhoto();
+
+    const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [showBorder, setShowBorder] = useState(false);
+    const [bgcolor,setbgcolor]=useState(false)
+    const [saveClicked, setSaveClicked] = useState(false);
 
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -266,6 +284,15 @@ function ProfileComponent() {
         );
     }
 
+    const handleCancelUpload = () => {
+        setResumeFile(null);
+        setResumeText('');
+        setLoading(false);
+        setProgress(0);
+        showToast('Upload canceled.');
+        setShowBorder(false); 
+      };
+
     const handleUploadResume = async () => {
         try {
             const result: DocumentPickerResponse[] = await DocumentPicker.pick({
@@ -289,8 +316,27 @@ function ProfileComponent() {
             // Set selected file but do not upload yet
             setResumeFile(selectedFile);
             setResumeText(selectedFile.name || '');
-
-            showToast('Resume selected. Remember to save changes.');
+            showToast('Resume selected. Uploading...');
+            setTimeout(() => {
+                // Start the upload process
+                setLoading(true);
+                setProgress(0);
+                setShowBorder(true)
+                setbgcolor(false)
+        
+                // Simulate upload progress
+                const interval = setInterval(() => {
+                  setProgress((prevProgress) => {
+                    const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
+                    if (newProgress >= 1) {
+                      clearInterval(interval);
+                      setLoading(false);
+                    }
+                    return newProgress;
+                  });
+                }, 1000); // Update progress every 1 second
+            }, 500); // 0.5 second delay before starting the progress bar
+            
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 console.log('User canceled the picker');
@@ -309,16 +355,15 @@ function ProfileComponent() {
 
     const handleSaveResume = async () => {
         if (resumeFile) {
+            setShowBorder(false)
+            showToast('Resume uploaded')
+            setbgcolor(false)
             const formData = new FormData();
             formData.append('resume', {
                 uri: resumeFile.uri,
                 type: resumeFile.type,
                 name: resumeFile.name,
             } as any);
-
-
-
-
             const response = await ProfileService.uploadResume(userToken, userId, formData);
             if (response.success) {
                 setResumeFile(response.data.fileName);
@@ -372,7 +417,7 @@ function ProfileComponent() {
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={styles.name}>
+                            <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center', width: '80%' }]}>
                                 {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
                             </Text>
 
@@ -403,7 +448,7 @@ function ProfileComponent() {
                             {/* {qualification||'no qualification details availiable !!'} */}
                             <Text style={styles.details}>{qualification}</Text>
                             <Text style={styles.subheading}>Specilization</Text>
-                            <Text style={styles.details}> {specialization}</Text>
+                            <Text style={styles.details}>{specialization}</Text>
                             <Text style={styles.subheading}>Skills</Text>
 
                             <View style={styles.skillContainer}>
@@ -456,7 +501,9 @@ function ProfileComponent() {
                                 <Text style={styles.subheading}>Preferred Location</Text>
                                 {preferredJobLocations.length > 0 && (
 
+
                                     <Text style={{ color: '#000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 12 }}>
+
 
                                         {preferredJobLocations.join(', ')}
                                     </Text>
@@ -485,25 +532,22 @@ function ProfileComponent() {
                         >
                             <View style={styles.modalView5}>
                                 <View style={styles.modalCard5}>
-
-
                                     <TouchableOpacity style={styles.customButton} onPress={handleCamera}>
                                         <Text style={styles.buttonText1}>Take a photo</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.customButton} onPress={handleLibrary}>
                                         <Text style={styles.buttonText1}>Choose a photo</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.customButton} onPress={removePhoto}>
+                                    <TouchableOpacity style={styles.customButton1} onPress={removePhoto}>
                                         <Text style={styles.buttonText1}>Remove a photo</Text>
                                     </TouchableOpacity>
+                                </View>
+                                <View style={styles.modalCard6}>
                                     <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
                                         <Text style={styles.modalButtonText7}>Cancel</Text>
                                     </TouchableOpacity>
-
+                                
                                 </View>
-
-
-
                             </View>
 
                         </Modal>
@@ -567,43 +611,99 @@ function ProfileComponent() {
                 >
                     <View style={styles.modalView1}>
                         <View style={styles.modalCard1}>
+                            <View style={{ marginLeft: '95%' }}>
+                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} >
+                                   <Icon7 name="close" size={20} color ={'0D0D0D'} />
+                                </TouchableOpacity>
+                            </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                                 <Text style={styles.modalTitle1}>Upload Resume</Text>
+
                                 <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{ marginLeft: '50%' }}>
 
-                                    <Text style={{ fontSize: 12, color: 'gray', top: -35, fontFamily: 'PlusJakartaSans-Bold' }}>X</Text>
+                                    <Text style={{ fontSize: 12, color: 'gray', fontFamily: 'PlusJakartaSans-Bold',position:'absolute',top:-40,left:-10 }}>X</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ alignItems: 'center', width: '100%', height: 150, borderColor: '#3A76DE', borderWidth: 1, borderStyle: 'dashed', marginBottom: 20, borderRadius: 10, backgroundColor: '#E7F2FF' }}>
+                            <View style={[styles.uploadContainer,{borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor? "#FFEAE7":"#E7F2FF", borderRadius: 20}]}>
+                                <TouchableOpacity onPress={handleUploadResume}>
+                                <Image
+                                    source={require('../../../src/assests/Images/file1.png')}
+                                    style={{ position: 'absolute', left: 110, top: 30 }}
+                                />
+                                <Text style={{fontWeight:'bold',fontSize:17,marginTop:75,marginLeft:90}} >Select File</Text>
+                                <View style={{ padding: 10,paddingLeft:30 }}>
 
-                                <TouchableOpacity
-                                    onPress={handleUploadResume}
-                                >
-                                    <Image
-                                        source={require('../../../src/assests/Images/file1.png')}
-                                        style={{ position: 'relative', left: 60, top: 40 }}
+                                    <Text style={{color:'#6C6C6C',textAlign:'center'}}>File must be less than 1Mb</Text>
+                                    <Text style={{color:'#6C6C6C',textAlign:'center'}}>Only .doc or .PDFs are allowed.</Text>
+                                </View>
+                          
 
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{marginBottom:50}}>
+                                {bgcolor?(
+                                  <Text style={{color:'red',fontWeight:'bold',marginTop:10}}>File Not selected</Text>
+                                ):(
+                                    <Text></Text>
+                                )}
+                            </View>
+
+                            <View style={[styles.fileContainer, showBorder && styles.showborder]}>
+                    
+                                {resumeFile && (
+                    
+                                <View style={{flexDirection:'row',}}>
+                                    <FontAwesome name="file-text-o" size={20} color="#000" />
+                                    <Text style={[styles.fileNameText,{marginLeft:12}]}>{resumeFile.name}</Text>
+                    
+                                    <TouchableOpacity
+                                    style={styles.closeIcon}
+                                    onPress={handleCancelUpload}
+                                    >
+                                    <Image source={require('../../assests/Images/x1.png')} ></Image>
+                                    </TouchableOpacity>
+                                </View>
+                                )}
+                    
+                                {loading && (
+                                    <View style={styles.progressContainer}>
+                                    <Progress.Bar
+                                        progress={progress}
+                                        width={230}
+                                        color="#F97316"  // Progress bar color
+                                        unfilledColor="#D7D6D6"  // Unfilled background color
+                                        borderColor="#D7D6D6"  // Outline color
                                     />
-
-                                    <Text style={{ padding: 50, fontFamily: 'PlusJakartaSans-Bold' }}>Select File</Text>
-
-                                </TouchableOpacity>
+                                    </View>
+                                )}
+                    
                             </View>
-                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
 
-                                <View style={styles.line}></View>
 
-                                <Text style={{ marginTop: -10, fontFamily: 'PlusJakartaSans-Bold' }}> Or</Text>
+                            <View>
+                                {showBorder?(
+                                <View style={[styles.orContainer,{marginTop:20,marginVertical:20}]}>
+                                    <View style={styles.line}></View>
+                                    <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+                                    <View style={[styles.line, { marginLeft: 3 }]}></View>
+                                </View>):
+                                (
+                                <View style={[styles.orContainer,{marginTop:-20,marginVertical:20,}]}>
+                                    <View style={styles.line}></View>
+                                    <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+                                    <View style={[styles.line, { marginLeft: 3 }]}></View>
+                                </View>
+                                
+                                )}
 
-                                <View style={[styles.line, { marginLeft: 3 }]}></View>
                             </View>
                             <View>
                                 <TouchableOpacity
-                                    style={styles.uploadButton}
-                                    onPress={() => navigation.navigate('ResumeBuilder')}
+                                style={styles.uploadButton}
+                                onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
 
-                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
+                                <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -618,6 +718,7 @@ function ProfileComponent() {
                                         onPress={handleSaveResume}      // Save changes and upload the file to the backend
                                         style={styles.buttonContent}
                                     >
+
 
                                         <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
 
@@ -644,12 +745,42 @@ const styles = StyleSheet.create({
         top: '60%',
         marginBottom: 10,
     },
-
+    uploadContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 5,
+        
+      },
+      fileNameText: {
+        fontSize: 16,
+        color: '#000',
+      },
+    orContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+      },
+    fileContainer: {
+        padding: 10,
+        marginBottom: 10,
+        marginTop:-30
+      },
+    progressContainer: {
+        marginTop: 10,
+        alignItems: 'center',
+      },
+      showborder: {
+        borderWidth: 1,
+        borderColor: '#D7D6D6',
+        borderRadius: 10,
+      },
     buttonContent: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-      },
+    },
 
     uploadButton: {
         width: '100%',
@@ -661,6 +792,11 @@ const styles = StyleSheet.create({
         marginBottom: 55
 
     },
+    closeIcon: {
+        position:'absolute',
+        left:220,
+        
+      },
     skillBadge: {
         height: 30,
         flexDirection: 'row',
@@ -710,14 +846,16 @@ const styles = StyleSheet.create({
         height: 30,
         width: 'auto',
         padding: 5,
-        backgroundColor: '#334584',
+        backgroundColor: '#498C07',
         borderRadius: 15,
         marginRight: 8,
         justifyContent: 'space-between',
         margin: 5,
         color: '#fff',
+
         paddingHorizontal: 8,
         fontFamily: 'PlusJakartaSans-Medium',
+
 
 
     },
@@ -740,9 +878,11 @@ const styles = StyleSheet.create({
         marginLeft: 'auto'
     },
     name: {
+
         fontSize: 24,
         color: '#424242',
         fontFamily: 'PlusJakartaSans-Bold',
+
 
     },
     image: {
@@ -803,7 +943,7 @@ const styles = StyleSheet.create({
     details: {
         fontFamily: 'PlusJakartaSans-Bold',
         color: '#463F3F',
-        fontSize: 14
+        fontSize: 14,
     },
     modalView: {
         flex: 1,
@@ -880,7 +1020,7 @@ const styles = StyleSheet.create({
 
     // Modal Card Style
     modalCard1: {
-        width: 300,
+        width: 350,
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
@@ -927,6 +1067,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
+        marginBottom:10
     },
 
     modalCard5: {
@@ -934,13 +1075,28 @@ const styles = StyleSheet.create({
         marginHorizontal: '5%', // Centers the modal horizontally
         backgroundColor: 'white',
         borderRadius: 10,
-        paddingVertical: 20, // Padding for top and bottom, reducing the space inside the modal
-        paddingHorizontal: 20, // Horizontal padding to keep space on sides
+        paddingVertical: 3, // Padding for top and bottom, reducing the space inside the modal
+        paddingHorizontal: 2, // Horizontal padding to keep space on sides
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
+    },
+
+    modalCard6: {
+        width: '95%', // Adjusts modal width
+        marginHorizontal: '5%', // Centers the modal horizontally
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingVertical: 3, // Padding for top and bottom, reducing the space inside the modal
+        paddingHorizontal: 2, // Horizontal padding to keep space on sides
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+        marginTop:10,
     },
 
     customButton: {
@@ -952,8 +1108,20 @@ const styles = StyleSheet.create({
         borderColor: '#ccc', // Divider color
         justifyContent: 'flex-start', // Align text to the left
     },
+    customButton1: {
+        width: '100%', // Full-width button
+        backgroundColor: 'white',
+        paddingVertical: 15, // Vertical padding for button height
+        paddingHorizontal: 10, // Left and right padding
+        borderColor: '#ccc', // Divider color
+        justifyContent: 'flex-start', // Align text to the left
+    },
 
     buttonText1: {
+
+
+
+
         fontSize: 18,
         color: '#0D0D0D',
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans

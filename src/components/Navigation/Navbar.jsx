@@ -6,7 +6,7 @@ import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel';
 import ProfileService from '../../services/profile/ProfileService';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import useGoogleSignIn from '../../services/google/google';
- 
+import Notification from "../../assests/icons/notification";
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
  
 const Navbar = () => {
@@ -29,7 +29,7 @@ const Navbar = () => {
  
             <View style={styles.logoContainer}>
                 <Image
-                    source={require('../../assests/Images/logo.png')}
+                    source={require('../../assests/LandingPage/logo.png')}
                     style={styles.logo1Image}
                 />
             </View>
@@ -37,10 +37,7 @@ const Navbar = () => {
                 {/* Notification Bell */}
                 <View style={styles.notificationContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-                        <Image
-                            source={require('../../assests/Images/rat/notification.png')}
-                            style={styles.notification}
-                        />
+                    <Notification width={28} heigth={22}/>
                     </TouchableOpacity>
                     {unseenCount > 0 && (
                         <View style={styles.notificationBadge}>
@@ -71,10 +68,11 @@ const Navbar = () => {
                                 <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate("Profile")} >
                                     <Text style={styles.buttonText1}>View Profile</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate('ChangePassword')} >
+                                <TouchableOpacity style={styles.customButton1} onPress={() => navigation.navigate('ChangePassword')} >
                                     <Text style={styles.buttonText1}>Change password</Text>
                                 </TouchableOpacity>
-                                <View style={styles.separator}></View>
+                            </View>
+                            <View style={[styles.modalCard6,{marginTop:10,}]}>
                                 <TouchableOpacity style={styles.modalButton7} onPress={handleLogout} >
                                     <Text style={styles.modalButtonText7}>Logout</Text>
                                 </TouchableOpacity>
@@ -157,9 +155,20 @@ const styles = StyleSheet.create({
         marginHorizontal: '5%',
         backgroundColor: 'white',
         borderRadius: 10,
-        paddingVertical: 20,
-        paddingHorizontal: 20,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        paddingLeft:5
        
+    },
+    modalCard6:{
+        width:'95%',
+        marginHorizontal:'5%',
+        backgroundColor:'white',
+        borderRadius: 10,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        marginBottom:10,
+        paddingLeft:5
     },
     customButton: {
         width: '100%',
@@ -167,6 +176,15 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 10,
         borderBottomWidth: 1,
+        borderColor: '#ccc',
+        justifyContent: 'center',
+    },
+    customButton1: {
+        width: '100%',
+        backgroundColor: 'white',
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderBottomWidth: 0,
         borderColor: '#ccc',
         justifyContent: 'center',
     },

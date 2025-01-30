@@ -9,7 +9,7 @@ import Toast from 'react-native-toast-message'
       bottomOffset: 80,
       visibilityTime:5000,
       text1Style: {
-        fontSize: 14,
+        fontSize: 12,
         fontFamily: 'PlusJakartaSans-Medium',
       },
     })

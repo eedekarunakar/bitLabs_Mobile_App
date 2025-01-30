@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity,Linking } from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from '../../../New';
@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Badge'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Badges'>;
 
 interface ExploreSectionProps {
   navigateToBadge: () => void; // Prop to handle navigation to Badge screen
@@ -28,25 +28,33 @@ const ExploreSection = () => {
             source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Resume.ec41b4fde8cfb61ed302.png" }}
             style={styles.cardImage}
           />
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}  // Gradient colors
-            start={{ x: 0, y: 0 }}  // Start of gradient
-            end={{ x: 1, y: 0 }}    // End of gradient (horizontal direction)
-            style={styles.cardButton}  // Apply gradient to button style
+          <TouchableOpacity
+            onPress={() => { navigation.navigate('ResumeBuilder') }} // Use the navigateToBadge function here
+            style={styles.touchableContainer}
           >
-            {/* Ensure Text is wrapped correctly */}
-            <Text style={styles.buttonText}>Create Now</Text>
-          </LinearGradient>
+            <LinearGradient
+              colors={['#F97316', '#FAA729']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.cardButton}
+            >
+              {/* Ensure Text is wrapped correctly */}
+              <Text style={styles.buttonText}>Create Now</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.largeCard}>
-          <Text style={styles.cardTitle}>Earn Pre-Screened Badges</Text>
+          <View style={{borderColor:'red',borderRadius:10,borderWidth:1.5,paddingHorizontal:5,marginLeft:'80%'}}>
+            <Text style={{fontFamily:"PlusJakartaSans-Medium",color:'red',fontSize:12}}>New</Text>
+          </View>
+          <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"}             Badge</Text>
           <Image
             source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Taketest.f9b04fc56b4d85d488be.png" }}
             style={styles.cardImage}
           />
           <TouchableOpacity
-            onPress={() => {navigation.navigate('Badge')}} // Use the navigateToBadge function here
+            onPress={() => { navigation.navigate('Badges') }} // Use the navigateToBadge function here
             style={styles.touchableContainer}
           >
             <LinearGradient
@@ -67,15 +75,20 @@ const ExploreSection = () => {
             source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Certificate.cf13aa641913a67cb502.png" }}
             style={styles.cardImage}
           />
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.cardButton}
+          <TouchableOpacity
+            onPress={() => Linking.openURL('https://upskill.bitlabs.in/login/index.php')}// Use the navigateToBadge function here
+            style={styles.touchableContainer}
           >
-            {/* Ensure Text is wrapped correctly */}
-            <Text style={styles.buttonText}>Start Learning</Text>
-          </LinearGradient>
+            <LinearGradient
+              colors={['#F97316', '#FAA729']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.cardButton}
+            >
+              {/* Ensure Text is wrapped correctly */}
+              <Text style={styles.buttonText}>Start Learning</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
