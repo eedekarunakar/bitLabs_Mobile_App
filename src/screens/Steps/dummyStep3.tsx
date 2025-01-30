@@ -30,6 +30,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const [resumeText, setResumeText] = useState<string>('');
   const [isResumeModalVisible, setResumeModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  console.log('RR',route.params);
   const showToast = (message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
@@ -70,25 +71,36 @@ const Step3: React.FC = ({ route, navigation }: any) => {
 
   const handleAPI = async () => {
     try {
+      console.log('API Request Data:', {
+        firstName: route.params.firstName,
+        lastName: route.params.lastName,
+        alternatePhoneNumber: route.params.alternatePhoneNumber,
+        email: route.params.email,
+        skillsRequired: route.params.skillsRequired.map((skill: string) => ({ skillName: skill })),
+        experience: route.params.experience,
+        qualification: route.params.qualification,
+        specialization: route.params.specialization,
+        preferredJobLocations: route.params.preferredJobLocations,
+      });
+
       const response = await fetch(
         `${API_BASE_URL}/applicantprofile/createprofile/${userId}`,
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`, // Authorization token
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userToken}`,
           },
           body: JSON.stringify({
-            firstName: route.params.firstName,
-            lastName: route.params.lastName,
-            alternatePhoneNumber: route.params.whatsappNumber, // Map whatsappNumber here
-            email: route.params.email,
-            skillsRequired: route.params.skillsRequired,// Assuming selectedSkills is an array
-            experience: route.params.experience,
-            qualification: route.params.qualification,
-            specialization: route.params.specialization,
-            preferredJobLocations: route.params.selectedLocations,
-
+        firstName: route.params.firstName,
+        lastName: route.params.lastName,
+        alternatePhoneNumber: route.params.alternatePhoneNumber,
+        email: route.params.email,
+        skillsRequired: route.params.skillsRequired.map((skill: string) => ({ skillName: skill })),
+        experience: route.params.experience,
+        qualification: route.params.qualification,
+        specialization: route.params.specialization,
+        preferredJobLocations: route.params.selectedLocations,
           }),
         },
       );
@@ -169,7 +181,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     <View style={styles.screen}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("../../assests/Images/logo.png")} />
+        <Image style={styles.logo} source={require("../../assests/LandingPage/logo.png")} />
       </View>
 
       <View style={styles.container}>

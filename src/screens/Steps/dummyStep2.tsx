@@ -264,7 +264,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
     <View style={styles.screen}>
       <Image
         style={styles.logo}
-        source={require('../../assests/Images/logo.png')}
+        source={require('../../assests/LandingPage/logo.png')}
       />
       <ScrollView>
         <View style={styles.container}>
@@ -360,7 +360,8 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               multiple={true} // Allow multiple selection
               open={openLocationDropdown}
               value={selectedLocations} // Array of selected locations
-              items={locationOptions.map(location => ({
+              items={locationOptions
+                .map(location => ({
                 label: location,
                 value: location,
               }))}

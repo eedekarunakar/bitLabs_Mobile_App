@@ -111,7 +111,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
  
         <Image
           style={styles.logo}
-          source={require('../../assests/Images/logo.png')} // Replace with your actual logo path
+          source={require('../../assests/LandingPage/logo.png')} // Replace with your actual logo path
         />
  
         <View style={styles.container}>
