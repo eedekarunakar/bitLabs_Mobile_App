@@ -45,7 +45,7 @@ const PDFExample = () => {
     <View style={styles.container}>
       {pdfUri ? (
         <Pdf
-          source={source}
+          source={source as { uri: string }}
           onLoadComplete={(numberOfPages, filePath) => {
             console.log(`Number of pages: ${numberOfPages}`);
           }}

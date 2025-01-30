@@ -23,7 +23,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
-import LinearGradient from 'react-native-linear-gradient';
+
 
 
 
@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
         height: 30,
         width: 'auto',
         padding: 5,
-        backgroundColor: '#334584',
+        backgroundColor: '#498C07',
         borderRadius: 15,
         marginRight: 8,
         justifyContent: 'space-between',

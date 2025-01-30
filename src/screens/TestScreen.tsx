@@ -173,7 +173,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'JavaScript':
         fetchedTestData = require('../models/data/Javascript.json');
         break;
-      case 'Jsp':
+      case 'JSP':
         fetchedTestData = require('../models/data/Jsp.json');
         break;
       case 'Manual Testing':
@@ -214,6 +214,9 @@ const TestScreen = ({ route, navigation }: any) => {
         break;
       case 'MySQL':
         fetchedTestData = require('../models/data/SQL.json');
+        break;
+      case 'Vue':
+        fetchedTestData=require('../models/data/Vue.json');
         break;
       default:
         console.error(`No data found for test: ${testName}`);
