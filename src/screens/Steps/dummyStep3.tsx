@@ -14,7 +14,9 @@ import API_BASE_URL from '../../services/API_Service';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
+
 import axios from "axios";
+
  
 interface Step3Props {
   step: number;
@@ -107,6 +109,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${userToken}`,
           },
+
         }
       );
 

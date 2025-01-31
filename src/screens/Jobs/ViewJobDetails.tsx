@@ -41,7 +41,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "HTML&CSS": require('../../assests/Images/Html&Css.png'),
     "JAVA": require('../../assests/Images/Java1.png'),
     "JAVASCRIPT": require('../../assests/Images/JavaScript.png'),
-    "MYSQL": require('../../assests/Images/Mysqll.png'),
+    "MYSQL": require('../../assests/Images/Mysql.png'),
     "REACT": require('../../assests/Images/React.png'),
     "SPRING BOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON": require('../../assests/Images/python.png'),
