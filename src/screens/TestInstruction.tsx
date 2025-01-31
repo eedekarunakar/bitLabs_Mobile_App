@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Dimensions,Modal,Image } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '../context/Authcontext'; // Assuming you have a useAuth hook
@@ -33,6 +33,7 @@ import SpringData from '../models/data/Spring.json';
 import SQLData from '../models/data/SQL.json';
 import VueData from '../models/data/Vue.json';
 import API_BASE_URL from '../services/API_Service';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const { width } = Dimensions.get('window');
 
@@ -63,6 +64,8 @@ const Test = ({ route, navigation }: any) => {
     topicsCovered: [],
   });
   const [loading, setLoading] = useState(true);
+
+  const [showExitModal, setShowExitModal] = useState(false);
 
   // Fetch API data to dynamically adjust step and test information
   useEffect(() => {
@@ -241,6 +244,12 @@ const Test = ({ route, navigation }: any) => {
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={() => setShowExitModal(true)} style={styles.backButton}>
+                  <Icon name="left" size={24} color="#495057" />
+                </TouchableOpacity>
+                
+              </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.container1}>
@@ -297,6 +306,45 @@ const Test = ({ route, navigation }: any) => {
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={showExitModal}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+                            style={styles.closeIcon}
+                            onPress={() => setShowExitModal(false)} // Close the modal
+                          >
+                            <Icon name="close" size={20} color={'0D0D0D'} />
+                          </TouchableOpacity>
+            <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
+            <Text style={styles.modalText}>Do you really want to exit?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: '#FFF', borderColor: '#9D9D9D', borderWidth: 0.96 }]}
+                onPress={() => setShowExitModal(false)} // Close the modal
+              >
+                <Text style={[styles.modalButtonText, { color: 'grey' }]}>No</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()} // Navigate back
+              >
+                <LinearGradient
+                                    colors={['#F97316', '#FAA729']} // Gradient colors
+                                    start={{ x: 0, y: 0 }} // Gradient start point
+                                    end={{ x: 1, y: 1 }}   // Gradient end point
+                                    style={[styles.modalButton, { borderRadius: 10, width: width * 0.41 }]} // Ensure borderRadius matches your button's design
+                                  >
+                                    <Text style={styles.modalButtonText}>Yes</Text>
+                                  </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <View style={styles.footer}>
         <LinearGradient
@@ -435,5 +483,69 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 26,
     padding: 10,
+  },
+  headerContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 50,
+    backgroundColor:'#FFF'
+  },
+  backButton: {
+    position: 'absolute',
+    left: 15,
+  },
+  modalContainer: {
+    flex: 1,
+    marginTop: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '95%',
+    height: 337,
+    padding: 16,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButton: {
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#F97316',
+    flex: 1,
+    marginHorizontal: 4,
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    fontSize: 14,
+    color: '#FFF',
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
+  modalText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 18,
+    lineHeight: 25,
+    color: '#333333',
+    marginTop: 10,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30
+  },
+  Warning: {
+    width: 85,
+    height: 73,
+  },
+
+  closeIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 10,
   },
 });
