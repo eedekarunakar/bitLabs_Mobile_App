@@ -100,8 +100,10 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     }
 
     try {
-      await ProfileService.updateBasicDetails(userToken, userId, personalDetails);
-      return true; // Indicate success
+      const result = await ProfileService.updateBasicDetails(userToken, userId, personalDetails);
+      
+      return result// Indicate success
+     
     } catch (error) {
       
       console.log('Error updating personal details:', error);

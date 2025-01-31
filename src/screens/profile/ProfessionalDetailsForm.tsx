@@ -170,6 +170,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
       const newSkill: Skill = { id: skills.length + 1, skillName, experience: 0 };
       setSkills([...skills, newSkill]);
     }
+
     setSkillQuery('');
     setShowSkillsList(false);
   };
@@ -184,7 +185,11 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
       const updatedSkills = skills.filter((s) => s.id !== id);
       setSkills(updatedSkills);
     }
+
+    setSkillQuery('');
+    // setShowSkillsList(true);  // Optionally show the list after removing a skill
   };
+
 
   const addLocation = (location: string) => {
     if (!cities.includes(location)) {
@@ -274,13 +279,13 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
         <TouchableWithoutFeedback onPress={closeAllDropdowns}>
           <View style={styles.modalView}>
             <View style={styles.modalCard}>
-              <View style={{alignItems:'flex-end' }}>
+              <View style={{ alignItems: 'flex-end' }}>
                 <TouchableOpacity onPress={onClose}>
                   <Icon name="close" size={20} color={'0D0D0D'} />
                 </TouchableOpacity>
               </View>
               {/* <ScrollView contentContainerStyle={{ padding: 10 }}> */}
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={styles.modalTitle}>Professional Details</Text>
               </View>
 
@@ -367,7 +372,8 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.skills ? styles.errorInput : {}]}
-                  placeholder="Search Skills" placeholderTextColor="#0D0D0D"
+                  placeholder="Search Skills"
+                  placeholderTextColor="#0D0D0D"
                   value={skillQuery}
                   onFocus={toggleSkillsDropdown}
                   onChangeText={setSkillQuery}
@@ -375,9 +381,17 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                 {validationErrors.skills && <Text style={styles.errorText}>{validationErrors.skills}</Text>}
                 {showSkillsList && (
                   <View style={[styles.dropdown, { zIndex: 1000 }]}>
-
                     <FlatList
-                      data={skillQuery.length > 0 ? skillsOptions.filter((s) => s.toLowerCase().includes(skillQuery.toLowerCase())) : skillsOptions}
+                      data={skillQuery.length > 0
+                        ? skillsOptions.filter((s) => s.toLowerCase().includes(skillQuery.toLowerCase()) &&
+                          !skills.some((skill) => skill.skillName === s) &&
+                          !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
+                        )
+                        : skillsOptions.filter((s) =>
+                          !skills.some((skill) => skill.skillName === s) &&
+                          !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
+                        )
+                      }
                       keyExtractor={(item) => item}
                       renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => addSkill(item)}>
@@ -387,7 +401,6 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                       ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
                       nestedScrollEnabled={true}
                     />
-
                   </View>
                 )}
                 <View style={styles.selectedItems}>
@@ -412,11 +425,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                 </View>
               </View>
 
+
+
               {/* Locations */}
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.locations ? styles.errorInput : {}]}
-                  placeholder="Search Locations" placeholderTextColor="#0D0D0D"
+                  placeholder="Search Locations"
+                  placeholderTextColor="#0D0D0D"
                   value={locationQuery}
                   onFocus={toggleLocationDropdown}
                   onChangeText={setLocationQuery}
@@ -424,21 +440,24 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                 {validationErrors.locations && <Text style={styles.errorText}>{validationErrors.locations}</Text>}
                 {showLocationList && (
                   <View style={[styles.dropdown, { zIndex: 1000 }]}>
-
                     <FlatList
-                      data={locationQuery.length > 0 ? cities.filter((loc) => loc.toLowerCase().includes(locationQuery.toLowerCase())) : cities}
+                      data={locationQuery.length > 0
+                        ? cities.filter((loc) => loc.toLowerCase().includes(locationQuery.toLowerCase()) &&
+                          !locations.some((location) => location === loc)
+                        )
+                        : cities.filter((loc) =>
+                          !locations.some((location) => location === loc)
+                        )
+                      }
                       keyExtractor={(item) => item}
                       renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => addLocation(item)}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>
-
-                      }
+                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
                       nestedScrollEnabled={true}
                     />
-
                   </View>
                 )}
                 <View style={styles.selectedItems}>
@@ -520,10 +539,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    
+
   },
   modalCard: {
-    // maxHeight:'90%',
     width: '90%',
     backgroundColor: 'white',
     borderRadius: 10,
@@ -531,7 +549,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     position: 'relative',
-    marginBottom: 20,
+    marginBottom: 10,
+
 
   },
   modalTitle: {
@@ -543,10 +562,9 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    width:'100%',
+    width: '100%',
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 10,
     padding: 10,
     color: '#0D0D0D',
     fontFamily: 'PlusJakartaSans-Medium'
@@ -602,8 +620,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 10,
+    marginTop: 8
   },
   selectedItem: {
+
     backgroundColor: '#334584',
     padding: 5,
     marginRight: 10,
@@ -629,14 +649,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 34,
     width: '100%',
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 8
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
-    justifyContent:'center'
-   
+    justifyContent: 'center'
+
   },
   scrollContainer: {
     maxHeight: 150,
