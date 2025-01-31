@@ -23,6 +23,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -115,6 +116,20 @@ function ProfileComponent() {
             fetchProfilePhoto(userToken, userId);
         }
     }, [userId, userToken]);
+    const BoldToast = (type1: 'success' | 'error', message: string,) => {
+        Toast.show({
+          type: type1,
+          text1: message,
+          position: 'bottom',
+          onPress: () => Toast.hide(),
+          visibilityTime: 5000,
+          text1Style: {
+            fontSize: 12,
+            fontFamily: 'PlusJakartaSans-Medium'
+          }
+        });
+      };
+    
 
     const showToast = (message: string) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -382,9 +397,12 @@ function ProfileComponent() {
     const handleSaveChanges = async () => {
         const success = await updateBasicDetails();
         if (success) {
-            console.log('Personal details updated successfully');
+            
+           BoldToast('success','Personal details updated succesfully')
             setPersonalDetailsFormVisible(false);
             reloadProfile();
+        }else{
+        BoldToast('error','Error updating, please try again')
         }
     };
 
@@ -465,7 +483,7 @@ function ProfileComponent() {
                                             key={index}
                                             style={[
                                                 styles.skillBadge,
-                                                { backgroundColor: badge.status === 'PASSED' ? '#498C07' : '#334584' },
+                                                { backgroundColor: '#498C07' },
                                             ]}
                                         >
                                             {badge.status === 'PASSED' && (
@@ -561,6 +579,14 @@ function ProfileComponent() {
                             }}>
                             <View style={styles.modalView}>
                                 <View style={styles.modalCard}>
+                                    <View style={{alignSelf:'flex-end'}}>
+                                        <TouchableOpacity onPress={() => setPersonalDetailsFormVisible(false)} >
+                                            <Icon7 name="close" size={20} color={'0D0D0D'} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Text style={styles.modalTitle1}>Personal Details</Text>
+                                    </View>
                                     <TextInput placeholder='FirstName' placeholderTextColor="#B1B1B1" style={styles.input}
                                         value={personalDetails.firstName}
                                         onChangeText={(text) => handleInputChange('firstName', (text))} />
@@ -582,9 +608,16 @@ function ProfileComponent() {
                                     )}
 
                                     <View style={{ alignItems: 'flex-end' }}>
-                                        <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                            <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Medium', fontSize: 14 }}>Save Changes</Text>
-                                        </TouchableOpacity>
+                                        <LinearGradient
+                                            colors={['#F97316', '#FAA729']}  // Gradient colors
+                                            style={styles.button}            // Apply styles to the gradient button
+                                            start={{ x: 0, y: 0 }}           // Starting point of the gradient
+                                            end={{ x: 1, y: 0 }}             // Ending point of the gradient
+                                        >
+                                            <TouchableOpacity style={styles.buttonContent} onPress={handleSaveChanges}>
+                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Medium', fontSize: 14 }}>Save Changes</Text>
+                                            </TouchableOpacity>
+                                        </LinearGradient>
                                     </View>
                                 </View>
                             </View>
@@ -627,14 +660,14 @@ function ProfileComponent() {
                                             style={{ position: 'absolute', top: 30 }}
                                         />
                                     </View>
-                                    
+
                                     <View style={{ padding: 10, paddingHorizontal: 50 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center' }} >Select File</Text>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center' }} >Select File</Text>
                                         <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>File must be less than 1Mb</Text>
                                         <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>Only .doc or .PDFs are allowed.</Text>
                                     </View>
- 
- 
+
+
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginBottom: 50 }}>
@@ -644,15 +677,15 @@ function ProfileComponent() {
                                     <Text></Text>
                                 )}
                             </View>
- 
+
                             <View style={[styles.fileContainer, showBorder && styles.showborder]}>
- 
+
                                 {resumeFile && (
- 
+
                                     <View style={{ flexDirection: 'row', }}>
                                         <FontAwesome name="file-text-o" size={20} color="#000" />
                                         <Text style={[styles.fileNameText, { marginLeft: 12 }]}>{resumeFile.name}</Text>
- 
+
                                         <TouchableOpacity
                                             style={styles.closeIcon}
                                             onPress={handleCancelUpload}
@@ -661,7 +694,7 @@ function ProfileComponent() {
                                         </TouchableOpacity>
                                     </View>
                                 )}
- 
+
                                 {loading && (
                                     <View style={styles.progressContainer}>
                                         <Progress.Bar
@@ -673,10 +706,10 @@ function ProfileComponent() {
                                         />
                                     </View>
                                 )}
- 
+
                             </View>
- 
- 
+
+
                             <View>
                                 {showBorder ? (
                                     <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
@@ -690,18 +723,18 @@ function ProfileComponent() {
                                             <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
                                             <View style={[styles.line, { marginLeft: 3 }]}></View>
                                         </View>
- 
+
                                     )}
- 
+
                             </View>
                             <View>
                                 <TouchableOpacity
                                     style={styles.uploadButton}
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
- 
+
                                     <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold', fontWeight: 'bold' }}>Create Resume</Text>
- 
+
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'flex-end' }}>
@@ -715,10 +748,10 @@ function ProfileComponent() {
                                         onPress={handleSaveResume}      // Save changes and upload the file to the backend
                                         style={styles.buttonContent}
                                     >
- 
- 
+
+
                                         <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
- 
+
                                     </TouchableOpacity>
                                 </LinearGradient>
                             </View>
@@ -835,6 +868,7 @@ const styles = StyleSheet.create({
 
     },
     skillContainer: {
+        alignItems: 'center',
         marginTop: 5,
         flexDirection: 'row',
         flexWrap: 'wrap',
