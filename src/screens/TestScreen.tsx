@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert, ScrollView } from 'react-native';
+import React, { useState, useEffect ,useRef } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler,  AppState,Alert, ScrollView } from 'react-native';
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -43,6 +43,31 @@ const TestScreen = ({ route, navigation }: any) => {
 
   let timerInterval: NodeJS.Timeout;
 
+  const appState = useRef(AppState.currentState); // Track app state
+  const [appStateVisible, setAppStateVisible] = useState(appState.current); // Current app state
+  const backgroundTime = useRef<number | null>(null); // Track background time
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App came to the foreground
+        if (backgroundTime.current) {
+          const elapsedTime = Math.floor((Date.now() - backgroundTime.current) / 1000); // Calculate elapsed time in seconds
+          setTimeLeft((prevTime) => prevTime - elapsedTime); // Subtract elapsed time from the timer
+        }
+      } else if (nextAppState.match(/inactive|background/)) {
+        // App went to the background
+        backgroundTime.current = Date.now(); // Store the time when the app went to the background
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
