@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native'; // Import the useFocusEffect hook
 import Navbar from '../../components/Navigation/Navbar';
@@ -14,7 +14,7 @@ const { width } = Dimensions.get('window');
 
 
 
-const Badge = ({ route,navigation }: any) => {
+const Badge = ({ route, navigation }: any) => {
   const { isTestComplete } = route.params || { isTestComplete: false }; // Default to false if not passed
   const [selectedStep, setSelectedStep] = useState(1); // Default to Step 1 for new users
   const [timer, setTimer] = useState<null | { days: number, hours: number, minutes: number }>(null); // Set the initial timer in seconds
@@ -31,7 +31,7 @@ const Badge = ({ route,navigation }: any) => {
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const [skillBadges, setSkillBadges] = useState<any[]>([]); // For storing the fetched skill badges data
   const [skillLoading, setSkillLoading] = useState(true); // Loading state for skill badges
-  
+
 
   const testImage: Record<string, any> = {
     Angular: require('../../assests/Images/Test/Angular.png'),
@@ -41,12 +41,12 @@ const Badge = ({ route,navigation }: any) => {
     'C Sharp': require('../../assests/Images/Test/CSharp.png'),
     CSS: require('../../assests/Images/Test/CSS.png'),
     Django: require('../../assests/Images/Test/Django.png'),
-   '.Net':require('../../assests/Images/Test/Dot Net.png'),
+    '.Net': require('../../assests/Images/Test/Dot Net.png'),
     Flask: require('../../assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
     HTML: require('../../assests/Images/Test/HTML.png'),
     JavaScript: require('../../assests/Images/Test/JavaScript.png'),
-    Jsp: require('../../assests/Images/Test/JSP.png'),
+    JSP: require('../../assests/Images/Test/JSP.png'),
     'Manual Testing': require('../../assests/Images/Test/ManualTesting.png'),
     'Mongo DB': require('../../assests/Images/Test/MongoDB.png'),
     Python: require('../../assests/Images/Test/Python.png'),
@@ -60,188 +60,189 @@ const Badge = ({ route,navigation }: any) => {
     SQL: require('../../assests/Images/Test/MySQL.png'),
     Css: require('../../assests/Images/Test/CSS.png'),
     MySQL: require('../../assests/Images/Test/MySQL.png'),
+    Vue: require('../../assests/Images/Test/Vue.png')
   };
 
-    const fetchTestStatus = async () => {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/applicant1/tests/${userId}`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  const fetchTestStatus = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/applicant1/tests/${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'application/json',
+          },
         }
+      );
 
-        const data = await response.json();
-        console.log('Test Data:', data);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        if (Array.isArray(data) && data.length > 0) {
-          // Assign default names for tests with empty testName
-          data.forEach(test => {
-            if (!test.testName || test.testName.trim() === '') {
-              test.testName = 'General Aptitude Test'; // Default name
-            }
-          });
-          const aptitudeTest = data.find(test => test.testName.toLowerCase().includes('aptitude'));
-          const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
-          console.log(aptitudeTest.testStatus)
-          if (aptitudeTest) {
-            if (aptitudeTest.testStatus === 'P') {
-              if (technicalTest) {
-                // If Technical Test exists, handle its status
-                if (technicalTest.testStatus === 'P') {
-                  setSelectedStep(3); // Both tests passed
-                  setTestName('');
-                  setTestStatus('');
-                } else {
-                  setSelectedStep(2); // Technical test failed
-                  setTestName('Technical Test');
-                  setTestStatus(technicalTest.testStatus);
-                  const testDateTime = new Date(
-                    technicalTest.testDateTime[0], // Year
-                    technicalTest.testDateTime[1] - 1, // Month (0-based index)
-                    technicalTest.testDateTime[2], // Day
-                    technicalTest.testDateTime[3], // Hours
-                    technicalTest.testDateTime[4], // Minutes
-                    technicalTest.testDateTime[5] // Seconds
-                  );
-                  const retakeDate = new Date(testDateTime);
-                  retakeDate.setDate(retakeDate.getDate() + 7); // Set the retake date to 7 days later
-                  retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
-                  retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+      const data = await response.json();
+      console.log('Test Data:', data);
 
-                  const calculateTimeLeft = () => {
-                    const now = new Date();
-                    const difference = retakeDate.getTime() - now.getTime();
-
-                    if (difference > 0) {
-                      const timeLeft = {
-                        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-                      };
-                      setTimer(timeLeft);
-                      setIsButtonDisabled(true);; // Timer is still counting down
-                    } else {
-                      setTimer(null); // Timer has ended
-                      setIsButtonDisabled(false);// Enable the button when timer ends
-                    }
-                  };
-
-                  // Initial call and set interval for countdown
-                  calculateTimeLeft();
-                  const timerInterval = setInterval(calculateTimeLeft, 1000);
-
-                  // Cleanup interval on component unmount
-                  return () => clearInterval(timerInterval);
-                }
-              } else {
-                // Aptitude test passed but no technical test yet
-                setSelectedStep(2);
-                setTestName('Technical Test');
+      if (Array.isArray(data) && data.length > 0) {
+        // Assign default names for tests with empty testName
+        data.forEach(test => {
+          if (!test.testName || test.testName.trim() === '') {
+            test.testName = 'General Aptitude Test'; // Default name
+          }
+        });
+        const aptitudeTest = data.find(test => test.testName.toLowerCase().includes('aptitude'));
+        const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
+        console.log(aptitudeTest.testStatus)
+        if (aptitudeTest) {
+          if (aptitudeTest.testStatus === 'P') {
+            if (technicalTest) {
+              // If Technical Test exists, handle its status
+              if (technicalTest.testStatus === 'P') {
+                setSelectedStep(3); // Both tests passed
+                setTestName('');
                 setTestStatus('');
+              } else {
+                setSelectedStep(2); // Technical test failed
+                setTestName('Technical Test');
+                setTestStatus(technicalTest.testStatus);
+                const testDateTime = new Date(
+                  technicalTest.testDateTime[0], // Year
+                  technicalTest.testDateTime[1] - 1, // Month (0-based index)
+                  technicalTest.testDateTime[2], // Day
+                  technicalTest.testDateTime[3], // Hours
+                  technicalTest.testDateTime[4], // Minutes
+                  technicalTest.testDateTime[5] // Seconds
+                );
+                const retakeDate = new Date(testDateTime);
+                retakeDate.setDate(retakeDate.getDate() + 7); // Set the retake date to 7 days later
+                retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
+                retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+
+                const calculateTimeLeft = () => {
+                  const now = new Date();
+                  const difference = retakeDate.getTime() - now.getTime();
+
+                  if (difference > 0) {
+                    const timeLeft = {
+                      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                      hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                      minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                    };
+                    setTimer(timeLeft);
+                    setIsButtonDisabled(true);; // Timer is still counting down
+                  } else {
+                    setTimer(null); // Timer has ended
+                    setIsButtonDisabled(false);// Enable the button when timer ends
+                  }
+                };
+
+                // Initial call and set interval for countdown
+                calculateTimeLeft();
+                const timerInterval = setInterval(calculateTimeLeft, 1000);
+
+                // Cleanup interval on component unmount
+                return () => clearInterval(timerInterval);
               }
             } else {
-              // Aptitude test failed
-              setSelectedStep(1);
-              setTestName('General Aptitude Test');
-              setTestStatus(aptitudeTest.testStatus);
-              const testDateTime = new Date(
-                aptitudeTest.testDateTime[0], // Year
-                aptitudeTest.testDateTime[1] - 1, // Month (0-based index)
-                aptitudeTest.testDateTime[2], // Day
-                aptitudeTest.testDateTime[3], // Hours
-                aptitudeTest.testDateTime[4], // Minutes
-                aptitudeTest.testDateTime[5] // Seconds
-              );
-              const retakeDate = new Date(testDateTime);
-              retakeDate.setDate(retakeDate.getDate() + 7); // Set retake date to 7 days later
-              retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
-              retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
-
-              const calculateTimeLeft = () => {
-                const now = new Date();
-                const difference = retakeDate.getTime() - now.getTime();
-
-                if (difference > 0) {
-                  const timeLeft = {
-                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-                  };
-                  setTimer(timeLeft);
-                  setIsButtonDisabled(true); // Disable button while timer is counting down
-                } else {
-                  setTimer(null); // Timer has ended
-                  setIsButtonDisabled(false); // Enable button when timer ends
-                }
-              };
-
-              // Initial call and set interval for countdown
-              calculateTimeLeft();
-              const timerInterval = setInterval(calculateTimeLeft, 1000);
-
-              // Cleanup interval on component unmount or when the test status changes
-              return () => {
-                clearInterval(timerInterval);
-              };
+              // Aptitude test passed but no technical test yet
+              setSelectedStep(2);
+              setTestName('Technical Test');
+              setTestStatus('');
             }
           } else {
-            // Default case if no aptitude test found
+            // Aptitude test failed
             setSelectedStep(1);
             setTestName('General Aptitude Test');
-            setTestStatus('');
+            setTestStatus(aptitudeTest.testStatus);
+            const testDateTime = new Date(
+              aptitudeTest.testDateTime[0], // Year
+              aptitudeTest.testDateTime[1] - 1, // Month (0-based index)
+              aptitudeTest.testDateTime[2], // Day
+              aptitudeTest.testDateTime[3], // Hours
+              aptitudeTest.testDateTime[4], // Minutes
+              aptitudeTest.testDateTime[5] // Seconds
+            );
+            const retakeDate = new Date(testDateTime);
+            retakeDate.setDate(retakeDate.getDate() + 7); // Set retake date to 7 days later
+            retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
+            retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+
+            const calculateTimeLeft = () => {
+              const now = new Date();
+              const difference = retakeDate.getTime() - now.getTime();
+
+              if (difference > 0) {
+                const timeLeft = {
+                  days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                  hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                  minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                };
+                setTimer(timeLeft);
+                setIsButtonDisabled(true); // Disable button while timer is counting down
+              } else {
+                setTimer(null); // Timer has ended
+                setIsButtonDisabled(false); // Enable button when timer ends
+              }
+            };
+
+            // Initial call and set interval for countdown
+            calculateTimeLeft();
+            const timerInterval = setInterval(calculateTimeLeft, 1000);
+
+            // Cleanup interval on component unmount or when the test status changes
+            return () => {
+              clearInterval(timerInterval);
+            };
           }
+        } else {
+          // Default case if no aptitude test found
+          setSelectedStep(1);
+          setTestName('General Aptitude Test');
+          setTestStatus('');
         }
-      } catch (error) {
-        setSelectedStep(1);
-        setTestName('General Aptitude Test');
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      setSelectedStep(1);
+      setTestName('General Aptitude Test');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const fetchSkillBadges = async () => {
-      if (!userId || !userToken) {
-        // Skip fetching if applicantId or jwtToken is null
-        setSkillBadges([]);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/skill-badges/${userId}/skill-badges`, // Replace with your actual API endpoint
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch skill badges');
+  const fetchSkillBadges = async () => {
+    if (!userId || !userToken) {
+      // Skip fetching if applicantId or jwtToken is null
+      setSkillBadges([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/skill-badges/${userId}/skill-badges`, // Replace with your actual API endpoint
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'application/json',
+          },
         }
+      );
 
-        const data = await response.json();
-        console.log('Skill Badge Data', data)
-        setSkillBadges(data); // Set the fetched skill badges data
-        setApplicantSkillBadges(data.applicantSkillBadges || []); // Set the fetched skill badges data
-      } catch (error) {
-        console.error('Error fetching skill badges:', error);
-      } finally {
-        setSkillLoading(false); // Set loading state to false once done
+      if (!response.ok) {
+        throw new Error('Failed to fetch skill badges');
       }
-    };
+
+      const data = await response.json();
+      console.log('Skill Badge Data', data)
+      setSkillBadges(data); // Set the fetched skill badges data
+      setApplicantSkillBadges(data.applicantSkillBadges || []); // Set the fetched skill badges data
+    } catch (error) {
+      console.error('Error fetching skill badges:', error);
+    } finally {
+      setSkillLoading(false); // Set loading state to false once done
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -253,7 +254,7 @@ const Badge = ({ route,navigation }: any) => {
       };
     }, [userId, userToken])
   );
-   // This effect runs when userId or userToken changes
+  // This effect runs when userId or userToken changes
   useEffect(() => {
     const calculateTimers = () => {
       // Go through each badge and calculate its timer if the status is 'FAILED'
@@ -321,9 +322,9 @@ const Badge = ({ route,navigation }: any) => {
 
   if (loading) {
     return (
-    <View style={styles.loaderContainer}>
-      <ActivityIndicator size="large" color="#0000ff" />
-    </View>
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     )
   }
   return (
@@ -382,25 +383,25 @@ const Badge = ({ route,navigation }: any) => {
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 1 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 1 ? '#219734' : '#D9D9D9' },
                     ]}
                   >
                     {testName === 'General Aptitude Test' && testStatus === 'P' ? (
                       <Icon1 name="check" size={14} style={{ color: 'white' }} />
                     ) : (
-                      <Text style={styles.stepText}>1</Text>
+                      <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
                     )}
                   </View>
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 2 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#D9D9D9' },
                     ]}
                   />
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 2 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#D9D9D9' },
                     ]}
                   >
                     {testName === 'Technical Test' && testStatus === 'P' ? (
@@ -412,24 +413,36 @@ const Badge = ({ route,navigation }: any) => {
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 3 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#D9D9D9' },
                     ]}
                   />
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 3 ? 'green' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#D9D9D9' },
                     ]}
                   >
                     <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : 'black' }} />
                   </View>
                 </View>
                 {/* Other Sections */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>     General{"\n"}Aptitude Test</Text>
-                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>Technical{"\n"}    Test</Text>
-                  <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', }}>Verification{"\n"}    done</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center' }}>
+                      General{"\n"}Aptitude Test
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center' }}>
+                      Technical{"\n"}Test
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center', marginRight: 10 }}>Verification{"\n"}Done
+                    </Text>
+                  </View>
                 </View>
+
 
                 <View style={{ marginVertical: 30, flexDirection: 'column', alignItems: 'flex-start' }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -439,7 +452,9 @@ const Badge = ({ route,navigation }: any) => {
                         A Comprehensive Assessment to{"\n"}Measure Your Analytical and{"\n"}Reasoning Skills
                       </Text>
                     </View>
-                    <Image source={require('../../assests/Images/boyimage.png')} />
+                    <View style={{marginRight:10}}>
+                      <Image source={require('../../assests/Images/boyimage.png')} style={{height:100}} />
+                    </View>
                   </View>
 
                   {/* TouchableOpacity */}
@@ -471,7 +486,7 @@ const Badge = ({ route,navigation }: any) => {
                         disabled={isButtonDisabled} // Disable the button when the timer is running
                       >
                         <Text style={styles.progressButtonText}>
-                          Take Test
+                          {testStatus === 'F' && timer ? 'Retake Test' : 'Take Test'}
                         </Text>
                       </TouchableOpacity>
                     </LinearGradient>
@@ -508,7 +523,7 @@ const Badge = ({ route,navigation }: any) => {
             )}
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Skill Badge</Text>
+            <Text style={styles.text}>Skill Badges</Text>
           </View>
 
           {/* Horizontal ScrollView for Cards */}
@@ -537,7 +552,7 @@ const Badge = ({ route,navigation }: any) => {
                     }
                   >
                     <Text style={styles.buttonText}>Take Test</Text>
-                    <Icon name="external-link" size={20} color="white" />
+                    <Icon name="external-link" size={20} color="white" style={{marginRight:15}}/>
                   </TouchableOpacity>
                 </View>
               ))
@@ -678,14 +693,17 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 20,
-    color:'#0D0D0D',
+    color: '#0D0D0D',
     fontFamily: 'PlusJakartaSans-Medium',
   },
   progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+    justifyContent: 'space-between',
+    width: '90%', // Adjusted width for better spacing
+    alignSelf: 'center',
+    marginBottom: 10,
+    marginTop: 20
   },
   stepCircle: {
     width: 20,
@@ -696,14 +714,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
   },
   stepText: {
-    color: 'white',
+    color: '#6D6969',
     fontWeight: '500',
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Medium',
   },
   stepLine: {
-    width: 117,
-    height: 3,
+    flex: 1,
+    width: 115,
+    height: 1,
     backgroundColor: '#BFBFBF',
   },
   gradientBackground: {
@@ -738,7 +757,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
     borderRadius: 10,
     backgroundColor: '#FFFFFF',
-    
+
     alignItems: 'center',
   },
   cardImage: {
@@ -760,7 +779,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: 197,
-    height: 40,
+    height: 45,
     backgroundColor: '#374A70',
     alignItems: 'center',
     borderBottomStartRadius: 10,
@@ -770,7 +789,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     marginLeft: 10,
     fontFamily: 'PlusJakartaSans-Medium',
@@ -875,13 +894,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#d4edda',
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   failed: {
     backgroundColor: '#f8d7da',
     color: 'red',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   badgeDate: {
     fontSize: 12,

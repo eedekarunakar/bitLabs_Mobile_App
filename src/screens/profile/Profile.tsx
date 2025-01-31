@@ -25,8 +25,11 @@ import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, I
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
+
+
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 
 
@@ -1175,6 +1178,5 @@ const styles = StyleSheet.create({
  },
 
 });
-
 export default ProfileComponent;
 

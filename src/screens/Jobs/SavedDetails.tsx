@@ -344,7 +344,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         )}
 
       </ScrollView>
-      <Toast />
       <View style={{ height: 20 }} />
       <View style={styles.footerContainer}>
         {/* Save Job Button */}

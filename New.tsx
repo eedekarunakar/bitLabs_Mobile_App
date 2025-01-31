@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput } from 'react-native';
+import { Text, TextInput,TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
@@ -21,7 +21,7 @@ import ImagePreviewScreen from './src/screens/profile/ImagePreviewScreen';
 import Pass from './src/screens/Test/passContent';
 import Fail from './src/screens/Test/FailContent';
 import Timeup from './src/screens/Test/TimeUp';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast, ToastConfig } from 'react-native-toast-message'; // Ensure this import is correct
 import ChangePasswordScreen from './src/screens/HomePage/ChangePassword';
 import { JobData } from './src/models/Jobs/ApplyJobmodel';
 import ViewJobDetails from './src/screens/Jobs/ViewJobDetails';
@@ -64,7 +64,37 @@ export type RootStackParamList = {
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
-
+// Global Toast Configuration with Cross Button
+const toastConfig: ToastConfig = {
+  success: (props) => (
+    <BaseToast
+      {...props} // Spread the props for BaseToast
+      style={{ borderLeftColor: 'green', paddingRight: 15 }} // Custom styling
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{ fontSize: 12,  fontFamily: 'PlusJakartaSans-Bold',}}
+      text1={props.text1} // Ensure text1 is passed
+      renderTrailingIcon={() => (
+        <TouchableOpacity onPress={() => Toast.hide()}>
+          <Text style={{ fontSize: 18, color: 'black' }}>✖</Text> {/* Wrap cross icon in <Text> */}
+        </TouchableOpacity>
+      )}
+    />
+  ),
+  error: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: 'red', paddingRight: 15 }}
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{ fontSize: 12,  fontFamily: 'PlusJakartaSans-Bold',}}
+      text1={props.text1}
+      renderTrailingIcon={() => (
+        <TouchableOpacity onPress={() => Toast.hide()}>
+           <Text style={{ fontSize: 18, color: 'black' }}>✖</Text> {/* Wrap cross icon in <Text> */}
+        </TouchableOpacity>
+      )}
+    />
+  ),
+};
 const Appnavigator = () => {
 
   const { isAuthenticated, userToken, userId, userEmail } = useAuth();
@@ -286,7 +316,7 @@ const AppWithProfileProvider = () => {
     <ProfilePhotoProvider userToken={userToken} userId={userId}>
       <NavigationContainer >
         <Appnavigator />
-        <Toast />
+        <Toast config={toastConfig} /> {/* Pass the toastConfig */}
       </NavigationContainer>
     </ProfilePhotoProvider>
   );

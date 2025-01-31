@@ -30,7 +30,8 @@ import ServletsData from '../models/data/Servlets.json';
 import SpringBootData from '../models/data/Spring Boot.json';
 import TSData from '../models/data/TS.json';
 import SpringData from '../models/data/Spring.json';
-import SQLData from '../models/data/SQL.json'
+import SQLData from '../models/data/SQL.json';
+import VueData from '../models/data/Vue.json';
 import API_BASE_URL from '../services/API_Service';
 
 const { width } = Dimensions.get('window');
@@ -199,10 +200,13 @@ const Test = ({ route, navigation }: any) => {
           setTestData(SQLData);
           break;
         case 'Css':
-          setTestData(CSSData)
+          setTestData(CSSData);
           break;
         case 'MySQL':
           setTestData(SQLData);
+          break;
+        case 'Vue':
+          setTestData(VueData);
           break;
         default:
           setTestData({
@@ -265,8 +269,8 @@ const Test = ({ route, navigation }: any) => {
                 <Text style={styles.text1}>{testData.numberOfQuestions || 0}</Text>
               </View>
             </View>
-            <Text style={{color:'#0D0D0D', fontFamily: 'PlusJakartaSans-Medium',}}>Topics Covered</Text>
-            <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Medium', }}>
+            <Text style={{color:'#797979', fontFamily: 'PlusJakartaSans-Medium'}}>Topics Covered</Text>
+            <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Bold', }}>
               {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
                 ? `${testData.topicsCovered.join(', ')}`
                 : 'No topics available'}
