@@ -13,9 +13,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import API_BASE_URL from '../../services/API_Service';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-
-
+import Icon7 from 'react-native-vector-icons/AntDesign';
+import axios from "axios";
+ 
 interface Step3Props {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -23,9 +23,9 @@ interface Step3Props {
   //route: Props;
   // navigation: any;
 }
-
+ 
 type Props = StackScreenProps<RootStackParamList, 'Step3'> & Step3Props;
-
+ 
 const Step3: React.FC = ({ route, navigation }: any) => {
   const [currentStep, setCurrentStep] = useState(3);
   const { updateShouldShowStep1 } = route.params;
@@ -33,30 +33,32 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const [resumeText, setResumeText] = useState<string>('');
   const [isResumeModalVisible, setResumeModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  console.log('RR',route.params);
+
+  console.log('RR', route.params);
+
   const showToast = (message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
-
+ 
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
-  const [bgcolor,setbgcolor]=useState(false)
+  const [bgcolor, setbgcolor] = useState(false)
   const [saveClicked, setSaveClicked] = useState(false);
-  
-
+ 
+ 
   const { userId, userToken } = useAuth();
   const saveProfile = () => {
     console.log("Profile saved!");
     // Add your logic for saving the profile
   };
-
+ 
   const goBackToStep2 = () => {
     console.log("Back button pressed, changing step to 2");
     setCurrentStep(2);
     navigation.goBack(); // Go back to Step 2 screen
   };
-
+ 
   const handleSave = () => {
     // Check if the resume is uploaded
     if (!resumeFile) {
@@ -64,97 +66,90 @@ const Step3: React.FC = ({ route, navigation }: any) => {
       //showToast('Please upload your resume before proceeding.'); // Optional: Show toast message for immediate feedback
       return; // Prevent calling saveProfile or navigating further
     }
-
+ 
     // Clear any previous error messages
     setErrorMessage('');
-
+ 
     // Proceed with saving the profile only if the resume is uploaded
     saveProfile(); // Call saveProfile when the user saves
     setCurrentStep(3); // Update the current step
-    
+ 
     // Update step1 visibility and navigate to BottomTab after a delay
     updateShouldShowStep1(false);
     setTimeout(() => {
       navigation.navigate("BottomTab", { shouldShowStep1: false, welcome: "Welcome" });
     }, 100);
   };
-
+ 
   const handleAPI = async () => {
     try {
-      console.log('API Request Data:', {
-        firstName: route.params.firstName,
-        lastName: route.params.lastName,
-        alternatePhoneNumber: route.params.alternatePhoneNumber,
-        email: route.params.email,
-        skillsRequired: route.params.skillsRequired.map((skill: string) => ({ skillName: skill })),
+      const requestData = {
+        basicDetails: {
+          firstName: route.params.firstName,
+          lastName: route.params.lastName,
+          email: route.params.email,
+          alternatePhoneNumber: route.params.alternatePhoneNumber,
+        },
         experience: route.params.experience,
         qualification: route.params.qualification,
         specialization: route.params.specialization,
         preferredJobLocations: route.params.preferredJobLocations,
-      });
+        skillsRequired: route.params.skillsRequired.map((skill: any) => ({ skillName: skill.skillName })),
+      };
 
-      const response = await fetch(
+      console.log('API Request Data:', requestData);
+
+      const response = await axios.post(
         `${API_BASE_URL}/applicantprofile/createprofile/${userId}`,
+        requestData,
         {
-          method: 'POST',
           headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
           },
-          body: JSON.stringify({
-        firstName: route.params.firstName,
-        lastName: route.params.lastName,
-        alternatePhoneNumber: route.params.alternatePhoneNumber,
-        email: route.params.email,
-        skillsRequired: route.params.skillsRequired.map((skill: string) => ({ skillName: skill })),
-        experience: route.params.experience,
-        qualification: route.params.qualification,
-        specialization: route.params.specialization,
-        preferredJobLocations: route.params.selectedLocations,
-          }),
-        },
+        }
       );
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Profile created successfully:', data);
+
+      if (response.status === 200 || response.status === 201) {
+        console.log('Profile created successfully:', response.data);
+handleSave();
       } else {
         console.error('Failed to create profile', response.status);
       }
-    }
-    catch (error) {
-      console.log(error)
+    } catch (error) {
+      console.error('Error creating profile:', error);
     }
   }
-
+ 
   const handleUploadResume = async () => {
     try {
       const result: DocumentPickerResponse[] = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf], // Allow only PDF files
-
-        
+ 
+ 
       });
-
-
+ 
+ 
       if (!result || result.length === 0) {
-        
+ 
         return;
       }
-
+ 
       const selectedFile: DocumentPickerResponse = result[0];
       const maxSize = 1048576; // 1MB size limit
-
+ 
       // Validate file size
       if (selectedFile.size && selectedFile.size > maxSize) {
         showToast("File size exceeds the 1MB limit.");
         return;
       }
-
+ 
       setResumeFile(selectedFile);
       setResumeText(selectedFile.name || '');
-
+ 
       // Show a toast message
       showToast('Resume selected. Uploading...');
-
+ 
       // Simulate delay to ensure the file name is displayed first
       setTimeout(() => {
         // Start the upload process
@@ -162,7 +157,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         setProgress(0);
         setShowBorder(true)
         setbgcolor(false)
-
+ 
         // Simulate upload progress
         const interval = setInterval(() => {
           setProgress((prevProgress) => {
@@ -175,9 +170,9 @@ const Step3: React.FC = ({ route, navigation }: any) => {
           });
         }, 1000); // Update progress every 1 second
       }, 500); // 0.5 second delay before starting the progress bar
-    
-    
-
+ 
+ 
+ 
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log("User canceled the picker");
@@ -187,19 +182,19 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         showToast("Error selecting file. Please try again.");
       }
     }
-
-    
+ 
+ 
   };
-
+ 
   const handleCancelUpload = () => {
     setResumeFile(null);
     setResumeText('');
     setLoading(false);
     setProgress(0);
     showToast('Upload canceled.');
-    setShowBorder(false); 
+    setShowBorder(false);
   };
-
+ 
   const handleSaveResume = async () => {
     if (resumeFile) {
       setbgcolor(false)
@@ -209,7 +204,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         type: resumeFile.type,
         name: resumeFile.name,
       } as any);
-
+ 
       const response = await ProfileService.uploadResume(userToken, userId, formData);
       if (response.success) {
         setResumeFile(response.data.fileName);
@@ -224,129 +219,130 @@ const Step3: React.FC = ({ route, navigation }: any) => {
       setbgcolor(true)
     }
   };
-
-
-
-  
-
-
-
+ 
+ 
   return (
     <View style={styles.screen}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
+
         <Image style={styles.logo} source={require('../../assests/LandingPage/logo.png')}/>
 
       </View>
-
+ 
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.completeProfile}>Complete Your Profile</Text>
           <Text style={styles.subHeader}>Fill the form  fields to go  next step</Text>
         </View>
-
+ 
         {/* ProgressBar */}
         <ProgressBar initialStep={currentStep} />
         <View>
-        <View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={styles.modalTitle1}>Upload Resume</Text>
-      </View>
-      <View style={[styles.uploadContainer,{borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor? "#FFEAE7":"#E7F2FF", borderRadius: 20}]}>
-        <TouchableOpacity onPress={handleUploadResume}>
-          <Image
-            source={require('../../../src/assests/Images/file1.png')}
-            style={{ position: 'relative', left: 150, top: 40 }}
-          />
-          <View style={{ padding: 50,alignItems:'center',paddingLeft:80  }}>
-            <Text style={{fontWeight:'bold',fontSize:17,marginBottom:10,}} >Select File</Text>
-            <Text style={{color:'#6C6C6C'}}>File must be less than 1Mb</Text>
-            <Text style={{color:'#6C6C6C'}}>Only .doc or .PDFs are allowed.</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <View style={{marginBottom:50}}>
-        {bgcolor?(
-          <Text style={{color:'red',fontWeight:'bold',marginTop:10}}>File Not selected</Text>
-        ):(
-          <Text></Text>
-        )}
-      </View>
-
-      <View style={[styles.fileContainer, showBorder && styles.showborder]}>
-
-        {resumeFile && (
-
-          <View style={{flexDirection:'row',}}>
-              <FontAwesome name="file-text-o" size={20} color="#000" />
-              <Text style={[styles.fileNameText,{marginLeft:12}]}>{resumeFile.name}</Text>
-
-              <TouchableOpacity
-                style={styles.closeIcon}
-                onPress={handleCancelUpload}
-              >
-                <Image source={require('../../assests/Images/x1.png')} ></Image>
+          <View style={{ paddingHorizontal: 15 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+              <Text style={styles.modalTitle1}>Upload Resume</Text>
+            </View>
+            <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20, alignSelf: 'center' }]}>
+              <TouchableOpacity onPress={handleUploadResume}>
+                <View style={{ alignItems: 'center' }}>
+                  <Image
+                    source={require('../../../src/assests/Images/file1.png')}
+                    style={{ position: 'absolute', top: 30 }}
+                  />
+                </View>
+ 
+                <View style={{ padding: 10, paddingHorizontal: 60 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center' }} >Select File</Text>
+                  <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>File must be less than 1Mb</Text>
+                  <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>Only .doc or .PDFs are allowed.</Text>
+                </View>
               </TouchableOpacity>
+            </View>
+            <View style={{ marginBottom: 50 }}>
+              {bgcolor ? (
+                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 10, }}>File Not selected</Text>
+              ) : (
+                <Text></Text>
+              )}
+            </View>
+ 
+            <View style={[styles.fileContainer, showBorder && styles.showborder]}>
+ 
+              {resumeFile && (
+ 
+                <View style={{ flexDirection: 'row', }}>
+                  <FontAwesome name="file-text-o" size={20} color="#000" />
+ 
+                  <Text style={[styles.fileNameText, { marginLeft: 12 }]}>
+                    {resumeFile?.name ? (resumeFile.name.length > 20 ? `${resumeFile.name.substring(0, 17)}...` : resumeFile.name) : "No file selected"}
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.closeIcon}
+                    onPress={handleCancelUpload}
+                  >
+                    <View style={{ position:'absolute',right:5 }}>
+                      <Icon7 name="close" size={15} color={'0D0D0D'} />
+                    </View>
+ 
+                  </TouchableOpacity>
+                </View>
+              )}
+ 
+              {loading && (
+                <View style={styles.progressContainer}>
+                  <Progress.Bar
+                    progress={progress}
+                    width={280}
+                    color="#F97316"  // Progress bar color
+                    unfilledColor="#D7D6D6"  // Unfilled background color
+                    borderColor="#D7D6D6"  // Outline color
+                  />
+                </View>
+              )}
+ 
+            </View>
+ 
+ 
+            <View>
+              {showBorder ? (
+                <View style={[styles.orContainer, { marginTop: 15, marginVertical: 10 }]}>
+                  <View style={styles.line}></View>
+                  <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+                  <View style={[styles.line, { marginLeft: 3 }]}></View>
+                </View>) :
+                (
+                  <View style={[styles.orContainer, { marginTop: -30, marginVertical: 20, }]}>
+                    <View style={styles.line}></View>
+                    <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
+                    <View style={[styles.line, { marginLeft: 3 }]}></View>
+                  </View>
+ 
+                )}
+ 
+            </View>
+ 
+ 
+            <View>
+              <TouchableOpacity
+                style={styles.uploadButton}
+                onPress={() => navigation.navigate('ResumeBuilder')}
+              >
+                <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-
-          )}
-
-        {loading && (
-          <View style={styles.progressContainer}>
-            <Progress.Bar
-              progress={progress}
-              width={330}
-              color="#F97316"  // Progress bar color
-              unfilledColor="#D7D6D6"  // Unfilled background color
-              borderColor="#D7D6D6"  // Outline color
-            />
-          </View>
-        )}
-
-      </View>
-
-      <View>
-        {showBorder?(
-
-          <View style={[styles.orContainer,{marginTop:20,marginVertical:20}]}>
-            <View style={styles.line}></View>
-            <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
-            <View style={[styles.line, { marginLeft: 3 }]}></View>
-          </View>
-
-          
-        ):(
-
-          <View style={[styles.orContainer,{marginTop:-20,marginVertical:20,}]}>
-            <View style={styles.line}></View>
-            <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
-            <View style={[styles.line, { marginLeft: 3 }]}></View>
-          </View>
-          
-        )}
-      </View>
-      <View>
-        <TouchableOpacity
-          style={styles.uploadButton}
-          onPress={() => navigation.navigate('ResumeBuilder')}
-        >
-          <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-
+ 
         </View>
-
-
-
+ 
+ 
+ 
         {/* Resume Upload Section */}
-
+ 
       </View>
-
-
-
+ 
+ 
+ 
       {/* Button container for Save or Back */}
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
@@ -354,9 +350,9 @@ const Step3: React.FC = ({ route, navigation }: any) => {
           <TouchableOpacity style={styles.backButton} onPress={goBackToStep2}>
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
-
+ 
           {/* Save & Next Button */}
-          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={() => { handleSaveResume(); handleAPI(); handleSave(); }}>
+          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={() => { handleSaveResume(); handleAPI();}}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{ x: 0, y: 0 }}
@@ -366,17 +362,18 @@ const Step3: React.FC = ({ route, navigation }: any) => {
               <Text style={styles.nextButtonText}>Save</Text>
             </LinearGradient>
           </TouchableOpacity>
-
+ 
         </View>
       </View>
-    </View>
+    </View >
   );
 };
 const styles = StyleSheet.create({
   fileContainer: {
     padding: 10,
     marginBottom: 10,
-    marginTop:-30
+    marginTop: -50,
+    position: 'relative'
   },
   showborder: {
     borderWidth: 1,
@@ -393,22 +390,25 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
   },
-
+ 
   orContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-
+ 
   },
   fileNameText: {
     fontSize: 16,
     color: '#000',
   },
   closeIcon: {
-    position:'absolute',
-    left:330,
-    
+    position: 'absolute',
+    top: 1,
+    right: 1,
+    padding: 3,
+    paddingRight:30
+ 
   },
   line: {
     width: '20%',
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     width: 150, // Decreased width
     height: 45,
     marginBottom: 20,
-    
+ 
   },
   container: {
     flex: 1,
@@ -488,7 +488,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 5,
-    
+    width: '100%',
+ 
+ 
   },
   browseButton: {
     backgroundColor: "gray",
@@ -515,7 +517,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
-    
+ 
   },
   buildText: {
     color: "white",
@@ -568,5 +570,5 @@ const styles = StyleSheet.create({
     width: '95%'
   }
 });
-
+ 
 export default Step3;
