@@ -119,7 +119,7 @@ const Appnavigator = () => {
       setProfileChecked(true);
     };
 
-    if (!profileChecked && isAuthenticated) {
+    if (isAuthenticated) {
       checkProfileId();
     }
   }, [isAuthenticated, userToken, userId, profileChecked]);
@@ -142,7 +142,7 @@ const Appnavigator = () => {
   }
 
   if (!profileChecked) {
-    // Add a loading screen or spinner here if necessary
+    
     return null;
   }
 

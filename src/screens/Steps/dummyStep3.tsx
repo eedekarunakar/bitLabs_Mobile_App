@@ -14,7 +14,9 @@ import API_BASE_URL from '../../services/API_Service';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
- 
+
+import axios from "axios";
+
  
 interface Step3Props {
   step: number;
@@ -83,49 +85,42 @@ const Step3: React.FC = ({ route, navigation }: any) => {
  
   const handleAPI = async () => {
     try {
-      console.log('API Request Data:', {
-        firstName: route.params.firstName,
-        lastName: route.params.lastName,
-        alternatePhoneNumber: route.params.alternatePhoneNumber,
-        email: route.params.email,
-        skillsRequired: route.params.skillsRequired.map((skill: string) => ({ skillName: skill })),
+      const requestData = {
+        basicDetails: {
+          firstName: route.params.firstName,
+          lastName: route.params.lastName,
+          email: route.params.email,
+          alternatePhoneNumber: route.params.alternatePhoneNumber,
+        },
         experience: route.params.experience,
         qualification: route.params.qualification,
         specialization: route.params.specialization,
         preferredJobLocations: route.params.preferredJobLocations,
-      });
+        skillsRequired: route.params.skillsRequired.map((skill: any) => ({ skillName: skill.skillName })),
+      };
 
-      const response = await fetch(
+      console.log('API Request Data:', requestData);
+
+      const response = await axios.post(
         `${API_BASE_URL}/applicantprofile/createprofile/${userId}`,
+        requestData,
         {
-          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${userToken}`,
           },
-          body: JSON.stringify({
-            firstName: route.params.firstName,
-            lastName: route.params.lastName,
-            alternatePhoneNumber: route.params.alternatePhoneNumber,
-            email: route.params.email,
-            skillsRequired: route.params.skillsRequired.map((skill: string) => ({ skillName: skill })),
-            experience: route.params.experience,
-            qualification: route.params.qualification,
-            specialization: route.params.specialization,
-            preferredJobLocations: route.params.selectedLocations,
 
-          }),
-        },
+        }
       );
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Profile created successfully:', data);
+
+      if (response.status === 200 || response.status === 201) {
+        console.log('Profile created successfully:', response.data);
+handleSave();
       } else {
         console.error('Failed to create profile', response.status);
       }
-    }
-    catch (error) {
-      console.log(error)
+    } catch (error) {
+      console.error('Error creating profile:', error);
     }
   }
  
@@ -360,7 +355,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
           </TouchableOpacity>
  
           {/* Save & Next Button */}
-          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={() => { handleSaveResume(); handleAPI(); handleSave(); }}>
+          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={() => { handleSaveResume(); handleAPI();}}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{ x: 0, y: 0 }}
