@@ -163,7 +163,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="TestInstruction"
             component={TestInstruction}
-            options={{ title: '' }}
+            options={{ headerShown: false, }}
           />
 
           {/* Test Instruction Screen */}

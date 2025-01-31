@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert, ScrollView } from 'react-native';
+import React, { useState, useEffect ,useRef } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler,  AppState,Alert, ScrollView } from 'react-native';
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -43,6 +43,31 @@ const TestScreen = ({ route, navigation }: any) => {
 
   let timerInterval: NodeJS.Timeout;
 
+  const appState = useRef(AppState.currentState); // Track app state
+  const [appStateVisible, setAppStateVisible] = useState(appState.current); // Current app state
+  const backgroundTime = useRef<number | null>(null); // Track background time
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App came to the foreground
+        if (backgroundTime.current) {
+          const elapsedTime = Math.floor((Date.now() - backgroundTime.current) / 1000); // Calculate elapsed time in seconds
+          setTimeLeft((prevTime) => prevTime - elapsedTime); // Subtract elapsed time from the timer
+        }
+      } else if (nextAppState.match(/inactive|background/)) {
+        // App went to the background
+        backgroundTime.current = Date.now(); // Store the time when the app went to the background
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
@@ -290,7 +315,12 @@ const TestScreen = ({ route, navigation }: any) => {
   };
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
+      // Restore the previously selected answer when going back
+      const previousAnswer = answer[currentQuestionIndex - 1] || null;
       setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setSelectedAnswer(previousAnswer); // Set the previously selected answer
+      setErrorMessage(''); // Clear error message when going back
+ 
     }
   };
 
@@ -300,14 +330,16 @@ const TestScreen = ({ route, navigation }: any) => {
       setErrorMessage('Please provide your answer before moving to the next question.');
       return;
     }
-
+ 
     // Save the selected answer before proceeding
     setAnswers((prevAnswers) => ({ ...prevAnswers, [currentQuestionIndex]: selectedAnswer }));
-
+ 
     if (currentQuestionIndex < testData.questions.length - 1) {
       // Move to the next question
+      const nextAnswer = answer[currentQuestionIndex + 1] || null;
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null); // Reset the selected answer for the next question
+      setSelectedAnswer(nextAnswer); // Reset the selected answer for the next question
+      setErrorMessage(''); // Clear error message when moving to the next question
     } else {
       // Submit the test if it is the last question
       clearInterval(timerInterval);
@@ -346,7 +378,7 @@ const TestScreen = ({ route, navigation }: any) => {
           Question {currentQuestionIndex + 1} / {testData?.questions?.length || 0}
         </Text>
         <View style={styles.timerContainer}>
-          <Icon name="clockcircleo" size={20} color="#F46F16" style={{ marginLeft: 15 }} />
+          <Icon name="clockcircleo" size={18} color="#F46F16" style={{ marginLeft: 15 }} />
           <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
         </View>
       </View>
@@ -388,13 +420,23 @@ const TestScreen = ({ route, navigation }: any) => {
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={styles.backButton}
+          style={[
+            styles.backButton,
+            currentQuestionIndex === 0 && { backgroundColor: '#D3D3D3', borderColor: '#D3D3D3' }
+          ]}
           onPress={goToPreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
-          <Text style={styles.navigationButtonText1}>Back</Text>
+          <Text
+            style={[
+              styles.navigationButtonText1,
+              currentQuestionIndex === 0 && { color: '#fff' }
+            ]}
+          >
+            Back
+          </Text>
         </TouchableOpacity>
-
+ 
         <TouchableOpacity onPress={goToNextQuestion}>
           <LinearGradient
             colors={['#F97316', '#FAA729']}
@@ -410,6 +452,7 @@ const TestScreen = ({ route, navigation }: any) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
+
 
       {/* Modals */}
       {showEarlySubmissionModal && (
@@ -427,9 +470,9 @@ const TestScreen = ({ route, navigation }: any) => {
                 <Icon name="close" size={20} color={'0D0D0D'} />
               </TouchableOpacity>
               <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
-              <Text style={styles.modalText}>Are you sure you want to quit?</Text>
+              <Text style={styles.modalText}>Do you really want to exit?</Text>
               <Text style={styles.modalText1}>
-                You will loose all the test results till now & You{"\n"}cannot take test until 1 week
+                Exiciting will erase your progress and prevent retaking{"\n"}the test for 7 days.Proceed?
               </Text>
               <View style={styles.modalOptions}>
                 <TouchableOpacity
@@ -484,15 +527,18 @@ const styles = StyleSheet.create({
     color: '#F68318',
   },
   timerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 0.96,
-    borderColor: '#F46F16',
-    borderRadius: 4,
-    padding: 5
+    width: 115.5, // Set the width
+    height: 33.25, // Set the height
+    flexShrink: 0, // Prevent shrinking
+    flexDirection: 'row', // Ensure content is aligned horizontally
+    alignItems: 'center', // Vertically align items
+    justifyContent: 'flex-start', // Align items to the start (left)
+    borderColor:'#F46F16',
+    borderWidth:1,
+    borderRadius: 5,
   },
   timerText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#F46F16',
     marginLeft: 8,
     fontFamily: 'PlusJakartaSans-Bold',
