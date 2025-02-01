@@ -383,10 +383,10 @@ const Badge = ({ route, navigation }: any) => {
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 1 ? '#219734' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 1 ? '#219734' : '#BFBFBF' },
                     ]}
                   >
-                    {testName === 'General Aptitude Test' && testStatus === 'P' ? (
+                    {testName === 'General Aptitude Test' && testStatus === 'P'|| selectedStep > 1 ? (
                       <Icon1 name="check" size={14} style={{ color: 'white' }} />
                     ) : (
                       <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
@@ -395,17 +395,17 @@ const Badge = ({ route, navigation }: any) => {
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF'},
                     ]}
                   />
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF' },
                     ]}
                   >
-                    {testName === 'Technical Test' && testStatus === 'P' ? (
-                      <Icon name="check" size={14} style={{ color: 'white' }} />
+                    {selectedStep >= 2 ? (
+                      <Text style={[styles.stepText,{color:'#fff'}]}>2</Text>
                     ) : (
                       <Text style={styles.stepText}>2</Text>
                     )}
@@ -413,13 +413,13 @@ const Badge = ({ route, navigation }: any) => {
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF' },
                     ]}
                   />
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#D9D9D9' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF' },
                     ]}
                   >
                     <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : 'black' }} />
@@ -721,9 +721,10 @@ const styles = StyleSheet.create({
   },
   stepLine: {
     flex: 1,
-    width: 115,
+    width: 105,
     height: 1,
     backgroundColor: '#BFBFBF',
+
   },
   gradientBackground: {
     marginTop: 20,
