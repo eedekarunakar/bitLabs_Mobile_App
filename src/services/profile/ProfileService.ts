@@ -58,11 +58,14 @@ export const ProfileService = {
           },
         }
       );
-
-      if (response.data?.formErrors) {
+      if(response.status!==200){
+        return false;
+      }
+      else if (response.data?.formErrors) {
         // If the API returns form errors, return them so that they can be displayed in the UI
         return { success: false, formErrors: response.data.formErrors };
       }
+
 
       // If update is successful, return the updated data
       return { success: true, profileData: response.data };
