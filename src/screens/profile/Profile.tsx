@@ -52,6 +52,7 @@ function ProfileComponent() {
     const [showBorder, setShowBorder] = useState(false);
     const [bgcolor, setbgcolor] = useState(false)
     //  const [saveClicked, setSaveClicked] = useState(false);
+    const [isUploadComplete, setIsUploadComplete] = useState(false);
 
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -295,6 +296,7 @@ function ProfileComponent() {
     };
 
     const handleUploadResume = async () => {
+        setIsUploadComplete(true)
         try {
             const result: DocumentPickerResponse[] = await DocumentPicker.pick({
                 type: [DocumentPicker.types.pdf], // Ensure only PDF files are shown
@@ -332,6 +334,7 @@ function ProfileComponent() {
                         if (newProgress >= 1) {
                             clearInterval(interval);
                             setLoading(false);
+                            setIsUploadComplete(false)
                         }
                         return newProgress;
                     });
@@ -390,7 +393,7 @@ function ProfileComponent() {
             reloadProfile();
             toastmsg('success', 'Personal details updated successfully')
 
-        }else{
+        } else {
             toastmsg('error', 'Error updating, please try again later')
         }
     };
@@ -615,9 +618,9 @@ function ProfileComponent() {
                                             end={{ x: 1, y: 0 }} // Ending point of the gradient
                                         >
                                             <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Medium', fontSize: 14 ,fontWeight:'bold'}}>Save Changes</Text>
+                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Medium', fontSize: 14, fontWeight: 'bold' }}>Save Changes</Text>
                                             </TouchableOpacity>
-                                            </LinearGradient>
+                                        </LinearGradient>
                                     </View>
                                 </View>
                             </View>
@@ -661,16 +664,16 @@ function ProfileComponent() {
                                         />
                                     </View>
 
-                                    <View style={{ padding: 10, paddingHorizontal: 50 }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center' }} >Select File</Text>
-                                        <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>File must be less than 1Mb</Text>
-                                        <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>Only .doc or .PDFs are allowed.</Text>
+                                    <View style={{ padding: 10, paddingHorizontal: 60    }}>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }} >Select File</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>File must be less than 1Mb</Text>
+                                        <Text style={{ color: '#6C6C6C',textAlign:'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>Only .doc or .PDFs are allowed.</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginBottom: 50 }}>
                                 {bgcolor ? (
-                                    <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 10 }}>File Not selected</Text>
+                                    <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
                                 ) : (
                                     <Text></Text>
                                 )}
@@ -740,17 +743,30 @@ function ProfileComponent() {
 
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]} onPress={handleSaveResume}>
-                                <LinearGradient
-                                    colors={['#F97316', '#FAA729']} // Gradient colors
-                                    style={styles.button} // Apply styles to the gradient button
-                                    start={{ x: 0, y: 0 }} // Starting point of the gradient
-                                    end={{ x: 1, y: 0 }} // Ending point of the gradient
-                                >
-                                    <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+                            <TouchableOpacity style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]} onPress={handleSaveResume} disabled={isUploadComplete}>
+                                {
+                                    isUploadComplete? (
+                                        <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
+                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+                                        </View>
 
-                                </LinearGradient>
+
+                                    ) : (
+                                        <LinearGradient
+                                            colors={['#F97316', '#FAA729']} // Gradient colors
+                                            style={styles.button} // Apply styles to the gradient button
+                                            start={{ x: 0, y: 0 }} // Starting point of the gradient
+                                            end={{ x: 1, y: 0 }} // Ending point of the gradient
+                                        >
+                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+
+                                        </LinearGradient>
+
+                                    )
+                                }
+
                             </TouchableOpacity>
+
                         </View>
                     </View>
                 </Modal>
@@ -867,7 +883,7 @@ const styles = StyleSheet.create({
 
     },
     skillContainer: {
-        alignItems:'center',
+        alignItems: 'center',
         marginTop: 5,
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -1198,4 +1214,5 @@ const styles = StyleSheet.create({
 
 });
 export default ProfileComponent;
+
 

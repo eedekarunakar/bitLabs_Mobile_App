@@ -375,7 +375,7 @@ const Badge = ({ route, navigation }: any) => {
               <View style={styles.badge1}>
                 <Text style={styles.content}>Pre-Screened Badge</Text>
                 <Text style={styles.matter1}>
-                  Achieve your dream job faster by demonstrating your{"\n"}aptitude and technical skills
+                  Achieve your dream job faster by demonstrating your aptitude and technical skills
                 </Text>
 
                 {/* Progress Bar */}
@@ -449,7 +449,7 @@ const Badge = ({ route, navigation }: any) => {
                     <View style={{ flex: 1 }}>
                       <Text style={styles.content}>{testName}</Text>
                       <Text style={styles.matter1}>
-                        A Comprehensive Assessment to{"\n"}Measure Your Analytical and{"\n"}Reasoning Skills
+                        A Comprehensive Assessment to Measure Your Analytical and Reasoning Skills
                       </Text>
                     </View>
                     <View style={{marginRight:10}}>
