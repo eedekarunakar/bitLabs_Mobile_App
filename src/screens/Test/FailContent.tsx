@@ -1,38 +1,40 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
-import BottomTab from '../../routes/BottomNavigation';
-import Badge from '../HomePage/Badge';
-import { RootStackParamList } from '../../../New';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-
-
-const { width,height } = Dimensions.get('window');
-const Fail = ({ navigation }: any) => {
+ 
+const FailureScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
-      <View style={styles.Items}>
-        <Image source={require('../../assests/Images/Test/failed.png')} style={styles.Image} />
-        <View style={styles.messageContainer}>
-          <Text style={styles.message}> Unfortunately, you scored{"\n"}less than 70%, and have not{"\n"}        passed the exam.</Text>
-        </View>
-        <View style={styles.retakeContainer}>
-          <Text style={styles.text}>You Can Retake The Test{"\n"}        After 7 Days</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() =>
+      {/* Card Container */}
+      <View style={styles.card}>
+        {/* Illustration Image */}
+        <Image
+          source={require('../../assests/Images/Test/failed.png')} // Replace with your image path
+          style={styles.image}
+          resizeMode="contain"
+        />
+ 
+        {/* Failure Message */}
+        <Text style={styles.message}>
+          Unfortunately, you scored less than 70%, and have not passed the exam.
+        </Text>
+ 
+        {/* Retake Info */}
+        <Text style={styles.retakeText}>
+          You Can Retake The Test{'\n'}After 7 Days
+        </Text>
+ 
+        {/* Exit Button with Gradient */}
+        <TouchableOpacity onPress={() =>
             navigation.navigate('BottomTab', { screen: 'Badge', isTestComplete: false })
           }
-        >
-          <LinearGradient
-            colors={['#F97316', '#FAA729']} // Gradient colors
-           // Gradient colors
-            start={{ x: 0, y: 0 }} // Gradient starting point
-            end={{ x: 1, y: 0 }} // Gradient ending point
-            style={[styles.button, { borderRadius: 10 }]} // Ensure it matches your button styling
+          style={styles.buttonContainer}
           >
+          <LinearGradient
+            colors={['#F97316', '#FAA729']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.gradientButton}>
             <Text style={styles.buttonText}>Exit</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -40,68 +42,66 @@ const Fail = ({ navigation }: any) => {
     </View>
   );
 };
-export default Fail;
-
+ 
+export default FailureScreen;
+ 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.92,
-    height: height*0.85,
-    marginTop: 20,
-    marginLeft: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+ 
+    width: '100%', // Increased the width of the container
   },
-  Items: {
-    flexDirection: 'column',
-    justifyContent: 'space-around'
+  card: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '95%',
+    height: '90%',
   },
-  Image: {
+  image: {
     width: 228,
     height: 203,
-    marginTop: 75,
-    marginLeft: 87
-  },
-  messageContainer: {
-    width: 316,
-    height: 154,
-    marginLeft: 49
+    marginBottom: 15,
   },
   message: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontWeight: 600,
+    marginBottom: 10,
+    color: '#000',
+    textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-Bold', // Ensure the font is linked properly
     fontSize: 22,
+    fontStyle: 'normal',
     lineHeight: 34,
-    alignContent: 'center',
-    color: '#000000',
-    marginTop: 20
   },
-  retakeContainer: {
-    width: 261,
-    height: 88,
-    marginLeft: 77
-  },
-  text: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontWeight: 600,
+  retakeText: {
+    color: '#F97316',
     fontSize: 20,
-    lineHeight: 34,
-    alignContent: 'center',
-    color: '#F97316'
+    fontWeight: '600',
+    fontFamily: 'PlusJakartaSans-Medium',
+    textAlign: 'center',
+    fontStyle: 'normal',
+    marginBottom: 20,
+    marginTop: 15,
+    textTransform: 'capitalize',
   },
-  button: {
-    width: '90%',
-    height: 42,
-    marginLeft: 25,
+  buttonContainer: {
     borderRadius: 7.68,
-    backgroundColor: 'orange',
-    alignItems: 'center'
+    overflow: 'hidden',
+    width: '100%',
+    marginTop: 10,
+  },
+  gradientButton: {
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 7.68,
   },
   buttonText: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    lineHeight: 14.4,
-    alignContent: 'center',
-    color: '#FFFFFF',
-    marginTop: 15
-  }
-})
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

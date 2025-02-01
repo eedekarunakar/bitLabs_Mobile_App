@@ -152,7 +152,7 @@
         "question": "What will be the output of the following code?\n\n#include &lt;iostream&gt;\n\nint main() {\n    std::string s = \"C++\";\n    std::string t = s + \" Programming\";\n    std::cout << t << std::endl;\n    return 0;\n}",
         "options": [
           "C++ Programming",
-          "C++Programming",
+          "Java",
           "C++",
           "Error"
         ],
