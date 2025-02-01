@@ -9,9 +9,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/AntDesign';
 import API_BASE_URL from '../../services/API_Service';
 import Toast from 'react-native-toast-message';
- 
+
 const secretKey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
- 
+
 const encryptPassword = (password: string, secretkey: string) => {
   const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV (16 bytes for AES)
   const encryptedPassword = CryptoJS.AES.encrypt(
@@ -25,7 +25,7 @@ const encryptPassword = (password: string, secretkey: string) => {
   ).toString();
   return { encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64) };
 };
- 
+
 const ChangePasswordScreen = () => {
   const [oldPassword, setOldPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
@@ -40,18 +40,18 @@ const ChangePasswordScreen = () => {
   const [visibleField, setVisibleField] = useState<string | null>(null);
   const { userToken, userId } = useAuth();
   const navigation = useNavigation();
- 
+
   const handleBackButton = (): void => {
     navigation.goBack();
   };
- 
+
   const handleKeyboardDismiss = () => {
     setShowOldPassword(false);
     setShowNewPassword(false);
     setShowReEnterPassword(false); // Hide all password fields when dismissing the keyboard
     Keyboard.dismiss();
   };
- 
+
   const handleFocus = (field: string) => {
     if (field === 'old') {
       setShowNewPassword(false);
@@ -64,10 +64,10 @@ const ChangePasswordScreen = () => {
       setShowNewPassword(false);
     }
   };
- 
+
   const validatePassword = (password: string, type: 'old' | 'new' | 'reEnter') => {
     const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
- 
+
     if (!password) {
       if (type === 'old') setOldMessage('Old password is required.');
       if (type === 'new') setNewMessage('New password is required.');
@@ -82,20 +82,20 @@ const ChangePasswordScreen = () => {
         if (type === 'new') setNewMessage(null);
       }
     }
- 
+
     if (type === 'reEnter' && password !== newPassword) {
       setReEnterMessage('Passwords do not match.');
     } else {
       if (type === 'reEnter') setReEnterMessage(null);
     }
   };
- 
+
   const handleChangePassword = async (): Promise<void> => {
     setOldMessage(null);
     setNewMessage(null);
     setReEnterMessage(null);
     setMessage(null);
- 
+
     // Ensure all fields are filled
     if (!oldPassword || !newPassword || !reEnterPassword) {
       if (!oldPassword) setOldMessage('Old Password is required');
@@ -103,28 +103,28 @@ const ChangePasswordScreen = () => {
       if (!reEnterPassword) setReEnterMessage('Confirm Password is required');
       return;
     }
- 
+
     // Check if old and new passwords are the same
     if (oldPassword === newPassword) {
       setMessage('Old Password and New Password cannot be the same');
       return;
     }
- 
+
     const oldPasswordEncrypt = encryptPassword(oldPassword, secretKey);
     const newPasswordEncrypt = encryptPassword(newPassword, secretKey);
- 
+
     const formData = {
       oldPassword: oldPasswordEncrypt.encryptedPassword,
       newPassword: newPasswordEncrypt.encryptedPassword,
       ivOld: oldPasswordEncrypt.iv,
       ivNew: newPasswordEncrypt.iv,
     };
- 
+
     try {
       const result = await Keychain.getGenericPassword();
- 
+
       const jwtToken = result ? result.password : null; // Retrieve JWT token from keychain
- 
+
       if (!jwtToken) {
         const response = await axios.post(
           `${API_BASE_URL}/applicant/authenticateUsers/${userId}`,
@@ -135,7 +135,7 @@ const ChangePasswordScreen = () => {
             },
           }
         );
- 
+
         if (
           response.status === 200 &&
           response.data === 'Password updated and stored'
@@ -198,7 +198,7 @@ const ChangePasswordScreen = () => {
       }
     }
   };
- 
+
   const renderPasswordField = (
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
@@ -233,7 +233,7 @@ const ChangePasswordScreen = () => {
       </TouchableOpacity>
     </View>
   );
- 
+
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
       <View style={styles.container}>
@@ -244,7 +244,7 @@ const ChangePasswordScreen = () => {
           />
         </View>
         <View style={styles.separator} />
- 
+
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={handleBackButton} style={styles.backButton}>
             <Icon name="left" size={24} color="#495057" />
@@ -252,7 +252,7 @@ const ChangePasswordScreen = () => {
           <Text style={styles.title}>Change Password</Text>
         </View>
         <View style={styles.separator} />
- 
+
         {renderPasswordField(
           oldPassword,
           setOldPassword,
@@ -261,14 +261,14 @@ const ChangePasswordScreen = () => {
           'Old Password',
 
           showOldPassword,
-        setShowOldPassword,
+          setShowOldPassword,
         )}
         {oldMessage ? (
           <Text style={[styles.message, oldMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {oldMessage}
           </Text>
         ) : null}
-          {renderPasswordField(
+        {renderPasswordField(
           newPassword,
           setNewPassword,
           'new',
@@ -276,14 +276,14 @@ const ChangePasswordScreen = () => {
           'New Password',
 
           showNewPassword,
-        setShowNewPassword,
+          setShowNewPassword,
         )}
         {newMessage ? (
           <Text style={[styles.message, newMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {newMessage}
           </Text>
         ) : null}
- 
+
         {renderPasswordField(
           reEnterPassword,
           setReEnterPassword,
@@ -292,32 +292,38 @@ const ChangePasswordScreen = () => {
           'Confirm Password',
 
           showReEnterPassword,
-        setShowReEnterPassword
+          setShowReEnterPassword
         )}
         {reEnterMessage ? (
           <Text style={[styles.message, reEnterMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {reEnterMessage}
           </Text>
         ) : null}
- 
+
         {message ? (
           <Text style={[styles.message, message === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {message}
           </Text>
         ) : null}
- 
-        <View style={styles.footerContainer}>
-          <TouchableOpacity style={styles.footerbackButton} onPress={handleBackButton}>
-            <Text style={styles.footerbackButtonText}>Cancel</Text>
+
+        <View style={[styles.buttonContainer, { alignSelf: 'center' }]}>
+          <TouchableOpacity style={styles.backButtonBottom} onPress={handleBackButton}>
+            <Text style={{
+              color: '#F46F16',
+              fontSize: 15,
+              fontFamily: 'PlusJakartaSans-Bold',
+            }}>Back
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton} onPress={handleChangePassword}>
+          <TouchableOpacity
+            style={styles.backButtonBottom}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={[styles.button, styles.applyButtonGradient]}
+              style={[styles.applyButtonGradient]}
             >
-              <Text style={styles.footerButtonText}>Save</Text>
+              <Text style={styles.buttonText}>Save</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -325,17 +331,17 @@ const ChangePasswordScreen = () => {
     </TouchableWithoutFeedback>
   );
 };
- 
- 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-   
-    padding:2,
+
+    padding: 2,
     backgroundColor: '#FFFFFF',
   },
   header: {
-    marginTop:20,
+    marginTop: 20,
     fontSize: 22,
     marginBottom: 16,
     textAlign: 'left', // Align text to the left
@@ -359,9 +365,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     height: 52,
     paddingHorizontal: 10,
-    marginBottom:15,
-    marginTop:15,
-    margin:15,
+    marginBottom: 15,
+    marginTop: 15,
+    margin: 15,
   },
   input: {
     flex: 1,
@@ -388,57 +394,12 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: 'red',
     fontFamily: 'PlusJakartaSans-Medium',
-    paddingLeft:20,
-    paddingRight:20,
-    textAlign:'justify',
-    marginTop:-6,
+    paddingLeft: 20,
+    paddingRight: 20,
+    textAlign: 'justify',
+    marginTop: -6,
   },
- 
-  footerButton: {
-    width: '33%',
-    height: 47,
-    bottom: 20,
-    borderRadius: 8,
-    marginRight:62,
- 
-   
-   
-  },
-  footerbackButton: {
-    width: '43%',
-    height: 47,
-    bottom: 20,
-    left: 28,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    borderWidth:0.96,
-    borderColor:'#F46F16',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  footerbackButtonText: {
-    color: '#F46F16',
-    fontSize: 15,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  footerButtonBack: {
-    backgroundColor: '#007BFF',
-  },
-   
-  footerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
- 
-    position: 'absolute',
-    width: '100%',
-    bottom: 20,
-    margin:1,
-  },
+
   navbar: {
     height: 25,
     justifyContent: 'center',
@@ -451,7 +412,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 40,
     resizeMode: 'contain',
-   
+
   },
   separator: {
     height: 1,
@@ -460,9 +421,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   applyButtonGradient: {
-    borderRadius: 10,
-    flex:1,
-    width:'125%'
+    height: 40,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   button: {
     flex: 1,
@@ -476,7 +439,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     height: 50,
-    backgroundColor:'#FFF'
+    backgroundColor: '#FFF'
   },
   headerImage: {
     width: 20, // Adjust size as needed
@@ -487,7 +450,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#000',
   },
- 
+
   backButton: {
     position: 'absolute',
     left: 15,
@@ -496,10 +459,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#495057',
-    lineHeight:25,
-    marginLeft:50
+    lineHeight: 25,
+    marginLeft: 50
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly', // Distribute space evenly
+    alignItems: 'center',
+    position: 'absolute',
+    width: '100%',
+    bottom: 20,
+    paddingHorizontal: 16,
+   
+
+  },  
+  backButtonBottom: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#F46F16',
+    height: 40,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 8,
+    width:'43%' // Add consistent spacing
+  },
+  buttonText: {
+    color: '#fff',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });
- 
+
 export default ChangePasswordScreen;
- 

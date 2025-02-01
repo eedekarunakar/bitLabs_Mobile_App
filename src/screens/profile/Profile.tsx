@@ -51,7 +51,7 @@ function ProfileComponent() {
  const [progress, setProgress] = useState(0);
  const [showBorder, setShowBorder] = useState(false);
  const [bgcolor, setbgcolor] = useState(false)
- const [saveClicked, setSaveClicked] = useState(false);
+ const [isUploadComplete, setIsUploadComplete] = useState(false);
 
 
  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -295,6 +295,7 @@ function ProfileComponent() {
  };
 
  const handleUploadResume = async () => {
+ setIsUploadComplete(true)
  try {
  const result: DocumentPickerResponse[] = await DocumentPicker.pick({
  type: [DocumentPicker.types.pdf], // Ensure only PDF files are shown
@@ -317,7 +318,7 @@ function ProfileComponent() {
  // Set selected file but do not upload yet
  setResumeFile(selectedFile);
  setResumeText(selectedFile.name || '');
- showToast('Resume selected. Uploading...');
+ //showToast('Resume selected. Uploading...');
  setTimeout(() => {
  // Start the upload process
  setLoading(true);
@@ -327,11 +328,13 @@ function ProfileComponent() {
 
  // Simulate upload progress
  const interval = setInterval(() => {
+ 
  setProgress((prevProgress) => {
  const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
  if (newProgress >= 1) {
  clearInterval(interval);
  setLoading(false);
+ setIsUploadComplete(false)
  }
  return newProgress;
  });
@@ -356,7 +359,7 @@ function ProfileComponent() {
  const handleSaveResume = async () => {
  if (resumeFile) {
  
- showToast('Resume uploaded')
+ //showToast('Resume uploaded')
  setbgcolor(false)
  const formData = new FormData();
  formData.append('resume', {
@@ -723,16 +726,28 @@ function ProfileComponent() {
 
  </TouchableOpacity>
  </View>
- <TouchableOpacity style={ [styles.buttonContent,{alignItems: 'flex-end',marginBottom:10} ]} onPress={handleSaveResume}>
- <LinearGradient
- colors={['#F97316', '#FAA729']} // Gradient colors
- style={styles.button} // Apply styles to the gradient button
- start={{ x: 0, y: 0 }} // Starting point of the gradient
- end={{ x: 1, y: 0 }} // Ending point of the gradient
- >
- <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
- 
- </LinearGradient>
+ <TouchableOpacity style={ [styles.buttonContent,{alignItems: 'flex-end',marginBottom:10} ]} onPress={handleSaveResume} disabled={isUploadComplete}>
+ {
+    isUploadComplete?(
+        <View style={[ styles.button,{backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5}]}>
+            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+        </View>
+        
+
+    ):(
+        <LinearGradient
+        colors={['#F97316', '#FAA729']} // Gradient colors
+        style={styles.button} // Apply styles to the gradient button
+        start={{ x: 0, y: 0 }} // Starting point of the gradient
+        end={{ x: 1, y: 0 }} // Ending point of the gradient
+        >
+        <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+        
+        </LinearGradient>
+
+    )
+ }
+
  </TouchableOpacity>
  </View>
  </View>

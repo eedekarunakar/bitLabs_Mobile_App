@@ -14,7 +14,10 @@ import API_BASE_URL from '../../services/API_Service';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
- 
+import { ScrollView } from "react-native-gesture-handler";
+import { Dimensions } from "react-native";
+
+const { width } = Dimensions.get('window'); 
  
 interface Step3Props {
   step: number;
@@ -33,6 +36,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const [resumeText, setResumeText] = useState<string>('');
   const [isResumeModalVisible, setResumeModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isUploadComplete, setIsUploadComplete] = useState(false);
 
   console.log('RR', route.params);
 
@@ -46,7 +50,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const [bgcolor, setbgcolor] = useState(false)
   const [saveClicked, setSaveClicked] = useState(false);
  
- 
+  const screenWidth = Dimensions.get("window").width;
   const { userId, userToken } = useAuth();
   const saveProfile = () => {
     console.log("Profile saved!");
@@ -130,6 +134,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   }
  
   const handleUploadResume = async () => {
+    setIsUploadComplete(true)
     try {
       const result: DocumentPickerResponse[] = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf], // Allow only PDF files
@@ -154,12 +159,13 @@ const Step3: React.FC = ({ route, navigation }: any) => {
  
       setResumeFile(selectedFile);
       setResumeText(selectedFile.name || '');
- 
+      
       // Show a toast message
-      showToast('Resume selected. Uploading...');
+      //showToast('Resume selected. Uploading...');
  
       // Simulate delay to ensure the file name is displayed first
       setTimeout(() => {
+        
         // Start the upload process
         setLoading(true);
         setProgress(0);
@@ -168,18 +174,23 @@ const Step3: React.FC = ({ route, navigation }: any) => {
  
         // Simulate upload progress
         const interval = setInterval(() => {
+          
           setProgress((prevProgress) => {
-            const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
-            if (newProgress >= 1) {
+            const newProgress = prevProgress + 0.5; 
+            if (newProgress >= 2) {
               clearInterval(interval);
               setLoading(false);
+              setIsUploadComplete(false)
+              
+              
             }
             return newProgress;
+            
           });
         }, 1000); // Update progress every 1 second
       }, 500); // 0.5 second delay before starting the progress bar
  
- 
+  
  
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -230,14 +241,18 @@ const Step3: React.FC = ({ route, navigation }: any) => {
  
  
   return (
+ 
+    
     <View style={styles.screen}>
+      <ScrollView showsVerticalScrollIndicator={false}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
 
         <Image style={styles.logo} source={require('../../assests/LandingPage/logo.png')}/>
 
       </View>
- 
+      
+
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.completeProfile}>Complete Your Profile</Text>
@@ -251,7 +266,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
               <Text style={styles.modalTitle1}>Upload Resume</Text>
             </View>
-            <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20, alignSelf: 'center' }]}>
+            <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5,alignSelf: 'stretch', borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20, }]}>
               <TouchableOpacity onPress={handleUploadResume}>
                 <View style={{ alignItems: 'center' }}>
                   <Image
@@ -269,7 +284,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
             </View>
             <View style={{ marginBottom: 50 }}>
               {bgcolor ? (
-                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 10, }}>File Not selected</Text>
+                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 5, }}>File Not selected</Text>
               ) : (
                 <Text></Text>
               )}
@@ -301,7 +316,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
                 <View style={styles.progressContainer}>
                   <Progress.Bar
                     progress={progress}
-                    width={280}
+                    width={width*0.55}
                     color="#F97316"  // Progress bar color
                     unfilledColor="#D7D6D6"  // Unfilled background color
                     borderColor="#D7D6D6"  // Outline color
@@ -320,7 +335,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
                   <View style={[styles.line, { marginLeft: 3 }]}></View>
                 </View>) :
                 (
-                  <View style={[styles.orContainer, { marginTop: -30, marginVertical: 20, }]}>
+                  <View style={[styles.orContainer, { marginTop: -26, marginVertical: 20, }]}>
                     <View style={styles.line}></View>
                     <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}>  Or  </Text>
                     <View style={[styles.line, { marginLeft: 3 }]}></View>
@@ -346,9 +361,11 @@ const Step3: React.FC = ({ route, navigation }: any) => {
  
  
         {/* Resume Upload Section */}
- 
-      </View>
- 
+        </View>
+      </ScrollView>
+  
+      
+    
  
  
       {/* Button container for Save or Back */}
@@ -360,8 +377,15 @@ const Step3: React.FC = ({ route, navigation }: any) => {
           </TouchableOpacity>
  
           {/* Save & Next Button */}
-          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={() => { handleSaveResume(); handleAPI(); handleSave(); }}>
-            <LinearGradient
+          <TouchableOpacity style={[ styles.backButton,  { borderWidth: 0}]} disabled={isUploadComplete}   onPress={() => { handleSaveResume(); handleAPI(); handleSave(); }}>
+            {
+              isUploadComplete?(
+                <View style={[styles.saveButton, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
+                <Text style={[styles.nextButtonText, { color: "#A0A0A0" }]}>Save</Text>
+              </View>
+              ):(
+
+              <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -369,19 +393,25 @@ const Step3: React.FC = ({ route, navigation }: any) => {
             >
               <Text style={styles.nextButtonText}>Save</Text>
             </LinearGradient>
+              )
+            }
+
           </TouchableOpacity>
  
         </View>
       </View>
     </View >
+    
   );
 };
+
 const styles = StyleSheet.create({
   fileContainer: {
     padding: 10,
     marginBottom: 10,
     marginTop: -50,
-    position: 'relative'
+    position: 'relative',
+    width:'100%'
   },
   showborder: {
     borderWidth: 1,
@@ -397,6 +427,8 @@ const styles = StyleSheet.create({
   progressContainer: {
     marginTop: 10,
     alignItems: 'center',
+    position:'relative',
+    bottom:5
   },
  
   orContainer: {
@@ -427,7 +459,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   uploadButton: {
-    width: '100%',
+    maxWidth: width*0.7,
     backgroundColor: '#F8F8F8',
     alignItems: 'center',
     justifyContent: 'center',
@@ -442,6 +474,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     padding: 20,
     paddingBottom: 75,
+    width: "100%",
+    maxWidth: Dimensions.get("window").width, // Prevents overflow
+    minWidth: Dimensions.get("window").width,
+   
+   
   },
   textInput: {
     height: 40,
@@ -454,6 +491,8 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     marginBottom: 20,
+    marginTop:9,
+    alignSelf:'center'
   },
   logo: {
     width: 150, // Decreased width
@@ -497,8 +536,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 5,
     width: '100%',
- 
- 
+    
+
   },
   browseButton: {
     backgroundColor: "gray",

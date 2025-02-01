@@ -121,10 +121,14 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                 ₹ {job.minSalary} - {job.maxSalary} LPA
               </Text>
               <Text style={styles.tag}>{job.employeeType}</Text>
+
+            </View>
+            <View>
               <Text style={styles.postedOn}>
                 Posted on {formatDate(job.creationDate)}
               </Text>
-            </View>
+                
+              </View>
           </View>
   
           <View style={styles.statusContainer}>
@@ -212,6 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
+    paddingHorizontal:8,
     margin:2,
     marginBottom: 6,
     
@@ -225,10 +230,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 50, // Makes the container oval
     marginBottom: 8,
-    marginRight: 6
+    marginRight: 3
   },
   ovalText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
     fontFamily:'PlusJakartaSans-Medium'
   },
@@ -247,7 +252,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
-    marginRight: 8,
+    marginRight: 3,
     marginBottom:8,
     fontSize: 8,
     fontFamily:'PlusJakartaSans-Medium'
@@ -262,7 +267,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   locationText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
     fontFamily:'PlusJakartaSans-Medium'
   },
@@ -298,7 +303,7 @@ const styles = StyleSheet.create({
   },
   tagRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     justifyContent: 'flex-start',
     marginBottom: 12,
     marginTop: 6

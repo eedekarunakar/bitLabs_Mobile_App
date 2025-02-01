@@ -59,12 +59,12 @@ const AppliedJobs = () => {
             style={styles.companyLogo}
           />
           <View style={styles.jobDetails}>
-            {/* <Text style={styles.jobTitle}>{job.jobTitle}</Text> */}
-            <Text style={styles.jobTitle}>
-              {job.jobTitle.length > 28 ? `${job.jobTitle.substring(0, 28)}...` : job.jobTitle}
+            <Text style={styles.jobTitle} numberOfLines={1} ellipsizeMode="tail">
+              {job.jobTitle}
             </Text>
             <Text style={styles.companyName}>{job.companyname}</Text>
           </View>
+
         </View>
         <View style={styles.tagRow}>
           <View style={[styles.tag, styles.locationContainer]}>
@@ -119,9 +119,10 @@ const styles = StyleSheet.create({
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
-    padding: 16,
+    padding: 14,
     margin: 12,
     marginBottom: 0,
+    paddingHorizontal: 10
   },
   oval: {
     flexDirection: 'row',
@@ -131,10 +132,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 50, // Makes the container oval
     marginBottom: 8,
-    marginRight: 6
+    marginRight: 3
   },
   ovalText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
   },
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
-    marginRight: 8,
+    marginRight: 3,
     marginBottom: 8,
     fontSize: 8,
     fontFamily: 'PlusJakartaSans-Medium'
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   locationText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
   },
@@ -205,8 +206,9 @@ const styles = StyleSheet.create({
   },
   tagRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     marginBottom: 8,
+
   },
   // tag: {
   //   backgroundColor: '#f6f6f6',

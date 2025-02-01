@@ -75,7 +75,7 @@ const toastConfig: ToastConfig = {
       text1={props.text1} // Ensure text1 is passed
       renderTrailingIcon={() => (
         <TouchableOpacity onPress={() => Toast.hide()}>
-          <Text style={{ fontSize: 18, color: 'black' }}>✖</Text> {/* Wrap cross icon in <Text> */}
+          <Text style={{ fontSize: 18, color: 'black' }}>x</Text> {/* Wrap cross icon in <Text> */}
         </TouchableOpacity>
       )}
     />
@@ -89,7 +89,7 @@ const toastConfig: ToastConfig = {
       text1={props.text1}
       renderTrailingIcon={() => (
         <TouchableOpacity onPress={() => Toast.hide()}>
-           <Text style={{ fontSize: 18, color: 'black' }}>✖</Text> {/* Wrap cross icon in <Text> */}
+           <Text style={{ fontSize: 18, color: 'black' }}>x</Text> {/* Wrap cross icon in <Text> */}
         </TouchableOpacity>
       )}
     />
