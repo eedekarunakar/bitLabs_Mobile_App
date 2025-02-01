@@ -52,11 +52,12 @@ const SavedJobs = () => {
               style={styles.companyLogo}
             />
             <View style={styles.jobDetails}>
-              <Text style={styles.jobTitle}>
-                {job.jobTitle.length > 28 ? `${job.jobTitle.substring(0, 28)}...` : job.jobTitle}
+              <Text style={styles.jobTitle} numberOfLines={1} ellipsizeMode="tail">
+                {job.jobTitle}
               </Text>
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
+
           </View>
           <View style={styles.tagRow}>
             <View style={[styles.tag, styles.locationContainer]}>
@@ -94,7 +95,8 @@ const styles = StyleSheet.create({
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
-    padding: 16,
+    padding: 14,
+    paddingHorizontal: 10,
     margin: 12,
     marginBottom: 0,
   },
@@ -117,16 +119,16 @@ const styles = StyleSheet.create({
     color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
-  tagRow: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 8 },
+  tagRow: { flexDirection: 'row', flexWrap: 'nowrap', marginBottom: 8 },
   tag: {
     backgroundColor: '#f6f6f6',
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
-    marginRight: 8,
+    marginRight: 3,
     marginBottom: 8,
-    fontSize: 8,
+    fontSize: 8.5,
     fontFamily: 'PlusJakartaSans-Medium'
   },
   oval: {
@@ -137,13 +139,13 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 50, // Makes the container oval
     marginBottom: 8,
-    marginRight: 6
+    marginRight: 3
   },
-  ovalText: { fontSize: 9, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  ovalText: { fontSize: 8.5, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
   brieficon: { height: 8, width: 8, marginRight: 8 },
   locationContainer: { flexDirection: 'row', alignItems: 'center' },
   locationIcon: { width: 8, height: 8, marginRight: 6 },
-  locationText: { fontSize: 9, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  locationText: { fontSize: 8.5, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
   postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font

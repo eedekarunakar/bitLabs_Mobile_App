@@ -75,13 +75,12 @@ const RecommendedJobs = () => {
               style={styles.companyLogo}
             />
             <View style={styles.jobDetails}>
-              <Text style={styles.jobTitle}>
-                {item.jobTitle.length > 28
-                  ? `${item.jobTitle.substring(0, 28)}...`
-                  : item.jobTitle}
+              <Text style={styles.jobTitle} numberOfLines={1} ellipsizeMode="tail">
+                {item.jobTitle}
               </Text>
               <Text style={styles.companyName}>{item.companyname}</Text>
             </View>
+
           </View>
           <View style={styles.tagRow}>
             <View style={[styles.tag, styles.locationContainer]}>
@@ -132,7 +131,10 @@ const RecommendedJobs = () => {
   const visibleJobs = jobs.slice(0, visibleJobsCount);
 
   // Render content based on active tab
-  const  renderContent = () => {
+  const renderContent = () => {
+    if (loading) {
+      return <ActivityIndicator size="large" color="#FF8C00" style={styles.loader} />;
+    }
     switch (activeTab) {
       case 'recommended':
         return (
@@ -228,22 +230,22 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 50, // Makes the container oval
     marginBottom: 8,
-    marginRight: 6
+    marginRight: 3
   },
   ovalText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   Jobstext: {
     marginLeft: 22,
     marginBottom: 10,
-    marginTop:12,
-    fontFamily:'PlusJakartaSans-Bold',
-    color:'#0D0D0D',
+    marginTop: 12,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: '#0D0D0D',
   },
-  jobstextcon:{
-    backgroundColor:'white'
+  jobstextcon: {
+    backgroundColor: 'white'
   },
   brieficon: {
     height: 8,
@@ -268,9 +270,11 @@ const styles = StyleSheet.create({
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
-    padding: 16,
-    margin:12,
-    marginBottom:0,
+    padding: 14,
+    paddingHorizontal: 10,
+    margin: 12,
+    marginBottom: 0,
+    //flexWrap:'nowrap'
   },
   row: {
     flexDirection: 'row',
@@ -291,6 +295,8 @@ const styles = StyleSheet.create({
   },
   jobDetails: {
     flex: 1,
+
+
   },
   jobTitle: {
     color: '#121212', // Text color
@@ -299,25 +305,28 @@ const styles = StyleSheet.create({
     fontStyle: 'normal', // Font style
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
+    flexWrap: 'nowrap'
   },
   companyName: {
     fontSize: 12,
     fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
-    fontWeight:600,
+    fontWeight: 600,
     color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
   tagRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     justifyContent: 'flex-start',
     marginBottom: 12,
-    marginTop: 6
+    marginTop: 6,
+
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'nowrap'
   },
   locationIcon: {
     width: 8,
@@ -325,9 +334,9 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   locationText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   tag: {
     backgroundColor: '#f6f6f6',
@@ -335,10 +344,10 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
-    marginRight: 8,
+    marginRight: 3,
     marginBottom: 8,
     fontSize: 8,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   postedOn: {
     color: '#979696', // Text color
@@ -363,21 +372,21 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomColor: '#F97316',
-    
-    
+
+
   },
   tabText: {
     fontSize: 12,
     color: '#888',
     marginLeft: 10,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   activeTabText: {
     color: '#F97316',
     marginLeft: 12,
-    fontFamily:'PlusJakartaSans-Bold'
- 
+    fontFamily: 'PlusJakartaSans-Bold'
+
   },
 });
- 
+
 export default RecommendedJobs;

@@ -449,10 +449,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 50, // Makes the container oval
     marginBottom: 8,
-    marginRight: 6
+    marginRight: 3
   },
   ovalText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
     fontFamily:'PlusJakartaSans-Medium'
   },
@@ -505,6 +505,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin:12,
     marginBottom: 2,
+    paddingHorizontal:8
   },
   row: {
     flexDirection: 'row',
@@ -537,7 +538,7 @@ const styles = StyleSheet.create({
   },
   tagRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     justifyContent: 'flex-start',
     marginBottom: 12,
   },
@@ -546,7 +547,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   locationText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: 'black',
     fontFamily:'PlusJakartaSans-Medium'
   },
@@ -556,7 +557,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
-    marginRight: 10,
+    marginRight: 3,
     marginBottom: 8,
     fontSize: 9,
     fontFamily:'PlusJakartaSans-Medium'

@@ -219,12 +219,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     justifyContent: "center", // Center the logo inside its container
     alignItems: "center", // Align logo in the center of the container
-    marginBottom: screenHeight * 0.02, // Space between logo and text/number
+    marginBottom: screenHeight * 0.012, // Space between logo and text/number
   },
 
   cardLogo: {
-    width: "40%", // Logo size within its container
-    height: "40%",
+    width: "30%", // Logo size within its container
+    height: "30%",
     resizeMode: "contain",
   },
 
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
 
   cardText: {
-    fontSize: 15, // Set text size to 14px
+    fontSize: 13, // Set text size to 14px
     color: "#333", // Text color
     fontFamily: "PlusJakartaSans-Medium", // Font family
     textAlign: "left", // Align text to the left

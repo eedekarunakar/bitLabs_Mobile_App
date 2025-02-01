@@ -760,6 +760,7 @@ function ProfileComponent() {
             </ScrollView>
         </KeyboardAvoidingView>
     )
+
 }
 
 
