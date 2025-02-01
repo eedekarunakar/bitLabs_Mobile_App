@@ -243,6 +243,9 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'Vue':
         fetchedTestData = require('../models/data/Vue.json');
         break;
+      case 'C++':
+        fetchedTestData = require('../models/data/Cpp.json');
+        break;  
       default:
         console.error(`No data found for test: ${testName}`);
         return;
