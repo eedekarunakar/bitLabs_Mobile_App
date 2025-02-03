@@ -569,12 +569,6 @@ const Badge = ({ route, navigation }: any) => {
 
                 return (
                   <View key={badge.id} style={styles.card}>
-                    <Image
-                      source={testImage[skillBadge.name] || require('../../assests/Images/Test/NotFound.png')}
-                      style={styles.cardImage}
-                    />
-                    <Text style={styles.cardTitle}>{skillBadge.name}</Text>
-
                     {/* Status Display */}
                     <View style={styles.statusContainer}>
                       <Text
@@ -586,6 +580,11 @@ const Badge = ({ route, navigation }: any) => {
                         {status === 'PASSED' ? 'Passed' : 'Failed'}
                       </Text>
                     </View>
+                    <Image
+                      source={testImage[skillBadge.name] || require('../../assests/Images/Test/NotFound.png')}
+                      style={styles.cardImage}
+                    />
+                    <Text style={styles.cardTitle}>{skillBadge.name}</Text>
 
                     {/* Button or Timer Display */}
                     {isFailed ? (
@@ -895,13 +894,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#d4edda',
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12
+    fontSize: 10
   },
   failed: {
     backgroundColor: '#f8d7da',
     color: 'red',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12
+    fontSize: 10
   },
   badgeDate: {
     fontSize: 12,
@@ -910,11 +909,10 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
+    top: 3,
+    right: 5,
+    paddingHorizontal: 5,
+    borderRadius: 8,
   },
   verifiedButton: {
     backgroundColor: 'green',

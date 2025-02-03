@@ -10,7 +10,7 @@ import Header from '../components/CustomHeader/Header';
 import { submitTestResult } from '../services/Test/testService';
 import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
-
+import { decode } from "html-entities";
 
 const { width } = Dimensions.get('window');
 
@@ -398,7 +398,7 @@ const TestScreen = ({ route, navigation }: any) => {
 
       <View style={styles.questionContainer}>
         <Text style={styles.questionText}>
-          {currentQuestionIndex + 1}. {currentQuestion?.question}
+          {currentQuestionIndex + 1}. {decode(currentQuestion?.question || "")} 
         </Text>
       </View>
       <FlatList
@@ -415,7 +415,7 @@ const TestScreen = ({ route, navigation }: any) => {
               <View style={[styles.radioButton, isSelected && styles.selectedRadioButton]}>
                 {isSelected && <View style={styles.radioDot} />}
               </View>
-              <Text style={styles.optionText}>{item}</Text>
+              <Text style={styles.optionText}>{decode(item)}</Text>
             </TouchableOpacity>
           );
         }}

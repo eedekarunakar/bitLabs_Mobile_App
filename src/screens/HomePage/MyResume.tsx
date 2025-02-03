@@ -19,6 +19,7 @@ const PDFExample = () => {
         setLoading(true);
         console.log('usereid:',userid.userId)
         const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
+        console.log(response)
         const arrayBuffer = await response.arrayBuffer();
         const base64Pdf = arrayBufferToBase64(arrayBuffer);
         const pdfUri = `data:application/pdf;base64,${base64Pdf}`;
@@ -53,6 +54,9 @@ const PDFExample = () => {
 
   return (
     <View style={styles.container}>
+      <View style={{height:50}}>
+        <Text style={{fontFamily:'PlusJakartaSans-Bold',fontSize:25}}>My Resume</Text>
+      </View>
       {pdfUri ? (
         <Pdf
           source={source as { uri: string }}

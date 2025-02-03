@@ -1,4 +1,6 @@
 import React from 'react';
+import 'react-native-gesture-handler'; // Make sure this is at the top of your entry point
+
 import {
   View,
   Image,

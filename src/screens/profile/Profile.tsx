@@ -618,7 +618,7 @@ function ProfileComponent() {
                                             end={{ x: 1, y: 0 }} // Ending point of the gradient
                                         >
                                             <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Medium', fontSize: 14, fontWeight: 'bold' }}>Save Changes</Text>
+                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Bold', fontSize: 14, }}>Save Changes</Text>
                                             </TouchableOpacity>
                                         </LinearGradient>
                                     </View>
@@ -665,7 +665,7 @@ function ProfileComponent() {
                                     </View>
 
                                     <View style={{ padding: 10, paddingHorizontal: 60    }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }} >Select File</Text>
+                                        <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
                                         <Text style={{ color: '#6C6C6C', textAlign: 'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>File must be less than 1Mb</Text>
                                         <Text style={{ color: '#6C6C6C',textAlign:'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>Only .doc or .PDFs are allowed.</Text>
                                     </View>
@@ -739,7 +739,7 @@ function ProfileComponent() {
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
 
-                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold', fontWeight: 'bold' }}>Create Resume</Text>
+                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold'}}>Create Resume</Text>
 
                                 </TouchableOpacity>
                             </View>

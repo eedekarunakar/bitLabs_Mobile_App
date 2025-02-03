@@ -1,8 +1,16 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity,BackHandler} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
- 
+import { useFocusEffect } from "@react-navigation/native";
 const FailureScreen = ({ navigation }: any) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => true; // Returning true disables back action
+ 
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
   return (
     <View style={styles.container}>
       {/* Card Container */}
