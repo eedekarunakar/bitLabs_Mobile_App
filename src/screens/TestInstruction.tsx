@@ -1,8 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Dimensions,Modal,Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+  Dimensions,
+  Modal,
+  Image,
+  BackHandler
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
-import { useAuth } from '../context/Authcontext'; // Assuming you have a useAuth hook
+import {useAuth} from '../context/Authcontext'; // Assuming you have a useAuth hook
 
 // Importing test data files
 import aptitudeTestData from '../models/data/testData.json';
@@ -20,7 +32,7 @@ import HibernateData from '../models/data/Hibernate.json';
 import HTMLData from '../models/data/HTML.json';
 import JavascriptData from '../models/data/Javascript.json';
 import JspData from '../models/data/Jsp.json';
-import ManualTestingData from '../models/data/ManualTesting.json'
+import ManualTestingData from '../models/data/ManualTesting.json';
 import MongoData from '../models/data/MongoDB.json';
 import PythonData from '../models/data/Paython.json';
 import ReactData from '../models/data/React.json';
@@ -35,7 +47,7 @@ import VueData from '../models/data/Vue.json';
 import API_BASE_URL from '../services/API_Service';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 // Define the type for the test data
 interface TestData {
@@ -51,10 +63,17 @@ interface TestData {
   }[];
 }
 
-const Test = ({ route, navigation }: any) => {
-  const { userId, userToken } = useAuth();
-  const { testName: routeTestName, testStatus: routeTestStatus, testType, skillName } = route.params || {};
-  const [testName, setTestName] = useState(routeTestName || 'General Aptitude Test');
+const Test = ({route, navigation}: any) => {
+  const {userId, userToken} = useAuth();
+  const {
+    testName: routeTestName,
+    testStatus: routeTestStatus,
+    testType,
+    skillName,
+  } = route.params || {};
+  const [testName, setTestName] = useState(
+    routeTestName || 'General Aptitude Test',
+  );
   const [testStatus, setTestStatus] = useState(routeTestStatus || 'F');
   const [step, setStep] = useState(1); // Default initial step
   const [testData, setTestData] = useState<TestData>({
@@ -75,6 +94,7 @@ const Test = ({ route, navigation }: any) => {
       return;
     }
 
+
     const fetchTestStatus = async () => {
       try {
         const response = await fetch(
@@ -85,7 +105,7 @@ const Test = ({ route, navigation }: any) => {
               Authorization: `Bearer ${userToken}`,
               'Content-Type': 'application/json',
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -96,7 +116,7 @@ const Test = ({ route, navigation }: any) => {
         console.log(data);
 
         if (Array.isArray(data) && data.length > 0) {
-          const { testStatus: fetchedStatus, testName: fetchedName } = data[0];
+          const {testStatus: fetchedStatus, testName: fetchedName} = data[0];
           setTestName(fetchedName || testName); // Use current state default if undefined
           setTestStatus(fetchedStatus || testStatus);
           adjustStep(fetchedName, fetchedStatus);
@@ -111,6 +131,18 @@ const Test = ({ route, navigation }: any) => {
 
     fetchTestStatus();
   }, [userId, userToken, testType]);
+
+  useFocusEffect(
+      React.useCallback(() => {
+        const backAction = () => {
+          setShowExitModal(true);
+          return true;
+        };
+  
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+        return () => backHandler.remove();
+      }, [])
+    );
 
   // Dynamically adjust step based on fetched data
   const adjustStep = (name: string, status: string) => {
@@ -236,21 +268,25 @@ const Test = ({ route, navigation }: any) => {
       }
     }
   }, [step, testType, testName]);
-  console.log(testType,skillName)
- 
+  console.log(testType, skillName);
 
   if (loading) {
-    return <Text style={{ fontFamily: 'PlusJakartaSans-Medium',fontSize:14}}>Loading test data...</Text>;
+    return (
+      <Text style={{fontFamily: 'PlusJakartaSans-Medium', fontSize: 14}}>
+        Loading test data...
+      </Text>
+    );
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={() => setShowExitModal(true)} style={styles.backButton}>
-                  <Icon name="left" size={24} color="#495057" />
-                </TouchableOpacity>
-                
-              </View>
-      <ScrollView style={{ flex: 1 }}>
+        <TouchableOpacity
+          onPress={() => setShowExitModal(true)}
+          style={styles.backButton}>
+          <Icon name="left" size={24} color="#495057" />
+        </TouchableOpacity>
+      </View>
+      <ScrollView style={{flex: 1}}>
         <View style={styles.container}>
           <View style={styles.container1}>
             <MaskedView
@@ -259,28 +295,43 @@ const Test = ({ route, navigation }: any) => {
                 <Text style={styles.head}>
                   {testData.testName || 'Loading...'}
                 </Text>
-              }
-            >
+              }>
               <LinearGradient
                 colors={['#F97316', '#FAA729']} // Gradient colors
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
                 style={styles.gradientBackground1}
               />
             </MaskedView>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginLeft: -20 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                marginLeft: -20,
+              }}>
               <View style={styles.box1}>
                 <Text style={styles.text}>Duration</Text>
                 <Text style={styles.text1}>{testData.duration || 'N/A'}</Text>
               </View>
               <View style={styles.box1}>
                 <Text style={styles.text}>Questions</Text>
-                <Text style={styles.text1}>{testData.numberOfQuestions || 0}</Text>
+                <Text style={styles.text1}>
+                  {testData.numberOfQuestions || 0}
+                </Text>
               </View>
             </View>
-            <Text style={{color:'#797979', fontFamily: 'PlusJakartaSans-Medium'}}>Topics Covered</Text>
-            <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Bold', }}>
-              {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
+            <Text
+              style={{color: '#797979', fontFamily: 'PlusJakartaSans-Medium'}}>
+              Topics Covered
+            </Text>
+            <Text
+              style={{
+                lineHeight: 27,
+                color: 'black',
+                fontFamily: 'PlusJakartaSans-Bold',
+              }}>
+              {Array.isArray(testData.topicsCovered) &&
+              testData.topicsCovered.length > 0
                 ? `${testData.topicsCovered.join(', ')}`
                 : 'No topics available'}
             </Text>
@@ -307,39 +358,50 @@ const Test = ({ route, navigation }: any) => {
         </View>
       </ScrollView>
 
-      <Modal
-        visible={showExitModal}
-        transparent={true}
-        animationType="slide"
-      >
+      <Modal visible={showExitModal} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity
-                            style={styles.closeIcon}
-                            onPress={() => setShowExitModal(false)} // Close the modal
-                          >
-                            <Icon name="close" size={20} color={'0D0D0D'} />
-                          </TouchableOpacity>
-            <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
+              style={styles.closeIcon}
+              onPress={() => setShowExitModal(false)} // Close the modal
+            >
+              <Icon name="close" size={20} color={'0D0D0D'} />
+            </TouchableOpacity>
+            <Image
+              source={require('../assests/Images/Test/Warning.png')}
+              style={styles.Warning}
+            />
             <Text style={styles.modalText}>Do you really want to exit?</Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: '#FFF', borderColor: '#9D9D9D', borderWidth: 0.96 }]}
+                style={[
+                  styles.modalButton,
+                  {
+                    backgroundColor: '#FFF',
+                    borderColor: '#9D9D9D',
+                    borderWidth: 0.96,
+                  },
+                ]}
                 onPress={() => setShowExitModal(false)} // Close the modal
               >
-                <Text style={[styles.modalButtonText, { color: 'grey' }]}>No</Text>
+                <Text style={[styles.modalButtonText, {color: 'grey'}]}>
+                  No
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.goBack()} // Navigate back
               >
                 <LinearGradient
-                                    colors={['#F97316', '#FAA729']} // Gradient colors
-                                    start={{ x: 0, y: 0 }} // Gradient start point
-                                    end={{ x: 1, y: 1 }}   // Gradient end point
-                                    style={[styles.modalButton, { borderRadius: 10, width: width * 0.41 }]} // Ensure borderRadius matches your button's design
-                                  >
-                                    <Text style={styles.modalButtonText}>Yes</Text>
-                                  </LinearGradient>
+                  colors={['#F97316', '#FAA729']} // Gradient colors
+                  start={{x: 0, y: 0}} // Gradient start point
+                  end={{x: 1, y: 1}} // Gradient end point
+                  style={[
+                    styles.modalButton,
+                    {borderRadius: 10, width: width * 0.41},
+                  ]} // Ensure borderRadius matches your button's design
+                >
+                  <Text style={styles.modalButtonText}>Yes</Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>
@@ -349,20 +411,19 @@ const Test = ({ route, navigation }: any) => {
       <View style={styles.footer}>
         <LinearGradient
           colors={['#F97316', '#FAA729']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradientBackground}
-        >
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientBackground}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
               // Determine the name to send based on testType
-              const nameToSend = testType === 'SkillBadge' ? skillName : testData.testName;
-              console.log("Navigating with",nameToSend)
+              const nameToSend =
+                testType === 'SkillBadge' ? skillName : testData.testName;
+              console.log('Navigating with', nameToSend);
               // Navigate to the TestScreen with the determined name
-              navigation.navigate('TestScreen', { testName: nameToSend });
-            }}
-          >
+              navigation.navigate('TestScreen', {testName: nameToSend});
+            }}>
             <Text style={styles.start}>Start</Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -375,7 +436,7 @@ export default Test;
 
 const styles = StyleSheet.create({
   container: {
-    width: width*0.93,
+    width: width * 0.93,
     height: 650,
     marginTop: 20,
     marginLeft: 13,
@@ -408,7 +469,7 @@ const styles = StyleSheet.create({
   },
   container2: {
     flex: 1,
-    padding:10,
+    padding: 10,
     backgroundColor: '#FFF',
   },
   text: {
@@ -488,7 +549,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     height: 50,
-    backgroundColor:'#FFF'
+    backgroundColor: '#FFF',
   },
   backButton: {
     position: 'absolute',
@@ -535,7 +596,7 @@ const styles = StyleSheet.create({
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 30
+    marginTop: 30,
   },
   Warning: {
     width: 85,
