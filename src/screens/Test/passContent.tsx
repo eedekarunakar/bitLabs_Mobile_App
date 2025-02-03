@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  BackHandler
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {useProfileViewModel} from '../../viewmodel/Profileviewmodel';
@@ -13,9 +14,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useAuth} from '../../context/Authcontext';
 import MaskedView from '@react-native-masked-view/masked-view';
 import {RootStackParamList} from '../../../New';
+import { useFocusEffect } from "@react-navigation/native";
 const {width, height} = Dimensions.get('window');
 
 const Pass = ({navigation}: any) => {
+  
   const route = useRoute();
   const {userId, userToken} = useAuth();
   const {finalScore, testName}: any = route.params; // Access the passed score
@@ -25,6 +28,14 @@ const Pass = ({navigation}: any) => {
   console.log('Final Score:', finalScore);
   console.log('Applicant:', applicant);
   console.log('Test Name:', testName);
+  useFocusEffect(
+      React.useCallback(() => {
+        const onBackPress = () => true; // Returning true disables back action
+   
+        BackHandler.addEventListener("hardwareBackPress", onBackPress);
+        return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      }, [])
+    );
   if (!profileData) {
     return <Text>Loading...</Text>; // Show a loading indicator while fetching data
   }

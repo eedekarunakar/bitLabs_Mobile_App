@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
   container2: {
 
     alignContent: 'center',
-    marginLeft: 10,
+    marginLeft: 20,
 
   },
   text: {

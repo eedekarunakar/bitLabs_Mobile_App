@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions,BackHandler } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTestViewModel } from '../../viewmodel/Test/TestViewModel';  // Adjust the import path based on your project structure
 import { useAuth } from '../../context/Authcontext';  // Adjust the import path for your auth hook
 import { useSkillTestViewModel } from '../../viewmodel/Test/skillViewModel';
-
+import { useFocusEffect } from "@react-navigation/native";
 const { width } = Dimensions.get('window');
 
 const TimeUp = ({ route }:any) => {
@@ -14,6 +14,14 @@ const TimeUp = ({ route }:any) => {
   const { userId, userToken } = useAuth(); // Assuming you have a hook to get auth data
   const { submitTest } = useTestViewModel(userId, userToken,testName); // Call the useTestViewModel hook
   const {submitSkillTest} = useSkillTestViewModel(userId,userToken,testName)
+  useFocusEffect(
+        React.useCallback(() => {
+          const onBackPress = () => true; // Returning true disables back action
+     
+          BackHandler.addEventListener("hardwareBackPress", onBackPress);
+          return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+        }, [])
+      );
   const handleTimeUpSubmission = async () => {
     // Pass the final score and mark the test as complete
      if (testName === 'Technical Test' || testName === 'General Aptitude Test') {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput,TouchableOpacity } from 'react-native';
+import { Text, TextInput,TouchableOpacity,ActivityIndicator,View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
@@ -101,7 +101,7 @@ const Appnavigator = () => {
 
   const { isAuthenticated, userToken, userId, userEmail } = useAuth();
   const [profileChecked, setProfileChecked] = useState(isAuthenticated);
-
+  const [loading, setLoading] = useState(true);
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
   const { setSetmsg } = useMessageContext();
 
@@ -120,7 +120,9 @@ const Appnavigator = () => {
           console.error('Error fetching profile ID:', error);
         }
       }
+      setLoading(false);
       setProfileChecked(true);
+      
     };
 
    
@@ -145,9 +147,12 @@ const Appnavigator = () => {
     );
   }
 
-  if (!profileChecked) {
-    
-    return null;
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
   }
 
   return (
