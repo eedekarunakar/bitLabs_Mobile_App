@@ -125,7 +125,15 @@ const TestScreen = ({ route, navigation }: any) => {
     }
 
     timerInterval = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - 1);
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timerInterval);
+          setIsTestComplete(true);
+          goToTimeUpScreen(); // Navigate to TimeUp screen when time is up
+          return 0;
+        }
+        return prevTime - 1;
+      });
     }, 1000);
 
     return () => clearInterval(timerInterval);
@@ -304,7 +312,7 @@ const TestScreen = ({ route, navigation }: any) => {
     const finalScore = calculateScore(); // Calculate the score
     const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
     setFinalScore(percentageScore); // Store final score in state
-    navigation.navigate('TimeUp', { finalScore: percentageScore }); // Pass the score to TimeUp screen
+    navigation.navigate('TimeUp', { finalScore: percentageScore, testName:testName}); // Pass the score to TimeUp screen
   };
   const currentQuestion =
     testData.questions && currentQuestionIndex < testData.questions.length
