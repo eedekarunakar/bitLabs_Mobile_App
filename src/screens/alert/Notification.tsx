@@ -71,7 +71,7 @@ const NotificationsPage: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
-        You have {unseenCount} unseen notifications.
+        No alerts are found.
       </Text>
       <FlatList
         data={jobAlerts}
@@ -91,9 +91,8 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   header: {
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 16,
-    fontWeight: '600',
     color: '#444',
     marginBottom: 20,
   },

@@ -32,6 +32,8 @@ import ResumeBuilder from './src/screens/profile/ResumeBuilder';
 import Drives from './src/screens/HomePage/Drives';
 import Badge from './src/screens/HomePage/Badge';
 
+import { useMessageContext, MessageProvider } from './src/screens/LandingPage/welcome';
+
 export type RootStackParamList = {
   ForgotPassword: undefined,
   LandingPage: undefined;
@@ -75,7 +77,7 @@ const toastConfig: ToastConfig = {
       text1={props.text1} // Ensure text1 is passed
       renderTrailingIcon={() => (
         <TouchableOpacity onPress={() => Toast.hide()}>
-          <Text style={{ fontSize: 18, color: 'black' }}>x</Text> {/* Wrap cross icon in <Text> */}
+          <Text style={{ fontSize: 18, color: 'black',fontFamily:'PlusJakartaSans-Bold' }}>x</Text> {/* Wrap cross icon in <Text> */}
         </TouchableOpacity>
       )}
     />
@@ -89,7 +91,7 @@ const toastConfig: ToastConfig = {
       text1={props.text1}
       renderTrailingIcon={() => (
         <TouchableOpacity onPress={() => Toast.hide()}>
-           <Text style={{ fontSize: 18, color: 'black' }}>x</Text> {/* Wrap cross icon in <Text> */}
+           <Text style={{ fontSize: 18, color: 'black',fontFamily:'PlusJakartaSans-Bold' }}>x</Text> {/* Wrap cross icon in <Text> */}
         </TouchableOpacity>
       )}
     />
@@ -101,6 +103,7 @@ const Appnavigator = () => {
   const [profileChecked, setProfileChecked] = useState(isAuthenticated);
 
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
+  const { setSetmsg } = useMessageContext();
 
   useEffect(() => {
     const checkProfileId = async () => {
@@ -109,6 +112,7 @@ const Appnavigator = () => {
           const result = await fetchProfileId(userId, userToken);
           if (result.success) {
             setShouldShowStep1(result.profileid === 0);
+            result.profileid==0?setSetmsg(true):setSetmsg(false)
           } else {
             console.error('Failed to fetch profile details');
           }
@@ -119,10 +123,10 @@ const Appnavigator = () => {
       setProfileChecked(true);
     };
 
-    if (isAuthenticated) {
+   
       checkProfileId();
-    }
-  }, [isAuthenticated, userToken, userId, profileChecked]);
+  
+  }, [isAuthenticated, userToken, userId, profileChecked,setSetmsg]);
 
   if (!isAuthenticated) {
     return (
@@ -313,12 +317,14 @@ const AppWithProfileProvider = () => {
   const { userToken, userId } = useAuth();
 
   return (
+    <MessageProvider>
     <ProfilePhotoProvider userToken={userToken} userId={userId}>
       <NavigationContainer >
         <Appnavigator />
         <Toast config={toastConfig} /> {/* Pass the toastConfig */}
       </NavigationContainer>
     </ProfilePhotoProvider>
+    </MessageProvider>
   );
 };
 

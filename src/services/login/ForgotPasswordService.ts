@@ -16,35 +16,38 @@ const encryptPassword = (password: string, secretkey: string) => {
   ).toString();
   return {encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64)};
 };
-
-const sendOtp = async (forgotemail :string ): Promise<AuthResponse> => {
-  const lowercaseEmail = forgotemail.toLowerCase();
-  try {
-    const response = await axios.post(`${API_BASE_URL}/applicant/forgotpasswordsendotp`, {
-     email:lowercaseEmail
-    });
-    console.log(response)
-    if (response.status === 200) {
-      return { success: true, message: 'OTP sent to your email!' };
-    } else {
-      return { success: false, message: response.data };
-    }
-  } catch (error) {
-    return { success: false, message: 'Error sending OTP. Please try again.' };
+const convertToLowerCase =(email:string)=>{
+  return email.toLowerCase();
   }
-};
-
-const verifyOtp = async(otp:string,signupEmail:string ): Promise<AuthResponse> => {
-
-console.log('verification otpp sent',otp)
-  try {
-        const response = await axios.post(
-          `${API_BASE_URL}/applicant/applicantverify-otp`,
-          {
-            otp: otp,
-            email: signupEmail,
-          },
-        );
+  const sendOtp = async (forgotemail :string ): Promise<AuthResponse> => {
+    const lowercaseEmail = convertToLowerCase(forgotemail);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/applicant/forgotpasswordsendotp`, {
+       email:lowercaseEmail
+      });
+      console.log(response)
+      if (response.status === 200) {
+        return { success: true, message: 'OTP sent to your email!' };
+      } else {
+        return { success: false, message: response.data };
+      }
+    } catch (error) {
+      return { success: false, message: 'Error sending OTP. Please try again.' };
+    }
+  };
+   
+  const verifyOtp = async(otp:string,signupEmail:string ): Promise<AuthResponse> => {
+   
+  console.log('verification otpp sent',otp)
+  const lowercaseEmail = convertToLowerCase(signupEmail)
+    try {
+          const response = await axios.post(
+            `${API_BASE_URL}/applicant/applicantverify-otp`,
+            {
+              otp: otp,
+              email:lowercaseEmail,
+            },
+          );
         console.log(response)
        console.log('this is the response',response)
         return { success: true, data: response.data };

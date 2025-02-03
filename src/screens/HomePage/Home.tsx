@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import Navbar from '../../components/Navigation/Navbar';
-import ExploreSection from '../../components/home/ExploreSection';
-import {useJobCounts} from '../../viewmodel/DashboardViewModel'; // Hook for fetching job counts
-import {useAuth} from '../../context/Authcontext';
-import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../../../New';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {
-  useRoute,
-  RouteProp,
-} from '@react-navigation/native'; // Updated imports
+
+import ExploreSection from "../../components/home/ExploreSection";
+import { useJobCounts } from '../../viewmodel/DashboardViewModel'; // Hook for fetching job counts
+import { useAuth } from '../../context/Authcontext';
+import AppliedJobs from '../Jobs/AppliedJobs';
+import { useNavigation } from '@react-navigation/native';
+import RecommendedJobs from './Jobs';
+import { RootStackParamList } from '../../../New';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useMessageContext,MessageProvider } from '../LandingPage/welcome';
+import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
+
 import {
   View,
   Image,
@@ -34,16 +36,18 @@ function Dashboard() {
     console.log('Dashboard route.params:', route.params); // Debug log
   }, [route.params]);
 
-  const [welcome, setWelcome] = useState(
-    route.params?.welcome ?? 'Welcome Back',
-  );
+
+  //const [welcome, setWelcome] = useState(route.params?.welcome ?? 'Welcome Back');
 
   // Use the useJobCounts hook to fetch job counts
-  const {jobCounts, loading, error} = useJobCounts(userId, userToken);
+  const { jobCounts, loading, error } = useJobCounts(userId, userToken);
+  const { setmsg } = useMessageContext();
+
 
   const {profileData} = useProfileViewModel(userToken, userId);
   const {basicDetails} = profileData || [];
   console.log('prof', basicDetails);
+
 
   const navigation = useNavigation<NavigationProp>();
 
@@ -74,14 +78,15 @@ function Dashboard() {
       <ScrollView
         contentContainerStyle={{paddingBottom: screenHeight * 0.04}} // Add bottom padding
       >
-        <Text style={styles.textBelowNavbar}>
-          Hello,{' '}
-          {basicDetails?.firstName
-            ? basicDetails.firstName.charAt(0).toUpperCase() +
-              basicDetails.firstName.slice(1)
-            : 'Guest'}
+
+        <Text style={styles.textBelowNavbar}>Hello, {basicDetails?.firstName
+          ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
+          : 'Guest'}
         </Text>
-        <Text style={styles.textBelowNavbar1}>{welcome}</Text>
+        <Text style={styles.textBelowNavbar1}>
+            {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
+        </Text>
+
 
         <View style={styles.cardContainer}>
           <View style={styles.row}>

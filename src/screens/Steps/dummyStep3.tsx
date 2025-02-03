@@ -255,7 +255,7 @@ handleSave();
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.completeProfile}>Complete Your Profile</Text>
-          <Text style={styles.subHeader}>Fill the form  fields to go  next step</Text>
+          <Text style={styles.subHeader}>Fill the form fields to go to the next step</Text>
         </View>
  
         {/* ProgressBar */}
@@ -275,15 +275,15 @@ handleSave();
                 </View>
  
                 <View style={{ padding: 10, paddingHorizontal: 60 }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center' }} >Select File</Text>
-                  <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>File must be less than 1Mb</Text>
-                  <Text style={{ color: '#6C6C6C', textAlign: 'center' }}>Only .doc or .PDFs are allowed.</Text>
+                  <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }} >Select File</Text>
+                  <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }}>File must be less than 1Mb</Text>
+                  <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }}>Only .doc or .PDFs are allowed.</Text>
                 </View>
               </TouchableOpacity>
             </View>
             <View style={{ marginBottom: 50 }}>
               {bgcolor ? (
-                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 5, }}>File Not selected</Text>
+                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 5,fontFamily: 'PlusJakartaSans-Medium' }}>File Not selected</Text>
               ) : (
                 <Text></Text>
               )}
@@ -381,7 +381,7 @@ handleSave();
             {
               isUploadComplete?(
                 <View style={[styles.saveButton, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
-                <Text style={[styles.nextButtonText, { color: "#A0A0A0" }]}>Save</Text>
+                <Text style={[styles.nextButtonText, { color: "#A0A0A0",fontFamily: 'PlusJakartaSans-Medium' }]}>Save</Text>
               </View>
               ):(
 

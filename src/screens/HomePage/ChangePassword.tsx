@@ -143,7 +143,7 @@ const ChangePasswordScreen = () => {
           Toast.show({
             type: 'success',
             position: 'bottom',
-            text1: 'Password Changed Successfully',
+            text1: 'Password changed successfully',
             text2: 'Your password has been updated.',
             visibilityTime: 5000,
           });
@@ -315,7 +315,7 @@ const ChangePasswordScreen = () => {
             }}>Back
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          <TouchableOpacity onPress={handleChangePassword}
             style={styles.backButtonBottom}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}

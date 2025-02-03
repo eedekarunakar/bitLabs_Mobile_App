@@ -53,7 +53,7 @@ const useLoginViewModel = () => {
     if (validateLogin()) {
       const result = await login(loginUserName, loginPassword);
       if (result.success) {
-        showToast('success','Login Successful')
+        showToast('success','Login successful')
         console.log('login succesfull')
       } else {
         if (result.message !== null && result.message !== undefined) {
