@@ -9,7 +9,8 @@ const { width } = Dimensions.get('window');
 
 const TimeUp = ({ route }:any) => {
   const { testName } = route.params;
-  const { finalScore } = route.params; // Get the final score from route params
+  const { finalScore } = route.params;
+  console.log('fS',finalScore) // Get the final score from route params
   const { userId, userToken } = useAuth(); // Assuming you have a hook to get auth data
   const { submitTest } = useTestViewModel(userId, userToken,testName); // Call the useTestViewModel hook
   const {submitSkillTest} = useSkillTestViewModel(userId,userToken,testName)
