@@ -177,7 +177,7 @@ const ForgotPassword = () => {
                   />
                 </TouchableOpacity>
               </View>
-              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+              
               <View style={styles.passwordContainer}>
                 <TextInput
                   placeholder="Confirm Password"  placeholderTextColor="#B1B1B1" 
@@ -187,6 +187,7 @@ const ForgotPassword = () => {
                   onBlur={() => { setIsResetPasswordVisible(false) }}
                   onChangeText={setConfirmPassword}
                 />
+                 
                 <TouchableOpacity onPress={() => setIsResetPasswordVisible(!isResetPasswordVisible)}>
                   <Image
                     source={
@@ -198,7 +199,9 @@ const ForgotPassword = () => {
                   />
                 </TouchableOpacity>
               </View>
+              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
             </View>
+
           ) : (
             <View style={styles.form}>
               <TextInput

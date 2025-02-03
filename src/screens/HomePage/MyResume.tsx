@@ -1,18 +1,22 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useAuth } from '../../context/Authcontext';
 import API_BASE_URL from '../../services/API_Service';
+import { useFocusEffect } from '@react-navigation/native';
+import { Callback } from 'react-native-image-picker';
 
 const PDFExample = () => {
   const userid = useAuth();
   const [pdfUri, setPdfUri] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  
     const fetchPdf = async () => {
       try {
+        setLoading(true);
         console.log('usereid:',userid.userId)
         const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
         const arrayBuffer = await response.arrayBuffer();
@@ -23,11 +27,17 @@ const PDFExample = () => {
         console.error('Error fetching PDF:', error);
         setError('Error fetching PDF');
       }
+      finally{
+        setLoading(false);
+      }
 
     };
 
-    fetchPdf();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPdf();
+    }, [userid.userId])
+  );
 
   // Helper function to convert ArrayBuffer to Base64
   const arrayBufferToBase64 = (buffer: ArrayBuffer) => {

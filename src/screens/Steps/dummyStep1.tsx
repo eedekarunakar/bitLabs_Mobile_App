@@ -119,7 +119,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
             <Text style={styles.subHeader}>
-              Fill the form fields to go next step
+            Fill the form fields to go to the next step
             </Text>
           </View>
  

@@ -13,7 +13,7 @@ import { RootStackParamList } from '../../../New';
 import useGoogleSignIn from '../../services/google/google'
 
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');  
 
 
 
@@ -71,13 +71,39 @@ const LandingPage = () => {
         setSignupNumber('');
         setSignupPassword('');
         setOtp('');
+        loginErrors.username = '';
+        loginErrors.password = '';
+
     };
+    const resetsignupfields = () =>{
+        signUpErrors.name='';
+        signUpErrors.email='';
+        signUpErrors.password ='';
+        signUpErrors.whatsappnumber='';
+
+    }
 
     useEffect(() => {
         if (activeButton === 'signup') {
             resetLoginFields();
         }
+        else if (activeButton==='login'){
+            resetsignupfields()
+        }
     }, [activeButton]);
+
+    type LoginErrorParam = "username" | "password" ;
+    const resetLoginErrors =(loginErrorParam: LoginErrorParam)=>{
+        if(Object.keys(loginErrors).length!==0){
+        if(loginErrorParam=="username"){
+            loginErrors.username='';
+        }
+        else if(loginErrorParam=='password'){
+            console.log(loginErrors.password)
+            loginErrors.password='';
+        }
+    }
+    }
  
 
     return (
@@ -133,17 +159,17 @@ const LandingPage = () => {
                         </View>
 
 
-                        {registration && <Text style={{ color: 'green', marginTop: 10 }}>Registration Successful</Text>}
+                        {registration && <Text style={{ color: 'green', marginTop: 10,fontFamily:'PlusJakartaSans-Regular' }}>Registration successful</Text>}
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
 
 
-                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName}  onChangeText={(text: string) => setLoginUserName(text.replace(/\s/g, ''))}  allowFontScaling={false} />
+                                <TextInput placeholder="Email"placeholderTextColor="#B1B1B1"  style={styles.input} value={loginUserName}  onChangeText={(text: string) => {setLoginUserName(text.replace(/\s/g, ''));resetLoginErrors("username")}}  allowFontScaling={false} />
                                 {loginErrors.username && <Text style={{ color: 'red',fontFamily:'PlusJakartaSans-Regular',fontSize:12 }}>{loginErrors.username}</Text>}
 
  
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={setLoginPassword} onBlur={()=>{SetIsPasswordVisible(false)}}  allowFontScaling={false} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword}  onChangeText={(text:string)=>{setLoginPassword(text);resetLoginErrors("password")}} onBlur={()=>{SetIsPasswordVisible(false)}} allowFontScaling={false} />
              <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
 
                                         <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
@@ -190,7 +216,7 @@ const LandingPage = () => {
                                 {otpReceived === true && (
                                     <View >
 
-                                        <Text style={{ color: 'green' }}>Otp sent to your mail,Please check and enter below:</Text>
+                                        <Text style={{ color: 'green',fontFamily:'PlusJakartaSans-Regular' }}>Otp sent to your mail, Please check and enter below:</Text>
 
                                         <TextInput placeholder='Enter OTP'placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} allowFontScaling={false}/>
  
@@ -198,10 +224,10 @@ const LandingPage = () => {
 
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
-                                                <Text style={{ color: '#0E8CFF',fontWeight:'bold' }}>Resend OTP</Text>
+                                                <Text style={{ color: '#0E8CFF',fontWeight:'bold' ,fontFamily:'PlusJakartaSans-Regular' }}>Resend OTP</Text>
                                             </TouchableOpacity>
                                             : <View style={{ alignItems: 'center' }}>
-                                                <Text style={{ color: 'red' }}>Please verify OTP within {timer} seconds</Text>
+                                                <Text style={{ color: 'red',fontFamily:'PlusJakartaSans-Regular' }}>Please verify OTP within {timer} seconds</Text>
                                             </View>
 
                                         }
@@ -326,7 +352,8 @@ const styles = StyleSheet.create({
 
     },
     resendotp: {
-        marginTop: 15
+        marginTop: 15,
+        fontFamily:'PlusJakartaSans-Regular' 
     },
 
 
@@ -407,7 +434,8 @@ const styles = StyleSheet.create({
     },
     forgotPassword: {
         alignSelf: 'flex-end',
-        marginTop: -10,
+        marginTop: -1,
+        zIndex:10
     },
     input: {
         width: '100%',

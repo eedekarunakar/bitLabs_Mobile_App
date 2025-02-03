@@ -573,6 +573,7 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   },
   errorText: {
+    fontFamily: 'PlusJakartaSans-Medium',
     color: 'red',
     fontSize: 12,
     marginBottom: 10,
