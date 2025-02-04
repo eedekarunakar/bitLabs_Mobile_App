@@ -34,7 +34,7 @@ const FailureScreen = ({ navigation }: any) => {
  
         {/* Exit Button with Gradient */}
         <TouchableOpacity onPress={() =>
-            navigation.navigate('BottomTab', { screen: 'Badge', isTestComplete: false })
+            navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })
           }
           style={styles.buttonContainer}
           >
@@ -110,6 +110,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });

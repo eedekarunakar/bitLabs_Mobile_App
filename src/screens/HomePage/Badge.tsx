@@ -752,7 +752,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    width: 197,
+    width: 190,
     height: 210,
     marginRight: 16,
     borderRadius: 10,
@@ -778,7 +778,7 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     bottom: 0,
-    width: 197,
+    width: 190,
     height: 45,
     backgroundColor: '#374A70',
     alignItems: 'center',
@@ -924,7 +924,7 @@ const styles = StyleSheet.create({
   },
   timerContain: {
     bottom: 0,
-    width: 197,
+    width: 190,
     height: 40,
     alignItems: 'center',
     borderBottomStartRadius: 10,

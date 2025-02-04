@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
   head: {
     color: 'orange',
     fontSize: 20,
-    lineHeight: 25,
+    lineHeight: 20,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   box1: {

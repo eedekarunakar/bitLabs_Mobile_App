@@ -45,13 +45,17 @@ const Pass = ({navigation}: any) => {
       <View style={styles.Items}>
         {/* Greeting Section */}
         <View style={styles.centeredView}>
-          <Text style={styles.nameText}>Hi Vitesh Kumar,</Text>
+        <Text style={styles.nameText}>
+            Hi {applicant.name
+              ? applicant.name.charAt(0).toUpperCase() + applicant.name.slice(1)
+              : 'Guest'},
+          </Text>
           <View style={styles.score}>
             <MaskedView
               maskElement={
                 <Text style={[styles.scoreText, styles.maskedText]}>
-                  You scored {80}%
-                </Text>
+                You scored {roundedScore}%
+              </Text>
               }>
               <LinearGradient
                 colors={['#F97316', '#FAA729']}
@@ -146,7 +150,7 @@ const Pass = ({navigation}: any) => {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() =>
-                  navigation.navigate('BottomTab', {screen: 'Badge'})
+                  navigation.navigate('BottomTab', {screen: 'Badges'})
                 }>
                 <LinearGradient
                   colors={['#F97316', '#FAA729']}
@@ -182,8 +186,7 @@ const styles = StyleSheet.create({
   },
 
   nameText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 26, // Adjusted font size dynamically
     lineHeight: 27,
     color: '#000000',
@@ -197,7 +200,6 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontFamily: 'PlusJakartaSans-Medium',
-    fontWeight: '700',
     fontSize: 28, // Adjusted font size dynamically
     lineHeight: 28,
     color: 'orange',
@@ -246,7 +248,6 @@ const styles = StyleSheet.create({
   },
   laterText: {
     fontFamily: 'PlusJakartaSans-Medium',
-    fontWeight: '700',
     fontSize: 14, // Adjusted font size dynamically
     lineHeight: 14.4,
     color: '#4D82D1',
