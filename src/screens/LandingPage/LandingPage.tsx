@@ -21,20 +21,20 @@ const LandingPage = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const {
         loginUserName, setLoginUserName, loginPassword, setLoginPassword,
-        loginErrors, loginMessage, validateAndLogin, validateLogin
+        loginErrors, loginMessage, validateAndLogin, validateLogin , setLoginErrors
     } = useLoginViewModel();
 
     const {
         signupName, setSignupName, signupEmail, setSignupEmail, signupNumber, setSignupNumber,
         signupPassword, setSignupPassword, signUpErrors, otp, setOtp, otpReceived, registration,
-        isOtpExpired, timer, isOtpValid,
-        validateAndSignup, handleOtp, validateSignup
+        isOtpExpired, timer, isOtpValid,setRegistration,
+        validateAndSignup, handleOtp, validateSignup,setSignUpErrors,setOtpReceived
     } = useSignupViewModel();
 
     const { userInfo, isSignedIn, signIn, signOut } = useGoogleSignIn();
     useEffect(() => {
         if (registration) {
-            setActiveButton('login');
+                setActiveButton('login');
         }
     }, [registration]
     );
@@ -62,34 +62,23 @@ const LandingPage = () => {
 
 
 
- 
-    const resetLoginFields = () => {
-        setLoginUserName('');
-        setLoginPassword('');
-        setSignupName('');
-        setSignupEmail('' );
-        setSignupNumber('');
-        setSignupPassword('');
-        setOtp('');
-        loginErrors.username = '';
-        loginErrors.password = '';
-
-    };
-    const resetsignupfields = () =>{
-        signUpErrors.name='';
-        signUpErrors.email='';
-        signUpErrors.password ='';
-        signUpErrors.whatsappnumber='';
-
-    }
 
     useEffect(() => {
-        if (activeButton === 'signup') {
-            resetLoginFields();
+        if(activeButton==='signup'){
+            setLoginErrors({})
         }
-        else if (activeButton==='login'){
-            resetsignupfields()
+        if (registration) {
+          setSignUpErrors({});
+          setSignupEmail('');
+          setSignupName('');
+          setSignupNumber('');
+          setSignupPassword('');
+          setOtp('');
+          setOtpReceived(false)
+        //   setTimeout(()=>{setRegistration(false)},3000)
+          
         }
+       
     }, [activeButton]);
 
     type LoginErrorParam = "username" | "password" ;
@@ -159,7 +148,7 @@ const LandingPage = () => {
                         </View>
 
 
-                        {registration && <Text style={{ color: 'green', marginTop: 10,fontFamily:'PlusJakartaSans-Regular' }}>Registration successful</Text>}
+                        {registration && (activeButton==='login')?<Text style={{ color: 'green', marginTop: 10,fontFamily:'PlusJakartaSans-Regular' }}>Registration successful</Text>:''}
                         {activeButton === 'login' ? (
                             <View style={styles.formContainer}>
 

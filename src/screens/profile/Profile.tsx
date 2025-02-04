@@ -27,6 +27,7 @@ import Toast from 'react-native-toast-message';
 
 
 
+
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -46,12 +47,11 @@ function ProfileComponent() {
     const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
     const [resumeText, setResumeText] = useState<string>('');
     const { fetchProfilePhoto, photo } = useProfilePhoto();
-
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [showBorder, setShowBorder] = useState(false);
     const [bgcolor, setbgcolor] = useState(false)
-    //  const [saveClicked, setSaveClicked] = useState(false);
+    const [verified, setVerified] = useState(false)
     const [isUploadComplete, setIsUploadComplete] = useState(false);
 
 
@@ -117,6 +117,21 @@ function ProfileComponent() {
             fetchProfilePhoto(userToken, userId);
         }
     }, [userId, userToken]);
+    useEffect(() => {
+        const checkVerification = async () => {
+          try {
+            const result = await ProfileService.checkVerified(userToken, userId);
+            if (result) {
+                console.log("verified: "+result)
+              setVerified(result);
+            }
+          } catch (error) {
+            console.error('Error checking verification:', error);
+          }
+        };
+      
+        checkVerification();
+      }, [userId]);
 
     const showToast = (message: string) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -406,6 +421,7 @@ function ProfileComponent() {
             visibilityTime: 5000,
         });
     }
+ 
 
 
 
@@ -438,9 +454,12 @@ function ProfileComponent() {
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center', width: '80%' }]}>
-                                {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                            <Text style={[styles.name, { textAlign:'center', alignSelf: 'center'}]}>
+                            {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
                             </Text>
+                            {verified&&<Icon5 name="verified" size={25} color="#334584" style={{marginLeft:5}} />}
+                            </View>
 
                             <View style={styles.infoContainer}>
                                 <View style={styles.info}>
@@ -664,10 +683,10 @@ function ProfileComponent() {
                                         />
                                     </View>
 
-                                    <View style={{ padding: 10, paddingHorizontal: 60    }}>
-                                        <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
-                                        <Text style={{ color: '#6C6C6C', textAlign: 'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>File must be less than 1Mb</Text>
-                                        <Text style={{ color: '#6C6C6C',textAlign:'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>Only .doc or .PDFs are allowed.</Text>
+                                    <View style={{ padding: 10, paddingHorizontal: 60 }}>
+                                        <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center', fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center', alignSelf: 'center', fontFamily: 'PlusJakartaSans-Medium' }}>File must be less than 1Mb</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center', alignSelf: 'center', fontFamily: 'PlusJakartaSans-Medium' }}>Only .doc or .PDFs are allowed.</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -739,13 +758,13 @@ function ProfileComponent() {
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
 
-                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold'}}>Create Resume</Text>
+                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
 
                                 </TouchableOpacity>
                             </View>
                             <TouchableOpacity style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]} onPress={handleSaveResume} disabled={isUploadComplete}>
                                 {
-                                    isUploadComplete? (
+                                    isUploadComplete ? (
                                         <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
                                             <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
                                         </View>
