@@ -97,10 +97,6 @@ const useSignupViewModel = () => {
       text1:message,
       position:'bottom',
       visibilityTime:5000,
-      text1Style:{
-        fontFamily:'PlusJakartaSans-Medium',
-        fontSize:12
-      }
     })
   }
 

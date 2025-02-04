@@ -8,10 +8,6 @@ import Toast from 'react-native-toast-message'
       position:'bottom',
       bottomOffset: 80,
       visibilityTime:5000,
-      text1Style: {
-        fontSize: 12,
-        fontFamily: 'PlusJakartaSans-Medium',
-      },
     })
   }
   export{showToast}

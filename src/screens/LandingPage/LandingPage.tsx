@@ -224,7 +224,7 @@ const LandingPage = () => {
 
                                         {isOtpExpired && otpReceived ?
                                             <TouchableOpacity style={[styles.forgotPassword, { zIndex: 10 }]} onPress={validateAndSignup}>
-                                                <Text style={{ color: '#0E8CFF',fontWeight:'bold' ,fontFamily:'PlusJakartaSans-Regular' }}>Resend OTP</Text>
+                                                <Text style={{ color: '#0E8CFF',fontFamily:'PlusJakartaSans-Bold',fontSize:12 }}>Resend OTP</Text>
                                             </TouchableOpacity>
                                             : <View style={{ alignItems: 'center' }}>
                                                 <Text style={{ color: 'red',fontFamily:'PlusJakartaSans-Regular' }}>Please verify OTP within {timer} seconds</Text>

@@ -339,7 +339,7 @@ function ProfileComponent() {
                         return newProgress;
                     });
                 }, 1000); // Update progress every 1 second
-            }, 500); // 0.5 second delay before starting the progress bar
+            }, 10); // 0.5 second delay before starting the progress bar
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 console.log('User canceled the picker');
@@ -664,10 +664,10 @@ function ProfileComponent() {
                                         />
                                     </View>
 
-                                    <View style={{ padding: 10, paddingHorizontal: 60    }}>
+                                    <View style={{ padding: 10,   }}>
                                         <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
-                                        <Text style={{ color: '#6C6C6C', textAlign: 'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>File must be less than 1Mb</Text>
-                                        <Text style={{ color: '#6C6C6C',textAlign:'center',alignSelf:'center',fontFamily: 'PlusJakartaSans-Medium'}}>Only .doc or .PDFs are allowed.</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium'}}>File must be less than 1Mb</Text>
+                                        <Text style={{ color: '#6C6C6C',textAlign:'center',fontFamily: 'PlusJakartaSans-Medium'}}>Only .doc or .PDFs are allowed.</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -724,7 +724,7 @@ function ProfileComponent() {
                                         <View style={[styles.line, { marginLeft: 3 }]}></View>
                                     </View>) :
                                     (
-                                        <View style={[styles.orContainer, { marginTop: -25, marginVertical: 20, }]}>
+                                        <View style={[styles.orContainer, { marginTop: -40, marginVertical: 20, }]}>
                                             <View style={styles.line}></View>
                                             <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
                                             <View style={[styles.line, { marginLeft: 3 }]}></View>
@@ -739,7 +739,7 @@ function ProfileComponent() {
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
 
-                                    <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold'}}>Create Resume</Text>
+                                    <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold'}}>Create Resume</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -791,8 +791,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     uploadContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+        //flexDirection: "row",
+        //justifyContent: "space-between",
         padding: 5,
 
     },
@@ -810,7 +810,7 @@ const styles = StyleSheet.create({
     fileContainer: {
         padding: 10,
         marginBottom: 10,
-        marginTop: -30
+        marginTop: -55
     },
     progressContainer: {
         marginTop: 10,
@@ -829,7 +829,7 @@ const styles = StyleSheet.create({
 
     uploadButton: {
         width: '100%',
-        backgroundColor: '#F8F8F8',
+        backgroundColor: '#4B4A4A',
         alignItems: 'center',
         justifyContent: 'center',
         height: 30,

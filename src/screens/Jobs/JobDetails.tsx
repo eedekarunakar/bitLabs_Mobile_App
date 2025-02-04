@@ -125,7 +125,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         // Alert.alert('Success', 'Job saved successfully!');
         Toast.show({
           type: 'success',
-          text1: 'Success',
+          text1: '',
           text2: 'Job saved successfully!',
           text1Style: {
             fontSize: 14,
@@ -170,7 +170,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         // Alert.alert('Success', 'Job application submitted successfully!');
         Toast.show({
           type: 'success',
-          text1: 'Success',
+          text1: '',
           text2: 'Job application submitted successfully!',
           text1Style: {
             fontSize: 14,
