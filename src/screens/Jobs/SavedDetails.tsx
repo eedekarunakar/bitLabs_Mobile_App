@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   postedOn: {
-    fontSize: 12,
+    fontSize: 9,
     color: '#888',
     fontFamily: 'PlusJakartaSans-Medium',
   },
