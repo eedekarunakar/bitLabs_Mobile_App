@@ -5,20 +5,20 @@ import { JobData1 } from '../../models/Jobs/SavedJob';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../New';
- 
+
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
   const [reload, setReload] = useState(false); // Reload state
- 
+
   // Automatically reload data when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchSavedJobs(); // Trigger a reload of the saved jobs data
     }, [reload]) // Dependency ensures fresh data each time
   );
- 
- 
+
+
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -26,7 +26,7 @@ const SavedJobs = () => {
       </View>
     );
   }
- 
+
   if (error || savedJobs.length === 0) {
     return <Text style={styles.placeholderText}>No saved jobs available!</Text>;
   }
@@ -57,18 +57,17 @@ const SavedJobs = () => {
               </Text>
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
- 
+
           </View>
-          <View style={[styles.tag, styles.locationContainer]}>
-            <Image
-              source={require('../../assests/Images/rat/loc.png')}
-              style={styles.locationIcon}
-            />
-            <Text style={styles.locationText}>{job.location}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
- 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
+          <View style={styles.tagRow}>
+            <View style={[styles.tag, styles.locationContainer]}>
+              <Image
+                source={require('../../assests/Images/rat/loc.png')}
+                style={styles.locationIcon}
+              />
+              <Text style={styles.locationText}>{job.location}</Text>
+            </View>
+            <View style={styles.oval}>
               <Image
                 source={require('../../assests/Images/rat/exp.png')}
                 style={styles.brieficon}
@@ -76,30 +75,19 @@ const SavedJobs = () => {
               <Text style={styles.ovalText}>
                 Exp: {job.minimumExperience} - {job.maximumExperience} years
               </Text>
-              <Text style={{ color: '#E2E2E2' }}>  |</Text>
             </View>
- 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Text style={{ fontSize: 13 }}>₹ </Text>
-                <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
-                <Text style={{ color: '#E2E2E2' }}>  |</Text>
-              </View>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
-            </View>
- 
-            <View style={{marginTop:10}}>
-              <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
-              </View>
+            <Text style={styles.tag}>
+              ₹ {job.minSalary.toFixed(2)} - {job.maxSalary.toFixed(2)} LPA
+            </Text>
+            <Text style={styles.tag}>{job.employeeType}</Text>
           </View>
+          <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f6f6f6' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
@@ -133,33 +121,39 @@ const styles = StyleSheet.create({
   },
   tagRow: { flexDirection: 'row', flexWrap: 'nowrap', marginBottom: 8 },
   tag: {
-    marginTop: -10,
+    backgroundColor: '#f6f6f6',
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
     marginRight: 3,
     marginBottom: 8,
-    fontSize: 11,
+    fontSize: 8.5,
     fontFamily: 'PlusJakartaSans-Medium'
   },
- 
-  ovalText: { fontSize: 11, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
-  brieficon: { height: 11, width: 11, marginRight: 8 },
-  locationContainer: { flexDirection: 'row', alignItems: 'center' ,marginTop:-5},
-  locationIcon: { width: 11, height: 11, marginRight: 6 },
-  locationText: { fontSize: 11, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  oval: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f6f6f6', // Background color for the oval
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 50, // Makes the container oval
+    marginBottom: 8,
+    marginRight: 3
+  },
+  ovalText: { fontSize: 8.5, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  brieficon: { height: 8, width: 8, marginRight: 8 },
+  locationContainer: { flexDirection: 'row', alignItems: 'center' },
+  locationIcon: { width: 8, height: 8, marginRight: 6 },
+  locationText: { fontSize: 8.5, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
   postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
-    fontSize: 9, // Font size
+    fontSize: 8, // Font size
     fontStyle: 'normal', // Font style
+    fontWeight: '500', // Font weight
     lineHeight: 23.76, // Line height (in points, not percentage)
-    marginTop:10,
-    display:'flex',
-    left:-40
   },
 });
- 
+
 export default SavedJobs;
- 

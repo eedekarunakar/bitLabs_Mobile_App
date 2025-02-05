@@ -14,7 +14,7 @@ import API_BASE_URL from '../../services/API_Service';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
-
+import Fileupload from "../../assests/icons/Fileupload";
 import { ScrollView } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
 
@@ -268,10 +268,11 @@ handleSave();
             <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5,alignSelf: 'stretch', borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20, }]}>
               <TouchableOpacity onPress={handleUploadResume}>
                 <View style={{ alignItems: 'center' }}>
-                  <Image
+                  {/* <Image
                     source={require('../../../src/assests/Images/file1.png')}
                     style={{ position: 'absolute', top: 30 }}
-                  />
+                  /> */}
+                  <Fileupload style={{position:'absolute',top:30}}/>
                 </View>
  
                 <View style={{ padding: 10,}}>
