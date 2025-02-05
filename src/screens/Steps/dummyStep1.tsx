@@ -67,13 +67,19 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     };
  
     // Validate first name
-    if (!formData.firstName || formData.firstName.length < 3) {
+    if (!formData.firstName) {
+      newErrors.firstName = 'First name is required.';
+      isValid = false;
+    } else if (formData.firstName.length < 3) {
       newErrors.firstName = 'First name should be at least 3 characters long.';
       isValid = false;
     }
  
     // Validate last name
-    if (!formData.lastName || formData.lastName.length < 3) {
+    if (!formData.lastName) {
+      newErrors.lastName = 'Last name is required.';
+      isValid = false;
+    } else if (formData.lastName.length < 3) {
       newErrors.lastName = 'Last name should be at least 3 characters long.';
       isValid = false;
     }
@@ -129,7 +135,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           />
  
           <TextInput
-            placeholder="First Name" placeholderTextColor="#B1B1B1"
+            placeholder="*First Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.firstName}
             onChangeText={(text) => {
@@ -145,7 +151,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           ) : null}
  
           <TextInput
-            placeholder="Last Name" placeholderTextColor="#B1B1B1"
+            placeholder="*Last Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.lastName}
             onChangeText={(text) => {
