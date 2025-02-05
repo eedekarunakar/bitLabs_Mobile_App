@@ -11,7 +11,7 @@ import { ProfileService } from '../../services/profile/ProfileService';
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
 import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
-
+import Alertcircle from '../../assests/icons/Alertcircle';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -133,15 +133,18 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
           </View>
-          <View style={styles.tagRow}>
-            <View style={[styles.tag, styles.locationContainer]}>
-              <Image
-                source={require('../../assests/Images/rat/loc.png')}
-                style={styles.locationIcon}
-              />
-              <Text style={styles.locationText}>{job.location}</Text>
-            </View>
-            <View style={styles.oval}>
+
+          <View style={[styles.tag, styles.locationContainer]}>
+            <Image
+              source={require('../../assests/Images/rat/loc.png')}
+              style={styles.locationIcon}
+            />
+            <Text style={styles.locationText}>{job.location}</Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center', marginLeft: 10 }}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
               <Image
                 source={require('../../assests/Images/rat/exp.png')}
                 style={styles.brieficon}
@@ -149,15 +152,23 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               <Text style={styles.ovalText}>
                 Exp: {job.minimumExperience} - {job.maximumExperience} years
               </Text>
+              <Text style={{ color: '#E2E2E2' }}>  |</Text>
             </View>
-            <Text style={styles.tag}>
-              ₹ {job.minSalary} - ₹ {job.maxSalary} LPA
-            </Text>
-            <Text style={styles.tag}>{job.employeeType}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Text style={{ fontSize: 13 }}>₹ </Text>
+                <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
+                <Text style={{ color: '#E2E2E2' }}>  |</Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
+            </View>
           </View>
-          <Text style={styles.postedOn}>
-            Posted on {formatDate(job.creationDate)}
-          </Text>
+          <View>
+            <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
+          </View>
         </View>
         <View style={styles.jobCard}>
           <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
@@ -205,10 +216,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             ))}
             {unmatchedSkills.map((skill, index) => (
               <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Image
-                  source={require('../../assests/Images/alert-circle.png')} // Replace with the actual image path
-                  style={styles.unmatchedSkillIcon} // Define this style as needed
-                />
+                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
                 <Text style={[styles.unmatchedSkill]}>{skill}</Text>
               </View>
             ))}
@@ -249,7 +257,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
                   ) : (
                     <Text style={styles.fallbackText}>Image not found</Text>
                   )}
-                  
+
                 </View>
 
               ))}
@@ -301,12 +309,12 @@ const styles = StyleSheet.create({
     marginRight: 3
   },
   ovalText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
   },
   brieficon: {
-    height: 8,
-    width: 8,
+    height: 10,
+    width: 12,
     marginRight: 8,
   },
   saveIcon: {
@@ -349,7 +357,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
-    paddingHorizontal:8,
+    paddingHorizontal: 8,
     marginBottom: 10,
     marginLeft: 16,
     marginTop: 10,
@@ -373,13 +381,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   companyName: {
     fontSize: 14,
     color: '#888',
     marginVertical: 4,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   externalLinkIcon: {
     width: 24,
@@ -396,12 +404,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   locationText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   tag: {
-    backgroundColor: '#f6f6f6',
+
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
@@ -409,7 +417,7 @@ const styles = StyleSheet.create({
     marginRight: 3,
     marginBottom: 8,
     fontSize: 8.5,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   skillTags: {
     backgroundColor: '#f6f6f6',  // Light background color for the tag
@@ -433,9 +441,14 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   postedOn: {
-    fontSize: 12,
-    color: '#888',
-    fontFamily:'PlusJakartaSans-Medium'
+    color: '#979696', // Text color
+    fontFamily: 'PlusJakartaSans-Medium', // Custom font
+    fontSize: 9, // Font size
+    fontStyle: 'normal', // Font style
+    lineHeight: 23.76, // Line height (in points, not percentage)
+    marginTop: 10,
+    display: 'flex',
+    marginLeft: '60%'
   },
   tabs: {
     flexDirection: 'row',
@@ -456,11 +469,11 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     color: '#888',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   activeTabText: {
     color: '#FF8C00',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   footerContainer: {
     flexDirection: 'row',
@@ -502,16 +515,16 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'orange',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   locationIcon: {
-    width: 8,
-    height: 8,
+    width: 11,
+    height: 12,
     marginRight: 4,
   },
   applybuttonText: {
     color: 'white',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   skillMatchContainer: {
     flexDirection: 'row',
@@ -544,13 +557,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   requiredSkills: {
     fontSize: 14,
     color: '#333',
     fontWeight: 'bold',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   skillsContainer: {
     flexDirection: 'row',
@@ -562,7 +575,7 @@ const styles = StyleSheet.create({
     flex: 0,
     backgroundColor: '#F46F16',
     color: 'white',
-    padding:3,
+    padding: 3,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,
@@ -584,12 +597,12 @@ const styles = StyleSheet.create({
   courseTitle: {
     fontSize: 14,
     color: '#333',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   fallbackText: {
     fontSize: 12,
     color: 'red',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   centeredView: {
     justifyContent: "center",
@@ -622,7 +635,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Align image and text side by side
     alignItems: 'center', // Vertically center image and text
     backgroundColor: '#BF2308', // Red background
-    padding:3, // Add padding to the top and bottom
+    padding: 3, // Add padding to the top and bottom
     borderRadius: 10, // Rounded corners
     marginRight: 8, // Space between skill tags
     marginBottom: 4, // Space between rows of skills

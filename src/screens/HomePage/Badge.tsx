@@ -383,10 +383,10 @@ const Badge = ({ route, navigation }: any) => {
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 1 ? '#219734' : '#BFBFBF' },
+                      { backgroundColor: selectedStep >= 1 ? '#219734' : '#BFBFBF', marginLeft: 15 },
                     ]}
                   >
-                    {testName === 'General Aptitude Test' && testStatus === 'P'|| selectedStep > 1 ? (
+                    {testName === 'General Aptitude Test' && testStatus === 'P' || selectedStep > 1 ? (
                       <Icon1 name="check" size={14} style={{ color: 'white' }} />
                     ) : (
                       <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
@@ -395,7 +395,7 @@ const Badge = ({ route, navigation }: any) => {
                   <View
                     style={[
                       styles.stepLine,
-                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF'},
+                      { backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF' },
                     ]}
                   />
                   <View
@@ -405,7 +405,7 @@ const Badge = ({ route, navigation }: any) => {
                     ]}
                   >
                     {selectedStep >= 2 ? (
-                      <Text style={[styles.stepText,{color:'#fff'}]}>2</Text>
+                      <Text style={[styles.stepText, { color: '#fff' }]}>2</Text>
                     ) : (
                       <Text style={styles.stepText}>2</Text>
                     )}
@@ -419,10 +419,10 @@ const Badge = ({ route, navigation }: any) => {
                   <View
                     style={[
                       styles.stepCircle,
-                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF' },
+                      { backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF', marginRight: 15 },
                     ]}
                   >
-                    <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : 'black' }} />
+                    <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : '#6D6969' }} />
                   </View>
                 </View>
                 {/* Other Sections */}
@@ -452,8 +452,8 @@ const Badge = ({ route, navigation }: any) => {
                         A Comprehensive Assessment to Measure Your Analytical and Reasoning Skills
                       </Text>
                     </View>
-                    <View style={{marginRight:10}}>
-                      <Image source={require('../../assests/Images/boyimage.png')} style={{height:100}} />
+                    <View style={{ marginRight: 10 }}>
+                      <Image source={require('../../assests/Images/boyimage.png')} style={{ height: 100 }} />
                     </View>
                   </View>
 
@@ -552,7 +552,7 @@ const Badge = ({ route, navigation }: any) => {
                     }
                   >
                     <Text style={styles.buttonText}>Take Test</Text>
-                    <Icon name="external-link" size={20} color="white" style={{marginRight:15}}/>
+                    <Icon name="external-link" size={20} color="white" style={{ marginRight: 15 }} />
                   </TouchableOpacity>
                 </View>
               ))
@@ -598,7 +598,7 @@ const Badge = ({ route, navigation }: any) => {
                             style={[styles.gradientBackground, styles.timerContain]} // Combine gradient styles with the timer container
                           >
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                              <Text style={styles.timerText1}>Retake test in:</Text>
+                              <Text style={styles.timerText1}>Retake test in</Text>
                               <Text style={styles.timerText1}>
                                 {timer.days}d {timer.hours}h {timer.minutes}m
                               </Text>
@@ -630,7 +630,10 @@ const Badge = ({ route, navigation }: any) => {
                         style={[styles.button, styles.verifiedButton]}
                         disabled
                       >
-                        <Text style={styles.verifiedText}>✔ Verified</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                          <Icon name="check" size={19} color="white" style={{ marginRight: 5 }} />
+                          <Text style={[styles.verifiedText, { lineHeight: 19 }]}>Verified</Text>
+                        </View>
                       </TouchableOpacity>
                     )}
                   </View>
@@ -720,7 +723,7 @@ const styles = StyleSheet.create({
   },
   stepLine: {
     flex: 1,
-    width: 105,
+    width: 100,
     height: 1,
     backgroundColor: '#BFBFBF',
 
@@ -921,9 +924,10 @@ const styles = StyleSheet.create({
   verifiedText: {
     color: 'white',
     fontFamily: 'PlusJakartaSans-Bold',
+    textAlignVertical:'center'
   },
   timerContain: {
-    bottom: 0,
+    bottom: 5,
     width: 190,
     height: 40,
     alignItems: 'center',
@@ -933,11 +937,12 @@ const styles = StyleSheet.create({
   },
   timerText1: {
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: 400,
     color: 'black',
     marginRight: 5, // Adding space between text and timer
-    lineHeight: 23
+    lineHeight: 20,
+    marginBottom: 1
   },
   cardFooter: {
     marginTop: 'auto', // Push the footer to the bottom of the card
