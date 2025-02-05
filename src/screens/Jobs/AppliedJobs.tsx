@@ -14,13 +14,13 @@ import { useAuth } from '../../context/Authcontext';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../New';
-
+ 
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
   const { appliedJobs, loading, error } = useAppliedJobsViewModel(userId, userToken);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList, 'AppliedJobs'>>();
-
+ 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -29,7 +29,7 @@ const AppliedJobs = () => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };;
-
+ 
   const renderJobs = () => {
     if (loading) {
       return (
@@ -38,15 +38,15 @@ const AppliedJobs = () => {
         </View>
       );
     }
-
+ 
     if (error) {
       return <Text style={styles.placeholderText}>{error}</Text>;
     }
-
+ 
     if (appliedJobs.length === 0) {
       return <Text style={styles.placeholderText}>No applied jobs available!</Text>;
     }
-
+ 
     return appliedJobs.map((job: JobData) => (
       <TouchableOpacity
         key={job.id}
@@ -64,41 +64,52 @@ const AppliedJobs = () => {
             </Text>
             <Text style={styles.companyName}>{job.companyname}</Text>
           </View>
-
+ 
         </View>
-        <View style={styles.tagRow}>
-          <View style={[styles.tag, styles.locationContainer]}>
-            <Image
-              source={require('../../assests/Images/rat/loc.png')}
-              style={styles.locationIcon}
-            />
-            <Text style={styles.locationText}>{job.location}</Text>
-          </View>
-          <View style={styles.oval}>
+ 
+        <View style={[styles.tag, styles.locationContainer]}>
+          <Image
+            source={require('../../assests/Images/rat/loc.png')}
+            style={styles.locationIcon}
+          />
+          <Text style={styles.locationText}>{job.location}</Text>
+        </View>
+ 
+        <View style={{ flexDirection: 'row',marginLeft:10,justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
+ 
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
             <Image
               source={require('../../assests/Images/rat/exp.png')}
               style={styles.brieficon}
             />
             <Text style={styles.ovalText}>
-              Exp: {job.minimumExperience} - {job.maximumExperience} years
+              Exp: {job.minimumExperience} - {job.maximumExperience} years   
             </Text>
+            <Text style={{color:'#E2E2E2'}}>  |</Text>
           </View>
-          <Text style={styles.tag}>
-            ₹ {job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA
-          </Text>
-          <Text style={styles.tag}>{job.employeeType}</Text>
-        </View>
-        {/* <Text style={styles.description}>
-          {job.description.replace(/<[^>]+>/g, '')}
-        </Text> */}
-        <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
+ 
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+              <Text style={{ fontSize: 13 }}>₹ </Text>
+              <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
+              <Text style={{color:'#E2E2E2'}}>  |</Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={styles.ovalText}>{job.employeeType}</Text>
+          </View>
+          </View>
+          <View>
+            <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
+          </View>
       </TouchableOpacity>
+ 
     ));
   };
-
+ 
   return <ScrollView style={styles.container}>{renderJobs()}</ScrollView>;
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -135,42 +146,32 @@ const styles = StyleSheet.create({
     marginRight: 3
   },
   ovalText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
   },
-
+ 
   brieficon: {
-    height: 8,
-    width: 8,
+    height: 10,
+    width: 12,
     marginRight: 8,
   },
   briefcon: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  tag: {
-    backgroundColor: '#f6f6f6',
-    color: 'black',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 50,
-    marginRight: 3,
-    marginBottom: 8,
-    fontSize: 8,
-    fontFamily: 'PlusJakartaSans-Medium'
-  },
+ 
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   locationIcon: {
-    width: 8,
-    height: 8,
+    width: 11,
+    height: 12,
     marginRight: 6,
   },
   locationText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
   },
@@ -208,15 +209,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     marginBottom: 8,
-
+ 
   },
-  // tag: {
-  //   backgroundColor: '#f6f6f6',
-  //   padding: 4,
-  //   borderRadius: 50,
-  //   marginRight: 8,
-  //   fontSize: 9,
-  // },
+  tag: {
+    marginTop: -10,
+    color: 'black',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 50,
+    marginRight: 3,
+    marginBottom: 8,
+    fontSize: 11,
+    fontFamily: 'PlusJakartaSans-Medium'
+  },
   description: {
     fontSize: 14,
     color: '#666',
@@ -225,11 +230,16 @@ const styles = StyleSheet.create({
   postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
-    fontSize: 8, // Font size
+    fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '500', // Font weight
     lineHeight: 23.76, // Line height (in points, not percentage)
+    marginTop:10,
+    display:'flex',
+    marginLeft:'58%',
+    //marginBottom:8
+    
+    
   },
 });
-
+ 
 export default AppliedJobs;

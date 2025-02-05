@@ -23,10 +23,11 @@ const Pass = ({navigation}: any) => {
   const {userId, userToken} = useAuth();
   const {finalScore, testName}: any = route.params; // Access the passed score
   const {profileData} = useProfileViewModel(userToken, userId);
-  const applicant = profileData?.applicant || {}; // Fallback to an empty object
+  const {basicDetails} = profileData || [];// Fallback to an empty object
+ 
   const roundedScore = Math.round(finalScore);
   console.log('Final Score:', finalScore);
-  console.log('Applicant:', applicant);
+  console.log('Applicant:', basicDetails);
   console.log('Test Name:', testName);
   useFocusEffect(
       React.useCallback(() => {
@@ -46,8 +47,8 @@ const Pass = ({navigation}: any) => {
         {/* Greeting Section */}
         <View style={styles.centeredView}>
         <Text style={styles.nameText}>
-            Hi {applicant.name
-              ? applicant.name.charAt(0).toUpperCase() + applicant.name.slice(1)
+            Hi {basicDetails.firstName
+              ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
               : 'Guest'},
           </Text>
           <View style={styles.score}>
