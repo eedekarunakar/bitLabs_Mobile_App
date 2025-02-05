@@ -94,7 +94,8 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   const showToast = (type1: 'success' | 'error', message: string,) => {
     Toast.show({
       type: type1,
-      text1: message,
+      text1: '',
+      text2:message,
       position: 'bottom',
       onPress: () => Toast.hide(),
       visibilityTime: 5000,

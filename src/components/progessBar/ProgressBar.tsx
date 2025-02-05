@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-
+import Icon from 'react-native-vector-icons/Feather';
 const screenWidth = Dimensions.get('window').width;
 
 type ProgressBarProps = {
@@ -45,7 +45,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ initialStep }) => {
                     isCompleted && styles.completedStepText,
                   ]}
                 >
-                  {isCompleted ? '✔' : step.id}
+                  {isCompleted ? <Icon name="check" size={20} color="white" /> : step.id}
+
                 </Text>
               </View>
 

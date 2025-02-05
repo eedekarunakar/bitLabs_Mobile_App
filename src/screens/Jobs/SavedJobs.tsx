@@ -5,20 +5,20 @@ import { JobData1 } from '../../models/Jobs/SavedJob';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../New';
-
+ 
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
   const [reload, setReload] = useState(false); // Reload state
-
+ 
   // Automatically reload data when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchSavedJobs(); // Trigger a reload of the saved jobs data
     }, [reload]) // Dependency ensures fresh data each time
   );
-
-
+ 
+ 
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -26,7 +26,7 @@ const SavedJobs = () => {
       </View>
     );
   }
-
+ 
   if (error || savedJobs.length === 0) {
     return <Text style={styles.placeholderText}>No saved jobs available!</Text>;
   }
@@ -57,16 +57,17 @@ const SavedJobs = () => {
               </Text>
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
-
+ 
           </View>
-          <View style={styles.tagRow}>
-            <View style={[styles.tag, styles.locationContainer]}>
+          <View style={[styles.tag, styles.locationContainer]}>
               <Image
                 source={require('../../assests/Images/rat/loc.png')}
                 style={styles.locationIcon}
               />
-              <Text style={styles.locationText}>{job.location}</Text>
-            </View>
+              <Text style={styles.locationText}> {job.location}</Text>
+            </View>    
+          <View style={styles.tagRow}>
+           
             <View style={styles.oval}>
               <Image
                 source={require('../../assests/Images/rat/exp.png')}
@@ -75,11 +76,17 @@ const SavedJobs = () => {
               <Text style={styles.ovalText}>
                 Exp: {job.minimumExperience} - {job.maximumExperience} years
               </Text>
+              <Text style={{color:'#E2E2E2'}}>  |</Text>
             </View>
+            <View style={styles.oval1}>
             <Text style={styles.tag}>
               ₹ {job.minSalary.toFixed(2)} - {job.maxSalary.toFixed(2)} LPA
             </Text>
+            <Text style={{color:'#E2E2E2'}}>  |</Text>
             <Text style={styles.tag}>{job.employeeType}</Text>
+ 
+            </View>
+ 
           </View>
           <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
         </TouchableOpacity>
@@ -87,7 +94,7 @@ const SavedJobs = () => {
     </ScrollView>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f6f6f6' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
@@ -95,12 +102,12 @@ const styles = StyleSheet.create({
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,
-    padding: 14,
+    padding: 10,
     paddingHorizontal: 10,
     margin: 12,
     marginBottom: 0,
   },
-  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
   companyLogo: { width: 50, height: 50, borderRadius: 15, marginRight: 16 },
   jobDetails: { flex: 1 },
   jobTitle: {
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal', // Font style
     lineHeight: 16, // Adjust line height as needed
     textTransform: 'capitalize', // Capitalize text
+    marginTop:10,
   },
   companyName: {
     fontSize: 12,
@@ -119,41 +127,57 @@ const styles = StyleSheet.create({
     color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
-  tagRow: { flexDirection: 'row', flexWrap: 'nowrap', marginBottom: 8 },
+  tagRow: { flexDirection: 'row', flexWrap: 'nowrap', marginBottom: 8, justifyContent:'flex-start' },
   tag: {
-    backgroundColor: '#f6f6f6',
+   
     color: 'black',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingVertical: 2,
+    paddingHorizontal: 5,
     borderRadius: 50,
-    marginRight: 3,
-    marginBottom: 8,
-    fontSize: 8.5,
-    fontFamily: 'PlusJakartaSans-Medium'
+    //marginRight: 3,
+    //marginBottom: 8,
+    fontSize: 11,
+    fontFamily: 'PlusJakartaSans-Medium',
+   
   },
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6', // Background color for the oval
-    paddingHorizontal: 12,
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 50, // Makes the container oval
+   
+    //marginRight: 30,
+    marginTop:-7,
+   
+  },
+  oval1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    //paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 50, // Makes the container oval
     marginBottom: 8,
-    marginRight: 3
+    //marginRight: 3,
+     marginTop:3
   },
-  ovalText: { fontSize: 8.5, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
-  brieficon: { height: 8, width: 8, marginRight: 8 },
+  ovalText: { fontSize: 11, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  brieficon: { height: 10, width: 12, marginRight: 8, marginLeft:-2 },
   locationContainer: { flexDirection: 'row', alignItems: 'center' },
-  locationIcon: { width: 8, height: 8, marginRight: 6 },
-  locationText: { fontSize: 8.5, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
+  locationIcon: { width: 11, height: 12, marginRight: 1},
+  locationText: { fontSize: 11, color: 'black', fontFamily: 'PlusJakartaSans-Medium' },
   postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
-    fontSize: 8, // Font size
+    fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
     fontWeight: '500', // Font weight
-    lineHeight: 23.76, // Line height (in points, not percentage)
+    lineHeight: 23.76, // Line height (in points, not percentage),
+    //marginLeft:200
+    position:'relative',
+    left:'58%',
+    marginTop:-19
   },
 });
-
+ 
 export default SavedJobs;

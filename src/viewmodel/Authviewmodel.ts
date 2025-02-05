@@ -96,9 +96,14 @@ const useSignupViewModel = () => {
   const showToast =(type: 'success'|'error',message:string)=>{
     Toast.show({
       type:type,
-      text1:message,
+      text1:'',
+      text2:message,
       position:'bottom',
       visibilityTime:5000,
+      text2Style:{
+        fontFamily:'PlusJakartaSans-Medium',
+        fontSize:12
+      }
     })
   }
 

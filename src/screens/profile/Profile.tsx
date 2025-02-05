@@ -53,7 +53,7 @@ function ProfileComponent() {
     const [bgcolor, setbgcolor] = useState(false)
     const [verified, setVerified] = useState(false)
     const [isUploadComplete, setIsUploadComplete] = useState(false);
-
+    
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
@@ -142,12 +142,12 @@ function ProfileComponent() {
         const maxSize = 1048576; // 1 MB in bytes
 
         if (!allowedTypes.includes(photoFile.type)) {
-            showToast('Only JPEG and PNG files are allowed.');
+            toastmsg('error','Only JPEG and PNG files are allowed.');
             return false;
         }
 
         if (photoFile.fileSize > maxSize) {
-            showToast('File size must be less than 1 MB.');
+            toastmsg('error','File size must be less than 1 MB.');
             return false;
         }
 
@@ -162,10 +162,10 @@ function ProfileComponent() {
             if (result.success) {
                 console.log('Photo uploaded successfully');
                 fetchProfilePhoto(userToken, userId);
-                showToast('Profile photo uploaded successfully!');
+                toastmsg('success','Profile photo uploaded successfully!');
             } else {
                 console.log('Failed to upload photo:', result.message);
-                showToast('Failed to upload photo.');
+                toastmsg('error','Failed to upload photo.');
             }
         } catch (error) {
             console.error('Error uploading photo:', error);
@@ -206,7 +206,7 @@ function ProfileComponent() {
     };
     const removePhoto = async () => {
         if (photo === DEFAULT_PROFILE_IMAGE) {
-            showToast('No photo to remove.');
+            toastmsg('error','No photo to remove.');
             return;
         }
         setIsLoading(true);
@@ -226,16 +226,16 @@ function ProfileComponent() {
             if (result.success) {
                 await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
                 console.log('Default photo uploaded successfully');
-                showToast('Default image set successfully!');
+                toastmsg('success','Default image set successfully!');
             } else {
                 console.log('Failed to set default photo:', result.message);
-                showToast('Failed to remove photo.');
+                toastmsg('error','Failed to remove photo.');
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Error setting default photo:', error.message);
             }
-            showToast('Error removing photo. Please try again.');
+            toastmsg('error','Error removing photo. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -306,8 +306,9 @@ function ProfileComponent() {
         setResumeText('');
         setLoading(false);
         setProgress(0);
-        showToast('Upload canceled.');
+        toastmsg('error', 'Upload cancelled');
         setShowBorder(false);
+       
     };
 
     const handleUploadResume = async () => {
@@ -318,7 +319,7 @@ function ProfileComponent() {
             });
 
             if (!result || result.length === 0) {
-                showToast('No file selected.');
+                toastmsg('error','No file selected.');
                 return;
             }
 
@@ -327,14 +328,14 @@ function ProfileComponent() {
 
             // Validate file size
             if (selectedFile.size && selectedFile.size > maxSize) {
-                showToast('File size exceeds the 1MB limit.');
+                toastmsg('error','File size exceeds the 1MB limit.');
                 return;
             }
 
             // Set selected file but do not upload yet
             setResumeFile(selectedFile);
             setResumeText(selectedFile.name || '');
-            showToast('Resume selected. Uploading...');
+            //showToast('Resume selected. Uploading...');
             setTimeout(() => {
                 // Start the upload process
                 setLoading(true);
@@ -358,13 +359,14 @@ function ProfileComponent() {
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 console.log('User canceled the picker');
-                showToast('Upload canceled.');
+                toastmsg('error','Upload canceled.');
+                setIsUploadComplete(false)
             } else if ((err as { message: string }).message === 'Network Error') {
                 console.log('Network Error:', err);
-                showToast('Network error. Please check your internet connection and try again.');
+                toastmsg('error','Network error. Please check your internet connection and try again.');
             } else {
                 console.error('Unknown error: ', err);
-                showToast('Error selecting file. Please try again.');
+                toastmsg('error','Error selecting file. Please try again.');
             }
         }
     };
@@ -373,8 +375,8 @@ function ProfileComponent() {
 
     const handleSaveResume = async () => {
         if (resumeFile) {
-
-            showToast('Resume uploaded')
+            
+            //showToast('Resume uploaded')
             setbgcolor(false)
             const formData = new FormData();
             formData.append('resume', {
@@ -385,15 +387,16 @@ function ProfileComponent() {
             const response = await ProfileService.uploadResume(userToken, userId, formData);
             if (response.success) {
                 setResumeFile(response.data.fileName);
-                showToast('Resume uploaded successfully!');
+                toastmsg('success', 'Resume uploaded successfully!');
                 setResumeModalVisible(false)
                 setShowBorder(false)
             } else {
                 console.error(response.message);
-                showToast('Error uploading resume. Please try again later.');
+                toastmsg('error', 'Error uploading resume. Please try again later.');
                 setResumeModalVisible(false)
 
             }
+            
         } else {
 
             setbgcolor(true)
@@ -416,9 +419,14 @@ function ProfileComponent() {
     const toastmsg = (type1: 'success' | 'error', message: string) => {
         Toast.show({
             type: type1,
-            text1: message,
+            text1: '',
+            text2:message,
             position: 'bottom',
             visibilityTime: 5000,
+            text2Style:{
+                fontFamily:'PlusJakartaSans-Medium',
+                fontSize:12
+            }
         });
     }
  
@@ -651,6 +659,7 @@ function ProfileComponent() {
                 <View style={{ flex: 1, padding: 10 }}>
                     <View style={styles.card1}>
                         <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
+                        
 
                         <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
                             <Icon3 name='pencil' size={18} color='black' />
@@ -667,7 +676,7 @@ function ProfileComponent() {
                     <View style={styles.modalView1}>
                         <View style={styles.modalCard1}>
                             <View style={{ marginLeft: '95%' }}>
-                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} >
+                                <TouchableOpacity onPress={() => {setResumeModalVisible(false); setIsUploadComplete(false);setLoading(false);setProgress(0);setResumeFile(null);setShowBorder(false)}} >
                                     <Icon7 name="close" size={20} color={'0D0D0D'} />
                                 </TouchableOpacity>
                             </View>
@@ -693,7 +702,7 @@ function ProfileComponent() {
                             </View>
                             <View style={{ marginBottom: 50 }}>
                                 {bgcolor ? (
-                                    <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
+                                    <Text style={{ color: 'red', fontWeight: 'bold',marginBottom:25,marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
                                 ) : (
                                     <Text></Text>
                                 )}

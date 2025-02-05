@@ -128,16 +128,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           text1: '',
           text2: 'Job saved successfully!',
           text1Style: {
-            fontSize: 14,
-            fontFamily:'PlusJakartaSans-Medium'
+            fontSize: 12,
+            fontFamily: 'PlusJakartaSans-Medium'
           },
           text2Style: {
-            fontSize: 14,
-            fontFamily:'PlusJakartaSans-Medium'
+            fontSize: 12,
+            fontFamily: 'PlusJakartaSans-Medium'
           },
           position: 'bottom',
           bottomOffset: 80,
-          visibilityTime:5000
+          visibilityTime: 5000
         });
       }
     } catch (error) {
@@ -145,19 +145,19 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       // Alert.alert('Error', 'Failed to save job.');
       Toast.show({
         type: 'error',
-        text1: 'Error',
+        text1: '',
         text2: 'Failed to save job.',
         text1Style: {
-          fontSize: 14,
-           fontFamily:'PlusJakartaSans-Medium'
+          fontSize: 12,
+          fontFamily: 'PlusJakartaSans-Medium'
         },
         text2Style: {
-          fontSize: 14,
-          fontFamily:'PlusJakartaSans-Medium'
+          fontSize: 12,
+          fontFamily: 'PlusJakartaSans-Medium'
         },
         position: 'bottom',
         bottomOffset: 80,
-        visibilityTime:5000
+        visibilityTime: 5000
       });
     }
   };
@@ -173,12 +173,12 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           text1: '',
           text2: 'Job application submitted successfully!',
           text1Style: {
-            fontSize: 14,
-            fontFamily:'PlusJakartaSans-Medium'
+            fontSize: 12,
+            fontFamily: 'PlusJakartaSans-Medium'
           },
           text2Style: {
-            fontSize: 14,
-            fontFamily:'PlusJakartaSans-Medium'
+            fontSize: 12,
+            fontFamily: 'PlusJakartaSans-Medium'
           },
           position: 'bottom',
           bottomOffset: 80,
@@ -190,15 +190,15 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       // Alert.alert('Error', 'Failed to apply for job.');
       Toast.show({
         type: 'error',
-        text1: 'Error',
+        text1: '',
         text2: 'Failed to apply for job.',
         text1Style: {
-          fontSize: 14,
-          fontFamily:'PlusJakartaSans-Medium'
+          fontSize: 12,
+          fontFamily: 'PlusJakartaSans-Medium'
         },
         text2Style: {
-          fontSize: 14,
-          fontFamily:'PlusJakartaSans-Medium'
+          fontSize: 12,
+          fontFamily: 'PlusJakartaSans-Medium'
         },
         position: 'bottom',
         bottomOffset: 80,
@@ -228,15 +228,18 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
           </View>
-          <View style={styles.tagRow}>
-            <View style={[styles.tag, styles.locationContainer]}>
-              <Image
-                source={require('../../assests/Images/rat/loc.png')}
-                style={styles.locationIcon}
-              />
-              <Text style={styles.locationText}>{job.location}</Text>
-            </View>
-            <View style={styles.oval}>
+          <View style={[styles.tag, styles.locationContainer]}>
+            <Image
+              source={require('../../assests/Images/rat/loc.png')}
+              style={styles.locationIcon}
+            />
+            <Text style={styles.locationText}>{job.location}</Text>
+          </View>
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' ,marginLeft:10}}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
               <Image
                 source={require('../../assests/Images/rat/exp.png')}
                 style={styles.brieficon}
@@ -244,16 +247,26 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               <Text style={styles.ovalText}>
                 Exp: {job.minimumExperience} - {job.maximumExperience} years
               </Text>
+              <Text style={{ color: '#E2E2E2' }}>  |</Text>
             </View>
-            <Text style={styles.tag}>
-              ₹ {job.minSalary} - ₹ {job.maxSalary} LPA
-            </Text>
-            <Text style={styles.tag}>{job.employeeType}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Text style={{ fontSize: 13 }}>₹ </Text>
+                <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
+                <Text style={{ color: '#E2E2E2' }}>  |</Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
+            </View>
           </View>
-          <Text style={styles.postedOn}>
-            Posted on {formatDate(job.creationDate)}
-          </Text>
+          <View>
+            <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
+          </View>
         </View>
+
+
         <View style={styles.jobCard}>
           <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
           <Text style={styles.message}>
@@ -300,7 +313,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             ))}
             {unmatchedSkills.map((skill, index) => (
               <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-               <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
+                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
                 <Text style={[styles.unmatchedSkill]}>{skill}</Text>
               </View>
             ))}
@@ -344,16 +357,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
         )}
       </ScrollView>
-     
-     
+
+
       <View style={styles.footerContainer}>
 
         {/* Save Job Button */}
         {isJobSaved ? (
           <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
             <View style={styles.buttonContent}>
-            <Savedjob height={18} width={18} />
-            <Text style={styles.savedButtonText}> Saved</Text>
+              <Savedjob height={18} width={18} />
+              <Text style={styles.savedButtonText}> Saved</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -376,8 +389,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
             <View>
-           
-            <Text style={styles.appliedButtonText}>✔  Applied</Text>
+
+              <Text style={styles.appliedButtonText}>✔  Applied</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -410,7 +423,7 @@ const styles = StyleSheet.create({
     color: '#F46F16',
     fontSize: 16,
     marginBottom: 8,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   appliedButton: {
     backgroundColor: '#08921E', // Gray background for "Applied"
@@ -428,37 +441,37 @@ const styles = StyleSheet.create({
   },
   appliedButtonText: {
     color: '#fff', // Gray text for "Applied"
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   savedButtonText: {
     color: '#F46F16', // Gray text for "Applied"
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   description: {
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
     flexShrink: 1,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6', // Background color for the oval
+    // Background color for the oval
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 50, // Makes the container oval
-    marginBottom: 8,
+    // Makes the container oval
+    marginBottom: 7,
     marginRight: 3
   },
   ovalText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   brieficon: {
-    height: 8,
-    width: 8,
+    height: 11,
+    width: 11,
     marginRight: 8,
   },
   saveIcon: {
@@ -503,9 +516,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
-    margin:12,
+    margin: 12,
     marginBottom: 2,
-    paddingHorizontal:8
+    paddingHorizontal: 8,
+    
   },
   row: {
     flexDirection: 'row',
@@ -524,13 +538,13 @@ const styles = StyleSheet.create({
   jobTitle: {
     fontSize: 16,
     color: '#333',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   companyName: {
     fontSize: 14,
     color: '#888',
     marginVertical: 4,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   externalLinkIcon: {
     width: 24,
@@ -547,20 +561,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   locationText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   tag: {
-    backgroundColor: '#f6f6f6',
+    marginTop: -10,
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
     marginRight: 3,
     marginBottom: 8,
-    fontSize: 9,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontSize: 11,
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   skillTags: {
     backgroundColor: '#f6f6f6',  // Light background color for the tag
@@ -584,10 +598,14 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   postedOn: {
-    fontSize: 10,
-    color: '#888',
-    fontFamily:'PlusJakartaSans-Medium',
-    marginBottom: 18,
+    color: '#979696', // Text color
+    fontFamily: 'PlusJakartaSans-Medium', // Custom font
+    fontSize: 9, // Font size
+    fontStyle: 'normal', // Font style
+    lineHeight: 23.76, // Line height (in points, not percentage)
+    marginTop: 10,
+    display: 'flex',
+    marginLeft: '60%'
   },
   tabs: {
     flexDirection: 'row',
@@ -653,16 +671,16 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#F46F16',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   locationIcon: {
-    width: 8,
-    height: 8,
+    width: 11,
+    height: 11,
     marginRight: 4,
   },
   applybuttonText: {
     color: 'white',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   skillMatchContainer: {
     flexDirection: 'row',
@@ -681,7 +699,7 @@ const styles = StyleSheet.create({
 
   },
   skillMatchText: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 27.27,
@@ -695,7 +713,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#666',
     marginBottom: 8,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   requiredSkills: {
     fontSize: 14,
@@ -712,13 +730,13 @@ const styles = StyleSheet.create({
     flex: 0,
     backgroundColor: '#F46F16',
     color: 'white',
-    padding:3,
+    padding: 3,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,
     fontSize: 14,
     textAlign: 'center',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   skillRow: {
     flex: 0,
@@ -739,7 +757,7 @@ const styles = StyleSheet.create({
   fallbackText: {
     fontSize: 12,
     color: 'red',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   centeredView: {
     justifyContent: "center",
@@ -759,7 +777,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     backgroundColor: '#498C07',
     fontSize: 12,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
 
   unmatchedSkill: {
@@ -790,7 +808,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Align image and text side by side
     alignItems: 'center', // Vertically center image and text
     backgroundColor: '#BF2308', // Red background
-    padding:3,
+    padding: 3,
     borderRadius: 10, // Rounded corners
     marginRight: 8, // Space between skill tags
     marginBottom: 4, // Space between rows of skills

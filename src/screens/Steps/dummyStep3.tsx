@@ -17,7 +17,7 @@ import Icon7 from 'react-native-vector-icons/AntDesign';
 import Fileupload from "../../assests/icons/Fileupload";
 import { ScrollView } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
-
+import Toast from 'react-native-toast-message';
 const { width } = Dimensions.get('window'); 
 
 
@@ -49,6 +49,19 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const showToast = (message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
+  const toastmsg = (type1: 'success' | 'error', message: string) => {
+          Toast.show({
+              type: type1,
+              text1: '',
+              text2:message,
+              position: 'bottom',
+              visibilityTime: 5000,
+              text2Style:{
+                  fontFamily:'PlusJakartaSans-Medium',
+                  fontSize:12
+              }
+          });
+      }
  
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -152,7 +165,7 @@ handleSave();
  
       // Validate file size
       if (selectedFile.size && selectedFile.size > maxSize) {
-        showToast("File size exceeds the 1MB limit.");
+        toastmsg('error',"File size exceeds the 1MB limit.");
         return;
       }
  
@@ -170,6 +183,7 @@ handleSave();
         setProgress(0);
         setShowBorder(true)
         setbgcolor(false)
+        
  
         // Simulate upload progress
         const interval = setInterval(() => {
@@ -186,6 +200,7 @@ handleSave();
             return newProgress;
             
           });
+          
         }, 1000); // Update progress every 1 second
       }, 10); // 0.5 second delay before starting the progress bar
  
@@ -194,10 +209,11 @@ handleSave();
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log("User canceled the picker");
-        showToast("Upload canceled.");
+        toastmsg('error',"Upload canceled.");
+        setIsUploadComplete(false)
       } else {
         console.error("Unknown error: ", err);
-        showToast("Error selecting file. Please try again.");
+        toastmsg('error',"Error selecting file. Please try again.");
       }
     }
  
@@ -209,7 +225,7 @@ handleSave();
     setResumeText('');
     setLoading(false);
     setProgress(0);
-    showToast('Upload canceled.');
+    toastmsg('error','Upload canceled.');
     setShowBorder(false);
   };
  
@@ -226,11 +242,11 @@ handleSave();
       const response = await ProfileService.uploadResume(userToken, userId, formData);
       if (response.success) {
         setResumeFile(response.data.fileName);
-        showToast('Resume uploaded successfully!');
+        toastmsg('success','Resume uploaded successfully!');
         setResumeModalVisible(false)
       } else {
         console.error(response.message);
-        showToast('Error uploading resume. Please try again later.');
+        toastmsg('error','Error uploading resume. Please try again later.');
         setResumeModalVisible(false)
       }
     } else {
@@ -283,7 +299,7 @@ handleSave();
               </TouchableOpacity>
             </View>
             <View style={{ marginBottom: 50 }}>
-              {bgcolor ? (
+              {bgcolor? (
                 <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 7,marginBottom:22,fontFamily: 'PlusJakartaSans-Medium' }}>File Not selected</Text>
               ) : (
                 <Text></Text>

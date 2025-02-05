@@ -7,7 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
-  
+ 
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
@@ -22,19 +22,19 @@ import ViewJobDetails from './ViewJobDetails';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { applyJob } from '../../services/Jobs/JobDetails';
 import API_BASE_URL from '../../services/API_Service';
-
+ 
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
 };
-
-
-
+ 
+ 
+ 
 const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   const { job } = route.params;
   const { userToken } = useAuth();
   const [jobStatus, setJobStatus] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+ 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'JobDetails'>>();
   useEffect(() => {
     const fetchJobStatus = async () => {
@@ -47,10 +47,10 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
             },
           }
         );
-
+ 
         const body = response.data;
         setLoading(false);
-
+ 
         if (Array.isArray(body) && body.length > 0) {
           const filteredStatuses = body.filter(
             status => !['screening', 'interview', 'selected', 'rejected'].includes(status.status)
@@ -63,10 +63,10 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
         setLoading(false);
       }
     };
-
+ 
     fetchJobStatus();
   }, [job, userToken]);
-
+ 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -75,32 +75,32 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };
-  const formatDates= (dateArray: [number, number, number]): string => {
+  const formatDates = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
     const date = new Date(year, month - 1, day);
     return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
   };
   return (
     <View style={{ flex: 1 }}>
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom:80 }}>
-      {loading ? (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#FF8C00" />
-        </View>
-      ) : (
-        <View>
-          <View style={styles.jobCard}>
-            <View style={styles.row}>
-              <Image
-               source={require('../../assests/Images/company.png')}
-                style={styles.companyLogo}
-              />
-              <View style={styles.jobDetails}>
-                <Text style={styles.jobTitle}>{job.jobTitle}</Text>
-                <Text style={styles.companyName}>{job.companyname}</Text>
+      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }}>
+        {loading ? (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color="#FF8C00" />
+          </View>
+        ) : (
+          <View>
+            <View style={styles.jobCard}>
+              <View style={styles.row}>
+                <Image
+                  source={require('../../assests/Images/company.png')}
+                  style={styles.companyLogo}
+                />
+                <View style={styles.jobDetails}>
+                  <Text style={styles.jobTitle}>{job.jobTitle}</Text>
+                  <Text style={styles.companyName}>{job.companyname}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.tagRow}>
+ 
               <View style={[styles.tag, styles.locationContainer]}>
                 <Image
                   source={require('../../assests/Images/rat/loc.png')}
@@ -108,92 +108,99 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                 />
                 <Text style={styles.locationText}>{job.location}</Text>
               </View>
-              <View style={styles.oval}>
-                <Image
-                  source={require('../../assests/Images/rat/exp.png')}
-                  style={styles.brieficon}
-                />
-                <Text style={styles.ovalText}>
-                  Exp: {job.minimumExperience} - {job.maximumExperience} years
-                </Text>
-              </View>
-              <Text style={styles.tag}>
-                ₹ {job.minSalary} - {job.maxSalary} LPA
-              </Text>
-              <Text style={styles.tag}>{job.employeeType}</Text>
-
-            </View>
-            <View>
-              <Text style={styles.postedOn}>
-                Posted on {formatDate(job.creationDate)}
-              </Text>
-                
-              </View>
-          </View>
-  
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusHeader}>Status History</Text>
-           
-            {jobStatus.length > 0 ? (
-              <View style={styles.statusTable}>
-                {jobStatus.map((status, index) => (
-                  <View key={index} style={styles.statusRow}>
-                    <Text style={styles.statusDate}>
-                      {formatDates(status.changeDate)}
-                    </Text>
-                    <View style={styles.iconWrapper}>
-                      {status.status === 'Completed' ? (
-                        <Icon name="check-circle" size={24} color="#4CAF50" />
-                        
-                      ) : (
-                        <View style={styles.circle} />
-                        
-                      )}
-                      {index < jobStatus.length - 1 && (
-                        <View style={styles.verticalLine} />
-                      )}
-                    </View>
-                    <Text style={styles.statusText}>
-                      {status.status === 'New' ? 'Job Applied' : status.status}
-                    </Text>
+ 
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center', marginLeft: 10 }}>
+ 
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
+                  <Image
+                    source={require('../../assests/Images/rat/exp.png')}
+                    style={styles.brieficon}
+                  />
+                  <Text style={styles.ovalText}>
+                    Exp: {job.minimumExperience} - {job.maximumExperience} years
+                  </Text>
+                  <Text style={{ color: '#E2E2E2' }}>  |</Text>
+                </View>
+ 
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ fontSize: 14 }}>₹ </Text>
+                    <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
+                    <Text style={{ color: '#E2E2E2' }}>  |</Text>
                   </View>
-                ))}
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.ovalText }>{job.employeeType}</Text>
+                </View>
               </View>
-            ) : (
-              <Text style={styles.placeholderText}>
-                No status history available!
-              </Text>
-            )}
-
+              <View>
+                <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
+              </View>
+            </View>
+ 
+            <View style={styles.statusContainer}>
+              <Text style={styles.statusHeader}>Status History</Text>
+ 
+              {jobStatus.length > 0 ? (
+                <View style={styles.statusTable}>
+                  {jobStatus.map((status, index) => (
+                    <View key={index} style={styles.statusRow}>
+                      <Text style={styles.statusDate}>
+                        {formatDates(status.changeDate)}
+                      </Text>
+                      <View style={styles.iconWrapper}>
+                        {status.status === 'Completed' ? (
+                          <Icon name="check-circle" size={24} color="#4CAF50" />
+ 
+                        ) : (
+                          <View style={styles.circle} />
+ 
+                        )}
+                        {index < jobStatus.length - 1 && (
+                          <View style={styles.verticalLine} />
+                        )}
+                      </View>
+                      <Text style={styles.statusText}>
+                        {status.status === 'New' ? 'Job Applied' : status.status}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <Text style={styles.placeholderText}>
+                  No status history available!
+                </Text>
+              )}
+ 
+            </View>
           </View>
-        </View>
-      )}
-    </ScrollView>
-  <View style={{height:20}}/>
-    {/* Footer outside ScrollView */}
-    <View style={styles.footer}>
-      <TouchableOpacity
-        style={[styles.button, styles.viewJobButton]}
-        onPress={() => {
-          console.log('Navigating to JobDetails with job:', job);
-          navigation.navigate('ViewJobDetails', { job });
-        }}
-      >
-        <LinearGradient
-          colors={['#F97316', '#FAA729']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={[styles.button, styles.applyButtonGradient]}
+        )}
+      </ScrollView>
+      <View style={{ height: 20 }} />
+      {/* Footer outside ScrollView */}
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={[styles.button, styles.viewJobButton]}
+          onPress={() => {
+            console.log('Navigating to JobDetails with job:', job);
+            navigation.navigate('ViewJobDetails', { job });
+          }}
         >
-          <Text style={styles.viewJobText}>View Job</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+          <LinearGradient
+            colors={['#F97316', '#FAA729']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={[styles.button, styles.applyButtonGradient]}
+          >
+            <Text style={styles.viewJobText}>View Job</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
-  
+ 
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -210,17 +217,17 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
-    paddingHorizontal:8,
-    margin:2,
+    paddingHorizontal: 8,
+    margin: 2,
     marginBottom: 6,
-    
-
+ 
+ 
   },
   oval: {
     flexDirection: 'row',
@@ -233,13 +240,13 @@ const styles = StyleSheet.create({
     marginRight: 3
   },
   ovalText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   brieficon: {
-    height: 8,
-    width: 8,
+    height: 10,
+    width: 12,
     marginRight: 8,
   },
   briefcon: {
@@ -247,29 +254,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tag: {
-    backgroundColor: '#f6f6f6',
+ 
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
-    borderRadius: 50,
+ 
     marginRight: 3,
-    marginBottom:8,
-    fontSize: 8,
-    fontFamily:'PlusJakartaSans-Medium'
+    marginBottom: 8,
+    fontSize: 11,
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop:-10
   },
   locationIcon: {
-    width: 8,
-    height: 8,
+    width: 11,
+    height: 12,
     marginRight: 6,
+    
   },
   locationText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   row: {
     flexDirection: 'row',
@@ -287,7 +296,7 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     color: '#121212', // Text color
-     fontFamily:'PlusJakartaSans-Bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16, // Font size
     fontStyle: 'normal', // Font style
     lineHeight: 16, // Adjust line height as needed
@@ -297,7 +306,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "PlusJakartaSans-Medium",
     fontStyle: 'normal',
-    fontWeight:600,
+    fontWeight: 600,
     color: 'rgba(83, 83, 83, 0.80)',
     marginVertical: 4,
   },
@@ -316,24 +325,26 @@ const styles = StyleSheet.create({
   postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
-    fontSize:10,
+    fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '500', // Font weight
     lineHeight: 23.76, // Line height (in points, not percentage)
+    marginTop: 10,
+    display: 'flex',
+    marginLeft: '60%'
   },
   statusHeader: {
     fontSize: 16,
     marginBottom: 8,
     color: '#F46F16',
-    fontFamily:'PlusJakartaSans-Bold',
-    fontWeight:700,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontWeight: 700,
   },
   statusContainer: {
     marginTop: 10,
     backgroundColor: '#fff',
     padding: 16,
-    borderRadius:8,
-    marginLeft:2,
+    borderRadius: 8,
+    marginLeft: 2,
     marginBottom: 10,
   },
   statusTable: {
@@ -366,14 +377,14 @@ const styles = StyleSheet.create({
     color: 'black',
     flex: 1,
     textAlign: 'center',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   statusText: {
     fontSize: 16,
     color: '#333',
     flex: 1,
     textAlign: 'center',
-    fontFamily:'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   iconWrapper: {
     zIndex: 1,
@@ -408,7 +419,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    
+ 
   },
  
   button: {
@@ -435,16 +446,18 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
   viewJobButton: {
-   
+ 
   },
   applyButtonGradient: {
     borderRadius: 10,
-    flex:1,
-    width:'100%',
-    padding:20
+    flex: 1,
+    width: '100%',
+    padding: 20
   },
-  
-
+ 
+ 
 });
-
+ 
 export default JobDetailsScreen;
+ 
+ 
