@@ -16,11 +16,11 @@ import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '../../models/Jobs/ApplyJobmodel'; // Your JobData interface
 import { useRoute, RouteProp } from '@react-navigation/native';
-
+ 
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 type JobsRouteProp = RouteProp<RootStackParamList, 'Jobs'>;
-
+ 
 const RecommendedJobs = () => {
   const route = useRoute<JobsRouteProp>(); // Specify the route type
   const { tab = 'recommended' } = route.params || {}; // Now TypeScript knows about 'tab'
@@ -31,24 +31,24 @@ const RecommendedJobs = () => {
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
   const isFocused = useIsFocused();
   const [visibleJobsCount, setVisibleJobsCount] = useState(10); // Number of jobs to display initially
-
+ 
   useEffect(() => {
     if (route.params?.tab) {
       setActiveTab(route.params.tab); // Set the active tab from the passed parameter
     }
   }, [route.params?.tab]);
-
+ 
   useEffect(() => {
     if (isFocused && activeTab === 'recommended') {
       reloadJobs(); // Reload jobs when the screen is focused and tab is 'recommended'
     }
   }, [isFocused, activeTab]);
-
+ 
   // Handle tab press
   const handleTabPress = (tab: 'recommended' | 'applied' | 'saved') => {
     setActiveTab(tab);
   };
-
+ 
   // Filter applied and saved jobs
   const filterAppliedJobs = (jobsToFilter: JobData[]) => {
     return jobsToFilter.filter((job) => {
@@ -56,14 +56,14 @@ const RecommendedJobs = () => {
         !savedJobs.some((savedJob) => savedJob.id === job.id);
     });
   };
-
+ 
   // Load more jobs when the user scrolls to the bottom
   const loadMoreJobs = () => {
     if (visibleJobsCount < jobs.length) {
       setVisibleJobsCount(visibleJobsCount + 10); // Load 10 more jobs
     }
   };
-
+ 
   // Render job cards
   const renderJobs = ({ item }: { item: JobData }) => {
     return (
@@ -80,30 +80,44 @@ const RecommendedJobs = () => {
               </Text>
               <Text style={styles.companyName}>{item.companyname}</Text>
             </View>
-
+ 
           </View>
-          <View style={styles.tagRow}>
-            <View style={[styles.tag, styles.locationContainer]}>
-              <Image
-                source={require('../../assests/Images/rat/loc.png')}
-                style={styles.locationIcon}
-              />
-              <Text style={styles.locationText}>{item.location}</Text>
-            </View>
-            <View style={styles.oval}>
+          <View style={[styles.tag, styles.locationContainer]}>
+            <Image
+              source={require('../../assests/Images/rat/loc.png')}
+              style={styles.locationIcon}
+            />
+            <Text style={styles.locationText}>{item.location}</Text>
+          </View>
+ 
+          <View style={{ flexDirection: 'row',justifyContent:'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
               <Image
                 source={require('../../assests/Images/rat/exp.png')}
                 style={styles.brieficon}
               />
               <Text style={styles.ovalText}>
-                Exp: {item.minimumExperience} - {item.maximumExperience} years
+                Exp: {item.minimumExperience} - {item.maximumExperience} years    
               </Text>
+              <Text style={{color:'#E2E2E2'}}>   |</Text>
             </View>
-            <Text style={styles.tag}>
-              ₹ {item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA
-            </Text>
-            <Text style={styles.tag}>{item.employeeType}</Text>
+ 
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10,marginTop:1}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <Text style={{fontSize:13}}>₹ </Text>
+                <Text style={styles.ovalText}>{item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA  </Text>
+                <Text style={{color:'#E2E2E2'}}>   |</Text>
+              </View>
+ 
+                 
+
+            </View>
+ 
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.ovalText}>{item.employeeType}</Text>
+            </View>
           </View>
+ 
           <Text style={styles.postedOn}>
             Posted on {formatDate(item.creationDate)}
           </Text>
@@ -111,7 +125,7 @@ const RecommendedJobs = () => {
       </View>
     );
   };
-
+ 
   // Format creation date
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -121,15 +135,15 @@ const RecommendedJobs = () => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };
-
+ 
   // Handle job press to navigate to JobDetails
   const handleJobPress = (job: JobData) => {
     navigation.navigate('JobDetails', { job });
   };
-
+ 
   // Get the first `visibleJobsCount` jobs
   const visibleJobs = jobs.slice(0, visibleJobsCount);
-
+ 
   // Render content based on active tab
   const renderContent = () => {
     if (loading) {
@@ -164,7 +178,7 @@ const RecommendedJobs = () => {
         return null;
     }
   };
-
+ 
   return (
     <View style={styles.container}>
       <View style={styles.jobstextcon}>
@@ -215,7 +229,7 @@ const RecommendedJobs = () => {
     </View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -225,15 +239,16 @@ const styles = StyleSheet.create({
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6', // Background color for the oval
+    // Background color for the oval
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 50, // Makes the container oval
-    marginBottom: 8,
+    // Makes the container oval
+    //marginBottom: 8,
+    marginTop: -35,
     marginRight: 3
   },
   ovalText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
   },
@@ -248,9 +263,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   brieficon: {
-    height: 8,
-    width: 8,
+    height: 11,
+    width: 11,
     marginRight: 8,
+    marginLeft:8
   },
   briefcon: {
     flexDirection: 'row',
@@ -295,8 +311,8 @@ const styles = StyleSheet.create({
   },
   jobDetails: {
     flex: 1,
-
-
+ 
+ 
   },
   jobTitle: {
     color: '#121212', // Text color
@@ -321,7 +337,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginBottom: 12,
     marginTop: 6,
-
+ 
   },
   locationContainer: {
     flexDirection: 'row',
@@ -329,33 +345,35 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap'
   },
   locationIcon: {
-    width: 8,
-    height: 8,
+    width: 11,
+    height: 11,
     marginRight: 6,
   },
   locationText: {
-    fontSize: 8.5,
+    fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
   },
   tag: {
-    backgroundColor: '#f6f6f6',
+    marginTop: -10,
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
     marginRight: 3,
     marginBottom: 8,
-    fontSize: 8,
+    fontSize: 11,
     fontFamily: 'PlusJakartaSans-Medium'
   },
   postedOn: {
     color: '#979696', // Text color
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
-    fontSize: 8, // Font size
+    fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
-    fontWeight: '500', // Font weight
+    marginLeft:'58%',
     lineHeight: 23.76, // Line height (in points, not percentage)
+    marginTop:10,
+    display:'flex'
   },
   tabs: {
     flexDirection: 'row',
@@ -372,8 +390,8 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomColor: '#F97316',
-
-
+ 
+ 
   },
   tabText: {
     fontSize: 12,
@@ -385,8 +403,8 @@ const styles = StyleSheet.create({
     color: '#F97316',
     marginLeft: 12,
     fontFamily: 'PlusJakartaSans-Bold'
-
+ 
   },
 });
-
+ 
 export default RecommendedJobs;

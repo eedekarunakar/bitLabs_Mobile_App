@@ -187,7 +187,7 @@ handleSave();
             
           });
         }, 1000); // Update progress every 1 second
-      }, 500); // 0.5 second delay before starting the progress bar
+      }, 10); // 0.5 second delay before starting the progress bar
  
   
  
@@ -274,7 +274,7 @@ handleSave();
                   />
                 </View>
  
-                <View style={{ padding: 10, paddingHorizontal: 60 }}>
+                <View style={{ padding: 10,}}>
                   <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }} >Select File</Text>
                   <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }}>File must be less than 1Mb</Text>
                   <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }}>Only .doc or .PDFs are allowed.</Text>
@@ -283,7 +283,7 @@ handleSave();
             </View>
             <View style={{ marginBottom: 50 }}>
               {bgcolor ? (
-                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 5,fontFamily: 'PlusJakartaSans-Medium' }}>File Not selected</Text>
+                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 7,marginBottom:22,fontFamily: 'PlusJakartaSans-Medium' }}>File Not selected</Text>
               ) : (
                 <Text></Text>
               )}
@@ -350,7 +350,7 @@ handleSave();
                 style={styles.uploadButton}
                 onPress={() => navigation.navigate('ResumeBuilder')}
               >
-                <Text style={{ color: 'black', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
+                <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -371,9 +371,7 @@ handleSave();
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
           {/* Back Button */}
-          <TouchableOpacity style={styles.backButton} onPress={goBackToStep2}>
-            <Text style={styles.backButtonText}>Back</Text>
-          </TouchableOpacity>
+
  
           {/* Save & Next Button */}
 
@@ -461,7 +459,7 @@ const styles = StyleSheet.create({
   },
   uploadButton: {
     maxWidth: width*0.7,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#4B4A4A',
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
@@ -533,12 +531,13 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   uploadContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    //flexDirection: "row",
+    //justifyContent: "space-between",
+    textAlign:'center',
     padding: 5,
     width: '100%',
     
-
+  
   },
   browseButton: {
     backgroundColor: "gray",
@@ -591,7 +590,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '50%',
+    width: '100%',
   },
   backButtonText: {
     color: "#F97316",

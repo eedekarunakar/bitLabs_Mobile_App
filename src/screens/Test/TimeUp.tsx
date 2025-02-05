@@ -35,9 +35,9 @@ const TimeUp = ({ route }:any) => {
     <View style={styles.modalContainer}>
       <View style={styles.modalContent}>
         <Image source={require('../../assests/Images/Test/Alarm.png')} style={styles.Alarm} />
-        <Text style={styles.modalText}>Time's Up!</Text>
+        <Text style={styles.modalText}>Time's Up</Text>
         <Text style={[styles.modalText1, { color: '#8F8F8F', lineHeight: 35 }]}>
-          Your answers have been submitted. Go{"\n"}check the results.
+          Your test has been submitted.Please check your score
         </Text>
         <TouchableOpacity onPress={handleTimeUpSubmission}>
           <LinearGradient

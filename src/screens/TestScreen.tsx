@@ -483,7 +483,7 @@ const TestScreen = ({ route, navigation }: any) => {
               <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
               <Text style={styles.modalText}>Do you really want to exit?</Text>
               <Text style={styles.modalText1}>
-                Exiciting will erase your progress and prevent retaking{"\n"}the test for 7 days.Proceed?
+                Exiting will erase your progress and prevent retaking the test for 7 days.Proceed?
               </Text>
               <View style={styles.modalOptions}>
                 <TouchableOpacity

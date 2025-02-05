@@ -123,7 +123,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           type: 'success',
           position: 'bottom',
           bottomOffset: 80,
-          text1: 'Success',
+          text1: '',
           text2: 'Job removed successfully!',
           text1Style: {
             fontSize: 14,
@@ -167,7 +167,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         // Alert.alert('Success', 'Job application submitted successfully!');
         Toast.show({
           type: 'success',
-          text1: 'Success',
+          text1: '',
           text2: 'Job application submitted successfully!',
           text1Style: {
             fontSize: 14,
