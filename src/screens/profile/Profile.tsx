@@ -24,7 +24,7 @@ import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're usin
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-
+import Fileupload from '../../assests/icons/Fileupload';
 
 
 import * as Progress from 'react-native-progress';
@@ -658,10 +658,11 @@ function ProfileComponent() {
                             <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20 }]}>
                                 <TouchableOpacity onPress={handleUploadResume}>
                                     <View style={{ alignItems: 'center' }}>
-                                        <Image
+                                        {/* <Image
                                             source={require('../../../src/assests/Images/file1.png')}
                                             style={{ position: 'absolute', top: 30 }}
-                                        />
+                                        /> */}
+                                        <Fileupload style={{position:'absolute',top:30}}/>
                                     </View>
 
                                     <View style={{ padding: 10,   }}>
@@ -724,7 +725,7 @@ function ProfileComponent() {
                                         <View style={[styles.line, { marginLeft: 3 }]}></View>
                                     </View>) :
                                     (
-                                        <View style={[styles.orContainer, { marginTop: -40, marginVertical: 20, }]}>
+                                        <View style={[styles.orContainer, { marginTop: -30, marginVertical: 20, }]}>
                                             <View style={styles.line}></View>
                                             <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
                                             <View style={[styles.line, { marginLeft: 3 }]}></View>
@@ -809,7 +810,7 @@ const styles = StyleSheet.create({
     },
     fileContainer: {
         padding: 10,
-        marginBottom: 10,
+        marginBottom: 15,
         marginTop: -55
     },
     progressContainer: {
