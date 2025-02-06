@@ -337,7 +337,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#F46F16',
     fontFamily: 'PlusJakartaSans-Bold',
-    fontWeight: 700,
   },
   statusContainer: {
     marginTop: 10,

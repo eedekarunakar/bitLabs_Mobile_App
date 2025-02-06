@@ -15,6 +15,7 @@ import Toast from 'react-native-toast-message';
 import Savejob from '../../assests/icons/Savejob';
 import Alertcircle from '../../assests/icons/Alertcircle';
 import Savedjob from '../../assests/icons/Savedjob';
+import Icon from 'react-native-vector-icons/Feather';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -258,7 +259,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
+              <Text style={{ fontSize: 11,fontFamily:'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
             </View>
           </View>
           <View>
@@ -307,14 +308,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
           <View style={styles.skillsContainer}>
             {perfectMatchSkills.map((skill, index) => (
-              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
-                {skill}
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills,]}>
+                {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
               </Text>
             ))}
             {unmatchedSkills.map((skill, index) => (
-              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
-                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
+              <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                <Alertcircle height={16} width={16} style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
+                <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
               </View>
             ))}
           </View>
@@ -389,8 +390,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
             <View>
-
-              <Text style={styles.appliedButtonText}>✔  Applied</Text>
+               <Icon name="check" size={20} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text>
             </View>
           </TouchableOpacity>
         ) : (

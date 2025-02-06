@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   iconText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#3384E3',
     fontFamily: "PlusJakartaSans-Bold",
   },
