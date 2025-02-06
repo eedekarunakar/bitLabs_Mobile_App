@@ -123,4 +123,4 @@ const useAuth = () => {
   return { ...rest, userId, userToken, userEmail };
 };
 
-export { AuthProvider, useAuth };
+export { AuthProvider, useAuth,AuthContext };

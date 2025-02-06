@@ -53,6 +53,7 @@ const useLoginViewModel = () => {
     if (validateLogin()) {
       const result = await login(loginUserName, loginPassword);
       if (result.success) {
+        console.log('toast displayed')
         showToast('success','Login successful')
         console.log('login succesfull')
       } else {
@@ -77,7 +78,8 @@ const useLoginViewModel = () => {
     showNotification,
     notificationType,
     validateLogin,
-    validateAndLogin
+    validateAndLogin,
+    setLoginErrors
   };
 };
 
@@ -218,7 +220,8 @@ const useSignupViewModel = () => {
     signupPassword,
     setSignupPassword,
     signUpErrors,
-    
+    setRegistration,
+    setSignUpErrors,
     validateSignup,
     validateAndSignup,
     handleOtp,

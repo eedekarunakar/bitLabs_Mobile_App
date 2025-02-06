@@ -3,7 +3,9 @@ import { DocumentPickerResponse } from 'react-native-document-picker';
 import API_BASE_URL from '../API_Service';
 
 // const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com'; // Replace with actual API base URL
-
+interface TestData {
+  testStatus: string;
+}
 export const ProfileService = {
   async fetchProfile(userToken: string | null, userId: number | null) {
     try {
@@ -58,7 +60,7 @@ export const ProfileService = {
           },
         }
       );
-      if(response.status!==200){
+      if (response.status !== 200) {
         return false;
       }
       else if (response.data?.formErrors) {
@@ -121,7 +123,7 @@ export const ProfileService = {
       }
       const formData = new FormData();
       formData.append('photo', { uri: photoFile.uri, type: photoFile.type, name: photoFile.fileName, });
-      console.log('FormData prepared:', formData);
+      // console.log('FormData prepared:', formData);
       const response = await axios.post(`${API_BASE_URL}/applicant-image/${userId}/upload`,
         formData,
         {
@@ -130,6 +132,7 @@ export const ProfileService = {
             'Content-Type': 'multipart/form-data',
           },
         });
+      // console.log("      Image : " +JSON.stringify(response))
       return { success: true, data: response.data };
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -198,8 +201,24 @@ export const ProfileService = {
       }
     }
   },
+  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean | void> {
+    try {
+      const response = await axios.get<TestData[]>(`${API_BASE_URL}/applicant1/tests/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      const data = response.data;
 
 
-  
+      // Check if both aptitude and technical tests have status "P" or "p"
+      const allTestsPassed = data.length >= 2 && data.every(test => test.testStatus.toLowerCase() === 'p');
+      console.log("verified = " +allTestsPassed);
+      return allTestsPassed;
+    } catch (error) {
+      console.error('Error fetching test data:', error);
+    }
+
+  }
 }
 export default ProfileService;

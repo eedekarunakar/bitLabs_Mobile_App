@@ -94,10 +94,10 @@ const Badge = ({ route, navigation }: any) => {
         const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
         console.log(aptitudeTest.testStatus)
         if (aptitudeTest) {
-          if (aptitudeTest.testStatus === 'P') {
+          if (aptitudeTest.testStatus === 'P' || aptitudeTest.testStatus === 'p') {
             if (technicalTest) {
               // If Technical Test exists, handle its status
-              if (technicalTest.testStatus === 'P') {
+              if (technicalTest.testStatus === 'P'|| technicalTest.testStatus === 'p') {
                 setSelectedStep(3); // Both tests passed
                 setTestName('');
                 setTestStatus('');

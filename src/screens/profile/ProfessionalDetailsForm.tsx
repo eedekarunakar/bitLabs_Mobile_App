@@ -562,6 +562,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold'
   },
   input: {
+    backgroundColor: '#E5E5E5',
     borderWidth: 1,
     width: '100%',
     borderColor: '#ccc',

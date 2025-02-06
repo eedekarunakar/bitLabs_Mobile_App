@@ -1,6 +1,4 @@
-import axios, {AxiosError} from 'axios';
-import * as Keychain from 'react-native-keychain';
- 
+import axios  from 'axios';
 import * as CryptoJS from 'crypto-js';
 import API_BASE_URL from '../API_Service';
  
@@ -63,14 +61,12 @@ export const handleLogin = async (
         password: encryptedPassword,
         iv: iv,
       }
- 
     );
  
     if (response.status === 200) {
       console.log(response);
       const token = response.data.data.jwt;
       const id = response.data.id;
- 
       if (token && id) {
         return {success: true, data: {token, id}};
       }
@@ -88,6 +84,8 @@ export const handleLogin = async (
     }
   }
 };
+
+
 export const handleSignup = async (
   signupEmail: string,
   signupNumber: string,
@@ -143,6 +141,7 @@ export const handleOTP = async (
       );
  
       if (registeruser.status === 200) {
+        await handleLogin(signupEmail,signupPassword)
         return {success: true, data: registeruser.data};
       } else {
         return {success: false, message: registeruser.data};
