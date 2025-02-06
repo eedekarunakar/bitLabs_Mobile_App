@@ -56,6 +56,7 @@ const LandingPage = () => {
         handleDirectLogin();
     }, [registration]);
 
+    
 
     const [activeButton, setActiveButton] = useState('login');
     const [IsPasswordVisible, SetIsPasswordVisible] = useState(false);
