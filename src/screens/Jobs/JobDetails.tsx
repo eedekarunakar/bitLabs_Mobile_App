@@ -59,7 +59,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`; 
   };
   const courseUrlMap: Record<string, any> = {
     "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
@@ -130,11 +130,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           text2: 'Job saved successfully!',
           text1Style: {
             fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Medium'
+            fontFamily: 'PlusJakartaSans-Bold',
+            color: 'black'
           },
           text2Style: {
             fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Medium'
+            fontFamily: 'PlusJakartaSans-Bold',
+            color: 'black'
           },
           position: 'bottom',
           bottomOffset: 80,
@@ -150,11 +152,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         text2: 'Failed to save job.',
         text1Style: {
           fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Medium'
+          fontFamily: 'PlusJakartaSans-Bold',
+          color: 'black'
         },
         text2Style: {
           fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Medium'
+          fontFamily: 'PlusJakartaSans-Bold',
+           color: 'black'
         },
         position: 'bottom',
         bottomOffset: 80,
@@ -389,9 +393,9 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {/* Apply Now Button */}
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <View>
-               <Icon name="check" size={20} color="white" />
-              <Text style={styles.appliedButtonText}>Applied</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+               <Icon name="check" size={18} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text> 
             </View>
           </TouchableOpacity>
         ) : (
@@ -711,7 +715,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   message: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#666',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium'

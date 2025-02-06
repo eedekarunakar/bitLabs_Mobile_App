@@ -198,13 +198,13 @@ const styles = StyleSheet.create({
     modalButtonText7: {
         color: '#E35D6A', // Text color for the Cancel button
         fontWeight:400,
-        fontSize: 18,
+        fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
  
     buttonText1: {
         fontWeight:400,
-        fontSize: 18,
+        fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
         color:'#2f2f2f'
     },

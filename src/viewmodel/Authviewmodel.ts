@@ -21,6 +21,7 @@ const useLoginViewModel = () => {
       text2:message,
       position:'bottom',
       visibilityTime:5000,
+      bottomOffset: 80,
       text2Style:{
         fontFamily:'PlusJakartaSans-Medium',
         fontSize:12
@@ -101,6 +102,7 @@ const useSignupViewModel = () => {
       text2:message,
       position:'bottom',
       visibilityTime:5000,
+      bottomOffset: 80,
       text2Style:{
         fontFamily:'PlusJakartaSans-Medium',
         fontSize:12

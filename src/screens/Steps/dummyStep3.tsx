@@ -320,7 +320,7 @@ handleSave();
                     style={styles.closeIcon}
                     onPress={handleCancelUpload}
                   >
-                    <View style={{ position:'absolute',right:5 }}>
+                    <View style={{ position:'absolute',right:5,top:1.5 }}>
                       <Icon7 name="close" size={15} color={'0D0D0D'} />
                     </View>
  
@@ -332,7 +332,7 @@ handleSave();
                 <View style={styles.progressContainer}>
                   <Progress.Bar
                     progress={progress}
-                    width={width*0.55}
+                    width={width*0.65}
                     color="#F97316"  // Progress bar color
                     unfilledColor="#D7D6D6"  // Unfilled background color
                     borderColor="#D7D6D6"  // Outline color
@@ -367,15 +367,12 @@ handleSave();
                 style={styles.uploadButton}
                 onPress={() => navigation.navigate('ResumeBuilder')}
               >
-                <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold',fontWeight:'bold' }}>Create Resume</Text>
+                <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
               </TouchableOpacity>
             </View>
           </View>
  
         </View>
- 
- 
- 
         {/* Resume Upload Section */}
         </View>
       </ScrollView>
@@ -441,7 +438,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   progressContainer: {
-    marginTop: 10,
+    marginTop: 20,
     alignItems: 'center',
     position:'relative',
     bottom:5
@@ -476,13 +473,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   uploadButton: {
-    maxWidth: width*0.7,
+    maxWidth: width*0.75,
     backgroundColor: '#4B4A4A',
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
     borderRadius: 5,
     marginBottom: 55,
+    
   },
   screen: {
     flex: 1,

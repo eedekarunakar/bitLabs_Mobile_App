@@ -48,7 +48,20 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
   useFocusEffect(
     useCallback(() => {
-      reloadProfile();
+      const reloadWithTimeout = async () => {
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
+        );
+  
+        try {
+          await Promise.race([reloadProfile(), timeoutPromise]);
+        } catch (error) {
+          console.warn(); // Handle timeout error gracefully
+        }
+      };
+  
+      reloadWithTimeout();
+  
     }, [reloadProfile])
   );
 
