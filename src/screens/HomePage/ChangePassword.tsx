@@ -98,15 +98,15 @@ const ChangePasswordScreen = () => {
 
     // Ensure all fields are filled
     if (!oldPassword || !newPassword || !reEnterPassword) {
-      if (!oldPassword) setOldMessage('Old Password is required');
-      if (!newPassword) setNewMessage('New Password is required');
-      if (!reEnterPassword) setReEnterMessage('Confirm Password is required');
+      if (!oldPassword) setOldMessage('Old password is required');
+      if (!newPassword) setNewMessage('New password is required');
+      if (!reEnterPassword) setReEnterMessage('Confirm password is required');
       return;
     }
 
     // Check if old and new passwords are the same
     if (oldPassword === newPassword) {
-      setMessage('Old Password and New Password cannot be the same');
+      setMessage('Old password and new password cannot be the same');
       return;
     }
 
@@ -386,10 +386,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium',
+    fontSize:12
   },
   successMessage: {
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
+    fontSize:12
   },
   errorMessage: {
     color: 'red',
@@ -398,6 +400,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     textAlign: 'justify',
     marginTop: -6,
+    fontSize:12
   },
 
   navbar: {

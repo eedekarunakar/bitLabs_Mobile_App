@@ -179,7 +179,7 @@ const Appnavigator = () => {
           <Stack.Screen
             name="TestScreen"
             component={TestScreen}
-            options={{ headerShown: false }}
+            options={{ headerShown: false}}
           />
           <Stack.Screen
             name="ChangePassword"

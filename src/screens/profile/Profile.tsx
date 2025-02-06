@@ -683,7 +683,7 @@ function ProfileComponent() {
                             </View>
                             <View style={{ marginBottom: 50 }}>
                                 {bgcolor ? (
-                                    <Text style={{ color: 'red', fontWeight: 'bold',marginBottom:25,marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
+                                    <Text style={{ color: 'red',marginBottom:25,marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
                                 ) : (
                                     <Text></Text>
                                 )}
@@ -809,6 +809,7 @@ const styles = StyleSheet.create({
     fileNameText: {
         fontSize: 16,
         color: '#000',
+        fontFamily: 'PlusJakartaSans-Medium',
     },
     orContainer: {
         display: 'flex',

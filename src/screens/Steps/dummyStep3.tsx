@@ -292,7 +292,7 @@ handleSave();
                 </View>
  
                 <View style={{ padding: 10,}}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }} >Select File</Text>
+                  <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
                   <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }}>File must be less than 1Mb</Text>
                   <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium' }}>Only .doc or .PDFs are allowed.</Text>
                 </View>
@@ -300,7 +300,7 @@ handleSave();
             </View>
             <View style={{ marginBottom: 50 }}>
               {bgcolor? (
-                <Text style={{ color: 'red', fontWeight: 'bold', marginTop: 7,marginBottom:22,fontFamily: 'PlusJakartaSans-Medium' }}>File Not selected</Text>
+                <Text style={{ color: 'red', marginTop: 7,marginBottom:22,fontFamily: 'PlusJakartaSans-Medium' }}>File Not selected</Text>
               ) : (
                 <Text></Text>
               )}
@@ -457,6 +457,7 @@ const styles = StyleSheet.create({
   fileNameText: {
     fontSize: 16,
     color: '#000',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   closeIcon: {
     position: 'absolute',

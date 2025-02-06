@@ -15,6 +15,7 @@ import Toast from 'react-native-toast-message';
 import Savejob from '../../assests/icons/Savejob';
 import Alertcircle from '../../assests/icons/Alertcircle';
 import Savedjob from '../../assests/icons/Savedjob';
+import Icon from 'react-native-vector-icons/Feather';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -258,7 +259,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
+              <Text style={{ fontSize: 11,fontFamily:'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
             </View>
           </View>
           <View>
@@ -389,8 +390,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
             <View>
-
-              <Text style={styles.appliedButtonText}>✔  Applied</Text>
+               <Icon name="check" size={20} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text>
             </View>
           </TouchableOpacity>
         ) : (
