@@ -586,9 +586,6 @@ function ProfileComponent() {
                                     <TouchableOpacity style={styles.customButton} onPress={handleLibrary}>
                                         <Text style={styles.buttonText1}>Choose a photo</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.customButton1} onPress={removePhoto}>
-                                        <Text style={styles.buttonText1}>Remove a photo</Text>
-                                    </TouchableOpacity>
                                 </View>
                                 <View style={styles.modalCard6}>
                                     <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
@@ -889,6 +886,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium',
+        
     },
     button: {
         // backgroundColor: '#F97316',
@@ -1143,7 +1141,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
-        marginBottom: 10
+       
     },
 
     modalCard5: {

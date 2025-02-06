@@ -300,14 +300,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
           <View style={styles.skillsContainer}>
             {perfectMatchSkills.map((skill, index) => (
-              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
-                {skill}
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, ]}>
+               {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
               </Text>
             ))}
             {unmatchedSkills.map((skill, index) => (
-              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
-                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
+              <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                <Alertcircle height={16} width={16}style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
+                <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
               </View>
             ))}
           </View>
