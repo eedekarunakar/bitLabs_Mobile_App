@@ -10,8 +10,9 @@ import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMessageContext,MessageProvider } from '../LandingPage/welcome';
+import ProfileService from '../../services/profile/ProfileService';
 import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
-
+import Icon5 from 'react-native-vector-icons/MaterialIcons'
 import {
   View,
   Image,
@@ -30,6 +31,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
 function Dashboard() {
+  const [verified,setVerified] = useState(false)
   const {userId, userToken} = useAuth(); // Retrieve userId and userToken
   const route = useRoute<HomeScreenRouteProp>(); // Handle route params
   useEffect(() => {
@@ -50,6 +52,21 @@ function Dashboard() {
 
 
   const navigation = useNavigation<NavigationProp>();
+  useEffect(() => {
+          const checkVerification = async () => {
+            try {
+              const result = await ProfileService.checkVerified(userToken, userId);
+              if (result) {
+                  console.log("verified: "+result)
+                setVerified(result);
+              }
+            } catch (error) {
+              console.error('Error checking verification:', error);
+            }
+          };
+        
+          checkVerification();
+        }, [userId]);
 
   // Handle loading state
   if (loading) {
@@ -78,11 +95,13 @@ function Dashboard() {
       <ScrollView
         contentContainerStyle={{paddingBottom: screenHeight * 0.04}} // Add bottom padding
       >
-
+       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text style={styles.textBelowNavbar}>Hello, {basicDetails?.firstName
           ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
           : 'Guest'}
         </Text>
+        {verified&&<Icon5 name="verified" size={25} color="#334584" style={{marginLeft:4,marginTop: screenHeight * 0.025,}} />}
+        </View>
         <Text style={styles.textBelowNavbar1}>
             {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
         </Text>

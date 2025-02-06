@@ -129,6 +129,14 @@ const Appnavigator = () => {
       checkProfileId();
   
   }, [isAuthenticated, userToken, userId, profileChecked,setSetmsg]);
+  
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -144,14 +152,6 @@ const Appnavigator = () => {
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
-    );
-  }
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
     );
   }
 
@@ -319,7 +319,7 @@ const Appnavigator = () => {
 };
 
 const AppWithProfileProvider = () => {
-  const { userToken, userId } = useAuth();
+  const { userToken, userId} = useAuth();
 
   return (
     <MessageProvider>
