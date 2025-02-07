@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, ActivityIndicator } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';
@@ -15,6 +15,8 @@ import Toast from 'react-native-toast-message';
 import Savejob from '../../assests/icons/Savejob';
 import Alertcircle from '../../assests/icons/Alertcircle';
 import Savedjob from '../../assests/icons/Savedjob';
+import UserContext from '../../context/UserContext';
+import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -31,6 +33,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const { job } = route.params; // job data passed from the previous screen
   const [isJobSaved, setIsJobSaved] = useState(false);
   const { userToken, userId } = useAuth();
+  const { reloadJobs } = useRecommendedJobsViewModel(); 
   const [isJobApplied, setIsJobApplied] = useState(false);
   const [skills, setSkills] = useState<string[]>([]); // Explicitly setting the type as string[]
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
@@ -40,7 +43,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Loading state
-
+  const {refreshJobCounts} = useContext(UserContext)
 
 
   const courseImages: Record<string, any> = {
@@ -123,6 +126,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       if (result) {
         setIsJobSaved(true);
         // Alert.alert('Success', 'Job saved successfully!');
+        refreshJobCounts();
+        reloadJobs();
         Toast.show({
           type: 'success',
           text1: '',
@@ -168,6 +173,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       if (result) {
         setIsJobApplied(true);
         // Alert.alert('Success', 'Job application submitted successfully!');
+        refreshJobCounts();
+        reloadJobs();
         Toast.show({
           type: 'success',
           text1: '',

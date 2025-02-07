@@ -33,6 +33,7 @@ import Drives from './src/screens/HomePage/Drives';
 import Badge from './src/screens/HomePage/Badge';
 
 import { useMessageContext, MessageProvider } from './src/screens/LandingPage/welcome';
+import { UserProvider } from './src/context/UserContext';
 
 export type RootStackParamList = {
   ForgotPassword: undefined,
@@ -336,7 +337,9 @@ const AppWithProfileProvider = () => {
 const App = () => {
   return (
     <AuthProvider>
+      <UserProvider>
       <AppWithProfileProvider />
+      </UserProvider>
     </AuthProvider>
   );
 };

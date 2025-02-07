@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';
@@ -15,6 +15,7 @@ import Toast from 'react-native-toast-message';
 import { removeSavedJob } from '../../services/Jobs/JobDetails';
 import { ScrollView } from 'react-native-gesture-handler';
 import Alertcircle from '../../assests/icons/Alertcircle';
+import UserContext from '../../context/UserContext';
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 
@@ -27,6 +28,7 @@ type JobDetailsProps = {
 };
 
 const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
+  const {refreshJobCounts} = useContext(UserContext)
   const { job } = route.params; // job data passed from the previous screen
   const [isJobSaved, setIsJobSaved] = useState(false);
   const { userToken, userId } = useAuth();
@@ -119,6 +121,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     try {
       const result = await removeSavedJob(job.id, userId, userToken);
       if (result) {
+        refreshJobCounts();
         Toast.show({
           type: 'success',
           position: 'bottom',
@@ -164,6 +167,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       const result = await applyJob(userId, job.id, userToken);
       if (result) {
         setIsJobApplied(true);
+        refreshJobCounts();
         // Alert.alert('Success', 'Job application submitted successfully!');
         Toast.show({
           type: 'success',

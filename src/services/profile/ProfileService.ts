@@ -201,7 +201,7 @@ export const ProfileService = {
       }
     }
   },
-  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean | void> {
+  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean> {
     try {
       const response = await axios.get<TestData[]>(`${API_BASE_URL}/applicant1/tests/${userId}`, {
         headers: {
@@ -217,6 +217,7 @@ export const ProfileService = {
       return allTestsPassed;
     } catch (error) {
       console.error('Error fetching test data:', error);
+      return false
     }
 
   }

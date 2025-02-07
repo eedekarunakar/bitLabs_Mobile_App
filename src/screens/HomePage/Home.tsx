@@ -1,18 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Navbar from '../../components/Navigation/Navbar';
 
-import ExploreSection from "../../components/home/ExploreSection";
-import { useJobCounts } from '../../viewmodel/DashboardViewModel'; // Hook for fetching job counts
+import ExploreSection from "../../components/home/ExploreSection"; // Hook for fetching job counts
 import { useAuth } from '../../context/Authcontext';
 import AppliedJobs from '../Jobs/AppliedJobs';
 import { useNavigation } from '@react-navigation/native';
 import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useMessageContext,MessageProvider } from '../LandingPage/welcome';
-import ProfileService from '../../services/profile/ProfileService';
+import { useMessageContext, MessageProvider } from '../LandingPage/welcome';
 import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
-import Icon5 from 'react-native-vector-icons/MaterialIcons'
+import Icon5 from 'react-native-vector-icons/MaterialIcons';
+import UserContext from '../../context/UserContext';
 import {
   View,
   Image,
@@ -22,17 +21,19 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import {Dimensions} from 'react-native';
-const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+import { Dimensions } from 'react-native';
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
-import {useProfileViewModel} from '../../viewmodel/Profileviewmodel';
+
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
 function Dashboard() {
-  const [verified,setVerified] = useState(false)
-  const {userId, userToken} = useAuth(); // Retrieve userId and userToken
+  const [verified, setVerified] = useState(false)
+  const [loading,setIsLoading] = useState(false);
+  const { userId, userToken } = useAuth(); // Retrieve userId and userToken
+  const { verifiedStatus, personalName, isLoading , jobCounts } = useContext(UserContext);
   const route = useRoute<HomeScreenRouteProp>(); // Handle route params
   useEffect(() => {
     console.log('Dashboard route.params:', route.params); // Debug log
@@ -42,38 +43,24 @@ function Dashboard() {
   //const [welcome, setWelcome] = useState(route.params?.welcome ?? 'Welcome Back');
 
   // Use the useJobCounts hook to fetch job counts
-  const { jobCounts, loading, error } = useJobCounts(userId, userToken);
+  // const { jobCounts, loading, error } = useJobCounts(userId, userToken);
   const { setmsg } = useMessageContext();
 
 
-  const {profileData} = useProfileViewModel(userToken, userId);
-  const {basicDetails} = profileData || [];
-  console.log('prof', basicDetails);
 
 
   const navigation = useNavigation<NavigationProp>();
+  console.log("verified status = ", verifiedStatus)
+  console.log("personal name =  ", personalName)
   useEffect(() => {
-          const checkVerification = async () => {
-            try {
-              const result = await ProfileService.checkVerified(userToken, userId);
-              if (result) {
-                  console.log("verified: "+result)
-                setVerified(result);
-              }
-            } catch (error) {
-              console.error('Error checking verification:', error);
-            }
-          };
-        
-          checkVerification();
-        }, [userId]);
-
+    setVerified(verifiedStatus);
+  }, [verifiedStatus]);
   // Handle loading state
-  if (loading) {
+  if ( loading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={{color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold'}}>
+        <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold' }}>
           Loading job data...
         </Text>
       </View>
@@ -81,29 +68,29 @@ function Dashboard() {
   }
 
   // Handle error state
-  if (error) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>{error}</Text>
-      </View>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <Text>{error}</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={styles.container}>
       <Navbar />
       <ScrollView
-        contentContainerStyle={{paddingBottom: screenHeight * 0.04}} // Add bottom padding
+        contentContainerStyle={{ paddingBottom: screenHeight * 0.04 }} // Add bottom padding
       >
-       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={styles.textBelowNavbar}>Hello, {basicDetails?.firstName
-          ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
-          : 'Guest'}
-        </Text>
-        {verified&&<Icon5 name="verified" size={25} color="#334584" style={{marginLeft:4,marginTop: screenHeight * 0.025,}} />}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={styles.textBelowNavbar}>Hello, {personalName
+            ? personalName.charAt(0).toUpperCase() + personalName.slice(1)
+            : 'Guest'}
+          </Text>
+          {verified && <Icon5 name="verified" size={25} color="#334584" style={{ marginLeft: 4, marginTop: screenHeight * 0.025, }} />}
         </View>
         <Text style={styles.textBelowNavbar1}>
-            {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
+          {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
         </Text>
 
 
@@ -118,18 +105,18 @@ function Dashboard() {
                   backgroundColor: '#F3FFEF',
                 },
               ]}
-              onPress={() => navigation.navigate('Jobs', {tab: 'recommended'})}>
+              onPress={() => navigation.navigate('Jobs', { tab: 'recommended' })}>
               <View
                 style={[
                   styles.cardLogoContainer,
-                  {backgroundColor: '#0A89101A'},
+                  { backgroundColor: '#0A89101A' },
                 ]}>
                 <Image
                   source={require('../../assests/Images/Recommendedjobs.png')}
                   style={styles.cardLogo}
                 />
               </View>
-              <Text style={[styles.cardText, {color: '#096E0E'}]}>
+              <Text style={[styles.cardText, { color: '#096E0E' }]}>
                 Recommended Jobs
               </Text>
               <Text style={styles.cardNumber}>
@@ -146,18 +133,18 @@ function Dashboard() {
                   backgroundColor: '#FFF7E9',
                 },
               ]}
-              onPress={() => navigation.navigate('Jobs', {tab: 'saved'})}>
+              onPress={() => navigation.navigate('Jobs', { tab: 'saved' })}>
               <View
                 style={[
                   styles.cardLogoContainer,
-                  {backgroundColor: '#FFB3211A'},
+                  { backgroundColor: '#FFB3211A' },
                 ]}>
                 <Image
                   source={require('../../assests/Images/Savedjobs.png')}
                   style={styles.cardLogo}
                 />
               </View>
-              <Text style={[styles.cardText, {color: '#C48916'}]}>
+              <Text style={[styles.cardText, { color: '#C48916' }]}>
                 Saved Jobs
               </Text>
               <Text style={styles.cardNumber}>
@@ -176,18 +163,18 @@ function Dashboard() {
                   backgroundColor: '#FFEEE9',
                 },
               ]}
-              onPress={() => navigation.navigate('Jobs', {tab: 'applied'})}>
+              onPress={() => navigation.navigate('Jobs', { tab: 'applied' })}>
               <View
                 style={[
                   styles.cardLogoContainer,
-                  {backgroundColor: '#FFDCD0'},
+                  { backgroundColor: '#FFDCD0' },
                 ]}>
                 <Image
                   source={require('../../assests/Images/Apply.png')}
                   style={styles.cardLogo}
                 />
               </View>
-              <Text style={[styles.cardText, {color: '#DE4715'}]}>
+              <Text style={[styles.cardText, { color: '#DE4715' }]}>
                 Applied Jobs
               </Text>
               <Text style={styles.cardNumber}>
@@ -208,14 +195,14 @@ function Dashboard() {
               <View
                 style={[
                   styles.cardLogoContainer,
-                  {backgroundColor: '#E5D9FF'},
+                  { backgroundColor: '#E5D9FF' },
                 ]}>
                 <Image
                   source={require('../../assests/Images/Drive.png')}
                   style={styles.cardLogo}
                 />
               </View>
-              <Text style={[styles.cardText, {color: '#360D8D'}]}>
+              <Text style={[styles.cardText, { color: '#360D8D' }]}>
                 Drive Invites
               </Text>
               <Text style={styles.cardNumber}>0</Text>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
     KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,
@@ -30,6 +30,7 @@ import Fileupload from '../../assests/icons/Fileupload';
 
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import UserContext from '../../context/UserContext';
 
 
 
@@ -41,7 +42,6 @@ type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
     const [isProfessionalFormVisible, setProfessionalFormVisible] = useState(false);
     const [isCameraOptionsVisible, setCameraOptionsVisible] = useState(false);
-    // const [photo, setPhoto] = useState<string | null>(null);
     const [isPersonalDetailsFormVisible, setPersonalDetailsFormVisible] = useState(false);
     const [isResumeModalVisible, setResumeModalVisible] = useState(false);
     const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
@@ -58,6 +58,7 @@ function ProfileComponent() {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
+    const {setPersonalName} = useContext(UserContext)
 
     const DEFAULT_PROFILE_IMAGE = require('../../assests/profile/profile.png');
     console.log(userId, userToken)
@@ -132,11 +133,6 @@ function ProfileComponent() {
       
         checkVerification();
       }, [userId]);
-
-    const showToast = (message: string) => {
-        ToastAndroid.show(message, ToastAndroid.SHORT);
-    };
-
     const validatePhoto = (photoFile: any) => {
         const allowedTypes = ['image/jpeg', 'image/png'];
         const maxSize = 1048576; // 1 MB in bytes
@@ -405,13 +401,14 @@ function ProfileComponent() {
 
     const handleSaveChanges = async () => {
         const success = await updateBasicDetails();
-        if (success) {
+        if(personalDetails.firstName.length<=19 && personalDetails.lastName.length<=19 && success){
+            setPersonalName(personalDetails.firstName);
             console.log('Personal details updated successfully');
             setPersonalDetailsFormVisible(false);
             reloadProfile();
             toastmsg('success', 'Personal details updated successfully')
-
-        } else {
+        }
+        else {
             toastmsg('error', 'Error updating, please try again later')
         }
     };
@@ -561,7 +558,7 @@ function ProfileComponent() {
                         </View>
                         <ProfessionalDetailsForm
                             visible={isProfessionalFormVisible}
-                            onClose={() => setProfessionalFormVisible(false)}
+                            onClose={() => {setProfessionalFormVisible(false)}}
                             qualification={qualification}
                             specialization={specialization}
                             skillsRequired={skillsRequired}
@@ -890,7 +887,7 @@ const styles = StyleSheet.create({
         fontFamily: 'PlusJakartaSans-Medium',
     },
     button: {
-        // backgroundColor: '#F97316',
+        marginTop:4,
         alignItems: 'center',
         justifyContent: 'center',
         height: 30,
@@ -902,7 +899,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: '#ccc',
         borderWidth: 1,
-        marginBottom: 15,
+        marginBottom: 8,
+        marginTop:4,
         paddingHorizontal: 10,
         borderRadius: 2,
         backgroundColor: '#E5E5E5',
@@ -1232,7 +1230,7 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
-        fontSize: 16
+        fontSize: 12
     }
     ,
     retryText: {

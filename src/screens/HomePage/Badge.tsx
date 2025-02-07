@@ -345,7 +345,7 @@ const Badge = ({ route, navigation }: any) => {
                   colors={['#FFEAC4', '#FFF9D6']} // Set the gradient colors
                   style={styles.gradientBackground1} // Style to ensure the gradient takes the full width and height
                 >
-                  <Text style={[styles.content, { marginLeft: 10 }]}>Pre-Screenedbadge</Text>
+                  <Text style={[styles.content, { marginLeft: 10 }]}>Pre-Screened badge</Text>
 
 
                   {/* Image Section (Middle) */}
