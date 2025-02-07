@@ -328,9 +328,9 @@ const styles = StyleSheet.create({
     fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
     lineHeight: 23.76, // Line height (in points, not percentage)
-    marginTop: 10,
+    marginTop: 9,
     display: 'flex',
-    marginLeft: '60%'
+    marginLeft: '50%'
   },
   statusHeader: {
     fontSize: 16,
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     top: 16,
     bottom: -40,
     width: 1,
-    backgroundColor: '#FF9800',
+    backgroundColor: '#F46F16',
     left: 7,
   },
   footer: {

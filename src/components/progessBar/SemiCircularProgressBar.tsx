@@ -65,20 +65,24 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
         height: circleRadius,
         borderRadius: circleRadius,
         backgroundColor: progressShadowColor,
+        overflow:'hidden'
       },
       rotatingCircleWrap: {
         width: circleRadius * 2,
         height: circleRadius,
         top: circleRadius,
+
       },
       rotatingCircle: {
-        width: circleRadius * 2,
+        width: circleRadius * 2.2,
         height: circleRadius,
         borderRadius: circleRadius,
         backgroundColor: rotationAnimation.interpolate({
           inputRange: [0, 100],
           outputRange: ["#F46F16", progressColor], // Transition of color
         }) as any,
+        position:'absolute',
+        left:-circleRadius*0.2,
         transform: [
           { translateY: -circleRadius / 2 },
           {
@@ -145,8 +149,8 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
         </Text>
         </View>
         {children}
+        
       </View>
-
     </View>
   );
 };

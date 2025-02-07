@@ -149,11 +149,12 @@ const Test = ({route, navigation}: any) => {
 
   // Dynamically adjust step based on fetched data
   const adjustStep = (name: string, status: string) => {
-    if (status === 'P' && name === 'General Aptitude Test') {
+    const lowerStatus = status.toLowerCase();
+    if (lowerStatus === 'p' && name === 'General Aptitude Test') {
       setStep(2); // Proceed to Technical Test
-    } else if (status === 'P' && name === 'Technical Test') {
+    } else if (lowerStatus === 'p' && name === 'Technical Test') {
       setStep(3); // Completed verification
-    } else if (status === 'F' && name === 'Technical Test') {
+    } else if (lowerStatus === 'f' && name === 'Technical Test') {
       setStep(2); // Retry Technical Test
     } else {
       setStep(1); // Default to Aptitude Test

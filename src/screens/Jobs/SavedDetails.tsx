@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   tag: {
-
+    marginTop:-1,
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
@@ -581,9 +581,9 @@ const styles = StyleSheet.create({
     fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
     lineHeight: 23.76, // Line height (in points, not percentage)
-    marginTop: 10,
+    marginTop: 9,
     display: 'flex',
-    marginLeft: '60%'
+    marginLeft: '50%'
   },
   tabs: {
     flexDirection: 'row',
