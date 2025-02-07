@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,
+    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,Dimensions
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
@@ -35,7 +35,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 
-
+const { width } = Dimensions.get('window'); 
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
@@ -142,7 +142,7 @@ function ProfileComponent() {
         const maxSize = 1048576; // 1 MB in bytes
 
         if (!allowedTypes.includes(photoFile.type)) {
-            toastmsg('error','Only JPEG and PNG files are allowed.');
+            toastmsg('error','only JPEG and PNG files are allowed.');
             return false;
         }
 
@@ -561,7 +561,7 @@ function ProfileComponent() {
                         </View>
                         <ProfessionalDetailsForm
                             visible={isProfessionalFormVisible}
-                            onClose={() => setProfessionalFormVisible(false)}
+                            onClose={() => {setProfessionalFormVisible(false);reloadProfile()}}
                             qualification={qualification}
                             specialization={specialization}
                             skillsRequired={skillsRequired}
@@ -731,7 +731,7 @@ function ProfileComponent() {
                                     <View style={styles.progressContainer}>
                                         <Progress.Bar
                                             progress={progress}
-                                            width={250}
+                                            width={290}
                                             color="#F97316" // Progress bar color
                                             unfilledColor="#D7D6D6" // Unfilled background color
                                             borderColor="#D7D6D6" // Outline color
@@ -840,7 +840,7 @@ const styles = StyleSheet.create({
         marginTop: -55
     },
     progressContainer: {
-        marginTop: 10,
+        marginTop: 20,
         alignItems: 'center',
     },
     showborder: {
@@ -1196,7 +1196,7 @@ const styles = StyleSheet.create({
 
 
 
-        fontSize: 18,
+        fontSize: 14,
         color: '#0D0D0D',
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
@@ -1213,7 +1213,7 @@ const styles = StyleSheet.create({
     modalButtonText7: {
         color: '#E35D6A', // Text color for the Cancel button
         fontWeight: 400,
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
 
