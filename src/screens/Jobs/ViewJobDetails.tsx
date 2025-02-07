@@ -157,13 +157,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Text style={{ fontSize: 13 }}>₹ </Text>
+                <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans-Medium' }}>₹ </Text>
                 <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
                 <Text style={{ color: '#E2E2E2' }}>  |</Text>
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
+              <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
             </View>
           </View>
           <View>
@@ -208,19 +208,21 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     ))}
 </View> */}
 
+
           <View style={styles.skillsContainer}>
             {perfectMatchSkills.map((skill, index) => (
-              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
-                {skill}
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills,]}>
+                {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
               </Text>
             ))}
             {unmatchedSkills.map((skill, index) => (
-              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
-                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
+              <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                <Alertcircle height={16} width={16} style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
+                <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
               </View>
             ))}
           </View>
+
         </View>
 
         <View style={styles.jobCard}>
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
   },
   jobdestitle: {
     color: '#F46F16',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     marginBottom: 8,
   },
@@ -311,6 +313,7 @@ const styles = StyleSheet.create({
   ovalText: {
     fontSize: 11,
     color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   brieficon: {
     height: 10,
@@ -379,7 +382,6 @@ const styles = StyleSheet.create({
   },
   jobTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#333',
     fontFamily: 'PlusJakartaSans-Bold'
   },
@@ -545,7 +547,6 @@ const styles = StyleSheet.create({
   skillMatchText: {
     fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 20,
-    fontWeight: '700',
     lineHeight: 27.27,
     textAlign: 'center',
     textDecorationStyle: 'solid',
@@ -554,7 +555,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   message: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium'
@@ -613,7 +614,6 @@ const styles = StyleSheet.create({
   centeredText: {
     fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 15,
-    fontWeight: 'bold',
     lineHeight: 35.27,
     textAlign: 'left',
     color: '#000000',

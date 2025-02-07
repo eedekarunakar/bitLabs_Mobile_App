@@ -115,7 +115,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
       position: 'bottom',
       onPress: () => Toast.hide(),
       visibilityTime: 5000,
-      text1Style: {
+      text2Style: {
         fontSize: 12,
         fontFamily: 'PlusJakartaSans-Medium'
       }

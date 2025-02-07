@@ -106,7 +106,7 @@ const Pass = ({navigation}: any) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('BottomTab', {
-                  screen: 'Badge',
+                  screen: 'Badges',
                   isTestComplete: true,
                 })
               }
@@ -126,7 +126,7 @@ const Pass = ({navigation}: any) => {
             <TouchableOpacity
               style={styles.button}
               onPress={() =>
-                navigation.navigate('BottomTab', {screen: 'Badge'})
+                navigation.navigate('BottomTab', {screen: 'Badges'})
               }>
               <LinearGradient
                 colors={['#F97316', '#FAA729']}
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontFamily: 'PlusJakartaSans-Regular',
-    fontSize: 16, // Adjusted font size dynamically
+    fontSize: 14, // Adjusted font size dynamically
     lineHeight: 31,
     textAlign: 'center',
     

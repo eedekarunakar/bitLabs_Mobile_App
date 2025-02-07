@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,
+    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,Dimensions
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
@@ -36,7 +36,7 @@ import UserContext from '../../context/UserContext';
 
 
 
-
+const { width } = Dimensions.get('window'); 
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
@@ -138,7 +138,7 @@ function ProfileComponent() {
         const maxSize = 1048576; // 1 MB in bytes
 
         if (!allowedTypes.includes(photoFile.type)) {
-            toastmsg('error','Only JPEG and PNG files are allowed.');
+            toastmsg('error','only JPEG and PNG files are allowed.');
             return false;
         }
 
@@ -583,9 +583,6 @@ function ProfileComponent() {
                                     <TouchableOpacity style={styles.customButton} onPress={handleLibrary}>
                                         <Text style={styles.buttonText1}>Choose a photo</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.customButton1} onPress={removePhoto}>
-                                        <Text style={styles.buttonText1}>Remove a photo</Text>
-                                    </TouchableOpacity>
                                 </View>
                                 <View style={styles.modalCard6}>
                                     <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
@@ -699,7 +696,7 @@ function ProfileComponent() {
                             </View>
                             <View style={{ marginBottom: 50 }}>
                                 {bgcolor ? (
-                                    <Text style={{ color: 'red', fontWeight: 'bold',marginBottom:25,marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
+                                    <Text style={{ color: 'red',marginBottom:25,marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
                                 ) : (
                                     <Text></Text>
                                 )}
@@ -731,7 +728,7 @@ function ProfileComponent() {
                                     <View style={styles.progressContainer}>
                                         <Progress.Bar
                                             progress={progress}
-                                            width={250}
+                                            width={290}
                                             color="#F97316" // Progress bar color
                                             unfilledColor="#D7D6D6" // Unfilled background color
                                             borderColor="#D7D6D6" // Outline color
@@ -825,6 +822,7 @@ const styles = StyleSheet.create({
     fileNameText: {
         fontSize: 16,
         color: '#000',
+        fontFamily: 'PlusJakartaSans-Medium',
     },
     orContainer: {
         display: 'flex',
@@ -839,7 +837,7 @@ const styles = StyleSheet.create({
         marginTop: -55
     },
     progressContainer: {
-        marginTop: 10,
+        marginTop: 20,
         alignItems: 'center',
     },
     showborder: {
@@ -885,6 +883,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium',
+        
     },
     button: {
         marginTop:4,
@@ -1140,7 +1139,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
-        marginBottom: 10
+       
     },
 
     modalCard5: {
@@ -1195,7 +1194,7 @@ const styles = StyleSheet.create({
 
 
 
-        fontSize: 18,
+        fontSize: 14,
         color: '#0D0D0D',
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
@@ -1212,7 +1211,7 @@ const styles = StyleSheet.create({
     modalButtonText7: {
         color: '#E35D6A', // Text color for the Cancel button
         fontWeight: 400,
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
 

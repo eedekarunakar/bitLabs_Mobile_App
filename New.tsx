@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput,TouchableOpacity,ActivityIndicator,View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, ActivityIndicator, View,Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
@@ -31,7 +31,7 @@ import { ProfilePhotoProvider } from './src/context/ProfilePhotoContext';
 import ResumeBuilder from './src/screens/profile/ResumeBuilder';
 import Drives from './src/screens/HomePage/Drives';
 import Badge from './src/screens/HomePage/Badge';
-
+import Icon from 'react-native-vector-icons/Entypo';
 import { useMessageContext, MessageProvider } from './src/screens/LandingPage/welcome';
 import { UserProvider } from './src/context/UserContext';
 
@@ -60,44 +60,61 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   Notification: undefined;
   ResumeBuilder: undefined;
-  Home: { welcome:string }| undefined;
+  Home: { welcome: string } | undefined;
   Drives: undefined;
   'My Resume': undefined;
 
 };
-
+const { width } = Dimensions.get('window'); // Get screen width
 const Stack = createStackNavigator<RootStackParamList>();
 // Global Toast Configuration with Cross Button
 const toastConfig: ToastConfig = {
   success: (props) => (
     <BaseToast
       {...props} // Spread the props for BaseToast
-      style={{ borderLeftColor: 'green', paddingRight: 15 }} // Custom styling
+      style={{ borderLeftColor: 'green', paddingRight: 15, width: width * 0.9, }} // Custom styling
       contentContainerStyle={{ paddingHorizontal: 15 }}
-      text1Style={{ fontSize: 12,  fontFamily: 'PlusJakartaSans-Bold',}}
+      text1Style={{ fontSize: 12, fontFamily: 'PlusJakartaSans-Bold' }}
+      text2Style={{ fontSize: 10, fontFamily: 'PlusJakartaSans-Bold',color:'black' }} // Ensure text2 styling
       text1={props.text1} // Ensure text1 is passed
+      text2={props.text2} // Ensure text2 is passed
       renderTrailingIcon={() => (
-        <TouchableOpacity onPress={() => Toast.hide()}>
-          <Text style={{ fontSize: 18, color: 'black',fontFamily:'PlusJakartaSans-Bold' }}>x</Text> {/* Wrap cross icon in <Text> */}
+        <TouchableOpacity
+          onPress={() => Toast.hide()}
+          style={{
+            alignSelf: 'center', // Align with text2
+            marginLeft: 10, // Adjust spacing from text
+          }}
+        >
+         <Icon name="cross" size={18} color="black" /> {/* Close Icon */}
         </TouchableOpacity>
       )}
     />
   ),
   error: (props) => (
     <BaseToast
-      {...props}
-      style={{ borderLeftColor: 'red', paddingRight: 15 }}
+      {...props} // Spread the props for BaseToast
+      style={{ borderLeftColor: 'green', paddingRight: 15, width: width * 0.9, }} // Custom styling
       contentContainerStyle={{ paddingHorizontal: 15 }}
-      text1Style={{ fontSize: 12,  fontFamily: 'PlusJakartaSans-Bold',}}
-      text1={props.text1}
+      text1Style={{ fontSize: 12, fontFamily: 'PlusJakartaSans-Bold' }}
+      text2Style={{ fontSize: 10, fontFamily: 'PlusJakartaSans-Bold',color:'black' }} // Ensure text2 styling
+      text1={props.text1} // Ensure text1 is passed
+      text2={props.text2} // Ensure text2 is passed
       renderTrailingIcon={() => (
-        <TouchableOpacity onPress={() => Toast.hide()}>
-           <Text style={{ fontSize: 18, color: 'black',fontFamily:'PlusJakartaSans-Bold' }}>x</Text> {/* Wrap cross icon in <Text> */}
+        <TouchableOpacity
+          onPress={() => Toast.hide()}
+          style={{
+            alignSelf: 'center', // Align with text2
+            marginLeft: 10, // Adjust spacing from text
+          }}
+        >
+         <Icon name="cross" size={18} color="black" /> {/* Close Icon */}
         </TouchableOpacity>
       )}
     />
   ),
 };
+
 const Appnavigator = () => {
 
   const { isAuthenticated, userToken, userId, userEmail } = useAuth();
@@ -113,7 +130,7 @@ const Appnavigator = () => {
           const result = await fetchProfileId(userId, userToken);
           if (result.success) {
             setShouldShowStep1(result.profileid === 0);
-            result.profileid==0?setSetmsg(true):setSetmsg(false)
+            result.profileid == 0 ? setSetmsg(true) : setSetmsg(false)
           } else {
             console.error('Failed to fetch profile details');
           }
@@ -123,14 +140,14 @@ const Appnavigator = () => {
       }
       setLoading(false);
       setProfileChecked(true);
-      
+
     };
 
-   
-      checkProfileId();
-  
-  }, [isAuthenticated, userToken, userId, profileChecked,setSetmsg]);
-  
+
+    checkProfileId();
+
+  }, [isAuthenticated, userToken, userId, profileChecked, setSetmsg]);
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -224,6 +241,13 @@ const Appnavigator = () => {
           <Stack.Screen
             name="ViewJobDetails"
             component={ViewJobDetails}
+            options={{
+              title: 'View Job Details',
+              headerTitleStyle: {
+                fontFamily: 'PlusJakartaSans-Bold',
+                fontSize: 16, // Customize the font size
+              },
+            }}
           />
           <Stack.Screen
             name="SavedDetails"
@@ -320,16 +344,16 @@ const Appnavigator = () => {
 };
 
 const AppWithProfileProvider = () => {
-  const { userToken, userId} = useAuth();
+  const { userToken, userId } = useAuth();
 
   return (
     <MessageProvider>
-    <ProfilePhotoProvider userToken={userToken} userId={userId}>
-      <NavigationContainer >
-        <Appnavigator />
-        <Toast config={toastConfig} /> {/* Pass the toastConfig */}
-      </NavigationContainer>
-    </ProfilePhotoProvider>
+      <ProfilePhotoProvider userToken={userToken} userId={userId}>
+        <NavigationContainer >
+          <Appnavigator />
+          <Toast config={toastConfig} /> {/* Pass the toastConfig */}
+        </NavigationContainer>
+      </ProfilePhotoProvider>
     </MessageProvider>
   );
 };

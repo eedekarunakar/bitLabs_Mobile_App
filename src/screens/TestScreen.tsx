@@ -41,7 +41,7 @@ const TestScreen = ({ route, navigation }: any) => {
   } = useTestViewModel(userId, userToken, testName);
   const [finalScore, setFinalScore] = useState<number>(0); // State to hold final score
 
-  let timerInterval: NodeJS.Timeout;
+  const timerInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const appState = useRef(AppState.currentState); // Track app state
   const [appStateVisible, setAppStateVisible] = useState(appState.current); // Current app state
@@ -101,9 +101,13 @@ const TestScreen = ({ route, navigation }: any) => {
 
   useEffect(() => {
     if (disconnectedTime >= 60) {
-      clearInterval(timerInterval);
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+        timerInterval.current = null;
+      }
+      
       handleModalConfirm();
-      setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
+      setHasExceededTimeout(true);
     }
   }, [disconnectedTime]);
 
@@ -115,29 +119,42 @@ const TestScreen = ({ route, navigation }: any) => {
 
   useEffect(() => {
     if (isTestComplete || showEarlySubmissionModal) {
-      clearInterval(timerInterval);
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+        timerInterval.current = null;
+      }
       return;
     }
+  
     if (timeLeft === 0) {
       setIsTestComplete(true);
       goToTimeUpScreen(); // Navigate to TimeUp screen when time is up
       return;
     }
-
-    timerInterval = setInterval(() => {
+  
+    timerInterval.current = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
-          clearInterval(timerInterval);
+          if (timerInterval.current) {
+            clearInterval(timerInterval.current);
+            timerInterval.current = null;
+          }
           setIsTestComplete(true);
-          goToTimeUpScreen(); // Navigate to TimeUp screen when time is up
+          goToTimeUpScreen();
           return 0;
         }
         return prevTime - 1;
       });
     }, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, [timeLeft, isTestComplete, showEarlySubmissionModal]);
+  
+    return () => {
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+        timerInterval.current = null;
+      }
+    };
+  }, [isTestComplete, showEarlySubmissionModal]); // Removed `timeLeft` dependency to avoid multiple intervals
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -298,22 +315,41 @@ const TestScreen = ({ route, navigation }: any) => {
 
   const handleModalConfirm = async () => {
     setShowEarlySubmissionModal(false);
-    clearInterval(timerInterval); // Ensure the timer is cleared for early submission
+  
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current); // Ensure the timer is cleared for early submission
+      timerInterval.current = null;
+    }
+  
     const finalScore = 0; // Score is 0 for early submission
     console.log('Submitting test with score:', finalScore);
-    if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
-      await submitTest(finalScore, true);
-    } else {
-      await submitSkillTest(finalScore, true);
+  
+    try {
+      if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
+        await submitTest(finalScore, true);
+      } else {
+        await submitSkillTest(finalScore, true);
+      }
+    } catch (error) {
+      console.error("Error submitting test:", error);
     }
   };
   const goToTimeUpScreen = async () => {
-    clearInterval(timerInterval); // Clear the timer if time's up
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current); // Clear the timer if time's up
+      timerInterval.current = null;
+    }
+  
     const finalScore = calculateScore(); // Calculate the score
     const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
     setFinalScore(percentageScore); // Store final score in state
-    navigation.navigate('TimeUp', { finalScore: percentageScore, testName:testName}); // Pass the score to TimeUp screen
+  
+    // Ensure we don't navigate multiple times if already on TimeUp screen
+    if (navigation.isFocused && !navigation.isFocused('TimeUp')) {
+      navigation.navigate('TimeUp', { finalScore: percentageScore, testName });
+    }
   };
+  
   const currentQuestion =
     testData.questions && currentQuestionIndex < testData.questions.length
       ? testData.questions[currentQuestionIndex]
@@ -336,34 +372,44 @@ const TestScreen = ({ route, navigation }: any) => {
   };
 
   const goToNextQuestion = async () => {
-    if (!selectedAnswer) {
-      // Show an alert if no answer is selected
-      setErrorMessage('Please provide your answer before moving to the next question.');
-      return;
+  if (!selectedAnswer) {
+    // Show an alert if no answer is selected
+    setErrorMessage('Please provide your answer before moving to the next question.');
+    return;
+  }
+
+  // Save the selected answer before proceeding
+  setAnswers((prevAnswers) => ({ ...prevAnswers, [currentQuestionIndex]: selectedAnswer }));
+
+  if (currentQuestionIndex < testData.questions.length - 1) {
+    // Move to the next question
+    const nextAnswer = answer[currentQuestionIndex + 1] || null; // Ensure correct variable usage
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setSelectedAnswer(nextAnswer); // Reset the selected answer for the next question
+    setErrorMessage(''); // Clear error message when moving to the next question
+  } else {
+    // Submit the test if it is the last question
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+      timerInterval.current = null;
     }
- 
-    // Save the selected answer before proceeding
-    setAnswers((prevAnswers) => ({ ...prevAnswers, [currentQuestionIndex]: selectedAnswer }));
- 
-    if (currentQuestionIndex < testData.questions.length - 1) {
-      // Move to the next question
-      const nextAnswer = answer[currentQuestionIndex + 1] || null;
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(nextAnswer); // Reset the selected answer for the next question
-      setErrorMessage(''); // Clear error message when moving to the next question
-    } else {
-      // Submit the test if it is the last question
-      clearInterval(timerInterval);
-      const finalScore = calculateScore();
-      const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
-      console.log('Final score (on submit):', percentageScore); // Debug
+
+    const finalScore = calculateScore();
+    const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
+    console.log('Final score (on submit):', percentageScore); // Debugging log
+
+    try {
       if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
         await submitTest(percentageScore, false);
       } else {
         await submitSkillTest(percentageScore, false);
       }
+    } catch (error) {
+      console.error("Error submitting test:", error);
     }
-  };
+  }
+};
+
   if (!isNetworkAvailable) {
     return (
       <SafeAreaView style={styles.container1}>

@@ -337,7 +337,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#F46F16',
     fontFamily: 'PlusJakartaSans-Bold',
-    fontWeight: 700,
   },
   statusContainer: {
     marginTop: 10,
@@ -374,14 +373,14 @@ const styles = StyleSheet.create({
   },
   statusDate: {
     fontSize: 14,
-    color: 'black',
+    color: '#5D5555',
     flex: 1,
     textAlign: 'center',
     fontFamily: 'PlusJakartaSans-Medium'
   },
   statusText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 14,
+    color: '#5D5555',
     flex: 1,
     textAlign: 'center',
     fontFamily: 'PlusJakartaSans-Medium'

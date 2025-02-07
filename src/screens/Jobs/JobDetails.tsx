@@ -17,6 +17,7 @@ import Alertcircle from '../../assests/icons/Alertcircle';
 import Savedjob from '../../assests/icons/Savedjob';
 import UserContext from '../../context/UserContext';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs';
+import Icon from 'react-native-vector-icons/Feather';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -61,7 +62,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`;
+    return `${monthNames[month - 1]} ${day}, ${year}`; 
   };
   const courseUrlMap: Record<string, any> = {
     "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
@@ -134,11 +135,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           text2: 'Job saved successfully!',
           text1Style: {
             fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Medium'
+            fontFamily: 'PlusJakartaSans-Bold',
+            color: 'black'
           },
           text2Style: {
             fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Medium'
+            fontFamily: 'PlusJakartaSans-Bold',
+            color: 'black'
           },
           position: 'bottom',
           bottomOffset: 80,
@@ -154,11 +157,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         text2: 'Failed to save job.',
         text1Style: {
           fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Medium'
+          fontFamily: 'PlusJakartaSans-Bold',
+          color: 'black'
         },
         text2Style: {
           fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Medium'
+          fontFamily: 'PlusJakartaSans-Bold',
+           color: 'black'
         },
         position: 'bottom',
         bottomOffset: 80,
@@ -265,7 +270,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11 }}>{job.employeeType}</Text>
+              <Text style={{ fontSize: 11,fontFamily:'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
             </View>
           </View>
           <View>
@@ -314,14 +319,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
           <View style={styles.skillsContainer}>
             {perfectMatchSkills.map((skill, index) => (
-              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
-                {skill}
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills,]}>
+                {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
               </Text>
             ))}
             {unmatchedSkills.map((skill, index) => (
-              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
-                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
+              <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                <Alertcircle height={16} width={16} style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
+                <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
               </View>
             ))}
           </View>
@@ -395,9 +400,9 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {/* Apply Now Button */}
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <View>
-
-              <Text style={styles.appliedButtonText}>✔  Applied</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+               <Icon name="check" size={18} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text> 
             </View>
           </TouchableOpacity>
         ) : (
@@ -717,7 +722,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   message: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#666',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium'

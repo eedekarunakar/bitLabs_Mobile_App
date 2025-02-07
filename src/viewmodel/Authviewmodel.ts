@@ -17,10 +17,12 @@ const useLoginViewModel = () => {
   const showToast =(type: 'success'|'error',message:string)=>{
     Toast.show({
       type:type,
-      text1:message,
+      text1:'',
+      text2:message,
       position:'bottom',
       visibilityTime:5000,
-      text1Style:{
+      bottomOffset: 80,
+      text2Style:{
         fontFamily:'PlusJakartaSans-Medium',
         fontSize:12
       }
@@ -100,6 +102,7 @@ const useSignupViewModel = () => {
       text2:message,
       position:'bottom',
       visibilityTime:5000,
+      bottomOffset: 80,
       text2Style:{
         fontFamily:'PlusJakartaSans-Medium',
         fontSize:12

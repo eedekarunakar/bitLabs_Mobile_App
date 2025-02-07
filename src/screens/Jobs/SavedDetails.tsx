@@ -16,6 +16,7 @@ import { removeSavedJob } from '../../services/Jobs/JobDetails';
 import { ScrollView } from 'react-native-gesture-handler';
 import Alertcircle from '../../assests/icons/Alertcircle';
 import UserContext from '../../context/UserContext';
+import Icon from 'react-native-vector-icons/Feather';
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 
@@ -48,7 +49,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     "JAVASCRIPT": require('../../assests/Images/JavaScript.png'),
     "MYSQL": require('../../assests/Images/Mysql.png'),
     "REACT": require('../../assests/Images/React.png'),
-    "SPRINGBOOT": require('../../assests/Images/SpringBoot.png'),
+    "SPRING BOOT": require('../../assests/Images/SpringBoot.png'),
     "PYTHON": require('../../assests/Images/python.png'),
   };
   const monthNames = [
@@ -303,14 +304,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
           <View style={styles.skillsContainer}>
             {perfectMatchSkills.map((skill, index) => (
-              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills, { textTransform: 'uppercase' }]}>
-                {skill}
+              <Text key={`perfect-${index}`} style={[styles.skillTag, styles.matchedSkills,]}>
+                {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
               </Text>
             ))}
             {unmatchedSkills.map((skill, index) => (
-              <View key={`unmatched-${index}`} style={styles.unmatchedSkillContainer} >
-                <Alertcircle height={16} width={16} style={styles.unmatchedSkillIcon} />
-                <Text style={[styles.unmatchedSkill]}>{skill}</Text>
+              <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                <Alertcircle height={16} width={16} style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
+                <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
               </View>
             ))}
           </View>
@@ -379,25 +380,28 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {/* Apply Now Button */}
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>✔ Applied</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name="check" size={18} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text>
+           </View>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.applyButton]}
-            onPress={handleApplyJob}
-          >
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.button, styles.applyButtonGradient]}
-            >
-              <Text style={styles.applybuttonText}>Apply Now</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+      ) : (
+      <TouchableOpacity
+        style={[styles.button, styles.applyButton]}
+        onPress={handleApplyJob}
+      >
+        <LinearGradient
+          colors={['#F97316', '#FAA729']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.button, styles.applyButtonGradient]}
+        >
+          <Text style={styles.applybuttonText}>Apply Now</Text>
+        </LinearGradient>
+      </TouchableOpacity>
         )}
-      </View>
     </View>
+    </View >
   );
 };
 
@@ -422,7 +426,7 @@ const styles = StyleSheet.create({
   },
   appliedButtonText: {
     color: '#fff', // Gray text for "Applied"
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   description: {
     fontSize: 14,
@@ -545,7 +549,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   tag: {
-    
+
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
@@ -689,7 +693,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   message: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#666',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium',
