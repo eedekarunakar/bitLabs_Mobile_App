@@ -209,7 +209,7 @@ handleSave();
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         console.log("User canceled the picker");
-        toastmsg('error',"Upload canceled.");
+        toastmsg('error',"Upload cancelled.");
         setIsUploadComplete(false)
       } else {
         console.error("Unknown error: ", err);

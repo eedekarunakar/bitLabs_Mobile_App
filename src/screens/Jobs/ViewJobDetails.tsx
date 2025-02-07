@@ -12,6 +12,7 @@ import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
 import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Alertcircle from '../../assests/icons/Alertcircle';
+import { Dimensions } from 'react-native';
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -36,6 +37,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
+  const width = Dimensions.get('window')
 
   const courseImages: Record<string, any> = {
     "HTML&CSS": require('../../assests/Images/Html&Css.png'),
@@ -179,7 +181,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
           <View>
             <View style={styles.centeredView}>
-              <Text style={styles.centeredText}>{skillProgressText}</Text>
+              <Text style={[styles.centeredText]}>{skillProgressText}</Text>
             </View>
           </View>
 
@@ -450,7 +452,7 @@ const styles = StyleSheet.create({
     lineHeight: 23.76, // Line height (in points, not percentage)
     marginTop: 10,
     display: 'flex',
-    marginLeft: '60%'
+    marginLeft: '50%'
   },
   tabs: {
     flexDirection: 'row',
@@ -609,14 +611,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     marginLeft: -20,
+    
 
   },
   centeredText: {
-    fontFamily: 'PlusJakartaSans-Medium',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 15,
     lineHeight: 35.27,
     textAlign: 'left',
     color: '#000000',
+    
+    
   },
   matchedSkills: {
     color: '#fff',
