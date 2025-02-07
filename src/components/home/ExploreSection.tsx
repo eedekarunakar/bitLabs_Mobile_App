@@ -75,7 +75,7 @@ const ExploreSection = () => {
         )}
 
         <View style={[styles.largeCard, styles.lastCard]}>
-          <Text style={styles.cardTitle}>Get Certified on Advanced{"\n"}{"        "}Technologies</Text>
+          <Text style={styles.cardTitle}>Get Certified on Advanced{"\n"}{"                 "}Technologies</Text>
           <Image
             source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Certificate.cf13aa641913a67cb502.png" }}
             style={styles.cardImage}

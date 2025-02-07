@@ -580,7 +580,7 @@ function ProfileComponent() {
                                     <TouchableOpacity style={styles.customButton} onPress={handleCamera}>
                                         <Text style={styles.buttonText1}>Take a photo</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.customButton} onPress={handleLibrary}>
+                                    <TouchableOpacity style={styles.modalButton7} onPress={handleLibrary}>
                                         <Text style={styles.buttonText1}>Choose a photo</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -599,6 +599,7 @@ function ProfileComponent() {
                             visible={isPersonalDetailsFormVisible}
                             onRequestClose={() => {
                                 setPersonalDetailsFormVisible(false);
+                                
                                 setFormErrors({});
                             }}>
                             <View style={styles.modalView}>
@@ -1154,21 +1155,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
+        marginBottom:10
     },
 
     modalCard6: {
-        width: '95%', // Adjusts modal width
-        marginHorizontal: '5%', // Centers the modal horizontally
+        width: '95%',
+        marginHorizontal: '5%',
         backgroundColor: 'white',
         borderRadius: 10,
-        paddingVertical: 3, // Padding for top and bottom, reducing the space inside the modal
-        paddingHorizontal: 2, // Horizontal padding to keep space on sides
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
-        marginTop: 10,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        marginBottom: 10,
+        paddingLeft: 5
     },
 
     customButton: {
