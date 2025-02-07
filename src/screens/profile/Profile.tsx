@@ -717,8 +717,8 @@ function ProfileComponent() {
                                             style={styles.closeIcon}
                                             onPress={handleCancelUpload}
                                         >
-                                            <View style={{ marginLeft: 50 }}>
-                                                <Icon7 name="close" size={15} color={'0D0D0D'} />
+                                            <View style={{ marginLeft: 50,position:'absolute',top:2.5 }}>
+                                                <Icon7 name="close" size={15}  />
                                             </View>
 
                                         </TouchableOpacity>

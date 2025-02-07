@@ -73,7 +73,7 @@ const ForgotPassword = () => {
         showToast('error', 'Error sending OTP');
       }
     } else {
-      showToast('error', 'Invalid email address');
+      //showToast('error', 'Invalid email address');
     }
   };
 
@@ -85,7 +85,7 @@ const ForgotPassword = () => {
     } else {
       setOtpValid(false);
       setTimeout(() => setOtpValid(true), 3000);
-      showToast('error', 'Invalid OTP');
+      //showToast('error', 'Invalid OTP');
     }
   };
 

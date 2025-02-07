@@ -94,7 +94,7 @@ const toastConfig: ToastConfig = {
   error: (props) => (
     <BaseToast
       {...props} // Spread the props for BaseToast
-      style={{ borderLeftColor: 'green', paddingRight: 15, width: width * 0.9, }} // Custom styling
+      style={{ borderLeftColor: 'red', paddingRight: 15, width: width * 0.9, }} // Custom styling
       contentContainerStyle={{ paddingHorizontal: 15 }}
       text1Style={{ fontSize: 12, fontFamily: 'PlusJakartaSans-Bold' }}
       text2Style={{ fontSize: 10, fontFamily: 'PlusJakartaSans-Bold',color:'black' }} // Ensure text2 styling

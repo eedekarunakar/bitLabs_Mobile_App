@@ -139,9 +139,11 @@ const styles = StyleSheet.create({
   dateInfo: {
     fontSize: 12,
     color: '#999',
+    fontFamily:'PlusJakartaSans-Medium'
   },
   readText: {
     color: '#666',
+    fontFamily:'PlusJakartaSans-Medium'
   },
 });
 
