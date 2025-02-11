@@ -41,7 +41,7 @@ const Badge = ({ route, navigation }: any) => {
     'C Sharp': require('../../assests/Images/Test/CSharp.png'),
     CSS: require('../../assests/Images/Test/CSS.png'),
     Django: require('../../assests/Images/Test/Django.png'),
-    '.Net': require('../../assests/Images/Test/Dot Net.png'),
+    '.Net': require('../../assests/Images/Test/DotNet.png'),
     Flask: require('../../assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
     HTML: require('../../assests/Images/Test/HTML.png'),
@@ -387,7 +387,7 @@ const Badge = ({ route, navigation }: any) => {
                     ]}
                   >
                     {testName === 'General Aptitude Test' && testStatus === 'P' || selectedStep > 1 ? (
-                      <Icon1 name="check" size={14} style={{ color: 'white' }} />
+                      <Icon name="check" size={16} color="white" />
                     ) : (
                       <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
                     )}

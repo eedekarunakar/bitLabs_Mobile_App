@@ -1,6 +1,6 @@
 {
   "testName": "Spring Boot MCQ Test",
-  "duration": "30 mins",
+  "duration": "1 mins",
   "numberOfQuestions": 30,
   "topicsCovered": ["Spring Boot"],
   "questions": [
