@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,Dimensions
+    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
@@ -36,7 +36,7 @@ import UserContext from '../../context/UserContext';
 
 
 
-const { width } = Dimensions.get('window'); 
+const { width } = Dimensions.get('window');
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
@@ -53,12 +53,12 @@ function ProfileComponent() {
     const [bgcolor, setbgcolor] = useState(false)
     const [verified, setVerified] = useState(false)
     const [isUploadComplete, setIsUploadComplete] = useState(false);
-    
+  
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-    const {setPersonalName} = useContext(UserContext)
+    const { setPersonalName } = useContext(UserContext)
 
     const DEFAULT_PROFILE_IMAGE = require('../../assests/profile/profile.png');
     console.log(userId, userToken)
@@ -72,7 +72,8 @@ function ProfileComponent() {
         setFormErrors,
         handleInputChange,
         updateBasicDetails,
-        reloadProfile
+        reloadProfile,
+        resetPersonalDetails
     } = useProfileViewModel(userToken, userId);
     const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
 
@@ -103,6 +104,7 @@ function ProfileComponent() {
         return true; // For iOS or platforms other than Android
     };
     const [key, setKey] = useState(0);
+
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             console.log('Profile screen is focused');
@@ -120,30 +122,35 @@ function ProfileComponent() {
     }, [userId, userToken]);
     useEffect(() => {
         const checkVerification = async () => {
-          try {
-            const result = await ProfileService.checkVerified(userToken, userId);
-            if (result) {
-                console.log("verified: "+result)
-              setVerified(result);
+            try {
+                const result = await ProfileService.checkVerified(userToken, userId);
+                if (result) {
+                    console.log("verified: " + result)
+                    setVerified(result);
+                }
+            } catch (error) {
+                console.error('Error checking verification:', error);
             }
-          } catch (error) {
-            console.error('Error checking verification:', error);
-          }
         };
-      
+
         checkVerification();
-      }, [userId]);
+    }, [userId]);
+
+    
+
+
+
     const validatePhoto = (photoFile: any) => {
         const allowedTypes = ['image/jpeg', 'image/png'];
         const maxSize = 1048576; // 1 MB in bytes
 
         if (!allowedTypes.includes(photoFile.type)) {
-            toastmsg('error','only JPEG and PNG files are allowed.');
+            toastmsg('error', 'only JPEG and PNG files are allowed.');
             return false;
         }
 
         if (photoFile.fileSize > maxSize) {
-            toastmsg('error','File size must be less than 1 MB.');
+            toastmsg('error', 'File size must be less than 1 MB.');
             return false;
         }
 
@@ -158,10 +165,10 @@ function ProfileComponent() {
             if (result.success) {
                 console.log('Photo uploaded successfully');
                 fetchProfilePhoto(userToken, userId);
-                toastmsg('success','Profile photo uploaded successfully!');
+                toastmsg('success', 'Profile photo uploaded successfully!');
             } else {
                 console.log('Failed to upload photo:', result.message);
-                toastmsg('error','Failed to upload photo.');
+                toastmsg('error', 'Failed to upload photo.');
             }
         } catch (error) {
             console.error('Error uploading photo:', error);
@@ -202,7 +209,7 @@ function ProfileComponent() {
     };
     const removePhoto = async () => {
         if (photo === DEFAULT_PROFILE_IMAGE) {
-            toastmsg('error','No photo to remove.');
+            toastmsg('error', 'No photo to remove.');
             return;
         }
         setIsLoading(true);
@@ -222,16 +229,16 @@ function ProfileComponent() {
             if (result.success) {
                 await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
                 console.log('Default photo uploaded successfully');
-                toastmsg('success','Default image set successfully!');
+                toastmsg('success', 'Default image set successfully!');
             } else {
                 console.log('Failed to set default photo:', result.message);
-                toastmsg('error','Failed to remove photo.');
+                toastmsg('error', 'Failed to remove photo.');
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Error setting default photo:', error.message);
             }
-            toastmsg('error','Error removing photo. Please try again.');
+            toastmsg('error', 'Error removing photo. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -304,7 +311,7 @@ function ProfileComponent() {
         setProgress(0);
         toastmsg('error', 'Upload cancelled');
         setShowBorder(false);
-       
+
     };
 
     const handleUploadResume = async () => {
@@ -315,7 +322,7 @@ function ProfileComponent() {
             });
 
             if (!result || result.length === 0) {
-                toastmsg('error','No file selected.');
+                toastmsg('error', 'No file selected.');
                 return;
             }
 
@@ -324,7 +331,7 @@ function ProfileComponent() {
 
             // Validate file size
             if (selectedFile.size && selectedFile.size > maxSize) {
-                toastmsg('error','File size exceeds the 1MB limit.');
+                toastmsg('error', 'File size exceeds the 1MB limit.');
                 return;
             }
 
@@ -355,14 +362,14 @@ function ProfileComponent() {
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 console.log('User canceled the picker');
-                toastmsg('error','Upload canceled.');
+                toastmsg('error', 'Upload canceled.');
                 setIsUploadComplete(false)
             } else if ((err as { message: string }).message === 'Network Error') {
                 console.log('Network Error:', err);
-                toastmsg('error','Network error. Please check your internet connection and try again.');
+                toastmsg('error', 'Network error. Please check your internet connection and try again.');
             } else {
                 console.error('Unknown error: ', err);
-                toastmsg('error','Error selecting file. Please try again.');
+                toastmsg('error', 'Error selecting file. Please try again.');
             }
         }
     };
@@ -371,7 +378,7 @@ function ProfileComponent() {
 
     const handleSaveResume = async () => {
         if (resumeFile) {
-            
+
             //showToast('Resume uploaded')
             setbgcolor(false)
             const formData = new FormData();
@@ -392,7 +399,7 @@ function ProfileComponent() {
                 setResumeModalVisible(false)
 
             }
-            
+
         } else {
 
             setbgcolor(true)
@@ -401,7 +408,7 @@ function ProfileComponent() {
 
     const handleSaveChanges = async () => {
         const success = await updateBasicDetails();
-        if(personalDetails.firstName.length<=19 && personalDetails.lastName.length<=19 && success){
+        if (personalDetails.firstName.length <= 19 && personalDetails.lastName.length <= 19 && success) {
             setPersonalName(personalDetails.firstName);
             console.log('Personal details updated successfully');
             setPersonalDetailsFormVisible(false);
@@ -417,16 +424,16 @@ function ProfileComponent() {
         Toast.show({
             type: type1,
             text1: '',
-            text2:message,
+            text2: message,
             position: 'bottom',
             visibilityTime: 5000,
-            text2Style:{
-                fontFamily:'PlusJakartaSans-Medium',
-                fontSize:12
+            text2Style: {
+                fontFamily: 'PlusJakartaSans-Medium',
+                fontSize: 12
             }
         });
     }
- 
+
 
 
 
@@ -437,7 +444,7 @@ function ProfileComponent() {
                     <View style={styles.card}>
                         <View style={styles.container}>
                             <View style={styles.pencil}>
-                                <TouchableOpacity onPress={() => setPersonalDetailsFormVisible(true)}>
+                                <TouchableOpacity onPress={() => {setPersonalDetailsFormVisible(true);resetPersonalDetails()}}>
                                     <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
@@ -452,18 +459,18 @@ function ProfileComponent() {
                                 <TouchableOpacity
                                     style={styles.cameraIcon}
                                     accessible={true} accessibilityLabel="Open Camera Options"
-                                    onPress={() => setCameraOptionsVisible(true)
+                                    onPress={() => { setCameraOptionsVisible(true) }
 
                                     }
                                 >
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                            <Text style={[styles.name, { textAlign:'center', alignSelf: 'center'}]}>
-                            {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
-                            </Text>
-                            {verified&&<Icon5 name="verified" size={25} color="#334584" style={{marginLeft:5}} />}
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
+                                    {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                                </Text>
+                                {verified && <Icon5 name="verified" size={25} color="#F46F16" style={{ marginLeft: 5 }} />}
                             </View>
 
                             <View style={styles.infoContainer}>
@@ -558,7 +565,7 @@ function ProfileComponent() {
                         </View>
                         <ProfessionalDetailsForm
                             visible={isProfessionalFormVisible}
-                            onClose={() => {setProfessionalFormVisible(false)}}
+                            onClose={() => { setProfessionalFormVisible(false); resetPersonalDetails() }}
                             qualification={qualification}
                             specialization={specialization}
                             skillsRequired={skillsRequired}
@@ -599,7 +606,6 @@ function ProfileComponent() {
                             visible={isPersonalDetailsFormVisible}
                             onRequestClose={() => {
                                 setPersonalDetailsFormVisible(false);
-                                
                                 setFormErrors({});
                             }}>
                             <View style={styles.modalView}>
@@ -654,7 +660,7 @@ function ProfileComponent() {
                 <View style={{ flex: 1, padding: 10 }}>
                     <View style={styles.card1}>
                         <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
-                        
+
 
                         <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
                             <Icon3 name='pencil' size={18} color='black' />
@@ -671,7 +677,7 @@ function ProfileComponent() {
                     <View style={styles.modalView1}>
                         <View style={styles.modalCard1}>
                             <View style={{ marginLeft: '95%' }}>
-                                <TouchableOpacity onPress={() => {setResumeModalVisible(false); setIsUploadComplete(false);setLoading(false);setProgress(0);setResumeFile(null);setShowBorder(false)}} >
+                                <TouchableOpacity onPress={() => { setResumeModalVisible(false); setIsUploadComplete(false); setLoading(false); setProgress(0); setResumeFile(null); setShowBorder(false) }} >
                                     <Icon7 name="close" size={20} color={'0D0D0D'} />
                                 </TouchableOpacity>
                             </View>
@@ -685,19 +691,19 @@ function ProfileComponent() {
                                             source={require('../../../src/assests/Images/file1.png')}
                                             style={{ position: 'absolute', top: 30 }}
                                         /> */}
-                                        <Fileupload style={{position:'absolute',top:30}}/>
+                                        <Fileupload style={{ position: 'absolute', top: 30 }} />
                                     </View>
 
-                                    <View style={{ padding: 10,   }}>
-                                        <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center',fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
-                                        <Text style={{ color: '#6C6C6C', textAlign: 'center',fontFamily: 'PlusJakartaSans-Medium'}}>File must be less than 1Mb</Text>
-                                        <Text style={{ color: '#6C6C6C',textAlign:'center',fontFamily: 'PlusJakartaSans-Medium'}}>Only .doc or .PDFs are allowed.</Text>
+                                    <View style={{ padding: 10, }}>
+                                        <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center', fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center', fontFamily: 'PlusJakartaSans-Medium' }}>File must be less than 1Mb</Text>
+                                        <Text style={{ color: '#6C6C6C', textAlign: 'center', fontFamily: 'PlusJakartaSans-Medium' }}>Only .doc or .PDFs are allowed.</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginBottom: 50 }}>
                                 {bgcolor ? (
-                                    <Text style={{ color: 'red',marginBottom:25,marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
+                                    <Text style={{ color: 'red', marginBottom: 25, marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
                                 ) : (
                                     <Text></Text>
                                 )}
@@ -717,8 +723,8 @@ function ProfileComponent() {
                                             style={styles.closeIcon}
                                             onPress={handleCancelUpload}
                                         >
-                                            <View style={{ marginLeft: 50,position:'absolute',top:2.5 }}>
-                                                <Icon7 name="close" size={15}  />
+                                            <View style={{ marginLeft: 50, position: 'absolute', top: 2.5 }}>
+                                                <Icon7 name="close" size={15} />
                                             </View>
 
                                         </TouchableOpacity>
@@ -763,7 +769,7 @@ function ProfileComponent() {
                                     onPress={() => navigation.navigate('ResumeBuilder')}
                                 >
 
-                                    <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold'}}>Create Resume</Text>
+                                    <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
 
                                 </TouchableOpacity>
                             </View>
@@ -884,10 +890,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontFamily: 'PlusJakartaSans-Medium',
-        
+
     },
     button: {
-        marginTop:4,
+        marginTop: 4,
         alignItems: 'center',
         justifyContent: 'center',
         height: 30,
@@ -900,7 +906,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         marginBottom: 8,
-        marginTop:4,
+        marginTop: 4,
         paddingHorizontal: 10,
         borderRadius: 2,
         backgroundColor: '#E5E5E5',
@@ -1140,7 +1146,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
-       
+
     },
 
     modalCard5: {
@@ -1155,7 +1161,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
-        marginBottom:10
+        marginBottom: 10
     },
 
     modalCard6: {
@@ -1227,7 +1233,8 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
-        fontSize: 12
+        fontSize: 12,
+        fontFamily: 'PlusJakartaSans-Medium'
     }
     ,
     retryText: {

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { DocumentPickerResponse } from 'react-native-document-picker';
 import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
 
 // const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com'; // Replace with actual API base URL
 interface TestData {
@@ -16,7 +16,7 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.get(`${API_BASE_URL}/applicantprofile/${userId}/profile-view`, {
+      const response = await apiClient.get(`/applicantprofile/${userId}/profile-view`, {
         headers: {
           Authorization: `Bearer ${userToken}`, // Embed token in the Authorization header
         },

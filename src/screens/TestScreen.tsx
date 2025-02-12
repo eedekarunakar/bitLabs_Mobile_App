@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, AppState, Alert, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert, ScrollView } from 'react-native';
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -11,9 +11,10 @@ import { submitTestResult } from '../services/Test/testService';
 import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import { decode } from "html-entities";
- 
+import { AppState } from 'react-native';
+
 const { width } = Dimensions.get('window');
- 
+
 const TestScreen = ({ route, navigation }: any) => {
   const { testName } = route.params;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -27,11 +28,12 @@ const TestScreen = ({ route, navigation }: any) => {
   const [isNetworkAvailable, setIsNetworkAvailable] = useState<boolean>(true); // Default to true // Network state
   const [disconnectedTime, setDisconnectedTime] = useState<number>(0); // Time duration of network disconnection
   const [hasExceededTimeout, setHasExceededTimeout] = useState(false);
+  const [isTestSubmitted, setIsTestSubmitted] = useState(false);
   const {
     submitSkillTest,
   } = useSkillTestViewModel(userId, userToken, testName);
- 
- 
+
+
   const {
     isTestComplete,
     showEarlySubmissionModal,
@@ -40,51 +42,46 @@ const TestScreen = ({ route, navigation }: any) => {
     submitTest,
   } = useTestViewModel(userId, userToken, testName);
   const [finalScore, setFinalScore] = useState<number>(0); // State to hold final score
- 
-  const timerInterval = useRef<ReturnType<typeof setInterval> | null>(null);
- 
-  const appState = useRef(AppState.currentState); // Track app state
-  const [appStateVisible, setAppStateVisible] = useState(appState.current); // Current app state
-  const backgroundTime = useRef<number | null>(null); // Track background time
- 
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        // App came to the foreground
-        if (backgroundTime.current) {
-          const elapsedTime = Math.floor((Date.now() - backgroundTime.current) / 1000); // Calculate elapsed time in seconds
-          setTimeLeft((prevTime) => prevTime - elapsedTime); // Subtract elapsed time from the timer
-        }
-      } else if (nextAppState.match(/inactive|background/)) {
-        // App went to the background
-        backgroundTime.current = Date.now(); // Store the time when the app went to the background
-      }
- 
-      appState.current = nextAppState;
-      setAppStateVisible(appState.current);
-    });
- 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
- 
+  let timerInterval: NodeJS.Timeout;
+
+  useEffect(() => {
+    let backgroundStartTime: number | null = null;
+
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'background') {
+        // Save the current time when app goes to background
+        backgroundStartTime = Date.now();
+        clearInterval(timerInterval);
+      } else if (nextAppState === 'active' && backgroundStartTime) {
+        // Calculate the time difference when the app comes back to foreground
+        const elapsedTime = Math.floor((Date.now() - backgroundStartTime) / 1000);
+        setTimeLeft((prevTime) => Math.max(0, prevTime - elapsedTime));
+        backgroundStartTime = null;
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => subscription.remove();
+  }, []);
+
   useEffect(() => {
     // Log the testName to check what value was sent
     console.log('Test Name received in TestScreen:', testName);
   }, [testName]);
- 
- 
+
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
       setIsNetworkAvailable(state.isConnected ?? false); // Use false if `state.isConnected` is null
     });
- 
+
     return () => {
       unsubscribe();
     };
@@ -98,71 +95,46 @@ const TestScreen = ({ route, navigation }: any) => {
       setDisconnectedTime(0);
     }
   }, [isNetworkAvailable]);
- 
+
   useEffect(() => {
     if (disconnectedTime >= 60) {
-      if (timerInterval.current) {
-        clearInterval(timerInterval.current);
-        timerInterval.current = null;
-      }
- 
+      clearInterval(timerInterval);
       handleModalConfirm();
-      setHasExceededTimeout(true);
+      setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
     }
   }, [disconnectedTime]);
- 
+
   useEffect(() => {
     if (isNetworkAvailable && hasExceededTimeout) {
       handleModalConfirm(); // Call again if needed
     }
   }, [isNetworkAvailable, hasExceededTimeout]);
- 
+
   useEffect(() => {
-    if (isTestComplete || showEarlySubmissionModal) {
-      if (timerInterval.current) {
-        clearInterval(timerInterval.current);
-        timerInterval.current = null;
-      }
+    if (isTestComplete || showEarlySubmissionModal || isTestSubmitted) {
+      clearInterval(timerInterval);
       return;
     }
- 
     if (timeLeft === 0) {
       setIsTestComplete(true);
       goToTimeUpScreen(); // Navigate to TimeUp screen when time is up
       return;
     }
- 
-    timerInterval.current = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          if (timerInterval.current) {
-            clearInterval(timerInterval.current);
-            timerInterval.current = null;
-          }
-          setIsTestComplete(true);
-          goToTimeUpScreen();
-          return 0;
-        }
-        return prevTime - 1;
-      });
+
+    timerInterval = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
- 
-    return () => {
-      if (timerInterval.current) {
-        clearInterval(timerInterval.current);
-        timerInterval.current = null;
-      }
-    };
-  }, [isTestComplete, showEarlySubmissionModal]); // Removed `timeLeft` dependency to avoid multiple intervals
- 
- 
+
+    return () => clearInterval(timerInterval);
+  }, [timeLeft, isTestComplete, showEarlySubmissionModal, isTestSubmitted]);
+
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
         setShowEarlySubmissionModal(true);
         return true;
       };
- 
+
       const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, [])
@@ -174,12 +146,12 @@ const TestScreen = ({ route, navigation }: any) => {
     }
     return array;
   };
- 
+
   useEffect(() => {
     if (!testName) return; // Ensure testName is available before fetching data
- 
+
     let fetchedTestData;
- 
+
     switch (testName) {
       case 'General Aptitude Test':
         fetchedTestData = require('../models/data/testData.json');
@@ -265,17 +237,14 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'MySQL':
         fetchedTestData = require('../models/data/SQL.json');
         break;
-      case 'Vue':
-        fetchedTestData = require('../models/data/Vue.json');
-        break;
-      case 'C++':
-        fetchedTestData = require('../models/data/Cpp.json');
+      case 'SQL-Server':
+        fetchedTestData = require('../models/data/SQL.json');
         break;
       default:
         console.error(`No data found for test: ${testName}`);
         return;
     }
- 
+
     if (fetchedTestData) {
       const shuffledQuestions = shuffleArray(fetchedTestData.questions); // Shuffle questions
       setTestData({ questions: shuffledQuestions });
@@ -284,10 +253,10 @@ const TestScreen = ({ route, navigation }: any) => {
       setTimeLeft(durationInSeconds); // Set time left
     }
   }, [testName]); // Re-run when testName changes
- 
+
   const parseDuration = (duration: string): number => {
     const match = duration.match(/(\d+)\s*(mins?|hr|hours?)/i);
- 
+
     if (match) {
       const value = parseInt(match[1]); // Get the numerical value
       const unit = match[2].toLowerCase(); // Get the unit (minute or hour)
@@ -297,11 +266,11 @@ const TestScreen = ({ route, navigation }: any) => {
         return value * 60; // Convert minutes to seconds
       }
     }
- 
+
     return 1800; // Default to 30 mins if no match (30 mins = 1800 seconds)
   };
- 
- 
+
+
   const calculateScore = () => {
     let score = 0;
     for (let i = 0; i < testData.questions.length; i++) {
@@ -312,53 +281,30 @@ const TestScreen = ({ route, navigation }: any) => {
     }
     return score;
   };
- 
+
   const handleModalConfirm = async () => {
     setShowEarlySubmissionModal(false);
- 
-    if (timerInterval.current) {
-      clearInterval(timerInterval.current); // Ensure the timer is cleared for early submission
-      timerInterval.current = null;
-    }
- 
+    clearInterval(timerInterval); // Ensure the timer is cleared for early submission
     const finalScore = 0; // Score is 0 for early submission
     console.log('Submitting test with score:', finalScore);
- 
-    try {
-      if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
-        await submitTest(finalScore, true);
-      } else {
-        await submitSkillTest(finalScore, true);
-      }
-    } catch (error) {
-      console.error("Error submitting test:", error);
+    if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
+      await submitTest(finalScore, true);
+    } else {
+      await submitSkillTest(finalScore, true);
     }
-  };
-  const calculateTimeUpScore = () => {
-    const finalScore = calculateTimeUpScore();
-    const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
-    return percentageScore;
   };
   const goToTimeUpScreen = async () => {
-    if (timerInterval.current) {
-      clearInterval(timerInterval.current); // Clear the timer if time's up
-      timerInterval.current = null;
-    }
- 
-    const finalScore = calculateScore();
+    clearInterval(timerInterval); // Clear the timer if time's up
+    const finalScore = calculateScore(); // Calculate the score
     const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
-    // Store final score in state
-    console.log('Final score (on time up):', percentageScore); // Debugging log
- 
-    navigation.navigate('TimeUp', { finalScore: percentageScore,testName });
- 
+    setFinalScore(percentageScore); // Store final score in state
+    navigation.navigate('TimeUp', { finalScore: percentageScore, testName }); // Pass the score to TimeUp screen
   };
- 
   const currentQuestion =
     testData.questions && currentQuestionIndex < testData.questions.length
       ? testData.questions[currentQuestionIndex]
       : null;
- 
+
   const handleAnswerSelect = (index: number, answer: string) => {
     setSelectedAnswer(answer);
     setAnswers((prevAnswers) => ({ ...prevAnswers, [index]: answer }));
@@ -366,25 +312,23 @@ const TestScreen = ({ route, navigation }: any) => {
   };
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      // Restore the previously selected answer when going back
       const previousAnswer = answer[currentQuestionIndex - 1] || null;
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedAnswer(previousAnswer); // Set the previously selected answer
       setErrorMessage(''); // Clear error message when going back
- 
     }
   };
- 
+
   const goToNextQuestion = async () => {
     if (!selectedAnswer) {
       // Show an alert if no answer is selected
       setErrorMessage('Please provide your answer before moving to the next question.');
       return;
     }
- 
+
     // Save the selected answer before proceeding
     setAnswers((prevAnswers) => ({ ...prevAnswers, [currentQuestionIndex]: selectedAnswer }));
- 
+
     if (currentQuestionIndex < testData.questions.length - 1) {
       // Move to the next question
       const nextAnswer = answer[currentQuestionIndex + 1] || null; // Ensure correct variable usage
@@ -393,27 +337,18 @@ const TestScreen = ({ route, navigation }: any) => {
       setErrorMessage(''); // Clear error message when moving to the next question
     } else {
       // Submit the test if it is the last question
-      if (timerInterval.current) {
-        clearInterval(timerInterval.current);
-        timerInterval.current = null;
-      }
- 
+      setIsTestSubmitted(true); // Stop the timer
+
       const finalScore = calculateScore();
       const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
-      console.log('Final score (on submit):', percentageScore); // Debugging log
- 
-      try {
-        if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
-          await submitTest(percentageScore, false);
-        } else {
-          await submitSkillTest(percentageScore, false);
-        }
-      } catch (error) {
-        console.error("Error submitting test:", error);
+      console.log('Final score (on submit):', percentageScore); // Debug
+      if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
+        await submitTest(percentageScore, false);
+      } else {
+        await submitSkillTest(percentageScore, false);
       }
     }
   };
- 
   if (!isNetworkAvailable) {
     return (
       <SafeAreaView style={styles.container1}>
@@ -423,8 +358,10 @@ const TestScreen = ({ route, navigation }: any) => {
       </SafeAreaView>
     );
   }
+
   return (
     <SafeAreaView style={styles.container}>
+
       <Header
         onBackPress={() => {
           setShowEarlySubmissionModal(true);
@@ -437,24 +374,25 @@ const TestScreen = ({ route, navigation }: any) => {
           Question {currentQuestionIndex + 1} / {testData?.questions?.length || 0}
         </Text>
         <View style={styles.timerContainer}>
-          <Icon name="clockcircleo" size={18} color="#F46F16" style={{ marginLeft: 15 }} />
+          <Icon name="clockcircleo" size={20} color="orange" style={{ marginLeft: 15 }} />
           <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
         </View>
       </View>
- 
+
       <View style={styles.separator} />
+
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.questionContainer}>
           <Text style={styles.questionText}>
             {currentQuestionIndex + 1}. {decode(currentQuestion?.question || "")}
           </Text>
         </View>
- 
+
         {/* Options Container (Replacing FlatList) */}
         <View style={styles.optionsContainer}>
           {currentQuestion?.options?.map((item: string, index: number) => {
             const isSelected = answer[currentQuestionIndex] === item;
- 
+
             return (
               <TouchableOpacity
                 key={`${currentQuestion?.id}-${index}`}
@@ -469,15 +407,12 @@ const TestScreen = ({ route, navigation }: any) => {
             );
           })}
         </View>
- 
+
         {/* Error Message */}
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       </ScrollView>
- 
- 
- 
- 
- 
+
+
       {/* Navigation Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -497,7 +432,7 @@ const TestScreen = ({ route, navigation }: any) => {
             Back
           </Text>
         </TouchableOpacity>
- 
+
         <TouchableOpacity onPress={goToNextQuestion}>
           <LinearGradient
             colors={['#F97316', '#FAA729']}
@@ -513,8 +448,7 @@ const TestScreen = ({ route, navigation }: any) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
- 
- 
+
       {/* Modals */}
       {showEarlySubmissionModal && (
         <Modal
@@ -531,9 +465,9 @@ const TestScreen = ({ route, navigation }: any) => {
                 <Icon name="close" size={20} color={'0D0D0D'} />
               </TouchableOpacity>
               <Image source={require('../assests/Images/Test/Warning.png')} style={styles.Warning} />
-              <Text style={styles.modalText}>Do you really want to exit?</Text>
+              <Text style={styles.modalText}>Are you sure you want to quit?</Text>
               <Text style={styles.modalText1}>
-                Exiting will erase your progress and prevent retaking the test for 7 days.Proceed?
+                You will loose all the test results till now & You{"\n"}cannot take test until 1 week
               </Text>
               <View style={styles.modalOptions}>
                 <TouchableOpacity
@@ -564,11 +498,11 @@ const TestScreen = ({ route, navigation }: any) => {
           </View>
         </Modal>
       )}
- 
+
     </SafeAreaView>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -620,7 +554,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
     lineHeight: 25
- 
+
   },
   optionContainer: {
     flexDirection: 'row',
@@ -648,7 +582,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
- 
+
     height: 93,
     backgroundColor: '#FFF'
   },
@@ -670,7 +604,7 @@ const styles = StyleSheet.create({
     width: 162.21,
     padding: 12,
     borderRadius: 8,
- 
+
   },
   navigationButtonText: {
     fontFamily: 'PlusJakartaSans-Bold',
@@ -707,7 +641,7 @@ const styles = StyleSheet.create({
     width: 85,
     height: 73,
   },
- 
+
   modalText: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
@@ -801,7 +735,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 10,
     marginVertical: 5, // Space between options
-   
+
   },
 });
 export default TestScreen;

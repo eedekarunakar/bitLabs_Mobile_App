@@ -34,7 +34,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const { job } = route.params; // job data passed from the previous screen
   const [isJobSaved, setIsJobSaved] = useState(false);
   const { userToken, userId } = useAuth();
-  const { reloadJobs } = useRecommendedJobsViewModel(); 
+  const { reloadJobs } = useRecommendedJobsViewModel();
   const [isJobApplied, setIsJobApplied] = useState(false);
   const [skills, setSkills] = useState<string[]>([]); // Explicitly setting the type as string[]
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
@@ -44,7 +44,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Loading state
-  const {refreshJobCounts} = useContext(UserContext)
+  const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext)
 
 
   const courseImages: Record<string, any> = {
@@ -62,7 +62,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`; 
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
   const courseUrlMap: Record<string, any> = {
     "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
@@ -126,9 +126,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       const result = await saveJob(job.id, userId, userToken);
       if (result) {
         setIsJobSaved(true);
-        // Alert.alert('Success', 'Job saved successfully!');
+        setIsJobsLoaded(false);
         refreshJobCounts();
-        reloadJobs();
+        console.log('loading recommended for saved')
+        // reloadJobs(); // Reload jobs
         Toast.show({
           type: 'success',
           text1: '',
@@ -147,6 +148,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           bottomOffset: 80,
           visibilityTime: 5000
         });
+        // Alert.alert('Success', 'Job saved successfully!')
+     
       }
     } catch (error) {
       console.error('Error saving job:', error);
@@ -163,7 +166,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         text2Style: {
           fontSize: 12,
           fontFamily: 'PlusJakartaSans-Bold',
-           color: 'black'
+          color: 'black'
         },
         position: 'bottom',
         bottomOffset: 80,
@@ -177,9 +180,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       const result = await applyJob(userId, job.id, userToken);
       if (result) {
         setIsJobApplied(true);
-        // Alert.alert('Success', 'Job application submitted successfully!');
+        console.log("loading for apply job")
+        setIsJobsLoaded(false);
         refreshJobCounts();
-        reloadJobs();
+        // Alert.alert('Success', 'Job application submitted successfully!');
+       
+        
+        
+        // reloadJobs(); // Reload jobs
+
+        // After reload, mark as loaded
         Toast.show({
           type: 'success',
           text1: '',
@@ -196,6 +206,9 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           bottomOffset: 80,
           visibilityTime: 5000, // Set toast visibility duration to 5 seconds
         });
+         refreshJobCounts();
+        console.log('loading recommended for applied ')
+        
       }
     } catch (error) {
       console.error('Error applying for job:', error);
@@ -249,7 +262,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
 
 
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' ,marginLeft:10}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center', marginLeft: 10 }}>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
               <Image
@@ -270,7 +283,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11,fontFamily:'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
+              <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
             </View>
           </View>
           <View>
@@ -401,8 +414,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-               <Icon name="check" size={18} color="white" />
-              <Text style={styles.appliedButtonText}>Applied</Text> 
+              <Icon name="check" size={18} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -531,7 +544,7 @@ const styles = StyleSheet.create({
     margin: 12,
     marginBottom: 2,
     paddingHorizontal: 8,
-    
+
   },
   row: {
     flexDirection: 'row',

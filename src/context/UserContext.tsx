@@ -5,8 +5,11 @@ import { useAuth } from './Authcontext';
 import ProfileService from '../services/profile/ProfileService';
 import { fetchJobCounts } from '../services/Home/apiService';
 import { JobCounts } from '../models/home/model';
+
 interface UserContextProps {
   verifiedStatus: boolean;
+  isJobsLoaded :boolean;
+  setIsJobsLoaded: (value: React.SetStateAction<boolean>) => void;
   personalName: string;
   refreshVerifiedStatus: () => Promise<void>;
   setPersonalName: (value: React.SetStateAction<string>) => void;
@@ -17,9 +20,12 @@ interface UserContextProps {
 }
 
 const UserContext = createContext<UserContextProps>({
+
   verifiedStatus: false,
   personalName: '',
   jobCounts: null,
+  isJobsLoaded:false,
+  setIsJobsLoaded:()=>{},
   refreshVerifiedStatus: async () => { },
   refreshJobCounts: async () => { },
   setPersonalName: () => { },
@@ -32,6 +38,7 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const [isJobsLoaded,setIsJobsLoaded] = useState(false)
   const { userId, userToken } = useAuth();
   const [jobCounts, setJobCounts] = useState<JobCounts | null>(null);
   const [verifiedStatus, setVerifiedStatus] = useState(false);
@@ -134,6 +141,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   setPersonalName('');
   setVerifiedStatus(false);
   setJobCounts(null);
+  setIsJobsLoaded(false);
   
  }
   return (
@@ -147,6 +155,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         refreshJobCounts,
         isLoading,
         reset,
+        isJobsLoaded,
+        setIsJobsLoaded
       }}
     >
       {children}

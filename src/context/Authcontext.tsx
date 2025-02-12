@@ -4,7 +4,7 @@ import { handleLogin ,handleLoginWithEmail} from '../services/login/Authservice'
 import { AuthResponse } from '../services/login/Authservice';
 import { showToast } from '../services/login/ToastService';
 import LogoutModal from '../screens/LandingPage/LogoutModel'; // Import the modal component
-
+import { setLogoutHandler } from '../services/login/ApiClient';
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -20,7 +20,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authData, setAuthData] = useState<{ token: string; id: number; email: string } | null>(null);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  
+  useEffect(()=>{
+    setLogoutHandler(handleLogout);
+  })
 
   const login = async (loginemail: string, loginpassword: string): Promise<AuthResponse> => {
     const response = await handleLogin(loginemail, loginpassword);
@@ -100,7 +102,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, authData, login,Glogin, logout: showLogoutModal }}>
+    <AuthContext.Provider value={{ isAuthenticated, authData, login,Glogin, logout: showLogoutModal , }}>
       {children}
       <LogoutModal
         visible={isLogoutModalVisible}

@@ -41,7 +41,7 @@ const Badge = ({ route, navigation }: any) => {
     'C Sharp': require('../../assests/Images/Test/CSharp.png'),
     CSS: require('../../assests/Images/Test/CSS.png'),
     Django: require('../../assests/Images/Test/Django.png'),
-    '.Net': require('../../assests/Images/Test/Dot Net.png'),
+    '.Net': require('../../assests/Images/Test/DotNet.png'),
     Flask: require('../../assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
     HTML: require('../../assests/Images/Test/HTML.png'),
@@ -60,7 +60,8 @@ const Badge = ({ route, navigation }: any) => {
     SQL: require('../../assests/Images/Test/MySQL.png'),
     Css: require('../../assests/Images/Test/CSS.png'),
     MySQL: require('../../assests/Images/Test/MySQL.png'),
-    Vue: require('../../assests/Images/Test/Vue.png')
+    Vue: require('../../assests/Images/Test/Vue.png'),
+    'SQL-Server': require('../../assests/Images/Test/sqlserver.png'),
   };
 
   const fetchTestStatus = async () => {

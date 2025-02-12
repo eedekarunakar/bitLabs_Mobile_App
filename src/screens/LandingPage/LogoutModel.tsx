@@ -4,7 +4,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import UserContext from '../../context/UserContext';
-
+import {useAuth } from '../../context/Authcontext';
 interface LogoutModalProps {
   visible: boolean;
   onCancel: () => void;
@@ -12,6 +12,8 @@ interface LogoutModalProps {
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
+
+  //reset the total data while logout to ensure no credentilas left in authcontext
   const {reset} = useContext(UserContext)
   return (
     <Modal
@@ -25,10 +27,10 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm 
             Are you sure you want to{"\n"}logout?
           </Text>
           <View style={styles.modalButtons}>
-            <TouchableOpacity onPress={()=>{onCancel;reset();}} style={[styles.modalButton, styles.cancelButton]}>
+            <TouchableOpacity onPress={()=>{onCancel();reset();}} style={[styles.modalButton, styles.cancelButton]}>
               <Text style={[styles.buttonText, { color: '#F46F16' }]}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onConfirm} style={[styles.modalButton]}>
+            <TouchableOpacity onPress={()=>{onConfirm()}} style={[styles.modalButton]}>
               <LinearGradient
                 colors={['#F46F16', '#F8A44C']}
                 style={styles.gradientButton}

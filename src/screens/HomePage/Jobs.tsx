@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,6 +16,7 @@ import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '../../models/Jobs/ApplyJobmodel'; // Your JobData interface
 import { useRoute, RouteProp } from '@react-navigation/native';
+import UserContext from '../../context/UserContext';
  
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -31,7 +32,9 @@ const RecommendedJobs = () => {
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
   const isFocused = useIsFocused();
   const [visibleJobsCount, setVisibleJobsCount] = useState(10); // Number of jobs to display initially
- 
+  const {isJobsLoaded,setIsJobsLoaded} = useContext(UserContext);
+  const [isInitialLoad, setIsInitialLoad] = useState(isJobsLoaded);
+
   useEffect(() => {
     if (route.params?.tab) {
       setActiveTab(route.params.tab); // Set the active tab from the passed parameter
@@ -39,10 +42,12 @@ const RecommendedJobs = () => {
   }, [route.params?.tab]);
  
   useEffect(() => {
-    if (isFocused && activeTab === 'recommended') {
-      reloadJobs(); // Reload jobs when the screen is focused and tab is 'recommended'
+    if (!isJobsLoaded) {
+      reloadJobs();  // Reload jobs only when `isJobsLoaded` is false
+      setIsJobsLoaded(true);  // Mark as loaded after fetching
     }
-  }, [isFocused, activeTab]);
+  }, [isJobsLoaded]);
+  
  
   // Handle tab press
   const handleTabPress = (tab: 'recommended' | 'applied' | 'saved') => {
@@ -195,7 +200,7 @@ const RecommendedJobs = () => {
               activeTab === 'recommended' && styles.activeTabText,
             ]}
           >
-            Recommended Jobs
+            Recommended
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -208,7 +213,7 @@ const RecommendedJobs = () => {
               activeTab === 'applied' && styles.activeTabText,
             ]}
           >
-            Applied Jobs
+            Applied
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -221,7 +226,7 @@ const RecommendedJobs = () => {
               activeTab === 'saved' && styles.activeTabText,
             ]}
           >
-            Saved Jobs
+            Saved
           </Text>
         </TouchableOpacity>
       </View>
@@ -394,7 +399,7 @@ const styles = StyleSheet.create({
  
   },
   tabText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#888',
     marginLeft: 10,
     fontFamily: 'PlusJakartaSans-Bold'
