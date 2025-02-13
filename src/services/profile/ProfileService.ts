@@ -1,5 +1,6 @@
 import axios from 'axios';
 import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
 
 interface TestData {
   testStatus: string;
@@ -14,7 +15,7 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.get(`${API_BASE_URL}/applicantprofile/${userId}/profile-view`, {
+      const response = await apiClient.get(`/applicantprofile/${userId}/profile-view`, {
         headers: {
           Authorization: `Bearer ${userToken}`, // Embed token in the Authorization header
         },
@@ -198,7 +199,7 @@ export const ProfileService = {
       }
     }
   },
-  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean | void> {
+  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean> {
     try {
       const response = await axios.get<TestData[]>(`${API_BASE_URL}/applicant1/tests/${userId}`, {
         headers: {
@@ -214,6 +215,7 @@ export const ProfileService = {
       return allTestsPassed;
     } catch (error) {
       console.error('Error fetching test data:', error);
+      return false
     }
 
   }

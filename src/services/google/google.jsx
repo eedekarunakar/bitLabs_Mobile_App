@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin'; 
 import { useAuth } from '../../context/Authcontext';  
+import { showToast } from '../login/ToastService';
 
 
 const useGoogleSignIn = () => {
@@ -25,6 +26,7 @@ const useGoogleSignIn = () => {
       const email = user?.data.user?.email;
       console.log('Email:', email);
       await Glogin(email);
+      showToast('success','Login Successful')
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User cancelled the login');

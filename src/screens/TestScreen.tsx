@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+
 import { View, Text, StyleSheet, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, ScrollView, AppState } from 'react-native';
+
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
@@ -9,6 +11,8 @@ import Header from '../components/CustomHeader/Header';
 import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import { decode } from "html-entities";
+
+import { AppState } from 'react-native';
 
 
 const { width } = Dimensions.get('window');
@@ -38,6 +42,9 @@ const TestScreen = ({ route, navigation }: any) => {
     setIsTestComplete,
     submitTest,
   } = useTestViewModel(userId, userToken, testName);
+
+  const [finalScore, setFinalScore] = useState<number>(0); // State to hold final score
+
 
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -251,8 +258,10 @@ const TestScreen = ({ route, navigation }: any) => {
   }, [testName]); // Re-run when testName changes
 
   const parseDuration = (duration: string): number => {
+
     const regex = /(\d+)\s*(mins?|hr|hours?)/i;
     const match = regex.exec(duration); // Using exec() instead of match()
+
 
     if (match) {
       const value = parseInt(match[1], 10); // Ensure radix is specified
@@ -267,6 +276,7 @@ const TestScreen = ({ route, navigation }: any) => {
 
     return 1800; // Default to 30 mins (1800 seconds) if no match
   };
+
 
 
 
@@ -296,6 +306,9 @@ const TestScreen = ({ route, navigation }: any) => {
     clearInterval(timerInterval); // Clear the timer if time's up
     const finalScore = calculateScore(); // Calculate the score
     const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
+
+    setFinalScore(percentageScore); // Store final score in state
+
     navigation.navigate('TimeUp', { finalScore: percentageScore, testName }); // Pass the score to TimeUp screen
   };
   const currentQuestion =
@@ -310,7 +323,9 @@ const TestScreen = ({ route, navigation }: any) => {
   };
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
+
       const previousAnswer = answers[currentQuestionIndex - 1] || null;
+
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedAnswer(previousAnswer); // Set the previously selected answer
       setErrorMessage(''); // Clear error message when going back
@@ -389,7 +404,9 @@ const TestScreen = ({ route, navigation }: any) => {
         {/* Options Container (Replacing FlatList) */}
         <View style={styles.optionsContainer}>
           {currentQuestion?.options?.map((item: string, index: number) => {
+
             const isSelected = answers[currentQuestionIndex] === item;
+
 
             return (
               <TouchableOpacity

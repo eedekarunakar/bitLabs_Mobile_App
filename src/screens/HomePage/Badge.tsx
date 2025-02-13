@@ -57,6 +57,7 @@ const Badge = ({ navigation }: any) => {
     MySQL: require('../../assests/Images/Test/MySQL.png'),
     Vue: require('../../assests/Images/Test/Vue.png'),
     'SQL-Server': require('../../assests/Images/Test/sqlserver.png'),
+
   };
 
   const calculateRetakeDate = (testDateTimeArray: number[]) => {
@@ -113,6 +114,7 @@ const Badge = ({ navigation }: any) => {
 
     calculateTimeLeft();
     return setInterval(calculateTimeLeft, 1000);
+
   };
 
   const fetchTestStatus = async () => {
@@ -267,7 +269,7 @@ const Badge = ({ navigation }: any) => {
                   colors={['#FFEAC4', '#FFF9D6']} // Set the gradient colors
                   style={styles.gradientBackground1} // Style to ensure the gradient takes the full width and height
                 >
-                  <Text style={[styles.content, { marginLeft: 10 }]}>Pre-Screenedbadge</Text>
+                  <Text style={[styles.content, { marginLeft: 10 }]}>Pre-Screened badge</Text>
 
 
                   {/* Image Section (Middle) */}

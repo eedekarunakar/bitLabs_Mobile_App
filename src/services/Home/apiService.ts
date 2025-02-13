@@ -1,9 +1,8 @@
 import axios from 'axios';
 import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
 // Create Axios instance
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-});
+
 
 export const fetchJobCounts = async (applicantId: number|null,jwtToken:string|null) => {
   try {

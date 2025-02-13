@@ -68,11 +68,11 @@ const BottomTab = ({ route }: { route: BottomTabRouteProp }) => {
               component={Jobs}
               {...createTabScreenOptions(JobsIconOutline, JobsIconSolid)}
             />
-            <Tabs.Screen
+            {/* <Tabs.Screen
               name="Drives"
               component={Drives}
               {...createTabScreenOptions(DrivesIconOutline, DrivesIconSolid)}
-            />
+            /> */}
             <Tabs.Screen
               name="Badges"
               component={Notification}

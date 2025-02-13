@@ -1,8 +1,9 @@
-import React from "react";
-import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity,Linking } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity, Linking } from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from '../../../New';
+import UserContext from "../../context/UserContext";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
@@ -13,7 +14,10 @@ interface ExploreSectionProps {
   navigateToBadge: () => void; // Prop to handle navigation to Badge screen
 }
 const ExploreSection = () => {
+  const { verifiedStatus } = useContext(UserContext)
   const navigation = useNavigation<NavigationProp>();
+
+
   return (
     <View>
       <Text style={styles.textBelowCard}>Explore</Text>
@@ -43,34 +47,35 @@ const ExploreSection = () => {
             </LinearGradient>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.largeCard}>
-          <View style={{borderColor:'red',borderRadius:10,borderWidth:1.5,paddingHorizontal:5,marginLeft:'80%'}}>
-            <Text style={{fontFamily:"PlusJakartaSans-Medium",color:'red',fontSize:12}}>New</Text>
-          </View>
-          <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"}             Badge</Text>
-          <Image
-            source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Taketest.f9b04fc56b4d85d488be.png" }}
-            style={styles.cardImage}
-          />
-          <TouchableOpacity
-            onPress={() => { navigation.navigate('Badges') }} // Use the navigateToBadge function here
-            style={styles.touchableContainer}
-          >
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.cardButton}
+        {!verifiedStatus && (
+          <View style={styles.largeCard}>
+            <View style={{ borderColor: 'red', borderRadius: 10, borderWidth: 1.5, paddingHorizontal: 5, marginLeft: '80%' }}>
+              <Text style={{ fontFamily: "PlusJakartaSans-Medium", color: 'red', fontSize: 12 }}>New</Text>
+            </View>
+            <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"}             Badge</Text>
+            <Image
+              source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Taketest.f9b04fc56b4d85d488be.png" }}
+              style={styles.cardImage}
+            />
+            <TouchableOpacity
+              onPress={() => { navigation.navigate('Badges') }} // Use the navigateToBadge function here
+              style={styles.touchableContainer}
             >
-              {/* Ensure Text is wrapped correctly */}
-              <Text style={styles.buttonText}>Take Test</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+              <LinearGradient
+                colors={['#F97316', '#FAA729']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.cardButton}
+              >
+                {/* Ensure Text is wrapped correctly */}
+                <Text style={styles.buttonText}>Take Test</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        )}
 
         <View style={[styles.largeCard, styles.lastCard]}>
-          <Text style={styles.cardTitle}>Get Certified on Advanced{"\n"}{"        "}Technologies</Text>
+          <Text style={styles.cardTitle}>Get Certified on Advanced{"\n"}{"                 "}Technologies</Text>
           <Image
             source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Certificate.cf13aa641913a67cb502.png" }}
             style={styles.cardImage}

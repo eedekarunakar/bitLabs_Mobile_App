@@ -1,9 +1,12 @@
+
 import React, { useState, useCallback, } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import Pdf from 'react-native-pdf';
+import Navbar from '../../components/Navigation/Navbar';
 import { useAuth } from '../../context/Authcontext';
 import API_BASE_URL from '../../services/API_Service';
 import { useFocusEffect } from '@react-navigation/native';
+
 import LinearGradient from 'react-native-linear-gradient';
 import Resumebanner from '../../assests/icons/Resumebanner';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import RNFS from 'react-native-fs';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
 
+
 const PDFExample = () => {
   const userid = useAuth();
   const [pdfUri, setPdfUri] = useState<string | null>(null);
@@ -25,9 +29,10 @@ const PDFExample = () => {
   const fetchPdf = async () => {
     try {
       setLoading(true);
-      console.log('usereid:', userid.userId)
+
+      console.log('userid:', userid.userId);
       const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
-      console.log(response)
+      console.log(response);
       const arrayBuffer = await response.arrayBuffer();
       const base64Pdf = arrayBufferToBase64(arrayBuffer);
       const pdfUri = `data:application/pdf;base64,${base64Pdf}`;
@@ -35,10 +40,12 @@ const PDFExample = () => {
     } catch (error) {
       console.error('Error fetching PDF:', error);
       setError('Error fetching PDF');
+
     }
     finally {
       setLoading(false);
     }
+
 
   };
 
@@ -57,6 +64,7 @@ const PDFExample = () => {
     }
     return btoa(binary);
   };
+
 
   const source = { uri: pdfUri };
   const downloadFile = async () => {
@@ -184,14 +192,29 @@ const PDFExample = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 15
+
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    backgroundColor: '#fff',
+  },
+  header: {
+    marginBottom: 10,
+    // The default flexDirection is 'column', so items align to the left by default.
+  },
+  headerText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 20,
+    color:'grey',
+    textAlign: 'left',
+  },
+  pdfContainer: {
+    flex: 1,
+    marginTop: 10,
+
   },
   pdf: {
     flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: '100%',
   },
   gradientContainer: {
     width: 385,

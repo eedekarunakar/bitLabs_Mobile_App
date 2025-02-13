@@ -14,6 +14,13 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     alternatePhoneNumber: '',
     email: '', // Non-editable, if needed
   });
+  const [personalData, setPersonalData] = useState({
+    firstName: '',
+    lastName: '',
+    alternatePhoneNumber: '',
+    email: '', // Non-editable, if needed
+})
+
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
@@ -25,12 +32,16 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
       // Populate personal details from the profile data
       if (data?.basicDetails) {
-        setPersonalDetails({
+
+        const newPersonalDetails = {
           firstName: data.basicDetails.firstName || '',
           lastName: data.basicDetails.lastName || '',
           alternatePhoneNumber: data.basicDetails.alternatePhoneNumber || '',
           email: data.basicDetails.email || '', // Non-editable
-        });
+        };
+        setPersonalDetails(newPersonalDetails);
+        setPersonalData(newPersonalDetails);
+
       }
 
       setProfileData(data);
@@ -40,16 +51,17 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       setIsLoading(false);
     }
   };
-
+  const resetPersonalDetails = () => {
+    setPersonalDetails(personalData);
+  };
   // Ensure function doesn't recreate on every render
- 
 
   useFocusEffect(
     useCallback(() => {
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
       );
- 
+
       const reloadWithTimeout = async () => {
         try {
           await Promise.race([loadProfile(), timeoutPromise]);
@@ -61,10 +73,11 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       reloadWithTimeout();
     }, [userToken, userId])
   );
-
+  
   useEffect(() => {
     loadProfile();
-  }, []);
+  }, [userToken, userId]);
+
   // Validate Phone Number
   const validatePhoneNumber = (phone: string): boolean => {
     const phoneRegex = /^[6-9]\d{9}$/; // Adjust regex as needed
@@ -142,6 +155,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     handleInputChange,
     updateBasicDetails,
     setFormErrors,
+    resetPersonalDetails, // Add reset function to return object
   };
 };
 

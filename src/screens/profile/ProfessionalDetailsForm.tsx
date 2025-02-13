@@ -72,6 +72,22 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const { userToken, userId } = useAuth();
+  useEffect(() => {
+    if (visible) {
+      setQualification(initialQualification);
+      setSpecialization(initialSpecialization);
+      setLocations(initialLocations);
+      setSkills(initialSkills);
+      setExperience(initialExperience);
+    }
+  }, [
+    visible,
+    initialQualification,
+    initialSpecialization,
+    initialSkills,
+    initialExperience,
+    initialLocations,
+  ])
 
   const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
   const specializationsByQualification: Record<string, string[]> = {
@@ -94,7 +110,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     Toast.show({
       type: type1,
       text1: '',
-      text2:message,
+      text2: message,
       position: 'bottom',
       onPress: () => Toast.hide(),
       visibilityTime: 5000,
