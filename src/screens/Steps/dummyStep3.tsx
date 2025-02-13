@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text,  TouchableOpacity, StyleSheet, Image,Dimensions } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
 import ProgressBar from "../../components/progessBar/ProgressBar";
 import { RootStackParamList } from "../../../New";
 import DocumentPicker, {
   DocumentPickerResponse,
 } from "react-native-document-picker";
-import { ToastAndroid } from 'react-native';
+
 import { useAuth } from '../../context/Authcontext';
 import { ProfileService } from '../../services/profile/ProfileService';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,7 +16,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
 import Fileupload from "../../assests/icons/Fileupload";
 import { ScrollView } from "react-native-gesture-handler";
-import { Dimensions } from "react-native";
 import Toast from 'react-native-toast-message';
 const { width } = Dimensions.get('window'); 
 
@@ -29,8 +28,6 @@ interface Step3Props {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   saveProfile: () => void;
-  //route: Props;
-  // navigation: any;
 }
  
 type Props = StackScreenProps<RootStackParamList, 'Step3'> & Step3Props;
@@ -46,9 +43,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
 
   console.log('RR', route.params);
 
-  const showToast = (message: string) => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
-  };
+
   const toastmsg = (type1: 'success' | 'error', message: string) => {
           Toast.show({
               type: type1,
@@ -69,7 +64,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const [bgcolor, setbgcolor] = useState(false)
   const [saveClicked, setSaveClicked] = useState(false);
  
-  const screenWidth = Dimensions.get("window").width;
+
   const { userId, userToken } = useAuth();
   const saveProfile = () => {
     console.log("Profile saved!");
@@ -85,8 +80,6 @@ const Step3: React.FC = ({ route, navigation }: any) => {
   const handleSave = () => {
     // Check if the resume is uploaded
     if (!resumeFile) {
-      //setErrorMessage('Please upload your resume before proceeding.'); // Set error message
-      //showToast('Please upload your resume before proceeding.'); // Optional: Show toast message for immediate feedback
       return; // Prevent calling saveProfile or navigating further
     }
  

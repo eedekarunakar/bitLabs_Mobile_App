@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import axios from 'axios';
-import { AuthResponse } from '../login/Authservice';  
+
 import { useAuth } from '../../context/Authcontext';  
 
 

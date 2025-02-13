@@ -1,17 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,} from 'react';
 import Navbar from '../../components/Navigation/Navbar';
 
 import ExploreSection from "../../components/home/ExploreSection";
 import { useJobCounts } from '../../viewmodel/DashboardViewModel'; // Hook for fetching job counts
 import { useAuth } from '../../context/Authcontext';
-import AppliedJobs from '../Jobs/AppliedJobs';
-import { useNavigation } from '@react-navigation/native';
-import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useMessageContext,MessageProvider } from '../LandingPage/welcome';
+import { useMessageContext, } from '../LandingPage/welcome';
 import ProfileService from '../../services/profile/ProfileService';
-import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
 import {
   View,
@@ -21,8 +18,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Dimensions,
 } from 'react-native';
-import {Dimensions} from 'react-native';
+
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
 import {useProfileViewModel} from '../../viewmodel/Profileviewmodel';
@@ -39,7 +37,7 @@ function Dashboard() {
   }, [route.params]);
 
 
-  //const [welcome, setWelcome] = useState(route.params?.welcome ?? 'Welcome Back');
+
 
   // Use the useJobCounts hook to fetch job counts
   const { jobCounts, loading, error } = useJobCounts(userId, userToken);

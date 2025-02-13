@@ -1,0 +1,6 @@
+projectKey=bitlabs
+serverUrl=http://localhost:9000
+serverVersion=10.5.1.90531
+dashboardUrl=http://localhost:9000/dashboard?id=bitlabs
+ceTaskId=4b3e0b46-fe1e-41fd-9a8a-8d7e6cd27cce
+ceTaskUrl=http://localhost:9000/api/ce/task?id=4b3e0b46-fe1e-41fd-9a8a-8d7e6cd27cce

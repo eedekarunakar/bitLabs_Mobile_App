@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { View, Image, StyleSheet, Dimensions, TouchableOpacity, Modal, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/Authcontext";
 import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel';
-import ProfileService from '../../services/profile/ProfileService';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import useGoogleSignIn from '../../services/google/google';
 import Notification from "../../assests/icons/notification";
@@ -12,9 +11,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 const Navbar = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
-    // const [photo, setPhoto] = useState('');
-    const { authData, logout, userId, userToken } = useAuth();
-    const { unseenCount, handleMarkAsSeen } = useJobAlerts();
+    const { logout } = useAuth();
+    const { unseenCount } = useJobAlerts();
     const {photo} = useProfilePhoto();
     const{signOut} = useGoogleSignIn();
 

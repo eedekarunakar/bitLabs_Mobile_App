@@ -11,16 +11,12 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
-import { useRoute } from '@react-navigation/native';
 import { useAuth } from '../../context/Authcontext';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp,useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
-import ViewJobDetails from './ViewJobDetails';
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { applyJob } from '../../services/Jobs/JobDetails';
 import API_BASE_URL from '../../services/API_Service';
  
 type JobDetailsScreenProps = {
@@ -124,7 +120,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
  
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <Text style={{ fontSize: 14 }}>₹ </Text>
+                     <Text style={{ fontSize: 13 }}>{"\u20B9"}</Text>
                     <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
                     <Text style={{ color: '#E2E2E2' }}>  |</Text>
                   </View>
@@ -143,8 +139,8 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
  
               {jobStatus.length > 0 ? (
                 <View style={styles.statusTable}>
-                  {jobStatus.map((status, index) => (
-                    <View key={index} style={styles.statusRow}>
+                  {jobStatus.map((status) => (
+                    <View key={status.id} style={styles.statusRow}>
                       <Text style={styles.statusDate}>
                         {formatDates(status.changeDate)}
                       </Text>
@@ -156,7 +152,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                           <View style={styles.circle} />
  
                         )}
-                        {index < jobStatus.length - 1 && (
+                        {status!==jobStatus[ jobStatus.length - 1 ]&& (
                           <View style={styles.verticalLine} />
                         )}
                       </View>

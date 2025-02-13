@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import * as Keychain from 'react-native-keychain';
-import { handleLogin ,handleLoginWithEmail} from '../services/login/Authservice';
-import { AuthResponse } from '../services/login/Authservice';
+import { handleLogin ,handleLoginWithEmail,AuthResponse } from '../services/login/Authservice';
 import { showToast } from '../services/login/ToastService';
 import LogoutModal from '../screens/LandingPage/LogoutModel'; // Import the modal component
 
@@ -117,9 +116,9 @@ const useAuth = () => {
 
   const { authData, ...rest } = context;
 
-  const userId = authData?.id || null; // Extract userId from authData
-  const userToken = authData?.token || null; // Extract userToken from authData
-  const userEmail = authData?.email || null;
+  const userId = authData?.id ?? null; // Extract userId from authData
+  const userToken = authData?.token ?? null; // Extract userToken from authData
+  const userEmail = authData?.email ?? null;
   return { ...rest, userId, userToken, userEmail };
 };
 

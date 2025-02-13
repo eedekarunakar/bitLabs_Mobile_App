@@ -37,7 +37,6 @@ const ChangePasswordScreen = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
-  const [visibleField, setVisibleField] = useState<string | null>(null);
   const { userToken, userId } = useAuth();
   const navigation = useNavigation();
 

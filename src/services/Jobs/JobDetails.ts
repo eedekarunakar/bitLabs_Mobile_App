@@ -1,7 +1,6 @@
 import axios from 'axios';
 import API_BASE_URL from '../API_Service';
 
-// const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com';
 
 const getAuthHeader = (userToken: string|null) => {
   return {

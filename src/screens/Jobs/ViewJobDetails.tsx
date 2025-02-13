@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView,Linking } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { saveJob, applyJob } from '../../services/Jobs/JobDetails'; // Import API functions
-import { JobData } from '../../models/Jobs/ApplyJobmodel'; // Import types
 import { RootStackParamList } from '../../../New';
 import { useAuth } from '../../context/Authcontext';
 import SemiCircleProgress from '../../components/progessBar/SemiCircularProgressBar';
 import { ProfileService } from '../../services/profile/ProfileService';
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
-import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Alertcircle from '../../assests/icons/Alertcircle';
-import { Dimensions } from 'react-native';
+
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -27,17 +24,17 @@ type JobDetailsProps = {
 
 const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const { job } = route.params; // job data passed from the previous screen
-  const [isJobSaved, setIsJobSaved] = useState(false);
+  
   const { userToken, userId } = useAuth();
-  const [isJobApplied, setIsJobApplied] = useState(false);
+  
   const [skills, setSkills] = useState<string[]>([]); // Explicitly setting the type as string[]
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
-  const [matchedSkills, setMatchedSkills] = useState<string[]>([]);
+  
   const [percent, setPercent] = useState<number>(0);
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
-  const width = Dimensions.get('window')
+
 
   const courseImages: Record<string, any> = {
     "HTML&CSS": require('../../assests/Images/Html&Css.png'),
@@ -85,28 +82,17 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         setSkillProgressText(jobData.matchStatus);
         const Scourse = jobData.sugesstedCourses;
 
-        // setSkills(job.skillsRequired.map((skill:any) => skill.skillName as string));
         setSkills(job.skillsRequired.map((skill: { skillName: string }) => skill.skillName.toUpperCase()));
         setSuggestedCourses(Scourse);
 
         const matchPercentage = jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-        // const matchskill = jobData.matchedSkills.map(skill =>skill.skillName.toUpperCase());
-        // console.log("matchskill",matchskill);
+       
         console.log("skillsrequired", skillsRequired);
 
-
-
-        //   const perfectMatchedSkills = applicantSkills.filter((skill:any) => combinedSkills.includes(skill));
-
-        // // Find unmatched skills
-        // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
-
-
-        //  setPerfectMatchSkills(matchskill);
         setPerfectMatchSkills(jobData.matchedSkills.map((skill: any) => skill.skillName));
         setUnmatchedSkills(skillsRequired);
-        //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
+    
         console.log(matchPercentage);
         setPercent(matchPercentage);
       } catch (error) {
@@ -117,8 +103,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     fetchProfileData();
   }, [job.id, userId, userToken]);
 
-
-  // const percentageMatch = matchPercentage;
 
   return (
 
@@ -159,7 +143,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans-Medium' }}>₹ </Text>
+              <Text style={{ fontSize: 13 }}>{"\u20B9"}</Text>
                 <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
                 <Text style={{ color: '#E2E2E2' }}>  |</Text>
               </View>
@@ -184,31 +168,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               <Text style={[styles.centeredText]}>{skillProgressText}</Text>
             </View>
           </View>
-
-          {/* <View style={styles.skillsContainer}>
-          {skills.map((skill: string, index: number) => (
-            <Text key={index} style={matchedSkills.includes(skill) ? [styles.skillTag, styles.matchedSkill] : styles.skillTag}>
-              {skill}
-            </Text>
-          ))}
-        </View> */}
-          {/* <View style={styles.skillsContainer}>
-  {skills
-    .filter(skill => perfectMatchSkills.includes(skill))
-    .map((skill, index) => (
-      <Text key={index} style={[styles.skillTag, styles.matchedSkills]}>
-        {skill}
-      </Text>
-    ))}
-  
-  {skills
-    .filter(skill => unmatchedSkills.includes(skill))
-    .map((skill, index) => (
-      <Text key={index} style={[styles.skillTag, styles.unmatchedSkill]}>
-        {skill}
-      </Text>
-    ))}
-</View> */}
 
 
           <View style={styles.skillsContainer}>

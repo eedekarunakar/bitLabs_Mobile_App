@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Dimensions
+  Dimensions,
+  FlatList
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '../../context/Authcontext';
@@ -39,7 +39,6 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-import { FlatList } from 'react-native';
 const { width, height } = Dimensions.get('window');
 const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   visible,

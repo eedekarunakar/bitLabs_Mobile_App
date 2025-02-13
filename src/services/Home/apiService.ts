@@ -7,7 +7,7 @@ const apiClient = axios.create({
 
 export const fetchJobCounts = async (applicantId: number|null,jwtToken:string|null) => {
   try {
-    // const jwtToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRlbHlhc2gyNTA3MDJAZ21haWwuY29tIiwiZXhwIjoxNzMzNzYzNTQ2LCJpYXQiOjE3MzM3Mjc1NDZ9.oEUVk0zBYJM9RouLupoPM8ZjqlayJfXnpwy2wC71vAE'; // Replace with actual token
+    
 
     const [recommendedResponse, appliedResponse, savedResponse] = await Promise.all([
       apiClient.get(`/recommendedjob/countRecommendedJobsForApplicant/${applicantId}`, {
