@@ -1,5 +1,5 @@
 // TestViewModel.ts
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { submitTestResult } from '../../services/Test/testService'; // Import the service
 import { TestDetails } from '../../models/Test/TestModel'; // Assuming you have a model for test details
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -11,7 +11,7 @@ export const useTestViewModel = (userId: number | any, jwtToken: string | null, 
   const [isTestComplete, setIsTestComplete] = useState(false);
   const [showEarlySubmissionModal, setShowEarlySubmissionModal] = useState(false);
   const [showTimeUpModal, setShowTimeUpModal] = useState(false);
-  const [finalScore, setFinalScore] = useState<number | null>(null);
+
 
 
   const submitTest = async (finalScore: number, isEarlySubmission: boolean) => {
@@ -37,15 +37,9 @@ export const useTestViewModel = (userId: number | any, jwtToken: string | null, 
         // Handle success
         setIsTestComplete(true);
         
-        if (finalScore >= 70) {
+        if (finalScore >= 70 && (testName === 'General Aptitude Test' || testName === 'Technical Test')) {
           console.log('Final Score:', finalScore);
-
-          if (testName === 'General Aptitude Test') {
-            navigation.navigate('passContent', { finalScore,testName });
-          } else if (testName === 'Technical Test') {
-            // Assuming the bottom tab is part of the navigation stack
-            navigation.navigate('passContent', { finalScore,testName }); // Adjust the tab name as needed
-          }
+          navigation.navigate('passContent', { finalScore, testName });
         } else {
           navigation.navigate('FailContent');
         }

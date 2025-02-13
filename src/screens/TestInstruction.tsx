@@ -247,6 +247,9 @@ const Test = ({route, navigation}: any) => {
         case 'Vue':
           setTestData(VueData);
           break;
+        case 'SQL-Server':
+          setTestData(SQLData);
+          break;
         default:
           setTestData({
             testName: 'Unknown Skill Test',
