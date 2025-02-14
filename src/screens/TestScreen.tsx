@@ -12,7 +12,7 @@ import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import { decode } from "html-entities";
 
-import { AppState } from 'react-native';
+
 
 
 const { width } = Dimensions.get('window');
