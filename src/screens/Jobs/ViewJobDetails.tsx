@@ -25,7 +25,7 @@ type JobDetailsProps = {
   navigation: JobDetailsScreenNavigationProp;
 };
 
-const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
+const JobDetails: React.FC = ({ route, navigation }:any) => {
   const { job } = route.params; // job data passed from the previous screen
   const [isJobSaved, setIsJobSaved] = useState(false);
   const { userToken, userId } = useAuth();
