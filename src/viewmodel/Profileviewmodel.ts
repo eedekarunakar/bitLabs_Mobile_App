@@ -14,6 +14,13 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     alternatePhoneNumber: '',
     email: '', // Non-editable, if needed
   });
+  const [personalData, setPersonalData] = useState({
+    firstName: '',
+    lastName: '',
+    alternatePhoneNumber: '',
+    email: '', // Non-editable, if needed
+})
+
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
@@ -24,13 +31,17 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       console.log(data.applicant.applicantSkillBadges);
 
       // Populate personal details from the profile data
-      if (data && data.basicDetails) {
-        setPersonalDetails({
+      if (data?.basicDetails) {
+
+        const newPersonalDetails = {
           firstName: data.basicDetails.firstName || '',
           lastName: data.basicDetails.lastName || '',
           alternatePhoneNumber: data.basicDetails.alternatePhoneNumber || '',
           email: data.basicDetails.email || '', // Non-editable
-        });
+        };
+        setPersonalDetails(newPersonalDetails);
+        setPersonalData(newPersonalDetails);
+
       }
 
       setProfileData(data);
@@ -40,34 +51,33 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       setIsLoading(false);
     }
   };
-
+  const resetPersonalDetails = () => {
+    setPersonalDetails(personalData);
+  };
   // Ensure function doesn't recreate on every render
-  const reloadProfile = useCallback(() => {
-    loadProfile();
-  }, [userToken, userId]);
 
   useFocusEffect(
     useCallback(() => {
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
+      );
+
       const reloadWithTimeout = async () => {
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
-        );
-  
         try {
-          await Promise.race([reloadProfile(), timeoutPromise]);
+          await Promise.race([loadProfile(), timeoutPromise]);
         } catch (error) {
           console.warn(); // Handle timeout error gracefully
         }
       };
-  
+ 
       reloadWithTimeout();
-  
-    }, [reloadProfile])
+    }, [userToken, userId])
   );
-
+  
   useEffect(() => {
     loadProfile();
-  }, []);
+  }, [userToken, userId]);
+
   // Validate Phone Number
   const validatePhoneNumber = (phone: string): boolean => {
     const phoneRegex = /^[6-9]\d{9}$/; // Adjust regex as needed
@@ -145,6 +155,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     handleInputChange,
     updateBasicDetails,
     setFormErrors,
+    resetPersonalDetails, // Add reset function to return object
   };
 };
 
@@ -153,14 +164,7 @@ export const ProfileViewModel = {
   
 
   async saveProfessionalDetails(userToken: string | null, userId: number | null, updatedData: any) {
-    // const errors = await this.validateFormData(updatedData);
 
-    // if (Object.keys(errors).length > 0) {
-    //   // If validation fails, return errors
-    //   return { success: false, formErrors: errors };
-    // }
-
-    // Proceed to save the data if no validation errors
     const response = await ProfileService.updateProfessionalDetails(userToken, userId, updatedData);
 
     if (response.success) {

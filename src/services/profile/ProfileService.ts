@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { DocumentPickerResponse } from 'react-native-document-picker';
 import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
 
-// const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com'; // Replace with actual API base URL
 interface TestData {
   testStatus: string;
 }
@@ -16,7 +15,7 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.get(`${API_BASE_URL}/applicantprofile/${userId}/profile-view`, {
+      const response = await apiClient.get(`/applicantprofile/${userId}/profile-view`, {
         headers: {
           Authorization: `Bearer ${userToken}`, // Embed token in the Authorization header
         },
@@ -76,7 +75,6 @@ export const ProfileService = {
       if (axios.isAxiosError(error)) {
 
         console.log('Axios error:', error.response?.data || error.message);
-        // throw new Error(error.response?.data?.message || 'An error occurred while updating profile data.');
         return (error?.response?.data);
       } else {
         console.log('Unexpected error:', error);
@@ -123,7 +121,7 @@ export const ProfileService = {
       }
       const formData = new FormData();
       formData.append('photo', { uri: photoFile.uri, type: photoFile.type, name: photoFile.fileName, });
-      // console.log('FormData prepared:', formData);
+
       const response = await axios.post(`${API_BASE_URL}/applicant-image/${userId}/upload`,
         formData,
         {
@@ -132,7 +130,7 @@ export const ProfileService = {
             'Content-Type': 'multipart/form-data',
           },
         });
-      // console.log("      Image : " +JSON.stringify(response))
+
       return { success: true, data: response.data };
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -201,7 +199,7 @@ export const ProfileService = {
       }
     }
   },
-  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean | void> {
+  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean> {
     try {
       const response = await axios.get<TestData[]>(`${API_BASE_URL}/applicant1/tests/${userId}`, {
         headers: {
@@ -217,6 +215,7 @@ export const ProfileService = {
       return allTestsPassed;
     } catch (error) {
       console.error('Error fetching test data:', error);
+      return false
     }
 
   }

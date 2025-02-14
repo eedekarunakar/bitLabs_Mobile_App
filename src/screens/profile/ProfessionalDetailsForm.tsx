@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Dimensions
+  Dimensions,
+  FlatList
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '../../context/Authcontext';
@@ -39,7 +39,6 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-import { FlatList } from 'react-native';
 const { width, height } = Dimensions.get('window');
 const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   visible,
@@ -73,6 +72,22 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const { userToken, userId } = useAuth();
+  useEffect(() => {
+    if (visible) {
+      setQualification(initialQualification);
+      setSpecialization(initialSpecialization);
+      setLocations(initialLocations);
+      setSkills(initialSkills);
+      setExperience(initialExperience);
+    }
+  }, [
+    visible,
+    initialQualification,
+    initialSpecialization,
+    initialSkills,
+    initialExperience,
+    initialLocations,
+  ])
 
   const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
   const specializationsByQualification: Record<string, string[]> = {
@@ -95,7 +110,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     Toast.show({
       type: type1,
       text1: '',
-      text2:message,
+      text2: message,
       position: 'bottom',
       onPress: () => Toast.hide(),
       visibilityTime: 5000,

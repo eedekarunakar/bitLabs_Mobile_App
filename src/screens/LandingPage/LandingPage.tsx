@@ -8,13 +8,12 @@ import {
 import { AuthContext } from '../../context/Authcontext';
 import { useLoginViewModel, useSignupViewModel } from '../../viewmodel/Authviewmodel';
 import LinearGradient from 'react-native-linear-gradient';
-// import ForgotPassword from './ForgotPassword';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import useGoogleSignIn from '../../services/google/google'
 
 
-const { width, height } = Dimensions.get('window');
+const {  height } = Dimensions.get('window');
 
 
 
@@ -23,17 +22,17 @@ const LandingPage = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const {
         loginUserName, setLoginUserName, loginPassword, setLoginPassword,
-        loginErrors, loginMessage, validateAndLogin, validateLogin, setLoginErrors
+        loginErrors, loginMessage, validateAndLogin, setLoginErrors
     } = useLoginViewModel();
 
     const {
         signupName, setSignupName, signupEmail, setSignupEmail, signupNumber, setSignupNumber,
         signupPassword, setSignupPassword, signUpErrors, otp, setOtp, otpReceived, registration,
-        isOtpExpired, timer, isOtpValid, setRegistration,
+        isOtpExpired, timer, isOtpValid,
         validateAndSignup, handleOtp, validateSignup, setSignUpErrors, setOtpReceived
     } = useSignupViewModel();
 
-    const { userInfo, isSignedIn, signIn, signOut } = useGoogleSignIn();
+    const {  signIn } = useGoogleSignIn();
 
     useEffect(() => {
         const handleDirectLogin = async () => {
@@ -59,7 +58,7 @@ const LandingPage = () => {
     
 
     const [activeButton, setActiveButton] = useState('login');
-    const [IsPasswordVisible, SetIsPasswordVisible] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [IsSignupPasswordVisible, SetIsSignupPasswordVisible] = useState(false);
 
 
@@ -177,10 +176,10 @@ const LandingPage = () => {
 
 
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsPasswordVisible} value={loginPassword} onChangeText={(text: string) => { setLoginPassword(text); resetLoginErrors("password") }} onBlur={() => { SetIsPasswordVisible(false) }} allowFontScaling={false} />
-                                    <TouchableOpacity onPress={() => SetIsPasswordVisible(!IsPasswordVisible)}>
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!isPasswordVisible} value={loginPassword} onChangeText={(text: string) => { setLoginPassword(text); resetLoginErrors("password") }} onBlur={() => { setIsPasswordVisible(false) }} allowFontScaling={false} />
+                                    <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
 
-                                        <Image source={IsPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
+                                        <Image source={isPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
 
                                     </TouchableOpacity>
 
@@ -198,7 +197,7 @@ const LandingPage = () => {
 
 
                                 <View style={{ alignItems: 'center' }}>
-                                    {loginMessage && <Text style={styles.errorText}>{loginMessage}</Text>}
+                                    {!!loginMessage && <Text style={styles.errorText}>{loginMessage}</Text>}
                                 </View>
                             </View>
 
@@ -209,7 +208,7 @@ const LandingPage = () => {
                                 {signUpErrors.name && <Text style={styles.errorText}>{signUpErrors.name}</Text>}
                                 <TextInput placeholder="Email" placeholderTextColor="#B1B1B1" style={styles.input} value={signupEmail} onChangeText={(text) => { setSignupEmail(text.replace(/\s/g, '')); handleChange('email', text) }} allowFontScaling={false} />
                                 {signUpErrors.email && <Text style={styles.errorText}>{signUpErrors.email}</Text>}
-                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => { setSignupNumber(text.replace(/[^0-9]/g, '')); handleChange('whatsappnumber', text) }} allowFontScaling={false} />
+                                <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => { setSignupNumber(text.replace(/\D/g, '')); handleChange('whatsappnumber', text) }} allowFontScaling={false} />
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
                                     <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={(text) => { setSignupPassword; handleChange('password', text) }} onBlur={() => { SetIsSignupPasswordVisible(false) }} allowFontScaling={false} />
@@ -557,4 +556,3 @@ const styles = StyleSheet.create({
 });
 
 export default LandingPage;
-

@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import API_BASE_URL from '../API_Service';
 export const fetchProfileId = async (id: number, token: string): Promise<{ success: boolean; profileid?: number }> => {
     try {
