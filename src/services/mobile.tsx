@@ -1,4 +1,5 @@
 import axios from 'axios';
+import apiClient from './login/ApiClient';
 
 // Base URL for the API
 const BASE_URL = 'https://kqryamxpv3.ap-south-1.awsapprunner.com';
@@ -7,7 +8,7 @@ const BASE_URL = 'https://kqryamxpv3.ap-south-1.awsapprunner.com';
 export const getMobileNumber = async (id: number|null): Promise<string | null> => {
     try {
         // Construct the full API URL with the provided id
-        const response = await axios.get(`${BASE_URL}/applicant/getApplicantById/${id}`);
+        const response = await apiClient.get(`/applicant/getApplicantById/${id}`);
         if (response.status === 200) {
             const applicantData = response.data;
             return applicantData.mobilenumber; // Assuming the mobilenumber field exists

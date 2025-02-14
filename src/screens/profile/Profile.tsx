@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect,} from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions
+    KeyboardAvoidingView, Platform, Modal, TextInput, ActivityIndicator, 
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
@@ -13,54 +13,19 @@ import Icon5 from 'react-native-vector-icons/MaterialIcons'
 import { RootStackParamList } from '../../../New';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { useAuth } from '../../context/Authcontext';
-import { Skill, ApplicantSkillBadge } from '../../models/profile/profile';
-import { ProfileService } from '../../services/profile/ProfileService';
-import { ToastAndroid } from 'react-native';
-import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
-import { useProfilePhoto } from '../../context/ProfilePhotoContext';
-import { base64Image } from '../../services/base64Image';
+import {  ApplicantSkillBadge } from '../../models/profile/profile';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
-import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
-import axios from 'axios';
-import Toast from 'react-native-toast-message';
 import Fileupload from '../../assests/icons/Fileupload';
-
-
-
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import UserContext from '../../context/UserContext';
-
-
-
-
-
-const { width } = Dimensions.get('window');
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
-    const [isProfessionalFormVisible, setProfessionalFormVisible] = useState(false);
-    const [isCameraOptionsVisible, setCameraOptionsVisible] = useState(false);
-    const [isPersonalDetailsFormVisible, setPersonalDetailsFormVisible] = useState(false);
-    const [isResumeModalVisible, setResumeModalVisible] = useState(false);
-    const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
-    const [resumeText, setResumeText] = useState<string>('');
-    const { fetchProfilePhoto, photo } = useProfilePhoto();
-    const [loading, setLoading] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [showBorder, setShowBorder] = useState(false);
-    const [bgcolor, setbgcolor] = useState(false)
-    const [verified, setVerified] = useState(false)
-    const [isUploadComplete, setIsUploadComplete] = useState(false);
-  
-
+    const nav = useNavigation<any>();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-    const { setPersonalName } = useContext(UserContext)
-
-    const DEFAULT_PROFILE_IMAGE = require('../../assests/profile/profile.png');
     console.log(userId, userToken)
     const {
         profileData,
@@ -71,40 +36,27 @@ function ProfileComponent() {
         formErrors,
         setFormErrors,
         handleInputChange,
-        updateBasicDetails,
         reloadProfile,
-        resetPersonalDetails
+        resetPersonalDetails,
+        handleCamera,
+        handleCancelUpload,
+        handleUploadResume,
+        handleSaveChanges,
+        handleSaveResume,
+        handleLibrary,
+        isProfessionalFormVisible,
+        setProfessionalFormVisible,
+        isPersonalDetailsFormVisible,
+        setPersonalDetailsFormVisible,
+        isResumeModalVisible,setResumeModalVisible,
+        loading,setLoading,progress,setProgress,
+        isCameraOptionsVisible,setCameraOptionsVisible,
+        resumeFile,setResumeFile,showBorder,bgcolor,verified,setShowBorder,isUploadComplete,setIsUploadComplete,hasResume,
+        isResumeRemoved,photo
+
     } = useProfileViewModel(userToken, userId);
     const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
-
-
-
-    const handlePermission = async () => {
-        if (Platform.OS === 'android') {
-            const permissions = Platform.Version >= 33
-                ? [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES]
-                : [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE];
-            for (const permission of permissions) {
-                const status = await PermissionsAndroid.check(permission);
-                console.log(`Permission ${permission}:`, status ? 'GRANTED' : 'DENIED');
-            }
-            const grantedStatuses = await Promise.all(
-                permissions.map((permission) => PermissionsAndroid.check(permission))
-            );
-
-
-            const allPermissionsGranted = grantedStatuses.every((status) => status);
-
-            if (!allPermissionsGranted) {
-                const granted = await PermissionsAndroid.requestMultiple(permissions);
-                return Object.values(granted).every(status => status === PermissionsAndroid.RESULTS.GRANTED);
-            }
-            return true;
-        }
-        return true; // For iOS or platforms other than Android
-    };
     const [key, setKey] = useState(0);
-
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             console.log('Profile screen is focused');
@@ -113,166 +65,6 @@ function ProfileComponent() {
         });
         return unsubscribe;
     }, [navigation]);
-
-
-    useEffect(() => {
-        if (userId && userToken) {
-            fetchProfilePhoto(userToken, userId);
-        }
-    }, [userId, userToken]);
-    useEffect(() => {
-        const checkVerification = async () => {
-            try {
-                const result = await ProfileService.checkVerified(userToken, userId);
-                if (result) {
-                    console.log("verified: " + result)
-                    setVerified(result);
-                }
-            } catch (error) {
-                console.error('Error checking verification:', error);
-            }
-        };
-
-        checkVerification();
-    }, [userId]);
-
-    
-
-
-
-    const validatePhoto = (photoFile: any) => {
-        const allowedTypes = ['image/jpeg', 'image/png'];
-        const maxSize = 1048576; // 1 MB in bytes
-
-        if (!allowedTypes.includes(photoFile.type)) {
-            toastmsg('error', 'only JPEG and PNG files are allowed.');
-            return false;
-        }
-
-        if (photoFile.fileSize > maxSize) {
-            toastmsg('error', 'File size must be less than 1 MB.');
-            return false;
-        }
-
-        return true;
-    };
-
-
-    const uploadProfilePhoto = async (photoFile: any) => {
-        setIsLoading(true);
-        try {
-            const result = await ProfileService.uploadProfilePhoto(userToken, userId, photoFile);
-            if (result.success) {
-                console.log('Photo uploaded successfully');
-                fetchProfilePhoto(userToken, userId);
-                toastmsg('success', 'Profile photo uploaded successfully!');
-            } else {
-                console.log('Failed to upload photo:', result.message);
-                toastmsg('error', 'Failed to upload photo.');
-            }
-        } catch (error) {
-            console.error('Error uploading photo:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleCamera = async () => {
-        const isPermissionGranted = await handlePermission();
-        if (!isPermissionGranted) {
-            console.log('Permission denied');
-            return;
-        }
-        const options: CameraOptions = {
-            mediaType: 'photo',
-            saveToPhotos: true
-        };
-        launchCamera(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled');
-            } else if (response.errorCode) {
-                console.log('Image picker error');
-            } else if (response.assets && response.assets.length > 0) {
-                const photoFile = response.assets[0];
-                if (validatePhoto(photoFile)) {
-                    console.log('uploading......');
-                    uploadProfilePhoto(photoFile);
-                } else {
-                    console.log('Invalid file type or size.');
-                }
-            } else {
-                console.log('Error storing image');
-            }
-            setCameraOptionsVisible(false);
-        });
-
-    };
-    const removePhoto = async () => {
-        if (photo === DEFAULT_PROFILE_IMAGE) {
-            toastmsg('error', 'No photo to remove.');
-            return;
-        }
-        setIsLoading(true);
-        try {
-            // Prepare the default image file object
-            const defaultImageFile = {
-                uri: base64Image,
-                type: 'image/png', // Correct MIME type
-                fileName: 'default_profile.png',
-            };
-
-            console.log('Default Image File:', defaultImageFile);
-
-            // Upload the default image
-            const result = await ProfileService.uploadProfilePhoto(userToken, userId, defaultImageFile);
-
-            if (result.success) {
-                await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
-                console.log('Default photo uploaded successfully');
-                toastmsg('success', 'Default image set successfully!');
-            } else {
-                console.log('Failed to set default photo:', result.message);
-                toastmsg('error', 'Failed to remove photo.');
-            }
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Error setting default photo:', error.message);
-            }
-            toastmsg('error', 'Error removing photo. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-
-
-
-    const handleLibrary = () => {
-        const options: ImageLibraryOptions = {
-            mediaType: 'photo',
-        };
-        launchImageLibrary(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled');
-            } else if (response.errorCode) {
-                console.log(response.errorMessage);
-            } else if (response.assets && response.assets.length > 0) {
-                const photoFile = response.assets[0];
-                if (validatePhoto(photoFile)) {
-                    console.log('uploading......');
-                    console.log(photoFile)
-                    uploadProfilePhoto(photoFile);
-                } else {
-                    console.log('Invalid file type or size.');
-                }
-            }
-            setCameraOptionsVisible(false);
-        });
-    };
-
-
-
-
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
@@ -296,147 +88,11 @@ function ProfileComponent() {
     if (!profileData || !profileData.applicant) {
         setIsLoading(true)
         return (
-
             <View>
-
                 <Text>No Applicant Data Found</Text>
             </View>
         );
     }
-
-    const handleCancelUpload = () => {
-        setResumeFile(null);
-        setResumeText('');
-        setLoading(false);
-        setProgress(0);
-        toastmsg('error', 'Upload cancelled');
-        setShowBorder(false);
-
-    };
-
-    const handleUploadResume = async () => {
-        setIsUploadComplete(true)
-        try {
-            const result: DocumentPickerResponse[] = await DocumentPicker.pick({
-                type: [DocumentPicker.types.pdf], // Ensure only PDF files are shown
-            });
-
-            if (!result || result.length === 0) {
-                toastmsg('error', 'No file selected.');
-                return;
-            }
-
-            const selectedFile: DocumentPickerResponse = result[0];
-            const maxSize = 1048576; // 1MB size limit
-
-            // Validate file size
-            if (selectedFile.size && selectedFile.size > maxSize) {
-                toastmsg('error', 'File size exceeds the 1MB limit.');
-                return;
-            }
-
-            // Set selected file but do not upload yet
-            setResumeFile(selectedFile);
-            setResumeText(selectedFile.name || '');
-            //showToast('Resume selected. Uploading...');
-            setTimeout(() => {
-                // Start the upload process
-                setLoading(true);
-                setProgress(0);
-                setShowBorder(true)
-                setbgcolor(false)
-
-                // Simulate upload progress
-                const interval = setInterval(() => {
-                    setProgress((prevProgress) => {
-                        const newProgress = prevProgress + 0.3; // 1/8th of the total progress for 8 seconds
-                        if (newProgress >= 1) {
-                            clearInterval(interval);
-                            setLoading(false);
-                            setIsUploadComplete(false)
-                        }
-                        return newProgress;
-                    });
-                }, 1000); // Update progress every 1 second
-            }, 10); // 0.5 second delay before starting the progress bar
-        } catch (err) {
-            if (DocumentPicker.isCancel(err)) {
-                console.log('User canceled the picker');
-                toastmsg('error', 'Upload canceled.');
-                setIsUploadComplete(false)
-            } else if ((err as { message: string }).message === 'Network Error') {
-                console.log('Network Error:', err);
-                toastmsg('error', 'Network error. Please check your internet connection and try again.');
-            } else {
-                console.error('Unknown error: ', err);
-                toastmsg('error', 'Error selecting file. Please try again.');
-            }
-        }
-    };
-
-
-
-    const handleSaveResume = async () => {
-        if (resumeFile) {
-
-            //showToast('Resume uploaded')
-            setbgcolor(false)
-            const formData = new FormData();
-            formData.append('resume', {
-                uri: resumeFile.uri,
-                type: resumeFile.type,
-                name: resumeFile.name,
-            } as any);
-            const response = await ProfileService.uploadResume(userToken, userId, formData);
-            if (response.success) {
-                setResumeFile(response.data.fileName);
-                toastmsg('success', 'Resume uploaded successfully!');
-                setResumeModalVisible(false)
-                setShowBorder(false)
-            } else {
-                console.error(response.message);
-                toastmsg('error', 'Error uploading resume. Please try again later.');
-                setResumeModalVisible(false)
-
-            }
-
-        } else {
-
-            setbgcolor(true)
-        }
-    };
-
-    const handleSaveChanges = async () => {
-        const success = await updateBasicDetails();
-        if (personalDetails.firstName.length <= 19 && personalDetails.lastName.length <= 19 && success) {
-            setPersonalName(personalDetails.firstName);
-            console.log('Personal details updated successfully');
-            setPersonalDetailsFormVisible(false);
-            reloadProfile();
-            toastmsg('success', 'Personal details updated successfully')
-        }
-        else {
-            toastmsg('error', 'Error updating, please try again later')
-        }
-    };
-
-    const toastmsg = (type1: 'success' | 'error', message: string) => {
-        Toast.show({
-            type: type1,
-            text1: '',
-            text2: message,
-            position: 'bottom',
-            visibilityTime: 5000,
-            text2Style: {
-                fontFamily: 'PlusJakartaSans-Medium',
-                fontSize: 12
-            }
-        });
-    }
-
-
-
-
     return (
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} key={key}>
             <ScrollView>
@@ -444,7 +100,7 @@ function ProfileComponent() {
                     <View style={styles.card}>
                         <View style={styles.container}>
                             <View style={styles.pencil}>
-                                <TouchableOpacity onPress={() => {setPersonalDetailsFormVisible(true);resetPersonalDetails()}}>
+                                <TouchableOpacity onPress={() => { setPersonalDetailsFormVisible(true); resetPersonalDetails() }}>
                                     <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
@@ -563,6 +219,7 @@ function ProfileComponent() {
                             </View>
 
                         </View>
+                        {isProfessionalFormVisible && (
                         <ProfessionalDetailsForm
                             visible={isProfessionalFormVisible}
                             onClose={() => { setProfessionalFormVisible(false); resetPersonalDetails() }}
@@ -575,8 +232,10 @@ function ProfileComponent() {
                             onReload={reloadProfile}
 
                         />
+                        )}
 
-                        <Modal
+                        {isCameraOptionsVisible && (
+                            <Modal
                             transparent={true}
                             animationType="slide"
                             visible={isCameraOptionsVisible}
@@ -600,6 +259,8 @@ function ProfileComponent() {
                             </View>
 
                         </Modal>
+                        )}
+                        {isPersonalDetailsFormVisible &&(
                         <Modal
                             transparent={true}
                             animationType='slide'
@@ -653,21 +314,35 @@ function ProfileComponent() {
                                 </View>
                             </View>
                         </Modal>
+                         )}
+
 
                     </View>
                 </View>
 
                 <View style={{ flex: 1, padding: 10 }}>
                     <View style={styles.card1}>
-                        <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
-
-
-                        <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
-                            <Icon3 name='pencil' size={18} color='black' />
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                            <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
+                            <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
+                                <Icon3 name="pencil" size={18} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.touchableTextContainer}>
+                            <TouchableOpacity onPress={() => nav.navigate('BottomTab', {
+                                screen: 'My Resume'
+                            })}>
+                                <Text style={[styles.resumeText, {
+                                    color: '#74A2FA', // Typical link blue color
+                                    textDecorationLine: 'underline',
+                                }]}>{basicDetails.firstName}_{basicDetails.lastName}.pdf</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
 
+
+             {isResumeModalVisible && (
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -709,9 +384,10 @@ function ProfileComponent() {
                                 )}
                             </View>
 
-                            <View style={[styles.fileContainer, showBorder && styles.showborder]}>
+                            <View style={[styles.fileContainer, ((showBorder) || (hasResume && !isResumeRemoved)) && styles.showborder
+                            ]}>
 
-                                {resumeFile && (
+                                {resumeFile ? (
 
                                     <View style={{ flexDirection: 'row', }}>
                                         <FontAwesome name="file-text-o" size={20} color="#000" />
@@ -729,7 +405,24 @@ function ProfileComponent() {
 
                                         </TouchableOpacity>
                                     </View>
-                                )}
+                                ) : (!isResumeRemoved && hasResume) ?
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <FontAwesome name="file-text-o" size={20} color="#000" />
+
+                                        <Text style={[styles.fileNameText, { marginLeft: 12 }]}>
+                                            {basicDetails.firstName}.pdf
+                                        </Text>
+                                        <TouchableOpacity
+                                            style={styles.closeIcon}
+                                            onPress={handleCancelUpload}
+                                        >
+                                            <View style={{ marginLeft: 50, position: 'absolute', top: 2.5 }}>
+                                                <Icon7 name="close" size={15} />
+                                            </View>
+
+                                        </TouchableOpacity>
+                                    </View>
+                                    : null}
 
                                 {loading && (
                                     <View style={styles.progressContainer}>
@@ -747,20 +440,14 @@ function ProfileComponent() {
 
 
                             <View>
-                                {showBorder ? (
-                                    <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
-                                        <View style={styles.line}></View>
-                                        <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
-                                        <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                    </View>) :
-                                    (
-                                        <View style={[styles.orContainer, { marginTop: -30, marginVertical: 20, }]}>
-                                            <View style={styles.line}></View>
-                                            <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
-                                            <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                        </View>
 
-                                    )}
+                                <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
+                                    <View style={styles.line}></View>
+                                    <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
+                                    <View style={[styles.line, { marginLeft: 3 }]}></View>
+                                </View>
+
+
 
                             </View>
                             <View>
@@ -790,6 +477,7 @@ function ProfileComponent() {
                                         >
                                             <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
 
+
                                         </LinearGradient>
 
                                     )
@@ -800,11 +488,12 @@ function ProfileComponent() {
                         </View>
                     </View>
                 </Modal>
+            )}
 
 
 
             </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView >
     )
 
 }
@@ -1056,27 +745,36 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'PlusJakartaSans-Bold'
     },
-    // Add the new style for the container
-
     card1: {
-        width: '100%', // Adjust width to 90% of the screen width
+        width: '100%',
         backgroundColor: '#fff',
-        //paddingTop: 10, // Increase top padding for more height
-        paddingBottom: 40, // Increase bottom padding for more height
-        paddingLeft: 40, // Space from the left side of the card
-        paddingRight: 20, // Space from the right side of the card
-        flexDirection: 'row', // Horizontally align the text and the button
-        justifyContent: 'space-between', // Space between the text and logo
-        alignItems: 'center', // Vertically center the content inside the card
-        borderRadius: 10, // Rounded corners for the card
-        shadowColor: '#000', // Shadow color
-        shadowOffset: { width: 0, height: 2 }, // Shadow offset
-        shadowOpacity: 0.8, // Shadow opacity
-        shadowRadius: 2, // Shadow blur radius
-        elevation: 5, // Elevation for Android
-        marginVertical: 10, // Space between cards
-        height: 100, // Increase height of the card
+        paddingBottom: 40,
+        paddingLeft: 40,
+        paddingRight: 20,
+        alignItems: 'center',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+        marginVertical: 10,
+        height: 100, // Increase height to accommodate extra text
     },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        marginTop: 16
+    },
+    touchableTextContainer: {
+        marginTop: 20, // Add margin to separate the touchable text from the row above
+        // alignItems: 'center', // Center align the touchable text
+        width: '100%',
+    },
+
+
 
     // Style for the static Resume Text (left side)
 

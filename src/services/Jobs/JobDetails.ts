@@ -1,5 +1,4 @@
-import axios from 'axios';
-import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
 
 // const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com';
 
@@ -11,8 +10,8 @@ const getAuthHeader = (userToken: string|null) => {
 
 export const saveJob = async (jobId: number, applicantId: number |null,userToken: string |null) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/savedjob/applicants/savejob/${applicantId}/${jobId}`,
+    const response = await apiClient.post(
+      `/savedjob/applicants/savejob/${applicantId}/${jobId}`,
       {},
       {  headers: { Authorization: `Bearer ${userToken}` }, }
     );
@@ -25,8 +24,8 @@ export const saveJob = async (jobId: number, applicantId: number |null,userToken
 
 export const applyJob = async (applicantId: number|null, jobId: number,userToken: string |null) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applyjob/applicants/applyjob/${applicantId}/${jobId}`,
+    const response = await apiClient.post(
+      `/applyjob/applicants/applyjob/${applicantId}/${jobId}`,
       {},
       { headers: getAuthHeader(userToken) }
     );
@@ -39,8 +38,8 @@ export const applyJob = async (applicantId: number|null, jobId: number,userToken
 
 export const removeSavedJob = async (jobId: number, applicantId: number |null,userToken: string |null) => {
   try {
-    const response = await axios.delete(
-      `${API_BASE_URL}/savedjob/applicants/deletejob/${applicantId}/${jobId}`,
+    const response = await apiClient.delete(
+      `/savedjob/applicants/deletejob/${applicantId}/${jobId}`,
       {  headers: { Authorization: `Bearer ${userToken}` } }
     );
     return response.data;

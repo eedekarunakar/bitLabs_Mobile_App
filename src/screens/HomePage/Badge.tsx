@@ -98,7 +98,7 @@ const Badge = ({ route, navigation }: any) => {
           if (aptitudeTest.testStatus === 'P' || aptitudeTest.testStatus === 'p') {
             if (technicalTest) {
               // If Technical Test exists, handle its status
-              if (technicalTest.testStatus === 'P'|| technicalTest.testStatus === 'p') {
+              if (technicalTest.testStatus === 'P' || technicalTest.testStatus === 'p') {
                 setSelectedStep(3); // Both tests passed
                 setTestName('');
                 setTestStatus('');
@@ -330,7 +330,9 @@ const Badge = ({ route, navigation }: any) => {
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Navbar />
+      <View style={styles.headerContainer}>
+        <Text style={styles.title}>Badges</Text>
+      </View>
       <ScrollView horizontal={false} style={styles.mainScroll}>
         <View style={styles.container}>
           <View style={styles.textContainer}>
@@ -925,7 +927,7 @@ const styles = StyleSheet.create({
   verifiedText: {
     color: 'white',
     fontFamily: 'PlusJakartaSans-Bold',
-    textAlignVertical:'center'
+    textAlignVertical: 'center'
   },
   timerContain: {
     bottom: 5,
@@ -950,5 +952,18 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center', // Center the button horizontally
     padding: 10
-  }
+  },
+  headerContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 58,
+    backgroundColor: '#FFF'
+  },
+  title: {
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: '#495057',
+    lineHeight: 25,
+    marginLeft: 15
+  },
 });

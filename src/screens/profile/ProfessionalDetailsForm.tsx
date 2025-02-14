@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
@@ -19,7 +18,7 @@ import { ProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import Toast from 'react-native-toast-message';
 import { ApplicantSkillBadge } from '../../models/profile/profile';
 import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
-
+import { showToast } from '../../services/login/ToastService';
 
 interface Skill {
   id: number;
@@ -41,7 +40,7 @@ interface ProfessionalDetailsFormProps {
 
 import { FlatList } from 'react-native';
 const { width, height } = Dimensions.get('window');
-const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
+const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(({
   visible,
   onClose,
   qualification: initialQualification = '',
@@ -107,20 +106,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added')
   );
 
-  const showToast = (type1: 'success' | 'error', message: string,) => {
-    Toast.show({
-      type: type1,
-      text1: '',
-      text2: message,
-      position: 'bottom',
-      onPress: () => Toast.hide(),
-      visibilityTime: 5000,
-      text2Style: {
-        fontSize: 12,
-        fontFamily: 'PlusJakartaSans-Medium'
-      }
-    });
-  };
+ 
 
   const toggleQualificationDropdown = () => {
     setShowQualificationList(!showQualificationList);
@@ -548,6 +534,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     </KeyboardAvoidingView>
   );
 }
+)
 
 
 const styles = StyleSheet.create({

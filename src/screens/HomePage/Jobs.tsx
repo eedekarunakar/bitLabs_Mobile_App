@@ -47,6 +47,15 @@ const RecommendedJobs = () => {
       setIsJobsLoaded(true);  // Mark as loaded after fetching
     }
   }, [isJobsLoaded]);
+// To reload in recommended jobs only if focus is on recommende djobs even a reload happens at saved jobs.
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (activeTab==='recommended' && !isJobsLoaded) {
+  //       reloadJobs();
+  //       setIsJobsLoaded(true);
+  //     }
+  //   }, [isJobsLoaded, reloadJobs, setIsJobsLoaded])
+  // );
   
  
   // Handle tab press
