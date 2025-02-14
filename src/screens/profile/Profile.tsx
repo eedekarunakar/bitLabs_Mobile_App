@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions
+    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions,ToastAndroid
+
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
@@ -9,13 +10,12 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon5 from 'react-native-vector-icons/MaterialIcons'
+
 import { RootStackParamList } from '../../../New';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { useAuth } from '../../context/Authcontext';
-import { Skill, ApplicantSkillBadge } from '../../models/profile/profile';
+import {  ApplicantSkillBadge } from '../../models/profile/profile';
 import { ProfileService } from '../../services/profile/ProfileService';
-import { ToastAndroid } from 'react-native';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import { base64Image } from '../../services/base64Image';
@@ -75,7 +75,7 @@ function ProfileComponent() {
         reloadProfile,
         resetPersonalDetails
     } = useProfileViewModel(userToken, userId);
-    const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
+    const {  basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
 
 
 
@@ -338,7 +338,7 @@ function ProfileComponent() {
             // Set selected file but do not upload yet
             setResumeFile(selectedFile);
             setResumeText(selectedFile.name || '');
-            //showToast('Resume selected. Uploading...');
+
             setTimeout(() => {
                 // Start the upload process
                 setLoading(true);
@@ -466,11 +466,13 @@ function ProfileComponent() {
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
-                                    {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
-                                </Text>
-                                {verified && <Icon5 name="verified" size={25} color="#F46F16" style={{ marginLeft: 5 }} />}
+
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                            <Text style={[styles.name, { textAlign:'center', alignSelf: 'center'}]}>
+                            {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                            </Text>
+                            {verified&&<Icon1 name="verified" size={25} color="#334584" style={{marginLeft:5}} />}
+
                             </View>
 
                             <View style={styles.infoContainer}>
@@ -497,7 +499,6 @@ function ProfileComponent() {
                         </View>
                         <View style={{ margin: 2 }}>
                             <Text style={styles.subheading}>Qualification</Text>
-                            {/* {qualification||'no qualification details availiable !!'} */}
                             <Text style={styles.details}>{qualification}</Text>
                             <Text style={styles.subheading}>Specilization</Text>
                             <Text style={styles.details}>{specialization}</Text>
@@ -521,7 +522,7 @@ function ProfileComponent() {
                                             ]}
                                         >
                                             {badge.status === 'PASSED' && (
-                                                <Icon5 name="verified" size={16} color="white" />
+                                                <Icon1 name="verified" size={16} color="white" />
                                             )}
                                             <Text style={styles.skillBadgeText}>
                                                 {badge.skillBadge.name}

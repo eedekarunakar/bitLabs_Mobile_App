@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+
+import React, {useState, useEffect,} from 'react';
+
 import Navbar from '../../components/Navigation/Navbar';
 
 import ExploreSection from "../../components/home/ExploreSection"; // Hook for fetching job counts
 import { useAuth } from '../../context/Authcontext';
-import AppliedJobs from '../Jobs/AppliedJobs';
-import { useNavigation } from '@react-navigation/native';
-import RecommendedJobs from './Jobs';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useMessageContext, MessageProvider } from '../LandingPage/welcome';
-import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
-import Icon5 from 'react-native-vector-icons/MaterialIcons';
-import UserContext from '../../context/UserContext';
+
+import { useMessageContext, } from '../LandingPage/welcome';
+import ProfileService from '../../services/profile/ProfileService';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
+import Icon5 from 'react-native-vector-icons/MaterialIcons'
+
 import {
   View,
   Image,
@@ -20,10 +21,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Dimensions,
 } from 'react-native';
+
 import { Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
@@ -41,7 +45,7 @@ function Dashboard() {
   }, [route.params]);
 
 
-  //const [welcome, setWelcome] = useState(route.params?.welcome ?? 'Welcome Back');
+
 
   // Use the useJobCounts hook to fetch job counts
   // const { jobCounts, loading, error } = useJobCounts(userId, userToken);

@@ -1,7 +1,6 @@
 // LogoutModal.tsx
 import React, { useContext } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import UserContext from '../../context/UserContext';
 import {useAuth } from '../../context/Authcontext';

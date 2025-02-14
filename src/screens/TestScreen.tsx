@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, Alert, ScrollView } from 'react-native';
+
+import { View, Text, StyleSheet, TouchableOpacity, Modal, SafeAreaView, Dimensions, Image, BackHandler, ScrollView, AppState } from 'react-native';
+
 import { useAuth } from '../context/Authcontext'; // Assuming you have an auth context for JWT
 import { useFocusEffect } from '@react-navigation/native';
 import { useTestViewModel } from '../viewmodel/Test/TestViewModel'; // Import ViewModel
-import { RadioButton } from 'react-native-paper'; // Ensure this is imported for RadioButton
 import { LinearGradient } from 'react-native-linear-gradient'; // Import LinearGradient for gradient background
 import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import Header from '../components/CustomHeader/Header';
-import { submitTestResult } from '../services/Test/testService';
 import { useSkillTestViewModel } from '../viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import { decode } from "html-entities";
+
 import { AppState } from 'react-native';
+
 
 const { width } = Dimensions.get('window');
 
@@ -19,12 +21,11 @@ const TestScreen = ({ route, navigation }: any) => {
   const { testName } = route.params;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [answer, setAnswers] = useState<{ [key: number]: string }>({});
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [timeLeft, setTimeLeft] = useState(2 * 60); // Added state for time left (5 minutes = 300 seconds)
-  const { userEmail, userId, userToken } = useAuth(); // Assuming userToken is retrieved from context
+  const { userId, userToken } = useAuth(); // Assuming userToken is retrieved from context
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message state
   const [testData, setTestData] = useState<{ questions: any[] }>({ questions: [] });
-  const [testStatus, settestStatus] = useState<string>('');
   const [isNetworkAvailable, setIsNetworkAvailable] = useState<boolean>(true); // Default to true // Network state
   const [disconnectedTime, setDisconnectedTime] = useState<number>(0); // Time duration of network disconnection
   const [hasExceededTimeout, setHasExceededTimeout] = useState(false);
@@ -41,7 +42,9 @@ const TestScreen = ({ route, navigation }: any) => {
     setIsTestComplete,
     submitTest,
   } = useTestViewModel(userId, userToken, testName);
+
   const [finalScore, setFinalScore] = useState<number>(0); // State to hold final score
+
 
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -255,11 +258,15 @@ const TestScreen = ({ route, navigation }: any) => {
   }, [testName]); // Re-run when testName changes
 
   const parseDuration = (duration: string): number => {
-    const match = duration.match(/(\d+)\s*(mins?|hr|hours?)/i);
+
+    const regex = /(\d+)\s*(mins?|hr|hours?)/i;
+    const match = regex.exec(duration); // Using exec() instead of match()
+
 
     if (match) {
-      const value = parseInt(match[1]); // Get the numerical value
-      const unit = match[2].toLowerCase(); // Get the unit (minute or hour)
+      const value = parseInt(match[1], 10); // Ensure radix is specified
+      const unit = match[2].toLowerCase(); // Get unit (min or hr)
+
       if (unit.includes('hr')) {
         return value * 3600; // Convert hours to seconds
       } else if (unit.includes('min')) {
@@ -267,15 +274,17 @@ const TestScreen = ({ route, navigation }: any) => {
       }
     }
 
-    return 1800; // Default to 30 mins if no match (30 mins = 1800 seconds)
+    return 1800; // Default to 30 mins (1800 seconds) if no match
   };
+
+
 
 
   const calculateScore = () => {
     let score = 0;
     for (let i = 0; i < testData.questions.length; i++) {
       const currentQuestion = testData.questions[i];
-      if (answer[i] && currentQuestion?.answer && answer[i] === currentQuestion.answer) {
+      if (answers[i] && currentQuestion?.answer && answers[i] === currentQuestion.answer) {
         score += 1;
       }
     }
@@ -297,7 +306,9 @@ const TestScreen = ({ route, navigation }: any) => {
     clearInterval(timerInterval); // Clear the timer if time's up
     const finalScore = calculateScore(); // Calculate the score
     const percentageScore = parseFloat(((finalScore / testData.questions.length) * 100).toFixed(2));
+
     setFinalScore(percentageScore); // Store final score in state
+
     navigation.navigate('TimeUp', { finalScore: percentageScore, testName }); // Pass the score to TimeUp screen
   };
   const currentQuestion =
@@ -312,7 +323,9 @@ const TestScreen = ({ route, navigation }: any) => {
   };
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      const previousAnswer = answer[currentQuestionIndex - 1] || null;
+
+      const previousAnswer = answers[currentQuestionIndex - 1] || null;
+
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedAnswer(previousAnswer); // Set the previously selected answer
       setErrorMessage(''); // Clear error message when going back
@@ -331,7 +344,7 @@ const TestScreen = ({ route, navigation }: any) => {
 
     if (currentQuestionIndex < testData.questions.length - 1) {
       // Move to the next question
-      const nextAnswer = answer[currentQuestionIndex + 1] || null; // Ensure correct variable usage
+      const nextAnswer = answers[currentQuestionIndex + 1] || null; // Ensure correct variable usage
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(nextAnswer); // Reset the selected answer for the next question
       setErrorMessage(''); // Clear error message when moving to the next question
@@ -391,7 +404,9 @@ const TestScreen = ({ route, navigation }: any) => {
         {/* Options Container (Replacing FlatList) */}
         <View style={styles.optionsContainer}>
           {currentQuestion?.options?.map((item: string, index: number) => {
-            const isSelected = answer[currentQuestionIndex] === item;
+
+            const isSelected = answers[currentQuestionIndex] === item;
+
 
             return (
               <TouchableOpacity

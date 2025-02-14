@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text,  TouchableOpacity, StyleSheet, Image,Dimensions } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
 import ProgressBar from "../../components/progessBar/ProgressBar";
 import { RootStackParamList } from "../../../New";
 import DocumentPicker, {
   DocumentPickerResponse,
 } from "react-native-document-picker";
-import { ToastAndroid } from 'react-native';
+
 import { useAuth } from '../../context/Authcontext';
 import { ProfileService } from '../../services/profile/ProfileService';
 import { useNavigation } from "@react-navigation/native";
@@ -17,7 +17,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
 import Fileupload from "../../assests/icons/Fileupload";
 import { ScrollView } from "react-native-gesture-handler";
-import { Dimensions } from "react-native";
 import Toast from 'react-native-toast-message';
 const { width } = Dimensions.get('window'); 
 import { useStep3ViewModel } from "../../viewmodel/step/step3";
@@ -32,18 +31,20 @@ interface Step3Props {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   saveProfile: () => void;
-  //route: Props;
-  // navigation: any;
 }
  
+
 const Step3: React.FC = ({ route, navigation }:any) => {
  const nav = useNavigation<prop>();
  const { updateShouldShowStep1 } = route.params;
+
   const { userId, userToken } = useAuth();
   
   const handleSave = () => {
     if (!resumeFile) {
-      return;
+
+      return; // Prevent calling saveProfile or navigating further
+
     }
     updateShouldShowStep1(false);
     setTimeout(() => {
