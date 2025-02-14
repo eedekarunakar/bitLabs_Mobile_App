@@ -1,11 +1,10 @@
-import axios from 'axios';
-import API_BASE_URL from '../API_Service';
+import apiClient from "../login/ApiClient";
 
 export const ProfileModel = {
   createProfile: async (userId: number |null, userToken: string|null, requestData: any) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/applicantprofile/createprofile/${userId}`,
+      const response = await apiClient.post(
+        `/applicantprofile/createprofile/${userId}`,
         requestData,
         {
           headers: {
@@ -23,8 +22,8 @@ export const ProfileModel = {
 
   uploadResume: async (userToken: string|null, userId: number | null, formData: FormData) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/applicantprofile/uploadresume/${userId}`,
+      const response = await apiClient.post(
+        `/applicantprofile/uploadresume/${userId}`,
         formData,
         {
           headers: {

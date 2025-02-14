@@ -3,19 +3,19 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import { useAuth } from '../../context/Authcontext';
 import { useNavigation } from '@react-navigation/native';
+import apiClient from '../../services/login/ApiClient';
 import axios from 'axios';
  
 const ResumeBuilder = () => {
     const [loginUrl, setLoginUrl] = useState('');
     const { userId } = useAuth();
     const navigation = useNavigation();
-    const API_BASE_URL = 'https://kqryamxpv3.ap-south-1.awsapprunner.com';
  
     useEffect(() => {
         const fetchData = async () => {
             try {
                 console.log('Fetching user data...');
-                const response = await axios.get(`${API_BASE_URL}/applicant/getApplicantById/${userId}`);
+                const response = await apiClient.get(`/applicant/getApplicantById/${userId}`);
                 console.log('User data fetched:', response.data);
  
                 const newData = {
@@ -74,7 +74,7 @@ const ResumeBuilder = () => {
  
         if (message === 'close-modal-saveexit') {
             try {
-                const response = await axios.put(`${API_BASE_URL}/applicantprofile/updateResumeSource/${userId}`);
+                const response = await apiClient.put(`/applicantprofile/updateResumeSource/${userId}`);
                 console.log('API call successful:', response.data);
                 // Navigate back to Profile component
                 navigation.goBack();

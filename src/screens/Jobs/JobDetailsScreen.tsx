@@ -10,14 +10,13 @@ import {
  
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import axios from 'axios';
 import { useAuth } from '../../context/Authcontext';
 import { RouteProp,useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import API_BASE_URL from '../../services/API_Service';
+import apiClient from '../../services/login/ApiClient';
  
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
@@ -35,8 +34,8 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   useEffect(() => {
     const fetchJobStatus = async () => {
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/applyjob/recruiters/applyjob-status-history/${job.applyJobId}`,
+        const response = await apiClient.get(
+          `/applyjob/recruiters/applyjob-status-history/${job.applyJobId}`,
           {
             headers: {
               Authorization: `Bearer ${userToken}`,
