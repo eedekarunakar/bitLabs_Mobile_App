@@ -8,13 +8,11 @@ import {
   TouchableOpacity,
   BackHandler
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {useRoute,useFocusEffect} from '@react-navigation/native';
 import {useProfileViewModel} from '../../viewmodel/Profileviewmodel';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAuth} from '../../context/Authcontext';
-import MaskedView from '@react-native-masked-view/masked-view';
-import {RootStackParamList} from '../../../New';
-import { useFocusEffect } from "@react-navigation/native";
+import MaskedView from '@react-native-masked-view/masked-view'
 const {width, height} = Dimensions.get('window');
 
 const Pass = ({navigation}: any) => {

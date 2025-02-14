@@ -1,6 +1,5 @@
 import apiClient from '../login/ApiClient';
 
-// const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com';
 
 const getAuthHeader = (userToken: string|null) => {
   return {

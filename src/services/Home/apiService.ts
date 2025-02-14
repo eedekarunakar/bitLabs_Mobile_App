@@ -1,5 +1,3 @@
-import axios from 'axios';
-import API_BASE_URL from '../API_Service';
 import apiClient from '../login/ApiClient';
 // Create Axios instance
 

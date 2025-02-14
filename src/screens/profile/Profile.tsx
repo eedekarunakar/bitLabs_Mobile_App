@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon5 from 'react-native-vector-icons/MaterialIcons'
+
 import { RootStackParamList } from '../../../New';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { useAuth } from '../../context/Authcontext';
@@ -122,11 +122,13 @@ function ProfileComponent() {
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
-                                    {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
-                                </Text>
-                                {verified && <Icon5 name="verified" size={25} color="#F46F16" style={{ marginLeft: 5 }} />}
+
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                            <Text style={[styles.name, { textAlign:'center', alignSelf: 'center'}]}>
+                            {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                            </Text>
+                            {verified&&<Icon1 name="verified" size={25} color="#334584" style={{marginLeft:5}} />}
+
                             </View>
 
                             <View style={styles.infoContainer}>
@@ -153,7 +155,6 @@ function ProfileComponent() {
                         </View>
                         <View style={{ margin: 2 }}>
                             <Text style={styles.subheading}>Qualification</Text>
-                            {/* {qualification||'no qualification details availiable !!'} */}
                             <Text style={styles.details}>{qualification}</Text>
                             <Text style={styles.subheading}>Specilization</Text>
                             <Text style={styles.details}>{specialization}</Text>
@@ -177,7 +178,7 @@ function ProfileComponent() {
                                             ]}
                                         >
                                             {badge.status === 'PASSED' && (
-                                                <Icon5 name="verified" size={16} color="white" />
+                                                <Icon1 name="verified" size={16} color="white" />
                                             )}
                                             <Text style={styles.skillBadgeText}>
                                                 {badge.skillBadge.name}

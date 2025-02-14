@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState,useRef } from 'react';
 import { handleLogin, handleSignup, handleOTP } from '../services/login/Authservice';
 import { LoginErrors, SignupErrors } from '../models/Autherrors';
 import { useAuth } from '../context/Authcontext';
@@ -11,9 +11,10 @@ const useLoginViewModel = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrors, setLoginErrors] = useState<LoginErrors>({});
   const [loginMessage, setLoginMessage] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState('');
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationType, setNotificationType] = useState('');
+  const notificationMessage = useRef('');
+  const showNotification =  useRef(false);
+  //declare in a use ref
+  const notificationType= useRef('');
   const showToast =(type: 'success'|'error',message:string)=>{
     Toast.show({
       type:type,

@@ -8,8 +8,6 @@ import {
   StyleSheet,
   ScrollView
 } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../../New';
 import ProgressBar from '../../components/progessBar/ProgressBar';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -17,13 +15,6 @@ import { getMobileNumber } from '../../services/mobile';
 import { useAuth } from '../../context/Authcontext';
 
 
-type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
- 
-interface Step1Props {
-  route: Step1ScreenRouteProp;
-  navigation: any;
-}
- 
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
  
   const { email } = route.params;

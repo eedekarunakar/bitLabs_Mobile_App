@@ -1,8 +1,7 @@
-import axios from 'axios';
 import apiClient from './login/ApiClient';
 
 // Base URL for the API
-const BASE_URL = 'https://kqryamxpv3.ap-south-1.awsapprunner.com';
+// const BASE_URL = 'https://kqryamxpv3.ap-south-1.awsapprunner.com';
 
 // Function to fetch mobile number from API
 export const getMobileNumber = async (id: number|null): Promise<string | null> => {

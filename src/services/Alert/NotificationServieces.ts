@@ -39,18 +39,6 @@ export const markAlertAsSeen = async (alertId: string, userToken: string|null): 
 };
 
 
-// export async function fetchJobData(jobId: number,userToken:string|null): Promise<JobData> {
-//   try {
-//     const response = await axios.get<JobData>(`https://g23jza8mtp.ap-south-1.awsapprunner.com/viewjob/applicant/viewjob/${jobId}`, {
-//       headers: { Authorization: `Bearer ${userToken}` },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching job data:', error);
-//     throw error;
-//   }
-// }
-
 const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
   return {
     id: id ?? 0, // Default to 0 if null
