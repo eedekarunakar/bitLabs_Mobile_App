@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect, useContext } from 'react';
+
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, ActivityIndicator ,Linking} from 'react-native';
+
 
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';

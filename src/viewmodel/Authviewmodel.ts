@@ -1,5 +1,5 @@
-import { useState} from 'react';
-import { handleSignup, handleOTP } from '../services/login/Authservice';
+import { useState,useRef } from 'react';
+import { handleLogin, handleSignup, handleOTP } from '../services/login/Authservice';
 import { LoginErrors, SignupErrors } from '../models/Autherrors';
 import { useAuth } from '../context/Authcontext';
 import useOtpManager from '../hooks/useOtpManager';
@@ -11,9 +11,10 @@ const useLoginViewModel = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrors, setLoginErrors] = useState<LoginErrors>({});
   const [loginMessage, setLoginMessage] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState('');
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationType, setNotificationType] = useState('');
+  const notificationMessage = useRef('');
+  const showNotification =  useRef(false);
+  //declare in a use ref
+  const notificationType= useRef('');
   const showToast =(type: 'success'|'error',message:string)=>{
     Toast.show({
       type:type,
@@ -135,7 +136,7 @@ const useSignupViewModel = () => {
             case 'whatsappnumber':
                 if (!value) errors.whatsappnumber = 'Whatsapp Number is required';
                 else if (value.length < 10) errors.whatsappnumber = 'Please enter a valid 10 digit mobile number';
-                else if (!/^[6-9]\d{9}$/.test(value)) errors.whatsappnumber = 'Mobile number should begin with 6, 7, 8, or 9';
+                else if (!/^[6-9][0-9]{9}$/.test(value)) errors.whatsappnumber = 'Mobile number should begin with 6, 7, 8, or 9';
                 else delete errors.whatsappnumber;
                 break;
             case 'password':
@@ -181,7 +182,10 @@ const useSignupViewModel = () => {
         otpManager.setTimer(60);
         otpManager.setIsOtpExpired(false);
         showToast('success', 'OTP sent successfully');
-  
+        // otpManager.triggerNotification('OTP sent successfully','success');
+        
+        
+        // setTimeout(() => otpManager.setShowNotification(false), 3000);
       } else {
         setSignUpErrors({ userRegistered: result.message });
       }
@@ -195,6 +199,10 @@ const useSignupViewModel = () => {
       setRegistration(true);
       otpManager.setTimer(0);
       showToast('success','User Registered Succesfully')
+      // otpManager.triggerNotification('User registered successfully','success');
+      // setNotificationType('success');
+      // setShowNotification(true);
+      // setTimeout(() => setShowNotification(false), 3000);
     } else {
       console.log('error occured');
       otpManager.setOtpValid(false);

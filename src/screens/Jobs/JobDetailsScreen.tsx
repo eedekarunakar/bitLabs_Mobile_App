@@ -14,7 +14,10 @@ import { RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 import { useJobDetailsViewModel } from '../../viewmodel/jobs/JobDetailsViewModel';
+
+import apiClient from '../../services/login/ApiClient';
 
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
@@ -26,6 +29,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   const { jobStatus, loading, formatDate, formatDates } = useJobDetailsViewModel(job, userToken ?? '');
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'JobDetails'>>();
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }}>

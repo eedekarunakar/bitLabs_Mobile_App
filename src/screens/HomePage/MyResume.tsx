@@ -23,7 +23,7 @@ const PDFExample = () => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation<NavigationProp>();
   const fetchPdf = async () => {
- 
+
     try {
       setLoading(true);
  
@@ -42,16 +42,17 @@ const PDFExample = () => {
   finally {
     setLoading(false);
   }
- 
- 
+
+
+
 };
- 
+
 useFocusEffect(
   useCallback(() => {
     fetchPdf();
   }, [userid.userId])
 );
- 
+
 // Helper function to convert ArrayBuffer to Base64
 const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
   let binary = '';
@@ -61,8 +62,7 @@ const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
   }
   return btoa(binary);
 };
- 
- 
+
 const source = { uri: pdfUri };
 const downloadFile = async () => {
   if (!pdfUri) {
@@ -74,12 +74,12 @@ const downloadFile = async () => {
       visibilityTime: 5000, // Toast stays for 3 seconds
       text2Style: {
         fontSize: 14
- 
+
       },
     });
     return;
   }
- 
+
   const hasPermission = await requestStoragePermission();
   if (!hasPermission) {
     Toast.show({
@@ -92,10 +92,11 @@ const downloadFile = async () => {
     });
     return;
   }
- 
+
+
   const fileName = `Resume_${new Date().getTime()}.pdf`;
   const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
- 
+
   try {
     await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
     Toast.show({
@@ -120,11 +121,13 @@ const downloadFile = async () => {
     });
   }
 };
- 
- 
+
+
+
 return (
   <SafeAreaView style={{ flex: 1 }}>
- 
+
+
     <View style={styles.headerContainer}>
       <Text style={styles.title}>My Resume</Text>
     </View>
@@ -144,10 +147,11 @@ return (
         <View>
           <Resumebanner width={130} height={130} />
         </View>
- 
+
+
       </LinearGradient>
       <View style={styles.pdfContainer}>
- 
+
         {pdfUri ? (
           <>
             <Pdf
@@ -276,5 +280,5 @@ const styles = StyleSheet.create({
     height: 30,
   }
 });
- 
+
 export default PDFExample;

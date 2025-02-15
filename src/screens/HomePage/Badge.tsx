@@ -134,57 +134,123 @@ const Badge = ({ navigation }: any) => {
       const data = await response.json();
       console.log('Test Data:', data);
 
-      if (!Array.isArray(data) || data.length === 0) {
-        setSelectedStep(1);
-        setTestName('General Aptitude Test');
-        return;
-      }
+      if (Array.isArray(data) && data.length > 0) {
+        // Assign default names for tests with empty testName
+        data.forEach(test => {
+          if (!test.testName || test.testName.trim() === '') {
+            test.testName = 'General Aptitude Test'; // Default name
+          }
+        });
+        const aptitudeTest = data.find(test => test.testName.toLowerCase().includes('aptitude'));
+        const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
+        console.log(aptitudeTest.testStatus)
+        if (aptitudeTest) {
+          if (aptitudeTest.testStatus === 'P' || aptitudeTest.testStatus === 'p') {
+            if (technicalTest) {
+              // If Technical Test exists, handle its status
+              if (technicalTest.testStatus === 'P'|| technicalTest.testStatus === 'p') {
+                setSelectedStep(3); // Both tests passed
+                setTestName('');
+                setTestStatus('');
+              } else {
+                setSelectedStep(2); // Technical test failed
+                setTestName('Technical Test');
+                setTestStatus(technicalTest.testStatus);
+                const testDateTime = new Date(
+                  technicalTest.testDateTime[0], // Year
+                  technicalTest.testDateTime[1] - 1, // Month (0-based index)
+                  technicalTest.testDateTime[2], // Day
+                  technicalTest.testDateTime[3], // Hours
+                  technicalTest.testDateTime[4], // Minutes
+                  technicalTest.testDateTime[5] // Seconds
+                );
+                const retakeDate = new Date(testDateTime);
+                retakeDate.setDate(retakeDate.getDate() + 7); // Set the retake date to 7 days later
+                retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
+                retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
 
-      data.forEach(test => {
-        if (!test.testName || test.testName.trim() === '') {
-          test.testName = 'General Aptitude Test'; // Default name
-        }
-      });
+                const calculateTimeLeft = () => {
+                  const now = new Date();
+                  const difference = retakeDate.getTime() - now.getTime();
 
-      const aptitudeTest = data.find(test => test.testName.toLowerCase().includes('aptitude'));
-      const technicalTest = data.find(test => test.testName.toLowerCase().includes('technical'));
+                  if (difference > 0) {
+                    const timeLeft = {
+                      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                      hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                      minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                    };
+                    setTimer(timeLeft);
+                    setIsButtonDisabled(true);; // Timer is still counting down
+                  } else {
+                    setTimer(null); // Timer has ended
+                    setIsButtonDisabled(false);// Enable the button when timer ends
+                  }
+                };
 
-      if (aptitudeTest) {
-        if (aptitudeTest.testStatus.toUpperCase() === 'P') {
-          if (technicalTest) {
-            if (technicalTest.testStatus.toUpperCase() === 'P') {
-              setSelectedStep(3);
-              setTestName('');
-              setTestStatus('');
+                // Initial call and set interval for countdown
+                calculateTimeLeft();
+                const timerInterval = setInterval(calculateTimeLeft, 1000);
+
+                // Cleanup interval on component unmount
+                return () => clearInterval(timerInterval);
+              }
             } else {
+              // Aptitude test passed but no technical test yet
               setSelectedStep(2);
               setTestName('Technical Test');
-              setTestStatus(technicalTest.testStatus);
-
-              const retakeDate = calculateRetakeDate(technicalTest.testDateTime);
-              const timerInterval = startTimer(retakeDate);
-
-              return () => clearInterval(timerInterval);
+              setTestStatus('');
             }
           } else {
-            setSelectedStep(2);
-            setTestName('Technical Test');
-            setTestStatus('');
+            // Aptitude test failed
+            setSelectedStep(1);
+            setTestName('General Aptitude Test');
+            setTestStatus(aptitudeTest.testStatus);
+            const testDateTime = new Date(
+              aptitudeTest.testDateTime[0], // Year
+              aptitudeTest.testDateTime[1] - 1, // Month (0-based index)
+              aptitudeTest.testDateTime[2], // Day
+              aptitudeTest.testDateTime[3], // Hours
+              aptitudeTest.testDateTime[4], // Minutes
+              aptitudeTest.testDateTime[5] // Seconds
+            );
+            const retakeDate = new Date(testDateTime);
+            retakeDate.setDate(retakeDate.getDate() + 7); // Set retake date to 7 days later
+            retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
+            retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
+
+            const calculateTimeLeft = () => {
+              const now = new Date();
+              const difference = retakeDate.getTime() - now.getTime();
+
+              if (difference > 0) {
+                const timeLeft = {
+                  days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                  hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                  minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                };
+                setTimer(timeLeft);
+                setIsButtonDisabled(true); // Disable button while timer is counting down
+              } else {
+                setTimer(null); // Timer has ended
+                setIsButtonDisabled(false); // Enable button when timer ends
+              }
+            };
+
+            // Initial call and set interval for countdown
+            calculateTimeLeft();
+            const timerInterval = setInterval(calculateTimeLeft, 1000);
+
+            // Cleanup interval on component unmount or when the test status changes
+            return () => {
+              clearInterval(timerInterval);
+            };
           }
         } else {
+          // Default case if no aptitude test found
           setSelectedStep(1);
           setTestName('General Aptitude Test');
-          setTestStatus(aptitudeTest.testStatus);
-
-          const retakeDate = calculateRetakeDate(aptitudeTest.testDateTime);
-          const timerInterval = startTimer(retakeDate);
-
-          return () => clearInterval(timerInterval);
+          setTestStatus('');
         }
-      } else {
-        setSelectedStep(1);
-        setTestName('General Aptitude Test');
-        setTestStatus('');
       }
     } catch (error) {
       setSelectedStep(1);
@@ -211,9 +277,9 @@ const Badge = ({ navigation }: any) => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch skill badges');
-      }
+                if (!response.ok) {
+                  throw new Error('Failed to fetch skill badges');
+                }
 
       const data = await response.json();
       console.log('Skill Badge Data', data);
@@ -260,47 +326,47 @@ const Badge = ({ navigation }: any) => {
             <Text style={styles.text}>Verified Badges</Text>
           </View>
 
-          {/* Pre-Screened Badge with Progress Bar */}
-          <View style={selectedStep === 3 ? null : styles.box1}>
-            {selectedStep === 3 ? (
-              // Show this view when Step 3 is completed
-              <View style={styles.badge}>
-                <LinearGradient
-                  colors={['#FFEAC4', '#FFF9D6']} // Set the gradient colors
-                  style={styles.gradientBackground1} // Style to ensure the gradient takes the full width and height
-                >
-                  <Text style={[styles.content, { marginLeft: 10 }]}>Pre-Screened badge</Text>
+                    {/* Pre-Screened Badge with Progress Bar */}
+                    <View style={selectedStep === 3 ? null : styles.box1}>
+                      {selectedStep === 3 ? (
+                        // Show this view when Step 3 is completed
+                        <View style={styles.badge}>
+                          <LinearGradient
+                            colors={['#FFEAC4', '#FFF9D6']} // Set the gradient colors
+                            style={styles.gradientBackground1} // Style to ensure the gradient takes the full width and height
+                          >
+                            <Text style={[styles.content, { marginLeft: 10 }]}>Pre-Screened badge</Text>
 
 
-                  {/* Image Section (Middle) */}
-                  <View>
-                    <Image
-                      source={require('../../assests/Images/Test/Badge.png')}
-                      style={styles.congratulationsImage}
-                    />
-                  </View>
-                  {/* Congratulations Message */}
-                  <Text style={styles.congratulationsMessage}>
-                    Congratulations, You are now Verified
-                  </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
-                    <Text style={styles.name}>
-                      {applicant.name
-                        ? applicant.name.charAt(0).toUpperCase() + applicant.name.slice(1)
-                        : 'Guest'}</Text>
-                    <Image source={require('../../assests/Images/Test/verified.png')}
-                      style={styles.verified} />
-                  </View>
+                            {/* Image Section (Middle) */}
+                            <View>
+                              <Image
+                                source={require('../../assests/Images/Test/Badge.png')}
+                                style={styles.congratulationsImage}
+                              />
+                            </View>
+                            {/* Congratulations Message */}
+                            <Text style={styles.congratulationsMessage}>
+                              Congratulations, You are now Verified
+                            </Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
+                              <Text style={styles.name}>
+                                {applicant.name
+                                  ? applicant.name.charAt(0).toUpperCase() + applicant.name.slice(1)
+                                  : 'Guest'}</Text>
+                              <Image source={require('../../assests/Images/Test/verified.png')}
+                                style={styles.verified} />
+                            </View>
 
-                </LinearGradient>
-              </View>
-            ) : (
-              // Show the original view when Step 3 is not yet completed
-              <View style={styles.badge1}>
-                <Text style={styles.content}>Pre-Screened Badge</Text>
-                <Text style={styles.matter1}>
-                  Achieve your dream job faster by demonstrating your aptitude and technical skills
-                </Text>
+                          </LinearGradient>
+                        </View>
+                      ) : (
+                        // Show the original view when Step 3 is not yet completed
+                        <View style={styles.badge1}>
+                          <Text style={styles.content}>Pre-Screened Badge</Text>
+                          <Text style={styles.matter1}>
+                            Achieve your dream job faster by demonstrating your aptitude and technical skills
+                          </Text>
 
                 {/* Progress Bar */}
                 <View style={styles.progressContainer}>
@@ -368,87 +434,87 @@ const Badge = ({ navigation }: any) => {
                 </View>
 
 
-                <View style={{ marginVertical: 30, flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.content}>{testName}</Text>
-                      <Text style={styles.matter1}>
-                        A Comprehensive Assessment to Measure Your Analytical and Reasoning Skills
-                      </Text>
-                    </View>
-                    <View style={{ marginRight: 10 }}>
-                      <Image source={require('../../assests/Images/boyimage.png')} style={{ height: 100 }} />
-                    </View>
-                  </View>
+                          <View style={{ marginVertical: 30, flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                              <View style={{ flex: 1 }}>
+                                <Text style={styles.content}>{testName}</Text>
+                                <Text style={styles.matter1}>
+                                  A Comprehensive Assessment to Measure Your Analytical and Reasoning Skills
+                                </Text>
+                              </View>
+                              <View style={{ marginRight: 10 }}>
+                                <Image source={require('../../assests/Images/boyimage.png')} style={{ height: 100 }} />
+                              </View>
+                            </View>
 
-                  {/* TouchableOpacity */}
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <LinearGradient
-                      colors={isButtonDisabled ? ['#d3d3d3', '#d3d3d3'] : ['#F97316', '#FAA729']} // Gradient colors
-                      start={{ x: 0, y: 0 }} // Gradient start
-                      end={{ x: 1, y: 0 }} // Gradient end
-                      style={[
-                        styles.gradientBackground,
-                        isButtonDisabled && testName !== 'Technical Test' && styles.disabledButton, // Apply disabled styles only for non-technical t
+                            {/* TouchableOpacity */}
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                              <LinearGradient
+                                colors={isButtonDisabled ? ['#d3d3d3', '#d3d3d3'] : ['#F97316', '#FAA729']} // Gradient colors
+                                start={{ x: 0, y: 0 }} // Gradient start
+                                end={{ x: 1, y: 0 }} // Gradient end
+                                style={[
+                                  styles.gradientBackground,
+                                  isButtonDisabled && testName !== 'Technical Test' && styles.disabledButton, // Apply disabled styles only for non-technical t
 
-                      ]}
-                    >
-                      <TouchableOpacity
-                        // style={[styles.progressButton, isButtonDisabled && styles.disabledButton]}
-                        style={[
-                          styles.progressButton,
-                          isButtonDisabled && testName !== 'Technical Test' && styles.disabledButton, // Apply disabled button styles
-                          // Apply resizing only when it's not a Technical Test and the timer is present
-                          testName === 'General Aptitude Test' && testStatus === 'F' && timer && styles.disabledButton,
-                        ]}
-                        onPress={() => {
-                          if (!isButtonDisabled && selectedStep < 3) {
-                            navigation.navigate('TestInstruction');
-                          }
-                          // If button is disabled (timer running), do nothing
-                        }}
-                        disabled={isButtonDisabled} // Disable the button when the timer is running
-                      >
-                        <Text style={styles.progressButtonText}>
-                          {testStatus === 'F' && timer ? 'Retake Test' : 'Take Test'}
-                        </Text>
-                      </TouchableOpacity>
-                    </LinearGradient>
-                    {/* Timer Container placed beside the Button */}
-                    {testName === 'General Aptitude Test' && testStatus === 'F' && timer && (
-                      <View style={styles.timerContainer}>
-                        <Text style={styles.timerText}>Retake test after{"\n"}
-                          <Text style={styles.timerNumber}>{timer.days}</Text>
-                          <Text style={styles.timerUnit}>d </Text>
-                          <Text style={styles.timerNumber}>{timer.hours}</Text>
-                          <Text style={styles.timerUnit}>hrs </Text>
-                          <Text style={styles.timerNumber}>{timer.minutes}</Text>
-                          <Text style={styles.timerUnit}>mins</Text>
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                  <View style={{ alignSelf: 'center' }}>
-                    {testName === 'Technical Test' && testStatus === 'F' && timer && (
-                      <View style={styles.timerContainer1}>
-                        <Text style={styles.timerText}>Retake test after{"   "}
-                          <Text style={styles.timerNumber}>{timer.days}</Text>
-                          <Text style={styles.timerUnit}>d </Text>
-                          <Text style={styles.timerNumber}>{timer.hours}</Text>
-                          <Text style={styles.timerUnit}>hrs </Text>
-                          <Text style={styles.timerNumber}>{timer.minutes}</Text>
-                          <Text style={styles.timerUnit}>mins</Text>
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                </View>
-              </View>
-            )}
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>Skill Badges</Text>
-          </View>
+                                ]}
+                              >
+                                <TouchableOpacity
+                                  // style={[styles.progressButton, isButtonDisabled && styles.disabledButton]}
+                                  style={[
+                                    styles.progressButton,
+                                    isButtonDisabled && testName !== 'Technical Test' && styles.disabledButton, // Apply disabled button styles
+                                    // Apply resizing only when it's not a Technical Test and the timer is present
+                                    testName === 'General Aptitude Test' && testStatus === 'F' && timer && styles.disabledButton,
+                                  ]}
+                                  onPress={() => {
+                                    if (!isButtonDisabled && selectedStep < 3) {
+                                      navigation.navigate('TestInstruction');
+                                    }
+                                    // If button is disabled (timer running), do nothing
+                                  }}
+                                  disabled={isButtonDisabled} // Disable the button when the timer is running
+                                >
+                                  <Text style={styles.progressButtonText}>
+                                    {testStatus === 'F' && timer ? 'Retake Test' : 'Take Test'}
+                                  </Text>
+                                </TouchableOpacity>
+                              </LinearGradient>
+                              {/* Timer Container placed beside the Button */}
+                              {testName === 'General Aptitude Test' && testStatus === 'F' && timer && (
+                                <View style={styles.timerContainer}>
+                                  <Text style={styles.timerText}>Retake test after{"\n"}
+                                    <Text style={styles.timerNumber}>{timer.days}</Text>
+                                    <Text style={styles.timerUnit}>d </Text>
+                                    <Text style={styles.timerNumber}>{timer.hours}</Text>
+                                    <Text style={styles.timerUnit}>hrs </Text>
+                                    <Text style={styles.timerNumber}>{timer.minutes}</Text>
+                                    <Text style={styles.timerUnit}>mins</Text>
+                                  </Text>
+                                </View>
+                              )}
+                            </View>
+                            <View style={{ alignSelf: 'center' }}>
+                              {testName === 'Technical Test' && testStatus === 'F' && timer && (
+                                <View style={styles.timerContainer1}>
+                                  <Text style={styles.timerText}>Retake test after{"   "}
+                                    <Text style={styles.timerNumber}>{timer.days}</Text>
+                                    <Text style={styles.timerUnit}>d </Text>
+                                    <Text style={styles.timerNumber}>{timer.hours}</Text>
+                                    <Text style={styles.timerUnit}>hrs </Text>
+                                    <Text style={styles.timerNumber}>{timer.minutes}</Text>
+                                    <Text style={styles.timerUnit}>mins</Text>
+                                  </Text>
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.text}>Skill Badges</Text>
+                    </View>
 
           {/* Horizontal ScrollView for Cards */}
           <ScrollView
@@ -555,116 +621,116 @@ const Badge = ({ navigation }: any) => {
   );
 };
 
-export default Badge;
-const styles = StyleSheet.create({
-  mainScroll: {
-    flex: 1,
-  },
-  container: {
-    flexDirection: 'column',
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textContainer: {
-    padding: 10,
-    marginTop: 10,
-    marginLeft: 24,
-  },
-  text: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 20,
-    color: '#495057',
-  },
-  box1: {
-    width: '90%',
-    alignSelf: 'center',
-    marginTop: 10,
-    marginHorizontal: 16,
-    borderRadius: 16,
-    backgroundColor: '#FFFF',
-    padding: 8,
-  },
-  badge1: {
-    marginLeft: 10,
-  },
-  content: {
-    fontSize: 16,
-    color: '#000000',
-    marginBottom: 5,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  matter1: {
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 20,
-    color: '#0D0D0D',
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
-  progressContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '90%', // Adjusted width for better spacing
-    alignSelf: 'center',
-    marginBottom: 10,
-    marginTop: 20
-  },
-  stepCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-  },
-  stepText: {
-    color: '#6D6969',
-    fontWeight: '500',
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
-  stepLine: {
-    flex: 1,
-    width: 100,
-    height: 1,
-    backgroundColor: '#BFBFBF',
+          export default Badge;
+          const styles = StyleSheet.create({
+            mainScroll: {
+              flex: 1,
+            },
+            container: {
+              flexDirection: 'column',
+            },
+            loaderContainer: {
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            textContainer: {
+              padding: 10,
+              marginTop: 10,
+              marginLeft: 24,
+            },
+            text: {
+              fontFamily: 'PlusJakartaSans-Bold',
+              fontSize: 20,
+              color: '#495057',
+            },
+            box1: {
+              width: '90%',
+              alignSelf: 'center',
+              marginTop: 10,
+              marginHorizontal: 16,
+              borderRadius: 16,
+              backgroundColor: '#FFFF',
+              padding: 8,
+            },
+            badge1: {
+              marginLeft: 10,
+            },
+            content: {
+              fontSize: 16,
+              color: '#000000',
+              marginBottom: 5,
+              fontFamily: 'PlusJakartaSans-Bold',
+            },
+            matter1: {
+              fontWeight: '400',
+              fontSize: 12,
+              lineHeight: 20,
+              color: '#0D0D0D',
+              fontFamily: 'PlusJakartaSans-Medium',
+            },
+            progressContainer: {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '90%', // Adjusted width for better spacing
+              alignSelf: 'center',
+              marginBottom: 10,
+              marginTop: 20
+            },
+            stepCircle: {
+              width: 20,
+              height: 20,
+              borderRadius: 15,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#f2f2f2',
+            },
+            stepText: {
+              color: '#6D6969',
+              fontWeight: '500',
+              fontSize: 12,
+              fontFamily: 'PlusJakartaSans-Medium',
+            },
+            stepLine: {
+              flex: 1,
+              width: 100,
+              height: 1,
+              backgroundColor: '#BFBFBF',
 
-  },
-  gradientBackground: {
-    marginTop: 20,
-    borderRadius: 10,
-    height: 40,
-  },
-  progressButton: {
-    marginTop: 10,
-    height: 40,
-    width: width * 0.8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  progressButtonText: {
-    color: '#fff',
-    marginBottom: 20,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  horizontalScrollContent: {
-    marginTop: 20,
-    paddingBottom: 50,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  card: {
-    flex: 1,
-    width: 190,
-    height: 210,
-    marginRight: 16,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+            },
+            gradientBackground: {
+              marginTop: 20,
+              borderRadius: 10,
+              height: 40,
+            },
+            progressButton: {
+              marginTop: 10,
+              height: 40,
+              width: width * 0.8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+            },
+            progressButtonText: {
+              color: '#fff',
+              marginBottom: 20,
+              fontFamily: 'PlusJakartaSans-Bold',
+            },
+            horizontalScrollContent: {
+              marginTop: 20,
+              paddingBottom: 50,
+              paddingHorizontal: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+            card: {
+              flex: 1,
+              width: 190,
+              height: 210,
+              marginRight: 16,
+              borderRadius: 10,
+              backgroundColor: '#FFFFFF',
 
     alignItems: 'center',
   },
