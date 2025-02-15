@@ -171,7 +171,7 @@ const TestScreen = ({ route, navigation }: any) => {
       case 'C':
         fetchedTestData = require('../models/data/C.json');
         break;
-      case 'Cpp':
+      case 'C++':
         fetchedTestData = require('../models/data/Cpp.json');
         break;
       case 'C Sharp':

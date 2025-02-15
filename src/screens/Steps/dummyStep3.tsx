@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { View, Text,  TouchableOpacity, StyleSheet, Image,Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
 import ProgressBar from "../../components/progessBar/ProgressBar";
 import { RootStackParamList } from "../../../New";
 import DocumentPicker, {
   DocumentPickerResponse,
 } from "react-native-document-picker";
-
+ 
 import { useAuth } from '../../context/Authcontext';
 import { ProfileService } from '../../services/profile/ProfileService';
 import { useNavigation } from "@react-navigation/native";
-import LinearGradient from 'react-native-linear-gradient';
+import GradientButton from '../../components/styles/GradientButton';
 import API_BASE_URL from '../../services/API_Service';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -18,38 +18,38 @@ import Icon7 from 'react-native-vector-icons/AntDesign';
 import Fileupload from "../../assests/icons/Fileupload";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from 'react-native-toast-message';
-const { width } = Dimensions.get('window'); 
+const { width } = Dimensions.get('window');
 import { useStep3ViewModel } from "../../viewmodel/step/step3";
 import { NavigationProp } from '@react-navigation/native';
-
-
+ 
+ 
 import axios from "axios";
-
-
- type prop = NavigationProp<RootStackParamList, 'BottomTab'>;
+ 
+ 
+type prop = NavigationProp<RootStackParamList, 'BottomTab'>;
 interface Step3Props {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   saveProfile: () => void;
 }
  
-
-const Step3: React.FC = ({ route, navigation }:any) => {
- const nav = useNavigation<prop>();
- const { updateShouldShowStep1 } = route.params;
-
+ 
+const Step3: React.FC = ({ route, navigation }: any) => {
+  const nav = useNavigation<prop>();
+  const { updateShouldShowStep1 } = route.params;
+ 
   const { userId, userToken } = useAuth();
-  
+ 
   const handleSave = () => {
     if (!resumeFile) {
-
+ 
       return; // Prevent calling saveProfile or navigating further
-
+ 
     }
     updateShouldShowStep1(false);
     setTimeout(() => {
       navigation.navigate('BottomTab', { shouldShowStep1: false, welcome: 'Welcome' });
-  }, 100); 
+    }, 100);
   };
   const {
     resumeFile,
@@ -63,21 +63,21 @@ const Step3: React.FC = ({ route, navigation }:any) => {
     handleCancelUpload,
     handleSaveResume,
   } = useStep3ViewModel(userId, userToken, handleSave, route);
-  
-
+ 
+ 
   return (
     <View style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.logoContainer}>
           <Image style={styles.logo} source={require('../../assests/LandingPage/logo.png')} />
         </View>
-
+ 
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
             <Text style={styles.subHeader}>Fill the form fields to go to the next step</Text>
           </View>
-
+ 
           <ProgressBar initialStep={3} />
           <View>
             <View style={{ paddingHorizontal: 15 }}>
@@ -101,7 +101,7 @@ const Step3: React.FC = ({ route, navigation }:any) => {
                   <View style={{ alignItems: 'center' }}>
                     <Fileupload style={{ position: 'absolute', top: 30 }} />
                   </View>
-
+ 
                   <View style={{ padding: 10 }}>
                     <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center', fontFamily: 'PlusJakartaSans-Bold' }}>
                       Select File
@@ -124,7 +124,7 @@ const Step3: React.FC = ({ route, navigation }:any) => {
                   <Text></Text>
                 )}
               </View>
-
+ 
               <View style={[styles.fileContainer, showBorder && styles.showborder]}>
                 {resumeFile && (
                   <View style={{ flexDirection: 'row' }}>
@@ -139,7 +139,7 @@ const Step3: React.FC = ({ route, navigation }:any) => {
                     </TouchableOpacity>
                   </View>
                 )}
-
+ 
                 {loading && (
                   <View style={styles.progressContainer}>
                     <Progress.Bar
@@ -152,7 +152,7 @@ const Step3: React.FC = ({ route, navigation }:any) => {
                   </View>
                 )}
               </View>
-
+ 
               <View>
                 {showBorder ? (
                   <View style={[styles.orContainer, { marginTop: 15, marginVertical: 10 }]}>
@@ -168,7 +168,7 @@ const Step3: React.FC = ({ route, navigation }:any) => {
                   </View>
                 )}
               </View>
-
+ 
               <View>
                 <TouchableOpacity style={styles.uploadButton} onPress={() => navigation.navigate('ResumeBuilder')}>
                   <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
@@ -178,47 +178,38 @@ const Step3: React.FC = ({ route, navigation }:any) => {
           </View>
         </View>
       </ScrollView>
-
+ 
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.backButton, { borderWidth: 0 }]}
-            disabled={isUploadComplete}
+          <GradientButton
+            title="Save"
             onPress={() => {
               handleSaveResume();
               handleAPI();
-              
             }}
-          >
-            {isUploadComplete ? (
-              <View style={[styles.saveButton, { backgroundColor: '#D7D6D6', alignItems: 'center', justifyContent: 'center', borderRadius: 5 }]}>
-                <Text style={[styles.nextButtonText, { color: '#A0A0A0', fontFamily: 'PlusJakartaSans-Medium' }]}>Save</Text>
-              </View>
-            ) : (
-              <LinearGradient
-                colors={['#F97316', '#FAA729']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={[styles.saveButton]}
-              >
-                <Text style={styles.nextButtonText}>Save</Text>
-              </LinearGradient>
-            )}
-          </TouchableOpacity>
+            style={[
+              ...(isUploadComplete ? [{ backgroundColor: '#D7D6D6' }] : []) // Apply background color only if true
+            ]}
+            textStyle={[
+              ...(isUploadComplete ? [{ color: '#A0A0A0', fontFamily: 'PlusJakartaSans-Medium' }] : []) // Apply text color only if true
+            ]}
+            disabled={isUploadComplete} // Disable button when upload is complete
+          />
+ 
         </View>
       </View>
     </View>
   );
 };
-
-
+ 
+ 
 const styles = StyleSheet.create({
   fileContainer: {
     padding: 10,
     marginBottom: 10,
     marginTop: -50,
     position: 'relative',
-    width:'100%'
+    width: '100%'
   },
   showborder: {
     borderWidth: 1,
@@ -234,8 +225,8 @@ const styles = StyleSheet.create({
   progressContainer: {
     marginTop: 20,
     alignItems: 'center',
-    position:'relative',
-    bottom:5
+    position: 'relative',
+    bottom: 5
   },
  
   orContainer: {
@@ -255,7 +246,7 @@ const styles = StyleSheet.create({
     top: 1,
     right: 1,
     padding: 3,
-    paddingRight:30
+    paddingRight: 30
  
   },
   line: {
@@ -267,14 +258,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   uploadButton: {
-    maxWidth: width*0.75,
+    maxWidth: width * 0.75,
     backgroundColor: '#4B4A4A',
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
     borderRadius: 5,
     marginBottom: 55,
-    
+ 
   },
   screen: {
     flex: 1,
@@ -286,8 +277,8 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: Dimensions.get("window").width, // Prevents overflow
     minWidth: Dimensions.get("window").width,
-   
-   
+ 
+ 
   },
   textInput: {
     height: 40,
@@ -300,8 +291,8 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     marginBottom: 20,
-    marginTop:9,
-    alignSelf:'center'
+    marginTop: 9,
+    alignSelf: 'center'
   },
   logo: {
     width: 150, // Decreased width
@@ -343,11 +334,11 @@ const styles = StyleSheet.create({
   uploadContainer: {
     //flexDirection: "row",
     //justifyContent: "space-between",
-    textAlign:'center',
+    textAlign: 'center',
     padding: 5,
     width: '100%',
-    
-  
+ 
+ 
   },
   browseButton: {
     backgroundColor: "gray",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions,ToastAndroid
+    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions, ToastAndroid
 
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
@@ -14,18 +14,17 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RootStackParamList } from '../../../New';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { useAuth } from '../../context/Authcontext';
-import {  ApplicantSkillBadge } from '../../models/profile/profile';
+import { ApplicantSkillBadge } from '../../models/profile/profile';
 import { ProfileService } from '../../services/profile/ProfileService';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import { useProfilePhoto } from '../../context/ProfilePhotoContext';
 import { base64Image } from '../../services/base64Image';
-import LinearGradient from 'react-native-linear-gradient';
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import Fileupload from '../../assests/icons/Fileupload';
-
+import GradientButton from '../../components/styles/GradientButton';
 
 
 import * as Progress from 'react-native-progress';
@@ -53,7 +52,7 @@ function ProfileComponent() {
     const [bgcolor, setbgcolor] = useState(false)
     const [verified, setVerified] = useState(false)
     const [isUploadComplete, setIsUploadComplete] = useState(false);
-  
+
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
@@ -75,7 +74,7 @@ function ProfileComponent() {
         reloadProfile,
         resetPersonalDetails
     } = useProfileViewModel(userToken, userId);
-    const {  basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
+    const { basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
 
 
 
@@ -136,7 +135,7 @@ function ProfileComponent() {
         checkVerification();
     }, [userId]);
 
-    
+
 
 
 
@@ -444,7 +443,7 @@ function ProfileComponent() {
                     <View style={styles.card}>
                         <View style={styles.container}>
                             <View style={styles.pencil}>
-                                <TouchableOpacity onPress={() => {setPersonalDetailsFormVisible(true);resetPersonalDetails()}}>
+                                <TouchableOpacity onPress={() => { setPersonalDetailsFormVisible(true); resetPersonalDetails() }}>
                                     <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
@@ -467,11 +466,11 @@ function ProfileComponent() {
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                            <Text style={[styles.name, { textAlign:'center', alignSelf: 'center'}]}>
-                            {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
-                            </Text>
-                            {verified&&<Icon1 name="verified" size={25} color="#334584" style={{marginLeft:5}} />}
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
+                                    {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                                </Text>
+                                {verified && <Icon1 name="verified" size={25} color="#334584" style={{ marginLeft: 5 }} />}
 
                             </View>
 
@@ -640,16 +639,11 @@ function ProfileComponent() {
                                     )}
 
                                     <View >
-                                        <LinearGradient
-                                            colors={['#F97316', '#FAA729']} // Gradient colors
-                                            style={styles.button} // Apply styles to the gradient button
-                                            start={{ x: 0, y: 0 }} // Starting point of the gradient
-                                            end={{ x: 1, y: 0 }} // Ending point of the gradient
-                                        >
-                                            <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Bold', fontSize: 14, }}>Save Changes</Text>
-                                            </TouchableOpacity>
-                                        </LinearGradient>
+                                        <GradientButton
+                                            title="Save Changes"
+                                            onPress={handleSaveChanges}
+                                            style={styles.button} // Apply button styles         
+                                        />
                                     </View>
                                 </View>
                             </View>
@@ -774,30 +768,23 @@ function ProfileComponent() {
 
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]} onPress={handleSaveResume} disabled={isUploadComplete}>
-                                {
-                                    isUploadComplete ? (
-                                        <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
-                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
-                                        </View>
-
-
-                                    ) : (
-                                        <LinearGradient
-                                            colors={['#F97316', '#FAA729']} // Gradient colors
-                                            style={styles.button} // Apply styles to the gradient button
-                                            start={{ x: 0, y: 0 }} // Starting point of the gradient
-                                            end={{ x: 1, y: 0 }} // Ending point of the gradient
-                                        >
-                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
-
-                                        </LinearGradient>
-
-                                    )
-                                }
-
+                            <TouchableOpacity
+                                style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]}
+                                onPress={handleSaveResume}
+                                disabled={isUploadComplete}
+                            >
+                                {isUploadComplete ? (
+                                    <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
+                                        <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+                                    </View>
+                                ) : (
+                                    <GradientButton
+                                        title="Save Changes"
+                                        onPress={handleSaveResume}
+                                        style={styles.button} // Apply button styles
+                                    />
+                                )}
                             </TouchableOpacity>
-
                         </View>
                     </View>
                 </Modal>
@@ -1246,5 +1233,4 @@ const styles = StyleSheet.create({
 
 });
 export default ProfileComponent;
-
 
