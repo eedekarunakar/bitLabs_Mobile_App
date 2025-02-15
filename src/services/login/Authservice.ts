@@ -1,6 +1,6 @@
 import axios  from 'axios';
 import * as CryptoJS from 'crypto-js';
-import API_BASE_URL from '../API_Service';
+import apiClient from './ApiClient';
  
 export interface AuthResponse {
   success: boolean;
@@ -24,7 +24,7 @@ const encryptPassword = (password: string, secretkey: string) => {
 };
 export const handleLoginWithEmail = async (email: string): Promise<AuthResponse> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/applicant/applicantLogin`, { email:email });
+    const response = await apiClient.post(`/applicant/applicantLogin`, { email:email });
     if (response.status === 200) {
       const token = response.data.data.jwt;
       const id = response.data.id;
@@ -54,8 +54,8 @@ export const handleLogin = async (
     const {encryptedPassword, iv} = encryptPassword(loginpassword, secretkey);
  
     console.log('Encrypted Password:', encryptedPassword);
-    const response = await axios.post(
-      `${API_BASE_URL}/applicant/applicantLogin`,
+    const response = await apiClient.post(
+      `/applicant/applicantLogin`,
       {
         email: loginemail.toLowerCase(),
         password: encryptedPassword,
@@ -91,8 +91,8 @@ export const handleSignup = async (
   signupNumber: string,
 ): Promise<AuthResponse> => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applicant/applicantsendotp`,
+    const response = await apiClient.post(
+      `/applicant/applicantsendotp`,
       {
         email: signupEmail.toLowerCase(),
         mobilenumber: signupNumber,
@@ -121,8 +121,8 @@ export const handleOTP = async (
   signupPassword: string,
 ): Promise<AuthResponse> => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applicant/applicantverify-otp`,
+    const response = await apiClient.post(
+      `/applicant/applicantverify-otp`,
       {
         otp: otp,
         email: signupEmail.toLowerCase(),
@@ -130,8 +130,8 @@ export const handleOTP = async (
     );
  
     if (response.status === 200) {
-      const registeruser = await axios.post(
-        `${API_BASE_URL}/applicant/saveApplicant`,
+      const registeruser = await apiClient.post(
+        `/applicant/saveApplicant`,
         {
           name: signupName,
           email: signupEmail,

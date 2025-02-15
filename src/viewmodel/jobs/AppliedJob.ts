@@ -1,7 +1,7 @@
 // /src/ViewModel/AppliedJobsViewModel.ts
 import { useEffect, useState } from 'react';
-import { fetchAppliedJobs } from '../../services/Jobs/AppliedJob';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
+import { fetchAppliedJobs } from '@services/Jobs/AppliedJob';
+import { JobData } from '@models/Jobs/ApplyJobmodel';
 
 // ViewModel for managing applied jobs state
 export const useAppliedJobsViewModel = (userId:number |null,token: string | null) => {

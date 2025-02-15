@@ -1,13 +1,11 @@
 // /src/Services/JobService.ts
-import axios from 'axios';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
-
-import API_BASE_URL from '../API_Service';
+// import axios from 'axios';
+import { JobData } from '@models/Jobs/ApplyJobmodel';
+import apiClient from '../login/ApiClient';
 // API endpoint URL
 export const fetchAppliedJobs = async (userId: number |null, userToken: string|null): Promise<JobData[]> => {
-  const API_URL = `${API_BASE_URL}/applyjob/getAppliedJobs/${userId}`;
   try {
-    const response = await axios.get(API_URL, {
+    const response = await apiClient.get(`/applyjob/getAppliedJobs/${userId}`, {
       headers: {
         Authorization: `Bearer ${userToken}`,
       },

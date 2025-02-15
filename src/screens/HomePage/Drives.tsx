@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text,Image,TouchableOpacity,StyleSheet,Dimensions } from 'react-native';
-const { width } = Dimensions.get('window');
+import { View, Text } from 'react-native';
+
 const Drives = () => {
   return (
     <View style={{  flex: 1, justifyContent: 'center', alignItems: 'center' }}>

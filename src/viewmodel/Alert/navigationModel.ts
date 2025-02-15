@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { fetchJobDetails } from '../../services/Alert/NotificationServieces';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
-import { useAuth } from '../../context/Authcontext';
+import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { useAuth } from '@context/Authcontext';
 
 export const useJobViewModel = () => {
   const [jobDetails, setJobDetails] = useState<JobData | null>(null);

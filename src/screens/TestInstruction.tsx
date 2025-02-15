@@ -16,37 +16,35 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
-import {useAuth} from '../context/Authcontext'; // Assuming you have a useAuth hook
-
-// Importing test data files
-import aptitudeTestData from '../models/data/testData.json';
-import technicalTestData from '../models/data/TechnicalTest.json';
-import AngularData from '../models/data/Angular.json';
-import JavaData from '../models/data/Java.json';
-import CData from '../models/data/C.json';
-import CppData from '../models/data/Cpp.json';
-import CSharpData from '../models/data/CSharp.json';
-import CSSData from '../models/data/CSS.json';
-import DjangoData from '../models/data/Django.json';
-import DotNetData from '../models/data/DotNet.json';
-import FlaskData from '../models/data/Flask.json';
-import HibernateData from '../models/data/Hibernate.json';
-import HTMLData from '../models/data/HTML.json';
-import JavascriptData from '../models/data/Javascript.json';
-import JspData from '../models/data/Jsp.json';
-import ManualTestingData from '../models/data/ManualTesting.json';
-import MongoData from '../models/data/MongoDB.json';
-import PythonData from '../models/data/Paython.json';
-import ReactData from '../models/data/React.json';
-import RegressionTestingData from '../models/data/Regression Testing.json';
-import SeleniumData from '../models/data/Selenium.json';
-import ServletsData from '../models/data/Servlets.json';
-import SpringBootData from '../models/data/Spring Boot.json';
-import TSData from '../models/data/TS.json';
-import SpringData from '../models/data/Spring.json';
-import SQLData from '../models/data/SQL.json';
-import VueData from '../models/data/Vue.json';
-import API_BASE_URL from '../services/API_Service';
+import {useAuth} from '@context/Authcontext'; 
+import aptitudeTestData from '@models/data/testData.json';
+import technicalTestData from '@models/data/TechnicalTest.json';
+import AngularData from '@models/data/Angular.json';
+import JavaData from '@models/data/Java.json';
+import CData from '@models/data/C.json';
+import CppData from '@models/data/Cpp.json';
+import CSharpData from '@models/data/CSharp.json';
+import CSSData from '@models/data/CSS.json';
+import DjangoData from '@models/data/Django.json';
+import DotNetData from '@models/data/DotNet.json';
+import FlaskData from '@models/data/Flask.json';
+import HibernateData from '@models/data/Hibernate.json';
+import HTMLData from '@models/data/HTML.json';
+import JavascriptData from '@models/data/Javascript.json';
+import JspData from '@models/data/Jsp.json';
+import ManualTestingData from '@models/data/ManualTesting.json';
+import MongoData from '@models/data/MongoDB.json';
+import PythonData from '@models/data/Paython.json';
+import ReactData from '@models/data/React.json';
+import RegressionTestingData from '@models/data/Regression Testing.json';
+import SeleniumData from '@models/data/Selenium.json';
+import ServletsData from '@models/data/Servlets.json';
+import SpringBootData from '@models/data/Spring Boot.json';
+import TSData from '@models/data/TS.json';
+import SpringData from '@models/data/Spring.json';
+import SQLData from '@models/data/SQL.json';
+import VueData from '@models/data/Vue.json';
+import API_BASE_URL from '@services/API_Service';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const { width, height } = Dimensions.get('window');
@@ -246,6 +244,9 @@ const Test = ({route, navigation}: any) => {
           break;
         case 'Vue':
           setTestData(VueData);
+          break;
+        case 'SQL-Server':
+          setTestData(SQLData);
           break;
         default:
           setTestData({

@@ -1,9 +1,9 @@
 // /src/ViewModels/RecommendedJobsViewModel.ts
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
-import { fetchRecommendedJobs, fetchJobDetails } from '../../services/Jobs/RecommendedJobs'
-import { useAuth } from '../../context/Authcontext';
+import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { fetchRecommendedJobs, fetchJobDetails } from '@services/Jobs/RecommendedJobs'
+import { useAuth } from '@context/Authcontext';
 
 const useRecommendedJobsViewModel = () => {
   const { userId, userToken } = useAuth();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, ActivityIndicator, View,Dimensions } from 'react-native';
+import {TouchableOpacity, ActivityIndicator, View,Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
@@ -33,6 +33,7 @@ import Drives from './src/screens/HomePage/Drives';
 import Badge from './src/screens/HomePage/Badge';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useMessageContext, MessageProvider } from './src/screens/LandingPage/welcome';
+import { UserProvider } from './src/context/UserContext';
 
 export type RootStackParamList = {
   ForgotPassword: undefined,
@@ -360,7 +361,9 @@ const AppWithProfileProvider = () => {
 const App = () => {
   return (
     <AuthProvider>
+      <UserProvider>
       <AppWithProfileProvider />
+      </UserProvider>
     </AuthProvider>
   );
 };

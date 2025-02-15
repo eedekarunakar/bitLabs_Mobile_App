@@ -1,35 +1,24 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   Image,
   StyleSheet,
   ScrollView
 } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../../New';
-import ProgressBar from '../../components/progessBar/ProgressBar';
-import LinearGradient from 'react-native-linear-gradient';
-
-import { getMobileNumber } from '../../services/mobile';
-import { useAuth } from '../../context/Authcontext';
-
-
-type Step1ScreenRouteProp = RouteProp<RootStackParamList, 'Step1'>;
+import ProgressBar from '@components/progessBar/ProgressBar';
+import GradientButton from '@components/styles/GradientButton';
+import { getMobileNumber } from '@services/mobile';
+import { useAuth } from '@context/Authcontext';
  
-interface Step1Props {
-  route: Step1ScreenRouteProp;
-  navigation: any;
-}
  
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
  
   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(1);
-  const{userId}=useAuth();
-
+  const { userId } = useAuth();
+ 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -41,9 +30,9 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     lastName: '',
     whatsappNumber: '',
   });
-
+ 
   const [loading, setLoading] = useState(true);
-
+ 
   useEffect(() => {
     // Fetch mobile number from API
     const fetchMobileNumber = async () => {
@@ -53,11 +42,11 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       }
       setLoading(false); // Mark API call as complete
     };
-
+ 
  
     fetchMobileNumber();
   }, []);
-
+ 
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
@@ -125,7 +114,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
             <Text style={styles.subHeader}>
-            Fill the form fields to go to the next step
+              Fill the form fields to go to the next step
             </Text>
           </View>
  
@@ -195,22 +184,17 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       {/* Footer with Back and Next Buttons */}
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.gradientTouchable} onPress={handleNext}>
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.nextButton, styles.applyButtonGradient]}
-            >
-              <Text style={styles.nextButtonText}>Next</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <GradientButton
+            title="Next"
+            onPress={handleNext}
+            style={[styles.applyButtonGradient]} // Custom styles if needed
+          />
         </View>
       </View>
     </View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -251,20 +235,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 25,
   },
-  nextButton: {
-    backgroundColor: '#F97316',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '45%',
-  },
-  nextButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
   header: {
     marginBottom: 20,
   },
@@ -273,7 +244,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: 'black',
     marginBottom: 8,
-
+ 
   },
   subHeader: {
     fontSize: 11,
@@ -305,5 +276,5 @@ const styles = StyleSheet.create({
     width: '50%'
   },
 });
-
+ 
 export default Dummystep1;

@@ -8,9 +8,9 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { useAppliedJobsViewModel } from '../../viewmodel/jobs/AppliedJob';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
-import { useAuth } from '../../context/Authcontext';
+import { useAppliedJobsViewModel } from '@viewmodel/jobs/AppliedJob';
+import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { useAuth } from '@context/Authcontext';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../New';

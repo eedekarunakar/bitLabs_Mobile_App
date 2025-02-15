@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
+
 import {
   View,
   Text,
@@ -6,20 +8,20 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Dimensions
+  Dimensions,
+  FlatList
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { useAuth } from '../../context/Authcontext';
-import { ProfileViewModel } from '../../viewmodel/Profileviewmodel';
-import Toast from 'react-native-toast-message';
-import { ApplicantSkillBadge } from '../../models/profile/profile';
-import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
+import GradientButton from '@components/styles/GradientButton';
+import { useAuth } from '@context/Authcontext';
+import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
 
+import { ApplicantSkillBadge } from '@models/profile/profile';
+import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
+import { showToast } from '@services/login/ToastService';
 
 interface Skill {
   id: number;
@@ -39,9 +41,8 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-import { FlatList } from 'react-native';
 const { width, height } = Dimensions.get('window');
-const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
+const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(({
   visible,
   onClose,
   qualification: initialQualification = '',
@@ -73,6 +74,22 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const { userToken, userId } = useAuth();
+  useEffect(() => {
+    if (visible) {
+      setQualification(initialQualification);
+      setSpecialization(initialSpecialization);
+      setLocations(initialLocations);
+      setSkills(initialSkills);
+      setExperience(initialExperience);
+    }
+  }, [
+    visible,
+    initialQualification,
+    initialSpecialization,
+    initialSkills,
+    initialExperience,
+    initialLocations,
+  ])
 
   const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
   const specializationsByQualification: Record<string, string[]> = {
@@ -91,20 +108,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added')
   );
 
-  const showToast = (type1: 'success' | 'error', message: string,) => {
-    Toast.show({
-      type: type1,
-      text1: '',
-      text2:message,
-      position: 'bottom',
-      onPress: () => Toast.hide(),
-      visibilityTime: 5000,
-      text2Style: {
-        fontSize: 12,
-        fontFamily: 'PlusJakartaSans-Medium'
-      }
-    });
-  };
+ 
 
   const toggleQualificationDropdown = () => {
     setShowQualificationList(!showQualificationList);
@@ -510,20 +514,11 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                   </View>
                 )}
               </View>
-              <LinearGradient
-                colors={['#F97316', '#FAA729']}  // Gradient colors
-                style={styles.button}            // Apply styles to the gradient button
-                start={{ x: 0, y: 0 }}           // Starting point of the gradient
-                end={{ x: 1, y: 0 }}             // Ending point of the gradient
-              >
-                <TouchableOpacity style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }} onPress={handleSaveChanges}>
-                  <Text style={styles.buttonText}>Save Changes</Text>
-                </TouchableOpacity>
-              </LinearGradient>
+              <GradientButton
+                title="Save Changes"
+                onPress={handleSaveChanges}
+                style={styles.button} // Apply button styles
+              />
               {/* </ScrollView> */}
             </View>
           </View>
@@ -532,6 +527,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     </KeyboardAvoidingView>
   );
 }
+)
 
 
 const styles = StyleSheet.create({
@@ -647,20 +643,12 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   button: {
-    backgroundColor: '#F97316',
     alignItems: 'center',
     justifyContent: 'center',
     height: 34,
     width: '100%',
     borderRadius: 5,
     marginTop: 8
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    justifyContent: 'center'
-
   },
   scrollContainer: {
     maxHeight: 150,
