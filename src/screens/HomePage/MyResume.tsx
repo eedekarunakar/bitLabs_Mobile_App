@@ -207,11 +207,7 @@ const styles = StyleSheet.create({
     color:'grey',
     textAlign: 'left',
   },
-  pdfContainer: {
-    flex: 1,
-    marginTop: 10,
-
-  },
+ 
   pdf: {
     flex: 1,
     width: '100%',
@@ -262,11 +258,7 @@ const styles = StyleSheet.create({
     width: 20, // Adjust size as needed
     height: 20,
   },
-  headerText: {
-    fontSize: 20,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: '#000',
-  },
+ 
   title: {
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',

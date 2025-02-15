@@ -16,7 +16,6 @@ import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '../../models/Jobs/ApplyJobmodel'; // Your JobData interface
 
-import { useRoute, RouteProp } from '@react-navigation/native';
 import UserContext from '../../context/UserContext';
  
 

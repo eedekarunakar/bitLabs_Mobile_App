@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity,BackHandler} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { View, Text, Image, StyleSheet, TouchableOpacity, BackHandler } from 'react-native';
+import GradientButton from '../../components/styles/GradientButton';
 import { useFocusEffect } from "@react-navigation/native";
 const FailureScreen = ({ navigation }: any) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => true; // Returning true disables back action
- 
+
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
       return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
@@ -21,45 +21,38 @@ const FailureScreen = ({ navigation }: any) => {
           style={styles.image}
           resizeMode="contain"
         />
- 
+
         {/* Failure Message */}
         <Text style={styles.message}>
           Unfortunately, you scored less than 70%, and have not passed the exam.
         </Text>
- 
+
         {/* Retake Info */}
         <Text style={styles.retakeText}>
           You Can Retake The Test{'\n'}After 7 Days
         </Text>
- 
+
         {/* Exit Button with Gradient */}
-        <TouchableOpacity onPress={() =>
-            navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })
-          }
-          style={styles.buttonContainer}
-          >
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.gradientButton}>
-            <Text style={styles.buttonText}>Exit</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <GradientButton
+          title="Exit"
+          onPress={() => navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })}
+          style={styles.gradientButton}
+          textStyle={styles.buttonText}
+        />
       </View>
     </View>
   );
 };
- 
+
 export default FailureScreen;
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
- 
+
     width: '100%', // Increased the width of the container
   },
   card: {

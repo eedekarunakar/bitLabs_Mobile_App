@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,24 +9,24 @@ import {
   ScrollView
 } from 'react-native';
 import ProgressBar from '../../components/progessBar/ProgressBar';
-import LinearGradient from 'react-native-linear-gradient';
+import GradientButton from '../../components/styles/GradientButton';
 
 import { getMobileNumber } from '../../services/mobile';
 import { useAuth } from '../../context/Authcontext';
 
 
 const Dummystep1: React.FC = ({ route, navigation }: any) => {
- 
+
   const { email } = route.params;
   const [currentStep, setCurrentStep] = useState(1);
-  const{userId}=useAuth();
+  const { userId } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     whatsappNumber: '',
   });
- 
+
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -45,7 +45,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       setLoading(false); // Mark API call as complete
     };
 
- 
+
     fetchMobileNumber();
   }, []);
 
@@ -56,7 +56,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       lastName: '',
       whatsappNumber: '',
     };
- 
+
     // Validate first name
     if (!formData.firstName) {
       newErrors.firstName = 'First name is required.';
@@ -65,7 +65,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       newErrors.firstName = 'First name should be at least 3 characters long.';
       isValid = false;
     }
- 
+
     // Validate last name
     if (!formData.lastName) {
       newErrors.lastName = 'Last name is required.';
@@ -74,7 +74,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       newErrors.lastName = 'Last name should be at least 3 characters long.';
       isValid = false;
     }
- 
+
     // Validate WhatsApp number
     const whatsappRegex = /^[6-9]\d{9}$/;
     if (!whatsappRegex.test(formData.whatsappNumber)) {
@@ -82,11 +82,11 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
         'Should be 10 digits and start with 6, 7, 8, or 9.';
       isValid = false;
     }
- 
+
     setErrors(newErrors);
     return isValid;
   };
- 
+
   const handleNext = () => {
     console.log('Route Params:', route.params);
     if (validateForm()) {
@@ -102,29 +102,29 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       }); // Proceed to next step
     }
   };
- 
+
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollView}>
- 
+
         <Image
           style={styles.logo}
           source={require('../../assests/LandingPage/logo.png')} // Replace with your actual logo path
         />
- 
+
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
             <Text style={styles.subHeader}>
-            Fill the form fields to go to the next step
+              Fill the form fields to go to the next step
             </Text>
           </View>
- 
+
           {/* ProgressBar with currentStep */}
           <ProgressBar
             initialStep={currentStep}
           />
- 
+
           <TextInput
             placeholder="*First Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
@@ -140,7 +140,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           {errors.firstName ? (
             <Text style={styles.errorText}>{errors.firstName}</Text>
           ) : null}
- 
+
           <TextInput
             placeholder="*Last Name" placeholderTextColor="#B1B1B1"
             style={styles.input}
@@ -156,7 +156,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
           {errors.lastName ? (
             <Text style={styles.errorText}>{errors.lastName}</Text>
           ) : null}
- 
+
           {/* Prefilled, non-editable Email field */}
           <TextInput
             value={email}
@@ -180,22 +180,17 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
             <Text style={styles.errorText}>{errors.whatsappNumber}</Text>
           ) : null}
         </View>
- 
+
       </ScrollView>
- 
+
       {/* Footer with Back and Next Buttons */}
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.gradientTouchable} onPress={handleNext}>
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.nextButton, styles.applyButtonGradient]}
-            >
-              <Text style={styles.nextButtonText}>Next</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <GradientButton
+            title="Next"
+            onPress={handleNext}
+            style={[styles.applyButtonGradient]} // Custom styles if needed
+          />
         </View>
       </View>
     </View>
@@ -242,20 +237,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 25,
   },
-  nextButton: {
-    backgroundColor: '#F97316',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '45%',
-  },
-  nextButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
   header: {
     marginBottom: 20,
   },

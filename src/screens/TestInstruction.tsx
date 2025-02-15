@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -17,7 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAuth} from '../context/Authcontext'; // Assuming you have a useAuth hook
-
+import GradientButton from '../components/styles/GradientButton';
 // Importing test data files
 import aptitudeTestData from '../models/data/testData.json';
 import technicalTestData from '../models/data/TechnicalTest.json';
@@ -48,6 +47,7 @@ import SQLData from '../models/data/SQL.json';
 import VueData from '../models/data/Vue.json';
 import API_BASE_URL from '../services/API_Service';
 import Icon from 'react-native-vector-icons/AntDesign';
+
 
 const { width, height } = Dimensions.get('window');
 

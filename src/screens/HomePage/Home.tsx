@@ -1,5 +1,5 @@
 
-import React, {useState, useEffect,} from 'react';
+import React, {useState, useEffect,useContext} from 'react';
 
 import Navbar from '../../components/Navigation/Navbar';
 
@@ -13,6 +13,7 @@ import ProfileService from '../../services/profile/ProfileService';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
 
+import UserContext from '../../context/UserContext';
 import {
   View,
   Image,
@@ -24,7 +25,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { Dimensions } from 'react-native';
+
 import LinearGradient from 'react-native-linear-gradient';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 

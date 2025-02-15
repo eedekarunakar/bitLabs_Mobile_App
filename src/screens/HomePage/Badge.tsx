@@ -253,7 +253,6 @@ const Badge = ({ navigation }: any) => {
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Navbar />
       <ScrollView horizontal={false} style={styles.mainScroll}>
         <View style={styles.container}>
           <View style={styles.textContainer}>

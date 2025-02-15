@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
 import useGoogleSignIn from '../../services/google/google'
-
+import GradientButton from '../../components/styles/GradientButton';
 
 const {  height } = Dimensions.get('window');
 
@@ -264,33 +264,12 @@ const LandingPage = () => {
                     </View>
 
                 </ScrollView>
-                {activeButton === 'login' ? (
-                    <View style={styles.bottomContainer}>
-                        <TouchableOpacity style={styles.submitButton} onPress={validateAndLogin}>
-                            <LinearGradient
-                                colors={['#F97316', '#FAA729']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                style={styles.gradientBackground}
-                            >
-                                <Text style={styles.submitButtonText}>Login</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>
-                ) : (
-                    <View style={styles.bottomContainer}>
-                        <TouchableOpacity style={styles.submitButton} onPress={otpReceived ? handleOtp : validateAndSignup}>
-                            <LinearGradient
-                                colors={['#F97316', '#FAA729']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                style={styles.gradientBackground}
-                            >
-                                <Text style={styles.submitButtonText}>{otpReceived ? 'Verify OTP' : 'Send OTP'}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>
-                )}
+                <View style={styles.bottomContainer}>
+                    <GradientButton
+                        title={activeButton === 'login' ? 'Login' : otpReceived ? 'Verify OTP' : 'Send OTP'}
+                        onPress={activeButton === 'login' ? validateAndLogin : otpReceived ? handleOtp : validateAndSignup}
+                    />
+                </View>
 
             </View>
 
@@ -473,22 +452,6 @@ const styles = StyleSheet.create({
         bottom: 20,
 
 
-    },
-    submitButton: {
-        height: 50,
-        width: '100%',
-        overflow: 'hidden',
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-
-    },
-    submitButtonText: {
-        color: '#fff',
-        fontSize: 16,
-
-        padding: 8,
-        fontFamily: 'PlusJakartaSans-Bold'
     },
 
 

@@ -5,8 +5,8 @@ import * as CryptoJS from 'crypto-js';
 import { useAuth } from '../../context/Authcontext';
 import * as Keychain from 'react-native-keychain';
 import { useNavigation } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/AntDesign';
+import ActionButtons from '../../components/styles/Actionbutton';
+import Navbar from '../../components/styles/Head';
 import API_BASE_URL from '../../services/API_Service';
 import Toast from 'react-native-toast-message';
 
@@ -236,21 +236,7 @@ const ChangePasswordScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Image
-            source={require('../../assests/Images/logo.png')}
-            style={styles.logo}
-          />
-        </View>
-        <View style={styles.separator} />
-
-        <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={handleBackButton} style={styles.backButton}>
-            <Icon name="left" size={24} color="#495057" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Change Password</Text>
-        </View>
-        <View style={styles.separator} />
+        <Navbar title="Change Password" onBackPress={() => navigation.goBack()} />
 
         {renderPasswordField(
           oldPassword,
@@ -305,27 +291,11 @@ const ChangePasswordScreen = () => {
           </Text>
         ) : null}
 
-        <View style={[styles.buttonContainer, { alignSelf: 'center' }]}>
-          <TouchableOpacity style={styles.backButtonBottom} onPress={handleBackButton}>
-            <Text style={{
-              color: '#F46F16',
-              fontSize: 15,
-              fontFamily: 'PlusJakartaSans-Bold',
-            }}>Back
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleChangePassword}
-            style={styles.backButtonBottom}>
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.applyButtonGradient]}
-            >
-              <Text style={styles.buttonText}>Save</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+        <ActionButtons
+          onPressAction={handleChangePassword}
+          actionTitle="Save"
+          onPressBack={handleBackButton} // Since the back button is needed here
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -335,7 +305,6 @@ const ChangePasswordScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     padding: 2,
     backgroundColor: '#FFFFFF',
   },
@@ -385,12 +354,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   successMessage: {
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   errorMessage: {
     color: 'red',
@@ -399,36 +368,9 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     textAlign: 'justify',
     marginTop: -6,
-    fontSize:12
+    fontSize: 12
   },
 
-  navbar: {
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    marginBottom: 16,
-    marginTop: 10,
-  },
-  logo: {
-    width: 120,
-    height: 40,
-    resizeMode: 'contain',
-
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#D3D3D3',
-    width: '100%',
-    marginTop: 8,
-  },
-  applyButtonGradient: {
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
   button: {
     flex: 1,
     height: 50,
@@ -437,12 +379,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#F97316'
   },
-  headerContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    height: 50,
-    backgroundColor: '#FFF'
-  },
+
   headerImage: {
     width: 20, // Adjust size as needed
     height: 20,
@@ -453,44 +390,9 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 
-  backButton: {
-    position: 'absolute',
-    left: 15,
-  },
-  title: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: '#495057',
-    lineHeight: 25,
-    marginLeft: 50
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly', // Distribute space evenly
-    alignItems: 'center',
-    position: 'absolute',
-    width: '100%',
-    bottom: 20,
-    paddingHorizontal: 16,
-   
 
-  },  
-  backButtonBottom: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#F46F16',
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 8,
-    width:'43%' // Add consistent spacing
-  },
-  buttonText: {
-    color: '#fff',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+
+
 });
 
 export default ChangePasswordScreen;

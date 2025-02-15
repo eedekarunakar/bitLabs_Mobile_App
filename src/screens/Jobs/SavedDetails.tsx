@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect,useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image,Linking,Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image,Linking } from 'react-native';
 
 
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported

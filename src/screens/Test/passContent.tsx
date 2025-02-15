@@ -8,33 +8,34 @@ import {
   TouchableOpacity,
   BackHandler
 } from 'react-native';
-import {useRoute,useFocusEffect} from '@react-navigation/native';
-import {useProfileViewModel} from '../../viewmodel/Profileviewmodel';
+import { useRoute, useFocusEffect } from '@react-navigation/native';
+import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import LinearGradient from 'react-native-linear-gradient';
-import {useAuth} from '../../context/Authcontext';
+import GradientButton from '../../components/styles/GradientButton';
+import { useAuth } from '../../context/Authcontext';
 import MaskedView from '@react-native-masked-view/masked-view'
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const Pass = ({navigation}: any) => {
-  
+const Pass = ({ navigation }: any) => {
+
   const route = useRoute();
-  const {userId, userToken} = useAuth();
-  const {finalScore, testName}: any = route.params; // Access the passed score
-  const {profileData} = useProfileViewModel(userToken, userId);
-  const {basicDetails} = profileData || [];// Fallback to an empty object
- 
+  const { userId, userToken } = useAuth();
+  const { finalScore, testName }: any = route.params; // Access the passed score
+  const { profileData } = useProfileViewModel(userToken, userId);
+  const { basicDetails } = profileData || [];// Fallback to an empty object
+
   const roundedScore = Math.round(finalScore);
   console.log('Final Score:', finalScore);
   console.log('Applicant:', basicDetails);
   console.log('Test Name:', testName);
   useFocusEffect(
-      React.useCallback(() => {
-        const onBackPress = () => true; // Returning true disables back action
-   
-        BackHandler.addEventListener("hardwareBackPress", onBackPress);
-        return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-      }, [])
-    );
+    React.useCallback(() => {
+      const onBackPress = () => true; // Returning true disables back action
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
   if (!profileData) {
     return <Text>Loading...</Text>; // Show a loading indicator while fetching data
   }
@@ -44,7 +45,7 @@ const Pass = ({navigation}: any) => {
       <View style={styles.Items}>
         {/* Greeting Section */}
         <View style={styles.centeredView}>
-        <Text style={styles.nameText}>
+          <Text style={styles.nameText}>
             Hi {basicDetails.firstName
               ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
               : 'Guest'},
@@ -53,13 +54,13 @@ const Pass = ({navigation}: any) => {
             <MaskedView
               maskElement={
                 <Text style={[styles.scoreText, styles.maskedText]}>
-                You scored {roundedScore}%
-              </Text>
+                  You scored {roundedScore}%
+                </Text>
               }>
               <LinearGradient
                 colors={['#F97316', '#FAA729']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 style={styles.gradientBackground}
               />
             </MaskedView>
@@ -86,21 +87,12 @@ const Pass = ({navigation}: any) => {
               Now you are eligible for{'\n'}the Technical Test
             </Text>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                navigation.navigate('TestInstruction', {
-                  testName: 'Technical Test',
-                })
-              }>
-              <LinearGradient
-                colors={['#F97316', '#FAA729']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={[styles.button, {borderRadius: 10}]}>
-                <Text style={styles.buttonText}>Take Test</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            <GradientButton
+              title="Take Test"
+              onPress={() => navigation.navigate('TestInstruction', { testName: 'Technical Test' })}
+              style={[styles.button, { borderRadius: 10 }]} // Custom styling if needed
+              textStyle={styles.buttonText} // Ensures text styling remains the same
+            />
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('BottomTab', {
@@ -121,19 +113,12 @@ const Pass = ({navigation}: any) => {
                 Congratulations! You are now verified.
               </Text>
             </View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                navigation.navigate('BottomTab', {screen: 'Badges'})
-              }>
-              <LinearGradient
-                colors={['#F97316', '#FAA729']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={[styles.button, {borderRadius: 10}]}>
-                <Text style={styles.buttonText}>Exit</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            <GradientButton
+              title="Exit"
+              onPress={() => navigation.navigate('BottomTab', { screen: 'Badges' })}
+              style={[styles.button, { borderRadius: 10 }]} // Custom styling if needed
+              textStyle={styles.buttonText} // Ensures text styling remains consistent
+            />
           </>
         )}
 
@@ -146,19 +131,12 @@ const Pass = ({navigation}: any) => {
                   test
                 </Text>
               </View>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() =>
-                  navigation.navigate('BottomTab', {screen: 'Badges'})
-                }>
-                <LinearGradient
-                  colors={['#F97316', '#FAA729']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  style={[styles.button, {borderRadius: 10}]}>
-                  <Text style={styles.buttonText}>Exit</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              <GradientButton
+                title="Exit"
+                onPress={() => navigation.navigate('BottomTab', { screen: 'Badges' })}
+                style={[styles.button, { borderRadius: 10 }]} // Apply custom styling if needed
+                textStyle={styles.buttonText} // Ensures text styling remains consistent
+              />
             </>
           )}
       </View>
@@ -214,7 +192,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     width: 292,
     height: 62,
-   
+
     alignItems: 'center',
   },
   message: {
@@ -222,7 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 14, // Adjusted font size dynamically
     lineHeight: 31,
     textAlign: 'center',
-    
+
   },
   button: {
     marginTop: 10,
