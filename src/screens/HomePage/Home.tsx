@@ -11,6 +11,8 @@ import { useMessageContext, } from '../LandingPage/welcome';
 
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
+
+
  
 import UserContext from '@context/UserContext';
 import {
@@ -33,6 +35,7 @@ const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
  
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
+
  
 function Dashboard() {
   const [verified, setVerified] = useState(false)

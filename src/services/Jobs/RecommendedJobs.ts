@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { JobData } from '../../models/Jobs/ApplyJobmodel';
-import API_BASE_URL from '../API_Service';
+import {API_BASE_URL} from '@env';
 
 
 const API_URLS = {

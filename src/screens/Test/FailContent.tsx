@@ -36,8 +36,7 @@ const FailureScreen = ({ navigation }: any) => {
         <GradientButton
           title="Exit"
           onPress={() => navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })}
-          style={styles.gradientButton}
-          textStyle={styles.buttonText}
+         
         />
       </View>
     </View>
@@ -100,9 +99,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 7.68,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
 });

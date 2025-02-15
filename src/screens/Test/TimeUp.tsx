@@ -42,8 +42,6 @@ const TimeUp = ({ route }: any) => {
         <GradientButton
           title="View Results"
           onPress={handleTimeUpSubmission}
-          style={[styles.modalButton1, { borderRadius: 10 }]} // Apply button styles
-          textStyle={styles.modalButtonText} // Apply text styles
         />
       </View>
     </View>
@@ -89,18 +87,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
-  modalButton1: {
-    borderRadius: 7.68,
-    alignItems: 'center',
-    padding: 10,
-    width: width * 0.9,
-    height: 45,
-    backgroundColor: 'orange',
-  },
-  modalButtonText: {
-    fontSize: 14,
-    color: '#FFF',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
+ 
 });
+ 
  

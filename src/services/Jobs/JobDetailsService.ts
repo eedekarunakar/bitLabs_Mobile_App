@@ -1,5 +1,5 @@
 import axios from 'axios';
-import API_BASE_URL from '../API_Service'
+import {API_BASE_URL} from '@env';
 
 export const fetchJobStatus = async (applyJobId: number, userToken: string) => {
   try {

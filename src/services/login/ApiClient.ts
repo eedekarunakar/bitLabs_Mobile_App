@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
-import API_BASE_URL from '../API_Service';
+import {API_BASE_URL} from '@env';
 
 let logoutHandler: (() => void) | null = null; //  Store logout function globally
 

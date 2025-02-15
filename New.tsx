@@ -23,14 +23,14 @@ import Fail from './src/screens/Test/FailContent';
 import Timeup from './src/screens/Test/TimeUp';
 import Toast, { BaseToast, ToastConfig } from 'react-native-toast-message'; // Ensure this import is correct
 import ChangePasswordScreen from './src/screens/HomePage/ChangePassword';
-import { JobData } from './src/models/Jobs/ApplyJobmodel';
+
 import ViewJobDetails from './src/screens/Jobs/ViewJobDetails';
 import Notification from './src/screens/alert/Notification';
 import SavedDetails from './src/screens/Jobs/SavedDetails';
 import { ProfilePhotoProvider } from './src/context/ProfilePhotoContext';
 import ResumeBuilder from './src/screens/profile/ResumeBuilder';
 import Drives from './src/screens/HomePage/Drives';
-import Badge from './src/screens/HomePage/Badge';
+
 import Icon from 'react-native-vector-icons/Entypo';
 import { useMessageContext, MessageProvider } from './src/screens/LandingPage/welcome';
 import { UserProvider } from './src/context/UserContext';

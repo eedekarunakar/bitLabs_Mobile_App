@@ -1,6 +1,6 @@
-import API_BASE_URL from '@env';
-
-export const fetchTestStatus = async (userId: string, userToken: string) => {
+import API_BASE_URL from "../API_Service";
+ 
+export const fetchTestStatus = async (userId: number|null, userToken: string|null) => {
   try {
     const response = await fetch(`${API_BASE_URL}/applicant1/tests/${userId}`, {
       method: 'GET',
@@ -9,11 +9,11 @@ export const fetchTestStatus = async (userId: string, userToken: string) => {
         'Content-Type': 'application/json',
       },
     });
-
+ 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
+ 
     const data = await response.json();
     return data;
   } catch (error) {
@@ -21,8 +21,8 @@ export const fetchTestStatus = async (userId: string, userToken: string) => {
     throw error;
   }
 };
-
-export const fetchSkillBadges = async (userId: string, userToken: string) => {
+ 
+export const fetchSkillBadges = async (userId: number | null, userToken: string|null) => {
   try {
     const response = await fetch(`${API_BASE_URL}/skill-badges/${userId}/skill-badges`, {
       method: 'GET',
@@ -31,11 +31,11 @@ export const fetchSkillBadges = async (userId: string, userToken: string) => {
         'Content-Type': 'application/json',
       },
     });
-
+ 
     if (!response.ok) {
       throw new Error('Failed to fetch skill badges');
     }
-
+ 
     const data = await response.json();
     return data.applicantSkillBadges || [];
   } catch (error) {
@@ -43,7 +43,7 @@ export const fetchSkillBadges = async (userId: string, userToken: string) => {
     throw error;
   }
 };
-
+ 
 export const calculateRetakeDate = (testDateTimeArray: number[]) => {
   const testDateTime = new Date(
     testDateTimeArray[0], // Year
@@ -53,11 +53,11 @@ export const calculateRetakeDate = (testDateTimeArray: number[]) => {
     testDateTimeArray[4], // Minutes
     testDateTimeArray[5] // Seconds
   );
-
+ 
   const retakeDate = new Date(testDateTime);
   retakeDate.setDate(retakeDate.getDate() + 7); // Retake after 7 days
   retakeDate.setHours(retakeDate.getHours() + 5); // Add 5 hours
   retakeDate.setMinutes(retakeDate.getMinutes() + 30); // Add 30 minutes
-
+ 
   return retakeDate;
 };
