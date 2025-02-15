@@ -2,118 +2,42 @@ import React, { useEffect, useState } from 'react';
 import {TouchableOpacity, ActivityIndicator, View,Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LandingPage from './src/screens/LandingPage/LandingPage'; // Replace with actual path
-import BottomTab from './src/routes/BottomNavigation';
-import Dummystep1 from './src/screens/Steps/dummyStep1'; // Replace with actual path
-import Dummystep2 from './src/screens/Steps/dummyStep2';
-import dummyStep3 from './src/screens/Steps/dummyStep3'
-import { useAuth, AuthProvider } from './src/context/Authcontext'; // Replace with actual path
-import { fetchProfileId } from './src/services/Create/createProfile'; // Replace with actual path
-import TestInstruction from './src/screens/TestInstruction'; // Ensure the path is correct
-import TestScreen from './src/screens/TestScreen';
-import ForgotPassword from './src/screens/LandingPage/ForgotPassword';
-import AppliedJobs from './src/screens/Jobs/AppliedJobs';
-import SavedJobs from './src/screens/Jobs/SavedJobs';
-import JobDetailsScreen from './src/screens/Jobs/JobDetailsScreen';
-import JobDetails from './src/screens/Jobs/JobDetails';
-import ProfileComponent from './src/screens/profile/Profile';
-import ImagePreviewScreen from './src/screens/profile/ImagePreviewScreen';
-import Pass from './src/screens/Test/passContent';
-import Fail from './src/screens/Test/FailContent';
-import Timeup from './src/screens/Test/TimeUp';
-import Toast, { BaseToast, ToastConfig } from 'react-native-toast-message'; // Ensure this import is correct
-import ChangePasswordScreen from './src/screens/HomePage/ChangePassword';
+import LandingPage from '../screens/LandingPage/LandingPage'; // Replace with actual path
+import BottomTab from './BottomNavigation';
+import Dummystep1 from '../screens/Steps/dummyStep1'; // Replace with actual path
+import Dummystep2 from '../screens/Steps/dummyStep2';
+import dummyStep3 from '../screens/Steps/dummyStep3'
+import { useAuth, AuthProvider } from '../context/Authcontext'; // Replace with actual path
+import { fetchProfileId } from '../services/Create/createProfile'; // Replace with actual path
+import TestInstruction from '../screens/TestInstruction'; // Ensure the path is correct
+import TestScreen from '../screens/TestScreen';
+import ForgotPassword from '../screens/LandingPage/ForgotPassword';
+import AppliedJobs from '../screens/Jobs/AppliedJobs';
+import SavedJobs from '../screens/Jobs/SavedJobs';
+import JobDetailsScreen from '../screens/Jobs/JobDetailsScreen';
+import JobDetails from '../screens/Jobs/JobDetails';
+import ProfileComponent from '../screens/profile/Profile';
+import ImagePreviewScreen from '../screens/profile/ImagePreviewScreen';
+import Pass from '../screens/Test/passContent';
+import Fail from '../screens/Test/FailContent';
+import Timeup from '../screens/Test/TimeUp';
+import Toast from 'react-native-toast-message'; // Ensure this import is correct
+import ChangePasswordScreen from '../screens/HomePage/ChangePassword';
+import ViewJobDetails from '../screens/Jobs/ViewJobDetails';
+import Notification from '../screens/alert/Notification';
+import SavedDetails from '../screens/Jobs/SavedDetails';
+import { ProfilePhotoProvider } from '../context/ProfilePhotoContext';
+import ResumeBuilder from '../screens/profile/ResumeBuilder';
+import Drives from '../screens/HomePage/Drives';
 
-import ViewJobDetails from './src/screens/Jobs/ViewJobDetails';
-import Notification from './src/screens/alert/Notification';
-import SavedDetails from './src/screens/Jobs/SavedDetails';
-import { ProfilePhotoProvider } from './src/context/ProfilePhotoContext';
-import ResumeBuilder from './src/screens/profile/ResumeBuilder';
-import Drives from './src/screens/HomePage/Drives';
+import { useMessageContext, MessageProvider } from '../screens/LandingPage/welcome';
+import { RootStackParamList } from '@models/home/model';
 
-import Icon from 'react-native-vector-icons/Entypo';
-import { useMessageContext, MessageProvider } from './src/screens/LandingPage/welcome';
-import { UserProvider } from './src/context/UserContext';
+import { toastConfig } from '@components/Toast/toast_config';
 
-export type RootStackParamList = {
-  ForgotPassword: undefined,
-  LandingPage: undefined;
-  BottomTab: { shouldShowStep1: boolean; welcome: string } | undefined;
-  Step1: { email: string | null }; // Specify that Step1 expects an email parameter
-  Step2: undefined;
-  Step3: { updateShouldShowStep1: React.Dispatch<React.SetStateAction<boolean>> };
-  TestInstruction: { testName: string };
-  TestScreen: { questions: any[] };
-  Jobs: { tab: 'recommended' | 'applied' | 'saved' };
-  JobDetails: { job: any }; // Pass job data to the JobDetails screen
-  JobDetailsScreen: { job: any };
-  ViewJobDetails: { job: any };
-  AppliedJobs: { job: any };
-  SavedDetails: { job: any };
-  SavedJobs: undefined;
-  Profile: { retake?: boolean } | undefined
-  ImagePreview: { uri: string; retake?: boolean }
-  passContent: { finalScore: number; testName: string };
-  FailContent: undefined;
-  TimeUp: undefined;
-  Badges: { skillName: string; testType: string } | undefined;
-  ChangePassword: undefined;
-  Notification: undefined;
-  ResumeBuilder: undefined;
-  Home: { welcome: string } | undefined;
-  Drives: undefined;
-  'My Resume': undefined;
 
-};
-const { width } = Dimensions.get('window'); // Get screen width
+
 const Stack = createStackNavigator<RootStackParamList>();
-// Global Toast Configuration with Cross Button
-const toastConfig: ToastConfig = {
-  success: (props) => (
-    <BaseToast
-      {...props} // Spread the props for BaseToast
-      style={{ borderLeftColor: 'green', paddingRight: 15, width: width * 0.9, }} // Custom styling
-      contentContainerStyle={{ paddingHorizontal: 15 }}
-      text1Style={{ fontSize: 12, fontFamily: 'PlusJakartaSans-Bold' }}
-      text2Style={{ fontSize: 10, fontFamily: 'PlusJakartaSans-Bold',color:'black' }} // Ensure text2 styling
-      text1={props.text1} // Ensure text1 is passed
-      text2={props.text2} // Ensure text2 is passed
-      renderTrailingIcon={() => (
-        <TouchableOpacity
-          onPress={() => Toast.hide()}
-          style={{
-            alignSelf: 'center', // Align with text2
-            marginLeft: 10, // Adjust spacing from text
-          }}
-        >
-         <Icon name="cross" size={18} color="black" /> {/* Close Icon */}
-        </TouchableOpacity>
-      )}
-    />
-  ),
-  error: (props) => (
-    <BaseToast
-      {...props} // Spread the props for BaseToast
-      style={{ borderLeftColor: 'red', paddingRight: 15, width: width * 0.9, }} // Custom styling
-      contentContainerStyle={{ paddingHorizontal: 15 }}
-      text1Style={{ fontSize: 12, fontFamily: 'PlusJakartaSans-Bold' }}
-      text2Style={{ fontSize: 10, fontFamily: 'PlusJakartaSans-Bold',color:'black' }} // Ensure text2 styling
-      text1={props.text1} // Ensure text1 is passed
-      text2={props.text2} // Ensure text2 is passed
-      renderTrailingIcon={() => (
-        <TouchableOpacity
-          onPress={() => Toast.hide()}
-          style={{
-            alignSelf: 'center', // Align with text2
-            marginLeft: 10, // Adjust spacing from text
-          }}
-        >
-         <Icon name="cross" size={18} color="black" /> {/* Close Icon */}
-        </TouchableOpacity>
-      )}
-    />
-  ),
-};
 
 const Appnavigator = () => {
 
@@ -358,14 +282,4 @@ const AppWithProfileProvider = () => {
   );
 };
 
-const App = () => {
-  return (
-    <AuthProvider>
-      <UserProvider>
-      <AppWithProfileProvider />
-      </UserProvider>
-    </AuthProvider>
-  );
-};
-
-export default App;
+export default AppWithProfileProvider;

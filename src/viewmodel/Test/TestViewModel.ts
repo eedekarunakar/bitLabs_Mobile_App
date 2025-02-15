@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { submitTestResult } from '@services/Test/testService'; // Import the service
 import { TestDetails } from '@models/Test/TestModel'; // Assuming you have a model for test details
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../../New'; // Define your stack param list
+import { RootStackParamList } from '@models/home/model'; // Define your stack param list
 // Type the navigation object with your stack's params
 
 export const useTestViewModel = (userId: number | any, jwtToken: string | null, testName: string) => {

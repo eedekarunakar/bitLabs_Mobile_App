@@ -4,7 +4,7 @@ import { useSavedJobs } from '@services/Jobs/SavedJob';
 import { JobData1 } from '@models/Jobs/SavedJob';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
  
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch

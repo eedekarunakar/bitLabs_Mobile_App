@@ -9,7 +9,7 @@ import Resumebanner from '@assests/icons/Resumebanner';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { requestStoragePermission } from './permissions';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import RNFS from 'react-native-fs';

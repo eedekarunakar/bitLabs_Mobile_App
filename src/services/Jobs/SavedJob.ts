@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { JobData1 } from '../../models/Jobs/SavedJob';
-import { useAuth } from '../../context/Authcontext';
+import { JobData1 } from '@models/Jobs/SavedJob';
+import { useAuth } from '@context/Authcontext';
 import apiClient from '../login/ApiClient';
 
 export const useSavedJobs = () => {

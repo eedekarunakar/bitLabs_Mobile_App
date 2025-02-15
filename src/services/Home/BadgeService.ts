@@ -1,4 +1,4 @@
-import API_BASE_URL from "../API_Service";
+import {API_BASE_URL} from '@env';
  
 export const fetchTestStatus = async (userId: number|null, userToken: string|null) => {
   try {

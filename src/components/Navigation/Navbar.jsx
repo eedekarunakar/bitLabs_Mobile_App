@@ -3,12 +3,12 @@ import React, { useState} from "react";
 
 import { View, Image, StyleSheet, Dimensions, TouchableOpacity, Modal, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "../../context/Authcontext";
-import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel';
-import { useProfilePhoto } from '../../context/ProfilePhotoContext';
-import useGoogleSignIn from '../../services/google/google';
-import Notification from "../../assests/icons/notification";
-import UserContext from "../../context/UserContext";
+import { useAuth } from "@context/Authcontext";
+import { useJobAlerts } from '@viewmodel/Alert/Notificationmodel';
+import { useProfilePhoto } from '@context/ProfilePhotoContext';
+import useGoogleSignIn from '@services/google/google';
+import Notification from "@assests/icons/notification";
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const Navbar = () => {

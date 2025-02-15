@@ -8,7 +8,7 @@ import DocumentPicker, {
     DocumentPickerResponse,
   } from "react-native-document-picker";
 import { NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
 
 type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
 

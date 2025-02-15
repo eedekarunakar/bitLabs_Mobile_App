@@ -9,7 +9,7 @@ import { AuthContext } from '@context/Authcontext';
 import { useLoginViewModel, useSignupViewModel } from '@viewmodel/Authviewmodel';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
 import useGoogleSignIn from '@services/google/google'
 import GradientButton from '@components/styles/GradientButton';
  

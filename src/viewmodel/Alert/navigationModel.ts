@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { fetchJobDetails } from '../../services/Alert/NotificationServieces';
+import { fetchJobDetails } from '@services/Alert/NotificationServieces';
 import { JobData } from '@models/Jobs/ApplyJobmodel';
 import { useAuth } from '@context/Authcontext';
 

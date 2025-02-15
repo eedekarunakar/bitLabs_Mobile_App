@@ -13,7 +13,7 @@ import { JobData } from '@models/Jobs/ApplyJobmodel';
 import { useAuth } from '@context/Authcontext';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
  
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();

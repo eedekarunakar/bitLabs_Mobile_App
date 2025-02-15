@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import * as Keychain from 'react-native-keychain';
 import { handleLogin ,handleLoginWithEmail,AuthResponse } from '../services/login/Authservice';
-import { showToast } from '../services/login/ToastService';
+import { showToast } from '@services/login/ToastService';
 import LogoutModal from '../screens/LandingPage/LogoutModel'; // Import the modal component
-import { setLogoutHandler } from '../services/login/ApiClient';
+import { setLogoutHandler } from '@services/login/ApiClient';
 
 interface AuthContextProps {
   isAuthenticated: boolean;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
+import { JobData } from '@models/Jobs/ApplyJobmodel';
 import {API_BASE_URL} from '@env';
 
 

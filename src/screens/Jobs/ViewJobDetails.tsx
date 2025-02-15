@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView,Linking } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
 import { useAuth } from '@context/Authcontext';
 import SemiCircleProgress from '@components/progessBar/SemiCircularProgressBar';
 import { ProfileService } from '@services/profile/ProfileService';

@@ -19,7 +19,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
 import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
 import { useAuth } from '@context/Authcontext';
 import { ApplicantSkillBadge } from '@models/profile/profile';

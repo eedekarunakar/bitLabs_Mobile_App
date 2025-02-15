@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvo
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model';
 import useOtpManager from '../../hooks/useOtpManager';
 import { sendOtp, verifyOtp, resetPassword } from '@services/login/ForgotPasswordService';
 import { ForgotErrors } from '@models/Autherrors';

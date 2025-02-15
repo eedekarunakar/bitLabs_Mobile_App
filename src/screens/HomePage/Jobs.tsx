@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useNavigation, useIsFocused, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../New'; // Import navigation types
+import { RootStackParamList } from '@models/home/model'; // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '@viewmodel/jobs/RecommendedJobs'; // Your ViewModel

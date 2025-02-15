@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imp
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { saveJob, applyJob } from '@services/Jobs/JobDetails'; // Import API functions
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/home/model'; // Ensure this path is correct
 import { useAuth } from '@context/Authcontext';
 import SemiCircleProgress from '@components/progessBar/SemiCircularProgressBar';
 
