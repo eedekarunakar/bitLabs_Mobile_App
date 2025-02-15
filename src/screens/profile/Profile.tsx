@@ -1,7 +1,10 @@
 import React, { useState, useEffect,} from 'react';
 import {
     View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, ActivityIndicator, 
+
+    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator, Dimensions, ToastAndroid
+
+
 } from 'react-native';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
@@ -13,16 +16,27 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RootStackParamList } from '../../../New';
 import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
 import { useAuth } from '../../context/Authcontext';
-import {  ApplicantSkillBadge } from '../../models/profile/profile';
-import LinearGradient from 'react-native-linear-gradient';
+
+import { ApplicantSkillBadge } from '../../models/profile/profile';
+import { ProfileService } from '../../services/profile/ProfileService';
+import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
+import { useProfilePhoto } from '../../context/ProfilePhotoContext';
+import { base64Image } from '../../services/base64Image';
+
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import Fileupload from '../../assests/icons/Fileupload';
+
+import GradientButton from '../../components/styles/GradientButton';
+
+
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
+
     const nav = useNavigation<any>();
+
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
@@ -54,6 +68,7 @@ function ProfileComponent() {
         resumeFile,setResumeFile,showBorder,bgcolor,verified,setShowBorder,isUploadComplete,setIsUploadComplete,hasResume,
         isResumeRemoved,photo
 
+
     } = useProfileViewModel(userToken, userId);
     const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
     const [key, setKey] = useState(0);
@@ -65,6 +80,8 @@ function ProfileComponent() {
         });
         return unsubscribe;
     }, [navigation]);
+
+
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
@@ -123,11 +140,11 @@ function ProfileComponent() {
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                            <Text style={[styles.name, { textAlign:'center', alignSelf: 'center'}]}>
-                            {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
-                            </Text>
-                            {verified&&<Icon1 name="verified" size={25} color="#334584" style={{marginLeft:5}} />}
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
+                                    {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                                </Text>
+                                {verified && <Icon1 name="verified" size={25} color="#334584" style={{ marginLeft: 5 }} />}
 
                             </View>
 
@@ -301,16 +318,11 @@ function ProfileComponent() {
                                     )}
 
                                     <View >
-                                        <LinearGradient
-                                            colors={['#F97316', '#FAA729']} // Gradient colors
-                                            style={styles.button} // Apply styles to the gradient button
-                                            start={{ x: 0, y: 0 }} // Starting point of the gradient
-                                            end={{ x: 1, y: 0 }} // Ending point of the gradient
-                                        >
-                                            <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                                <Text style={{ color: '#fff', fontFamily: 'PlusJakartaSans-Bold', fontSize: 14, }}>Save Changes</Text>
-                                            </TouchableOpacity>
-                                        </LinearGradient>
+                                        <GradientButton
+                                            title="Save Changes"
+                                            onPress={handleSaveChanges}
+                                            style={styles.button} // Apply button styles         
+                                        />
                                     </View>
                                 </View>
                             </View>
@@ -461,31 +473,25 @@ function ProfileComponent() {
 
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]} onPress={handleSaveResume} disabled={isUploadComplete}>
-                                {
-                                    isUploadComplete ? (
-                                        <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
-                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
-                                        </View>
 
-
-                                    ) : (
-                                        <LinearGradient
-                                            colors={['#F97316', '#FAA729']} // Gradient colors
-                                            style={styles.button} // Apply styles to the gradient button
-                                            start={{ x: 0, y: 0 }} // Starting point of the gradient
-                                            end={{ x: 1, y: 0 }} // Ending point of the gradient
-                                        >
-                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
-
-
-                                        </LinearGradient>
-
-                                    )
-                                }
+                            <TouchableOpacity
+                                style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]}
+                                onPress={handleSaveResume}
+                                disabled={isUploadComplete}
+                            >
+                                {isUploadComplete ? (
+                                    <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
+                                        <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+                                    </View>
+                                ) : (
+                                    <GradientButton
+                                        title="Save Changes"
+                                        onPress={handleSaveResume}
+                                        style={styles.button} // Apply button styles
+                                    />
+                                )}
 
                             </TouchableOpacity>
-
                         </View>
                     </View>
                 </Modal>
@@ -944,5 +950,4 @@ const styles = StyleSheet.create({
 
 });
 export default ProfileComponent;
-
 

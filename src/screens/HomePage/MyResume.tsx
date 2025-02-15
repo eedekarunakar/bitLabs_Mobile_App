@@ -14,8 +14,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import RNFS from 'react-native-fs';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
-
-
+ 
+ 
 const PDFExample = () => {
   const userid = useAuth();
   const [pdfUri, setPdfUri] = useState<string | null>(null);
@@ -26,7 +26,7 @@ const PDFExample = () => {
 
     try {
       setLoading(true);
-
+ 
       console.log('userid:', userid.userId);
       const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
       console.log(response);
@@ -42,6 +42,7 @@ const PDFExample = () => {
   finally {
     setLoading(false);
   }
+
 
 
 };
@@ -61,7 +62,6 @@ const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
   }
   return btoa(binary);
 };
-
 
 const source = { uri: pdfUri };
 const downloadFile = async () => {
@@ -93,6 +93,7 @@ const downloadFile = async () => {
     return;
   }
 
+
   const fileName = `Resume_${new Date().getTime()}.pdf`;
   const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
 
@@ -122,8 +123,10 @@ const downloadFile = async () => {
 };
 
 
+
 return (
   <SafeAreaView style={{ flex: 1 }}>
+
 
     <View style={styles.headerContainer}>
       <Text style={styles.title}>My Resume</Text>
@@ -144,6 +147,7 @@ return (
         <View>
           <Resumebanner width={130} height={130} />
         </View>
+
 
       </LinearGradient>
       <View style={styles.pdfContainer}>
@@ -182,11 +186,11 @@ return (
   </SafeAreaView>
 );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+ 
     paddingHorizontal: 20,
     paddingTop: 10,
     backgroundColor: '#fff',
@@ -204,7 +208,7 @@ const styles = StyleSheet.create({
   pdfContainer: {
     flex: 1,
     marginTop: 10,
-
+ 
   },
   pdf: {
     flex: 1,

@@ -1,18 +1,17 @@
-
 import React, {useState, useEffect,useContext} from 'react';
-
+ 
 import Navbar from '../../components/Navigation/Navbar';
-
+ 
 import ExploreSection from "../../components/home/ExploreSection"; // Hook for fetching job counts
 import { useAuth } from '../../context/Authcontext';
 import { RootStackParamList } from '../../../New';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+ 
 import { useMessageContext, } from '../LandingPage/welcome';
 import ProfileService from '../../services/profile/ProfileService';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
-
+ 
 import UserContext from '../../context/UserContext';
 import {
   View,
@@ -24,17 +23,17 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-
-
+ 
+ 
 import LinearGradient from 'react-native-linear-gradient';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
+ 
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
-
+ 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
-
+ 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
-
+ 
 function Dashboard() {
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
@@ -44,17 +43,17 @@ function Dashboard() {
   useEffect(() => {
     console.log('Dashboard route.params:', route.params); // Debug log
   }, [route.params]);
-
-
-
-
+ 
+ 
+ 
+ 
   // Use the useJobCounts hook to fetch job counts
   // const { jobCounts, loading, error } = useJobCounts(userId, userToken);
   const { setmsg } = useMessageContext();
-
-
-
-
+ 
+ 
+ 
+ 
   const navigation = useNavigation<NavigationProp>();
   console.log("verified status = ", verifiedStatus)
   console.log("personal name =  ", personalName)
@@ -72,7 +71,7 @@ function Dashboard() {
       </View>
     );
   }
-
+ 
   // Handle error state
   // if (error) {
   //   return (
@@ -81,7 +80,7 @@ function Dashboard() {
   //     </View>
   //   );
   // }
-
+ 
   return (
     <View style={styles.container}>
       <Navbar />
