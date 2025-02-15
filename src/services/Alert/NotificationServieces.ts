@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { JobData } from '../../models/Jobs/ApplyJobmodel';
-import API_BASE_URL from '../API_Service';
-const API_URL = API_BASE_URL;
+import apiClient from '../login/ApiClient';
+
 
 export interface JobAlert {
   alertsId: string;
@@ -16,7 +15,7 @@ export interface JobAlert {
 
 export const fetchJobAlerts = async (userId: number|null, userToken: string|null): Promise<JobAlert[]> => {
   try {
-    const response = await axios.get(`${API_URL}/applyjob/applicant/job-alerts/${userId}`, {
+    const response = await apiClient.get(`/applyjob/applicant/job-alerts/${userId}`, {
       headers: { Authorization: `Bearer ${userToken}` },
     });
     return response.data;
@@ -28,8 +27,8 @@ export const fetchJobAlerts = async (userId: number|null, userToken: string|null
 
 export const markAlertAsSeen = async (alertId: string, userToken: string|null): Promise<void> => {
   try {
-    await axios.put(
-      `${API_URL}/applyjob/applicant/mark-alert-as-seen/${alertId}`,
+    await apiClient.put(
+      `/applyjob/applicant/mark-alert-as-seen/${alertId}`,
       {},
       { headers: { Authorization: `Bearer ${userToken}` } }
     );
@@ -39,18 +38,6 @@ export const markAlertAsSeen = async (alertId: string, userToken: string|null): 
   }
 };
 
-
-// export async function fetchJobData(jobId: number,userToken:string|null): Promise<JobData> {
-//   try {
-//     const response = await axios.get<JobData>(`https://g23jza8mtp.ap-south-1.awsapprunner.com/viewjob/applicant/viewjob/${jobId}`, {
-//       headers: { Authorization: `Bearer ${userToken}` },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching job data:', error);
-//     throw error;
-//   }
-// }
 
 const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
   return {
@@ -82,8 +69,8 @@ const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
 
 export const fetchJobDetails = async (jobId: number|null, userToken: string | null,apply:number) => {
   try {
-    const response = await axios.get(
-      `${API_URL}/viewjob/applicant/viewjob/${jobId}`,
+    const response = await apiClient.get(
+      `/viewjob/applicant/viewjob/${jobId}`,
       {
         headers: { Authorization: `Bearer ${userToken}` },
       }

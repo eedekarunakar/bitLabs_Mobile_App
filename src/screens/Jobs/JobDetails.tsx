@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, ActivityIndicator } from 'react-native';
+
+import React, { useState, useEffect, useContext } from 'react';
+
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, ActivityIndicator ,Linking} from 'react-native';
+
+
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { saveJob, applyJob } from '../../services/Jobs/JobDetails'; // Import API functions
-import { JobData } from '../../models/Jobs/ApplyJobmodel'; // Import types
 import { RootStackParamList } from '../../../New';
 import { useAuth } from '../../context/Authcontext';
 import SemiCircleProgress from '../../components/progessBar/SemiCircularProgressBar';
-import { ProfileService } from '../../services/profile/ProfileService';
+
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
-import { Linking } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Savejob from '../../assests/icons/Savejob';
 import Alertcircle from '../../assests/icons/Alertcircle';
 import Savedjob from '../../assests/icons/Savedjob';
+import UserContext from '../../context/UserContext';
+import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs';
 import Icon from 'react-native-vector-icons/Feather';
 
 // Type for navigation prop
@@ -32,15 +36,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const { job } = route.params; // job data passed from the previous screen
   const [isJobSaved, setIsJobSaved] = useState(false);
   const { userToken, userId } = useAuth();
+  const { reloadJobs } = useRecommendedJobsViewModel();
   const [isJobApplied, setIsJobApplied] = useState(false);
-  const [skills, setSkills] = useState<string[]>([]); // Explicitly setting the type as string[]
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
-  const [matchedSkills, setMatchedSkills] = useState<string[]>([]);
   const [percent, setPercent] = useState<number>(0);
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
+
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext)
 
 
 
@@ -59,7 +64,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   ];
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`; 
+    return `${monthNames[month - 1]} ${day}, ${year}`;
   };
   const courseUrlMap: Record<string, any> = {
     "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
@@ -75,43 +80,24 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
     const fetchProfileData = async () => {
       try {
-        const profileData = await ProfileService.fetchProfile(userToken, userId);
-        const applicantSkills = profileData.skillsRequired.map((skill: { skillName: string }) =>
-          skill.skillName.toUpperCase()
-        );
-
         const jobData = await fetchJobDetails(job.id, userId, userToken);
 
         setSkillProgressText(jobData.matchStatus);
         const Scourse = jobData.sugesstedCourses;
 
-        // setSkills(job.skillsRequired.map((skill:any) => skill.skillName as string));
-        setSkills(job.skillsRequired.map((skill: { skillName: string }) => skill.skillName.toUpperCase()));
         setSuggestedCourses(Scourse);
 
         const matchPercentage = jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-        // const matchskill = jobData.matchedSkills.map(skill => skill.skillName.toUpperCase());
-        // console.log("matchskill", matchskill);
-
-
-
-
-        //   const perfectMatchedSkills = applicantSkills.filter((skill:any) => combinedSkills.includes(skill));
-
-        // // Find unmatched skills
-        // const unmatchedSkills = combinedSkills.filter(skill => !applicantSkills.includes(skill));
+   
 
 
         setPerfectMatchSkills(jobData.matchedSkills.map((skill: any) => skill.skillName));
         setUnmatchedSkills(skillsRequired);
-        //   const matchPercentage = (perfectMatchedSkills.length / combinedSkills.length) * 100;
 
         setPercent(matchPercentage);
       } catch (error) {
         console.error('Error fetching profile data:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -123,7 +109,12 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       const result = await saveJob(job.id, userId, userToken);
       if (result) {
         setIsJobSaved(true);
-        // Alert.alert('Success', 'Job saved successfully!');
+
+        setIsJobsLoaded(false);
+        refreshJobCounts();
+        console.log('loading recommended for saved')
+        // reloadJobs(); // Reload jobs
+
         Toast.show({
           type: 'success',
           text1: '',
@@ -142,10 +133,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           bottomOffset: 80,
           visibilityTime: 5000
         });
+        // Alert.alert('Success', 'Job saved successfully!')
+     
       }
     } catch (error) {
       console.error('Error saving job:', error);
-      // Alert.alert('Error', 'Failed to save job.');
       Toast.show({
         type: 'error',
         text1: '',
@@ -158,7 +150,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         text2Style: {
           fontSize: 12,
           fontFamily: 'PlusJakartaSans-Bold',
-           color: 'black'
+          color: 'black'
         },
         position: 'bottom',
         bottomOffset: 80,
@@ -172,7 +164,18 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
       const result = await applyJob(userId, job.id, userToken);
       if (result) {
         setIsJobApplied(true);
+
+        console.log("loading for apply job")
+        setIsJobsLoaded(false);
+        refreshJobCounts();
         // Alert.alert('Success', 'Job application submitted successfully!');
+       
+        
+        
+        // reloadJobs(); // Reload jobs
+
+        // After reload, mark as loaded
+
         Toast.show({
           type: 'success',
           text1: '',
@@ -189,10 +192,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           bottomOffset: 80,
           visibilityTime: 5000, // Set toast visibility duration to 5 seconds
         });
+         refreshJobCounts();
+        console.log('loading recommended for applied ')
+        
       }
     } catch (error) {
       console.error('Error applying for job:', error);
-      // Alert.alert('Error', 'Failed to apply for job.');
+  
       Toast.show({
         type: 'error',
         text1: '',
@@ -210,12 +216,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         visibilityTime: 5000, // Set toast visibility duration to 5 seconds
       });
     }
-  };
-  <View style={isLoading ? styles.loader : null}>
-    {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
-  </View>
+  }
 
-  // const percentageMatch = matchPercentage;
 
   return (
 
@@ -242,7 +244,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
 
 
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' ,marginLeft:10}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center', marginLeft: 10 }}>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
               <Image
@@ -257,13 +259,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Text style={{ fontSize: 13 }}>₹ </Text>
+              <Text style={{ fontSize: 13 }}>{"\u20B9"}</Text>
                 <Text style={styles.ovalText}>{job.minSalary.toFixed(2)} -  {job.maxSalary.toFixed(2)} LPA  </Text>
                 <Text style={{ color: '#E2E2E2' }}>  |</Text>
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11,fontFamily:'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
+              <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans-Medium' }}>{job.employeeType}</Text>
             </View>
           </View>
           <View>
@@ -285,30 +287,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* <View style={styles.skillsContainer}>
-          {skills.map((skill: string, index: number) => (
-            <Text key={index} style={matchedSkills.includes(skill) ? [styles.skillTag, styles.matchedSkill] : styles.skillTag}>
-              {skill}
-            </Text>
-          ))}
-        </View> */}
-          {/* <View style={styles.skillsContainer}>
-  {skills
-    .filter(skill => perfectMatchSkills.includes(skill))
-    .map((skill, index) => (
-      <Text key={index} style={[styles.skillTag, styles.matchedSkills]}>
-        {skill}
-      </Text>
-    ))}
-  
-  {skills
-    .filter(skill => unmatchedSkills.includes(skill))
-    .map((skill, index) => (
-      <Text key={index} style={[styles.skillTag, styles.unmatchedSkill]}>
-        {skill}
-      </Text>
-    ))}
-</View> */}
 
           <View style={styles.skillsContainer}>
             {perfectMatchSkills.map((skill, index) => (
@@ -332,14 +310,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </Text>
         </View>
 
-        {/* Suggested Courses Container */}
+
         {suggestedCourses && suggestedCourses.length > 0 && (
           <View style={styles.jobCard}>
             <Text style={styles.jobdestitle}>Suggested Courses</Text>
             <View>
               {suggestedCourses.map((course, index) => (
                 <View key={index} style={styles.courseCard}>
-                  {/* Check if the course has a matching image */}
+           
                   {courseImages[course] ? (
                     <TouchableOpacity
                       style={styles.imageRow}
@@ -366,7 +344,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
       <View style={styles.footerContainer}>
 
-        {/* Save Job Button */}
+
         {isJobSaved ? (
           <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
             <View style={styles.buttonContent}>
@@ -380,22 +358,19 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             onPress={handleSaveJob}
           >
             <View style={styles.buttonContent}>
-              {/* <Image
-                source={require('../../assests/Images/bookmark.png')} // Replace with your image path
-                style={styles.buttonImage}
-              /> */}
+ 
               <Savejob height={18} width={18} />
               <Text style={styles.buttonText}> Save Job</Text>
             </View>
           </TouchableOpacity>
         )}
 
-        {/* Apply Now Button */}
+
         {isJobApplied ? (
           <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-               <Icon name="check" size={18} color="white" />
-              <Text style={styles.appliedButtonText}>Applied</Text> 
+              <Icon name="check" size={18} color="white" />
+              <Text style={styles.appliedButtonText}>Applied</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -524,7 +499,7 @@ const styles = StyleSheet.create({
     margin: 12,
     marginBottom: 2,
     paddingHorizontal: 8,
-    
+
   },
   row: {
     flexDirection: 'row',

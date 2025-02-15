@@ -1,45 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import axios, { AxiosError } from 'axios';
-import * as CryptoJS from 'crypto-js';
 import { useAuth } from '../../context/Authcontext';
-import * as Keychain from 'react-native-keychain';
 import { useNavigation } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/AntDesign';
-import API_BASE_URL from '../../services/API_Service';
-import Toast from 'react-native-toast-message';
-
-const secretKey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
-
-const encryptPassword = (password: string, secretkey: string) => {
-  const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV (16 bytes for AES)
-  const encryptedPassword = CryptoJS.AES.encrypt(
-    password,
-    CryptoJS.enc.Utf8.parse(secretkey),
-    {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    },
-  ).toString();
-  return { encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64) };
-};
-
+import Navbar from '../../components/styles/Head';
+import ActionButtons from '../../components/styles/ActionButton';
+import { useChangePasswordViewModel } from '../../viewmodel/ChangePasswordViewModel';
+import Toast from 'react-native-toast-message'
 const ChangePasswordScreen = () => {
-  const [oldPassword, setOldPassword] = useState<string>('');
-  const [newPassword, setNewPassword] = useState<string>('');
-  const [reEnterPassword, setReEnterPassword] = useState<string>('');
-  const [message, setMessage] = useState<string | null>('');
-  const [oldMessage, setOldMessage] = useState<string | null>('');
-  const [newMessage, setNewMessage] = useState<string | null>('');
-  const [reEnterMessage, setReEnterMessage] = useState<string | null>('');
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showReEnterPassword, setShowReEnterPassword] = useState(false);
-  const [visibleField, setVisibleField] = useState<string | null>(null);
   const { userToken, userId } = useAuth();
   const navigation = useNavigation();
+  const {
+    oldPassword,
+    setOldPassword,
+    newPassword,
+    setNewPassword,
+    reEnterPassword,
+    setReEnterPassword,
+    message,
+    oldMessage,
+    newMessage,
+    reEnterMessage,
+    showOldPassword,
+    setShowOldPassword,
+    showNewPassword,
+    setShowNewPassword,
+    showReEnterPassword,
+    setShowReEnterPassword,
+    handleFocus,
+    validatePassword,
+    handleChangePassword,
+  } = useChangePasswordViewModel(userToken ?? '', userId?.toString() ?? '');
 
   const handleBackButton = (): void => {
     navigation.goBack();
@@ -50,153 +40,6 @@ const ChangePasswordScreen = () => {
     setShowNewPassword(false);
     setShowReEnterPassword(false); // Hide all password fields when dismissing the keyboard
     Keyboard.dismiss();
-  };
-
-  const handleFocus = (field: string) => {
-    if (field === 'old') {
-      setShowNewPassword(false);
-      setShowReEnterPassword(false);
-    } else if (field === 'new') {
-      setShowOldPassword(false);
-      setShowReEnterPassword(false);
-    } else if (field === 'reEnter') {
-      setShowOldPassword(false);
-      setShowNewPassword(false);
-    }
-  };
-
-  const validatePassword = (password: string, type: 'old' | 'new' | 'reEnter') => {
-    const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!password) {
-      if (type === 'old') setOldMessage('Old password is required.');
-      if (type === 'new') setNewMessage('New password is required.');
-      if (type === 'reEnter') setReEnterMessage('Confirm password is required.');
-    } else {
-      if (type === 'new' && !passwordValidationRegex.test(password)) {
-        setNewMessage(
-          'New password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, one special character, and no spaces.'
-        );
-      } else {
-        if (type === 'old') setOldMessage(null);
-        if (type === 'new') setNewMessage(null);
-      }
-    }
-
-    if (type === 'reEnter' && password !== newPassword) {
-      setReEnterMessage('Passwords do not match.');
-    } else {
-      if (type === 'reEnter') setReEnterMessage(null);
-    }
-  };
-
-  const handleChangePassword = async (): Promise<void> => {
-    setOldMessage(null);
-    setNewMessage(null);
-    setReEnterMessage(null);
-    setMessage(null);
-
-    // Ensure all fields are filled
-    if (!oldPassword || !newPassword || !reEnterPassword) {
-      if (!oldPassword) setOldMessage('Old password is required');
-      if (!newPassword) setNewMessage('New password is required');
-      if (!reEnterPassword) setReEnterMessage('Confirm password is required');
-      return;
-    }
-
-    // Check if old and new passwords are the same
-    if (oldPassword === newPassword) {
-      setMessage('Old password and new password cannot be the same');
-      return;
-    }
-
-    const oldPasswordEncrypt = encryptPassword(oldPassword, secretKey);
-    const newPasswordEncrypt = encryptPassword(newPassword, secretKey);
-
-    const formData = {
-      oldPassword: oldPasswordEncrypt.encryptedPassword,
-      newPassword: newPasswordEncrypt.encryptedPassword,
-      ivOld: oldPasswordEncrypt.iv,
-      ivNew: newPasswordEncrypt.iv,
-    };
-
-    try {
-      const result = await Keychain.getGenericPassword();
-
-      const jwtToken = result ? result.password : null; // Retrieve JWT token from keychain
-
-      if (!jwtToken) {
-        const response = await axios.post(
-          `${API_BASE_URL}/applicant/authenticateUsers/${userId}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-            },
-          }
-        );
-
-        if (
-          response.status === 200 &&
-          response.data === 'Password updated and stored'
-        ) {
-          Toast.show({
-            type: 'success',
-            position: 'bottom',
-            text1: 'Password changed successfully',
-            text2: 'Your password has been updated.',
-            visibilityTime: 5000,
-          });
-        } else {
-          Toast.show({
-            type: 'error',
-            position: 'bottom',
-            text1: 'Error',
-            text2: response.data.message || 'Old password is incorrect',
-            visibilityTime: 5000,
-          });
-        }
-      } else {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: 'Error',
-          text2: 'JWT Token not found',
-          visibilityTime: 5000,
-        });
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errResponse = error as AxiosError;
-        if (errResponse.response) {
-          if (errResponse.response.status === 400) {
-            Toast.show({
-              type: 'error',
-              position: 'bottom',
-              text1: 'Error',
-              text2: 'Old password is incorrect',
-              visibilityTime: 5000,
-            });
-          } else {
-            Toast.show({
-              type: 'error',
-              position: 'bottom',
-              text1: 'Unknown Error',
-              text2: 'An unexpected error occurred',
-              visibilityTime: 5000,
-            });
-          }
-        }
-      } else {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: 'Unknown Error',
-          text2: 'An unexpected error occurred',
-          visibilityTime: 5000,
-        });
-      }
-    }
   };
 
   const renderPasswordField = (
@@ -210,7 +53,6 @@ const ChangePasswordScreen = () => {
     <View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
-        // secureTextEntry={visibleField !== field}
         secureTextEntry={!showPassword}
         value={value}
         onChangeText={(text) => {
@@ -237,29 +79,15 @@ const ChangePasswordScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Image
-            source={require('../../assests/Images/logo.png')}
-            style={styles.logo}
-          />
-        </View>
-        <View style={styles.separator} />
-
-        <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={handleBackButton} style={styles.backButton}>
-            <Icon name="left" size={24} color="#495057" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Change Password</Text>
-        </View>
-        <View style={styles.separator} />
-
+        <Navbar title="Change Password" onBackPress={() => navigation.goBack()} />
+ 
         {renderPasswordField(
           oldPassword,
           setOldPassword,
           'old',
-
+ 
           'Old Password',
-
+ 
           showOldPassword,
           setShowOldPassword,
         )}
@@ -272,9 +100,9 @@ const ChangePasswordScreen = () => {
           newPassword,
           setNewPassword,
           'new',
-
+ 
           'New Password',
-
+ 
           showNewPassword,
           setShowNewPassword,
         )}
@@ -283,14 +111,14 @@ const ChangePasswordScreen = () => {
             {newMessage}
           </Text>
         ) : null}
-
+ 
         {renderPasswordField(
           reEnterPassword,
           setReEnterPassword,
           'reEnter',
-
+ 
           'Confirm Password',
-
+ 
           showReEnterPassword,
           setShowReEnterPassword
         )}
@@ -299,44 +127,27 @@ const ChangePasswordScreen = () => {
             {reEnterMessage}
           </Text>
         ) : null}
-
+ 
         {message ? (
           <Text style={[styles.message, message === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
             {message}
           </Text>
         ) : null}
-
-        <View style={[styles.buttonContainer, { alignSelf: 'center' }]}>
-          <TouchableOpacity style={styles.backButtonBottom} onPress={handleBackButton}>
-            <Text style={{
-              color: '#F46F16',
-              fontSize: 15,
-              fontFamily: 'PlusJakartaSans-Bold',
-            }}>Back
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleChangePassword}
-            style={styles.backButtonBottom}>
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.applyButtonGradient]}
-            >
-              <Text style={styles.buttonText}>Save</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+ 
+        <ActionButtons
+          onPressAction={handleChangePassword}
+          actionTitle="Save"
+          onPressBack={handleBackButton} // Since the back button is needed here
+        />
       </View>
     </TouchableWithoutFeedback>
   );
 };
-
-
+ 
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     padding: 2,
     backgroundColor: '#FFFFFF',
   },
@@ -386,12 +197,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   successMessage: {
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize:12
+    fontSize: 12
   },
   errorMessage: {
     color: 'red',
@@ -400,36 +211,9 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     textAlign: 'justify',
     marginTop: -6,
-    fontSize:12
+    fontSize: 12
   },
-
-  navbar: {
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    marginBottom: 16,
-    marginTop: 10,
-  },
-  logo: {
-    width: 120,
-    height: 40,
-    resizeMode: 'contain',
-
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#D3D3D3',
-    width: '100%',
-    marginTop: 8,
-  },
-  applyButtonGradient: {
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
+ 
   button: {
     flex: 1,
     height: 50,
@@ -438,12 +222,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#F97316'
   },
-  headerContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    height: 50,
-    backgroundColor: '#FFF'
-  },
+ 
   headerImage: {
     width: 20, // Adjust size as needed
     height: 20,
@@ -453,45 +232,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#000',
   },
-
-  backButton: {
-    position: 'absolute',
-    left: 15,
-  },
-  title: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: '#495057',
-    lineHeight: 25,
-    marginLeft: 50
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly', // Distribute space evenly
-    alignItems: 'center',
-    position: 'absolute',
-    width: '100%',
-    bottom: 20,
-    paddingHorizontal: 16,
-   
-
-  },  
-  backButtonBottom: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#F46F16',
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 8,
-    width:'43%' // Add consistent spacing
-  },
-  buttonText: {
-    color: '#fff',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
+ 
+ 
+ 
 });
-
+ 
 export default ChangePasswordScreen;

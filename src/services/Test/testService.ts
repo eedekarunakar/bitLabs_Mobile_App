@@ -1,9 +1,5 @@
-import axios from 'axios';
-import API_BASE_URL from '../API_Service';
+import apiClient from "../login/ApiClient";
 // Create Axios instance with base URL
-const apiClient = axios.create({
-  baseURL: API_BASE_URL, // Your base API URL
-});
 
 // Function to submit test results
 export const submitTestResult = async (userId: number, testDetails: object, jwtToken: string | null) => {
