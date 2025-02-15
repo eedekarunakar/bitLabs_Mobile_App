@@ -41,18 +41,6 @@ const nav = useNavigation<navigation>();
     });
   };
 
-  const handleSave = () => {
-    if (!resumeFile) {
-      return;
-    }
-
-    setErrorMessage('');
-
-    setTimeout(() => {
-        nav.navigate('BottomTab', { shouldShowStep1: false, welcome: 'Welcome' });
-    }, 100);
-  };
-
   const handleAPI = async () => {
     try {
       const requestData = {
@@ -73,6 +61,7 @@ const nav = useNavigation<navigation>();
 
       if (response) {
         navigation();
+        
       }
     } catch (error) {
       console.error('Error creating profile:', error);
@@ -168,7 +157,6 @@ const nav = useNavigation<navigation>();
     progress,
     showBorder,
     bgcolor,
-    handleSave,
     handleAPI,
     handleUploadResume,
     handleCancelUpload,
