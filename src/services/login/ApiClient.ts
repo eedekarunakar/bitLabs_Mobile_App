@@ -2,9 +2,14 @@ import axios from 'axios';
 import { Alert } from 'react-native';
 import {API_BASE_URL} from '@env';
 
-let logoutHandler: (() => void) | null = null; //  Store logout function globally
+let logoutHandler: (() => void) | null = null;
+let sessionExpiredAlertActive = false;
 
-//  Function to set logout handler from AuthContext
+let interceptorId: number | null = null; // Store interceptor ID
+let lastNoInternetAlertTime = 0; // timestamp in milliseconds
+
+
+// Function to set logout handler from AuthContext
 export const setLogoutHandler = (logoutFn: () => void) => {
   logoutHandler = logoutFn;
 };
@@ -15,44 +20,62 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
-//Interceptor to chec internet connection
 
+// Interceptor to handle errors
+const responseInterceptor = async (error: any) => {
+ // Handle no internet / network errors:
+ if (!error.response) {
+  const now = Date.now();
+  // Check if 4 minutes have passed since the last no internet alert
+  if (now - lastNoInternetAlertTime > 1 * 60 * 1000) {
+    lastNoInternetAlertTime = now;
+    Alert.alert(
+      'No Internet Connection',
+      'Please check your internet connection and try again.',
+      [{ text: 'OK' }]
+    );
+  }
+  return Promise.reject(error);
+}
 
-
-//  Interceptor to handle expired token
-apiClient.interceptors.response.use(
-  response => response,
-
-  async (error) => {
-     // Check for network error (no response received)
-     if (!error.response ) {
-      console.log(error.message)
-      Alert.alert(
-        'No Internet Connection',
-        'Please check your internet connection and try again.',
-        [{ text: 'OK' }]
-      );
-      // Optionally, you can return here or continue to reject the error.
-      return Promise.reject(error);
-
-    }
-
-    if (error.response?.status === 401 || error.response?.status === 403 ) {
+  if (error.response?.status === 401 || error.response?.status === 403) {
+    if (!sessionExpiredAlertActive) {
+      sessionExpiredAlertActive = true; // Activate the flag so it won't trigger again immediately
       console.log('Token expired! Logging out...');
 
       if (logoutHandler) {
-        logoutHandler(); //  Log out user
+        logoutHandler(); // Log out user
       }
 
       Alert.alert(
         'Session Expired',
         'Your session has expired. Please log in again.',
-        [{ text: 'OK' }]
+        [{
+          text: 'OK',
+          onPress: () => {
+            sessionExpiredAlertActive = false; // Reset flag after user acknowledges alert
+          },
+        }]
+
       );
     }
-
-    return Promise.reject(error);
   }
+
+  return Promise.reject(error);
+};
+
+// Add interceptor and store ID
+interceptorId = apiClient.interceptors.response.use(
+  response => response,
+  responseInterceptor
 );
+
+// Function to remove interceptors when logging out
+export const removeInterceptors = () => {
+  if (interceptorId !== null) {
+    apiClient.interceptors.response.eject(interceptorId);
+    interceptorId = null; // Reset ID
+  }
+};
 
 export default apiClient;

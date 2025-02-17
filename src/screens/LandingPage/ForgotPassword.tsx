@@ -1,134 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@models/home/model';
-import useOtpManager from '../../hooks/useOtpManager';
-import { sendOtp, verifyOtp, resetPassword } from '@services/login/ForgotPasswordService';
-import { ForgotErrors } from '@models/Autherrors';
 import Navbar from '@components/styles/Head';
 import ActionButtons from '@components/styles/ActionButton';
- 
+import { useForgotPasswordViewModal } from '@viewmodel/ForgotPasswordViewModal';
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState<ForgotErrors>({});
-  const { otp, setOtp, otpReceived, setOtpReceived, isOtpExpired, setIsOtpExpired, timer, setTimer, isOtpValid, setOtpValid } = useOtpManager();
-  const [isOtpVerified, setOtpVerified] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isResetPasswordVisible, setIsResetPasswordVisible] = useState(false);
+  const {
+    email,
+     setEmail,
+    errors,
+    otp,
+    setOtp,
+    otpReceived,
+    setOtpReceived,
+    isOtpExpired,
+    setIsOtpExpired,
+    timer,
+    setTimer,
+    isOtpValid,
+    setOtpValid,
+    isOtpVerified,
+    setOtpVerified,
+    newPassword,
+    setNewPassword,
+    confirmPassword,
+    setConfirmPassword,
+    sendOTP,
+    verifyOTP,
+    resetUserPassword,
+    isPasswordVisible,
+    setIsPasswordVisible,
+    isResetPasswordVisible,
+    setIsResetPasswordVisible
+  } = useForgotPasswordViewModal();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
- 
-  const showToast = (type: 'success' | 'error', message: string) => {
-    Toast.show({
-      type: type,
-      text1: message,
-      position: 'bottom',
-      visibilityTime: 5000,
-    });
-  };
- 
-  useEffect(() => {
-    if (otpReceived && !isOtpExpired) {
-      const interval = setInterval(() => {
-        if (timer > 0) {
-          setTimer(prevTimer => prevTimer - 1);
-        } else {
-          setIsOtpExpired(true);
-          clearInterval(interval);
-        }
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [otpReceived, timer, isOtpExpired, setTimer, setIsOtpExpired]);
- 
-  useEffect(() => {
- 
-  }, [errors]);
- 
-  const isValidEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      setErrors((prevErrors) => ({ ...prevErrors, email: 'E-mail is required' }));
-    } else if (!regex.test(email)) {
-      setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid E-mail' }));
-    } else {
-      setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
-    }
-    return regex.test(email);
-  };
- 
-  const sendOTP = async () => {
-    if (isValidEmail(email)) {
-      const result = await sendOtp(email);
-      if (result.success) {
-        setOtpReceived(true);
-        setTimer(60);
-        setIsOtpExpired(false);
-        showToast('success', 'OTP sent successfully');
-      } else {
-        setErrors((prevErrors) => ({ ...prevErrors, email: result.message }));
-        showToast('error', 'Error sending OTP');
-      }
-    } else {
-      console.log('Invalid ');
-    }
-  };
- 
-  const verifyOTP = async () => {
-    const result = await verifyOtp(otp, email);
-    if (result.success) {
-      setOtpVerified(true);
-      showToast('success', 'OTP verified successfully');
-    } else {
-      setOtpValid(false);
-      setTimeout(() => setOtpValid(true), 3000);
- 
-    }
-  };
- 
-  const validatePassword = () => {
-    const newErrors: ForgotErrors = {}; // Create a new errors object
- 
-    if (!newPassword) {
-      newErrors.password = 'Password is required';
-    } else if (newPassword.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
-    } else if (!/[A-Z]/.test(newPassword)) {
-      newErrors.password = 'Password must contain at least one uppercase letter';
-    } else if (!/[!@#$%^&*]/.test(newPassword)) {
-      newErrors.password = 'Password must contain at least one special character';
-    } else if (!/\d/.test(newPassword)) {
-      newErrors.password = 'Password must contain at least one digit';
-    } else if (/\s/.test(newPassword)) {
-      newErrors.password = 'Password cannot contain any spaces';
-    }
- 
-    if (newPassword !== confirmPassword) {
-      newErrors.password = 'Passwords do not match';
-    }
- 
-    setErrors(newErrors); // Update state with the new errors object
- 
-    return Object.keys(newErrors).length === 0; // Return true if there are no errors
-  };
- 
-  const resetUserPassword = async () => {
-    if (validatePassword()) {
-      const result = await resetPassword(email, newPassword, confirmPassword);
-      if (result.success) {
-        navigation.navigate('LandingPage');
-        showToast('success', 'Password reset Successfully');
-      } else {
-        console.log(newPassword, confirmPassword);
-        console.log('Error resetting password');
-        showToast('error', 'Error resetting Password');
-      }
-    }
-  };
- 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <View style={styles.container}>

@@ -75,7 +75,7 @@ const RecommendedJobs = () => {
   // Load more jobs when the user scrolls to the bottom
   const loadMoreJobs = () => {
     if (visibleJobsCount < jobs.length) {
-      setVisibleJobsCount(visibleJobsCount + 10); // Load 10 more jobs
+      setVisibleJobsCount(visibleJobsCount + 16); // Load 10 more jobs
     }
   };
  

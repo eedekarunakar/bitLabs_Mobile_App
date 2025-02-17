@@ -1,4 +1,4 @@
-import React, { useCallback} from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,21 +10,20 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native'; // Import the useFocusEffect hook
-import Navbar from '@components/Navigation/Navbar';
+import { useFocusEffect } from '@react-navigation/native'; // Import the useFocusEffect hook
 import Icon from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
-import {useProfileViewModel} from '@viewmodel/Profileviewmodel';
-import {useAuth} from '@context/Authcontext';
-import {useBadgeViewModel} from '@viewmodel/BadgeViewModel';
+import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
+import { useAuth } from '@context/Authcontext';
+import { useBadgeViewModel } from '@viewmodel/BadgeViewModel';
 import {
   fetchSkillBadges,
   fetchTestStatus,
 } from '@services/Home/BadgeService';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const Badge = ({navigation}: any) => {
+const Badge = ({ navigation }: any) => {
   const {
     selectedStep,
     timer,
@@ -35,40 +34,39 @@ const Badge = ({navigation}: any) => {
     loading,
     applicantSkillBadges,
   } = useBadgeViewModel();
-  const {userId, userToken} = useAuth();
-  const {profileData} = useProfileViewModel(userToken, userId);
-  const applicant = profileData?.applicant || {};
-  const {skillsRequired = []} = profileData || {}; // Default to an empty array if skills are missing
+  const { userId, userToken } = useAuth();
+  const { profileData } = useProfileViewModel(userToken, userId);
+  const { skillsRequired = [], basicDetails } = profileData || {}; // Default to an empty array if skills are missing
 
   const testImage: Record<string, any> = {
-    Angular: require('../../assests/Images/Test/Angular.png'),
-    Java: require('../../assests/Images/Test/Java.png'),
-    C: require('../../assests/Images/Test/C.png'),
-    'C++': require('../../assests/Images/Test/CPlusPlus.png'),
-    'C Sharp': require('../../assests/Images/Test/CSharp.png'),
-    CSS: require('../../assests/Images/Test/CSS.png'),
-    Django: require('../../assests/Images/Test/Django.png'),
-    '.Net': require('../../assests/Images/Test/DotNet.png'),
-    Flask: require('../../assests/Images/Test/Flask.png'),
+    Angular: require('@assests/Images/Test/Angular.png'),
+    Java: require('@assests/Images/Test/Java.png'),
+    C: require('@assests/Images/Test/C.png'),
+    'C++': require('@assests/Images/Test/CPlusPlus.png'),
+    'C Sharp': require('@assests/Images/Test/CSharp.png'),
+    CSS: require('@assests/Images/Test/CSS.png'),
+    Django: require('@assests/Images/Test/Django.png'),
+    '.Net': require('@assests/Images/Test/DotNet.png'),
+    Flask: require('@assests/Images/Test/Flask.png'),
     Hibernate: require('../../assests/Images/Test/Hibernate.png'),
-    HTML: require('../../assests/Images/Test/HTML.png'),
-    JavaScript: require('../../assests/Images/Test/JavaScript.png'),
-    JSP: require('../../assests/Images/Test/JSP.png'),
-    'Manual Testing': require('../../assests/Images/Test/ManualTesting.png'),
-    'Mongo DB': require('../../assests/Images/Test/MongoDB.png'),
-    Python: require('../../assests/Images/Test/Python.png'),
-    React: require('../../assests/Images/Test/React.png'),
-    'Regression Testing': require('../../assests/Images/Test/RegressionTesting.png'),
-    Selenium: require('../../assests/Images/Test/Selenium.png'),
-    Servlets: require('../../assests/Images/Test/Servlets.png'),
-    'Spring Boot': require('../../assests/Images/Test/SpringBoot.png'),
-    TypeScript: require('../../assests/Images/Test/TypeScript.png'),
-    Spring: require('../../assests/Images/Test/Spring.png'),
-    SQL: require('../../assests/Images/Test/MySQL.png'),
-    Css: require('../../assests/Images/Test/CSS.png'),
-    MySQL: require('../../assests/Images/Test/MySQL.png'),
-    Vue: require('../../assests/Images/Test/Vue.png'),
-    'SQL-Server': require('../../assests/Images/Test/sqlserver.png'),
+    HTML: require('@assests/Images/Test/HTML.png'),
+    JavaScript: require('@assests/Images/Test/JavaScript.png'),
+    JSP: require('@assests/Images/Test/JSP.png'),
+    'Manual Testing': require('@assests/Images/Test/ManualTesting.png'),
+    'Mongo DB': require('@assests/Images/Test/MongoDB.png'),
+    Python: require('@assests/Images/Test/Python.png'),
+    React: require('@assests/Images/Test/React.png'),
+    'Regression Testing': require('@assests/Images/Test/RegressionTesting.png'),
+    Selenium: require('@assests/Images/Test/Selenium.png'),
+    Servlets: require('@assests/Images/Test/Servlets.png'),
+    'Spring Boot': require('@assests/Images/Test/SpringBoot.png'),
+    TypeScript: require('@assests/Images/Test/TypeScript.png'),
+    Spring: require('@assests/Images/Test/Spring.png'),
+    SQL: require('@assests/Images/Test/MySQL.png'),
+    Css: require('@assests/Images/Test/CSS.png'),
+    MySQL: require('@assests/Images/Test/MySQL.png'),
+    Vue: require('@assests/Images/Test/Vue.png'),
+    'SQL-Server': require('@assests/Images/Test/sqlserver.png'),
   };
 
   useFocusEffect(
@@ -90,8 +88,10 @@ const Badge = ({navigation}: any) => {
     );
   }
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Navbar />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.title}>Badges</Text>
+      </View>
       <ScrollView horizontal={false} style={styles.mainScroll}>
         <View style={styles.container}>
           <View style={styles.textContainer}>
@@ -107,14 +107,14 @@ const Badge = ({navigation}: any) => {
                   colors={['#FFEAC4', '#FFF9D6']} // Set the gradient colors
                   style={styles.gradientBackground1} // Style to ensure the gradient takes the full width and height
                 >
-                  <Text style={[styles.content, {marginLeft: 10}]}>
+                  <Text style={[styles.content, { marginLeft: 10 }]}>
                     Pre-Screened badge
                   </Text>
 
                   {/* Image Section (Middle) */}
                   <View>
                     <Image
-                      source={require('../../assests/Images/Test/Badge.png')}
+                      source={require('@assests/Images/Test/Badge.png')}
                       style={styles.congratulationsImage}
                     />
                   </View>
@@ -129,13 +129,12 @@ const Badge = ({navigation}: any) => {
                       alignSelf: 'center',
                     }}>
                     <Text style={styles.name}>
-                      {applicant.name
-                        ? applicant.name.charAt(0).toUpperCase() +
-                          applicant.name.slice(1)
+                      {basicDetails.firstName
+                        ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
                         : 'Guest'}
                     </Text>
                     <Image
-                      source={require('../../assests/Images/Test/verified.png')}
+                      source={require('@assests/Images/Test/verified.png')}
                       style={styles.verified}
                     />
                   </View>
@@ -163,10 +162,10 @@ const Badge = ({navigation}: any) => {
                     ]}>
                     {(testName === 'General Aptitude Test' &&
                       testStatus === 'P') ||
-                    selectedStep > 1 ? (
+                      selectedStep > 1 ? (
                       <Icon name="check" size={16} color="white" />
                     ) : (
-                      <Text style={[styles.stepText, {color: '#fff'}]}>1</Text>
+                      <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
                     )}
                   </View>
                   <View
@@ -187,7 +186,7 @@ const Badge = ({navigation}: any) => {
                       },
                     ]}>
                     {selectedStep >= 2 ? (
-                      <Text style={[styles.stepText, {color: '#fff'}]}>2</Text>
+                      <Text style={[styles.stepText, { color: '#fff' }]}>2</Text>
                     ) : (
                       <Text style={styles.stepText}>2</Text>
                     )}
@@ -213,7 +212,7 @@ const Badge = ({navigation}: any) => {
                     <Icon
                       name="flag"
                       size={12}
-                      style={{color: selectedStep >= 3 ? 'white' : '#6D6969'}}
+                      style={{ color: selectedStep >= 3 ? 'white' : '#6D6969' }}
                     />
                   </View>
                 </View>
@@ -224,7 +223,7 @@ const Badge = ({navigation}: any) => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
-                  <View style={{alignItems: 'center'}}>
+                  <View style={{ alignItems: 'center' }}>
                     <Text
                       style={{
                         color: '#434343',
@@ -235,7 +234,7 @@ const Badge = ({navigation}: any) => {
                       General{'\n'}Aptitude Test
                     </Text>
                   </View>
-                  <View style={{alignItems: 'center'}}>
+                  <View style={{ alignItems: 'center' }}>
                     <Text
                       style={{
                         color: '#434343',
@@ -246,7 +245,7 @@ const Badge = ({navigation}: any) => {
                       Technical{'\n'}Test
                     </Text>
                   </View>
-                  <View style={{alignItems: 'center'}}>
+                  <View style={{ alignItems: 'center' }}>
                     <Text
                       style={{
                         color: '#434343',
@@ -273,49 +272,49 @@ const Badge = ({navigation}: any) => {
                       alignItems: 'center',
                       width: '100%',
                     }}>
-                    <View style={{flex: 1}}>
+                    <View style={{ flex: 1 }}>
                       <Text style={styles.content}>{testName}</Text>
                       <Text style={styles.matter1}>
                         A Comprehensive Assessment to Measure Your Analytical
                         and Reasoning Skills
                       </Text>
                     </View>
-                    <View style={{marginRight: 10}}>
+                    <View style={{ marginRight: 10 }}>
                       <Image
-                        source={require('../../assests/Images/boyimage.png')}
-                        style={{height: 100}}
+                        source={require('@assests/Images/boyimage.png')}
+                        style={{ height: 100 }}
                       />
                     </View>
                   </View>
 
                   {/* TouchableOpacity */}
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <LinearGradient
                       colors={
                         isButtonDisabled
                           ? ['#d3d3d3', '#d3d3d3']
                           : ['#F97316', '#FAA729']
                       } // Gradient colors
-                      start={{x: 0, y: 0}} // Gradient start
-                      end={{x: 1, y: 0}} // Gradient end
+                      start={{ x: 0, y: 0 }} // Gradient start
+                      end={{ x: 1, y: 0 }} // Gradient end
                       style={[
                         styles.gradientBackground,
                         isButtonDisabled &&
-                          testName !== 'Technical Test' &&
-                          styles.disabledButton, // Apply disabled styles only for non-technical t
+                        testName !== 'Technical Test' &&
+                        styles.disabledButton, // Apply disabled styles only for non-technical t
                       ]}>
                       <TouchableOpacity
                         // style={[styles.progressButton, isButtonDisabled && styles.disabledButton]}
                         style={[
                           styles.progressButton,
                           isButtonDisabled &&
-                            testName !== 'Technical Test' &&
-                            styles.disabledButton, // Apply disabled button styles
+                          testName !== 'Technical Test' &&
+                          styles.disabledButton, // Apply disabled button styles
                           // Apply resizing only when it's not a Technical Test and the timer is present
                           testName === 'General Aptitude Test' &&
-                            testStatus === 'F' &&
-                            timer &&
-                            styles.disabledButton,
+                          testStatus === 'F' &&
+                          timer &&
+                          styles.disabledButton,
                         ]}
                         onPress={() => {
                           if (!isButtonDisabled && selectedStep < 3) {
@@ -353,7 +352,7 @@ const Badge = ({navigation}: any) => {
                         </View>
                       )}
                   </View>
-                  <View style={{alignSelf: 'center'}}>
+                  <View style={{ alignSelf: 'center' }}>
                     {testName === 'Technical Test' &&
                       testStatus === 'F' &&
                       timer && (
@@ -394,7 +393,7 @@ const Badge = ({navigation}: any) => {
                   <Image
                     source={
                       testImage[skill.skillName] ||
-                      require('../../assests/Images/Test/NotFound.png')
+                      require('@assests/Images/Test/NotFound.png')
                     }
                     style={styles.cardImage}
                   />
@@ -414,7 +413,7 @@ const Badge = ({navigation}: any) => {
                       name="external-link"
                       size={20}
                       color="white"
-                      style={{marginRight: 15}}
+                      style={{ marginRight: 15 }}
                     />
                   </TouchableOpacity>
                 </View>
@@ -433,7 +432,7 @@ const Badge = ({navigation}: any) => {
                     <Image
                       source={
                         testImage[badge.skillBadge.name] ||
-                        require('../../assests/Images/Test/NotFound.png')
+                        require('@assests/Images/Test/NotFound.png')
                       }
                       style={styles.cardImage}
                     />
@@ -453,9 +452,9 @@ const Badge = ({navigation}: any) => {
                           name="check"
                           size={19}
                           color="white"
-                          style={{marginRight: 5}}
+                          style={{ marginRight: 5 }}
                         />
-                        <Text style={[styles.verifiedText, {lineHeight: 19}]}>
+                        <Text style={[styles.verifiedText, { lineHeight: 19 }]}>
                           Verified
                         </Text>
                       </View>
@@ -478,7 +477,7 @@ const Badge = ({navigation}: any) => {
                       <Image
                         source={
                           testImage[badge.skillBadge.name] ||
-                          require('../../assests/Images/Test/NotFound.png')
+                          require('@assests/Images/Test/NotFound.png')
                         }
                         style={styles.cardImage}
                       />
@@ -835,5 +834,18 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center', // Center the button horizontally
     padding: 10,
+  },
+  headerContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 58,
+    backgroundColor: '#FFF'
+  },
+  title: {
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: '#495057',
+    lineHeight: 25,
+    marginLeft: 15
   },
 });

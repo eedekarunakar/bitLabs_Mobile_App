@@ -3,7 +3,7 @@ import * as Keychain from 'react-native-keychain';
 import { handleLogin ,handleLoginWithEmail,AuthResponse } from '../services/login/Authservice';
 import { showToast } from '@services/login/ToastService';
 import LogoutModal from '../screens/LandingPage/LogoutModel'; // Import the modal component
-import { setLogoutHandler } from '@services/login/ApiClient';
+import { setLogoutHandler,removeInterceptors } from '@services/login/ApiClient';
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -21,7 +21,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   useEffect(()=>{
     setLogoutHandler(handleLogout);
-  })
+  },[])
 
   const login = async (loginemail: string, loginpassword: string): Promise<AuthResponse> => {
     const response = await handleLogin(loginemail, loginpassword);
@@ -70,6 +70,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setIsAuthenticated(false);
     showToast('success', 'Logout Successful');
     hideLogoutModal();
+    removeInterceptors();
   };
 
   const checkAuth = async () => {
