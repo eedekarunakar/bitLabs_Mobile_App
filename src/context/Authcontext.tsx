@@ -3,7 +3,8 @@ import * as Keychain from 'react-native-keychain';
 import { handleLogin ,handleLoginWithEmail,AuthResponse } from '../services/login/Authservice';
 import { showToast } from '../services/login/ToastService';
 import LogoutModal from '../screens/LandingPage/LogoutModel'; // Import the modal component
-import { setLogoutHandler } from '../services/login/ApiClient';
+import { setLogoutHandler ,removeInterceptors} from '../services/login/ApiClient';
+
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -66,6 +67,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const handleLogout = async () => {
     await Keychain.resetGenericPassword({ service: 'userDetails' });
     await Keychain.resetGenericPassword({ service: 'authToken' });
+    removeInterceptors(); // Remove API interceptors on logout
     setAuthData(null);
     setIsAuthenticated(false);
     showToast('success', 'Logout Successful');

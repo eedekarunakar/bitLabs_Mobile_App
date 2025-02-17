@@ -12,7 +12,7 @@ interface LogoutModalProps {
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
 
-  //reset the total data while logout to ensure no credentilas left in authcontext
+  //reset the total data while logout to ensure no credentials left in authcontext
   const {reset} = useContext(UserContext)
   return (
     <Modal

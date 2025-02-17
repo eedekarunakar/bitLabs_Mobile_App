@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { ProfileModel } from '../../services/step/stepServices';
 import { ToastAndroid } from 'react-native';
@@ -9,6 +9,7 @@ import DocumentPicker, {
   } from "react-native-document-picker";
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../../New';
+import UserContext from '../../context/UserContext';
 
 type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
 
@@ -22,6 +23,7 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
+  const {setPersonalName,refreshJobCounts,refreshVerifiedStatus} = useContext(UserContext)
 const nav = useNavigation<navigation>();
   const showToast = (message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -72,7 +74,12 @@ const nav = useNavigation<navigation>();
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
 
       if (response) {
-        navigation();
+        if(route ?.params ?.firstName){
+        setPersonalName(route.params.firstName)
+        }
+        refreshJobCounts();
+        refreshVerifiedStatus();
+       navigation();
       }
     } catch (error) {
       console.error('Error creating profile:', error);

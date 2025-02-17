@@ -120,6 +120,7 @@ const JobDetails: React.FC = ({ route, navigation }:any) => {
          // Update UserContext to trigger a reload in RecommendedJobs
 
         setIsJobsLoaded(false); // Trigger loading for Recommended Jobs
+        console.log('refreshing job counts')
         refreshJobCounts();
 
         // Go back to the previous screen and trigger a reload for Recommended Jobs
