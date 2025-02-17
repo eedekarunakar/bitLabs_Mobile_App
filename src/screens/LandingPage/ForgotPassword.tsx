@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import Navbar from '@components/styles/Head';
 import ActionButtons from '@components/styles/ActionButton';
 import { useForgotPasswordViewModal } from '@viewmodel/ForgotPasswordViewModal';

@@ -18,7 +18,7 @@ import GradientButton from '@components/styles/GradientButton';
 import { useAuth } from '@context/Authcontext';
 import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
 
-import { ApplicantSkillBadge } from '@models/profile/profile';
+import { ApplicantSkillBadge } from '@models/Model';
 import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { showToast } from '@services/login/ToastService';
 

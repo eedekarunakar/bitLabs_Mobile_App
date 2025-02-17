@@ -1,4 +1,4 @@
-import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { JobData } from '@models/Model';
 import apiClient from '../login/ApiClient';
 
 

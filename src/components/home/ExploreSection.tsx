@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity, Linking } from "react-native";
 import GradientButton from "../styles/GradientButton";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import UserContext from "../../context/UserContext";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
  

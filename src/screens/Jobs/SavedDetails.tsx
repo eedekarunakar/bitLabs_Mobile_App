@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 
 import Icon from 'react-native-vector-icons/Feather';
 import useJobDetailsViewModels from '@viewmodel/jobs/JobDetailsViewModels';

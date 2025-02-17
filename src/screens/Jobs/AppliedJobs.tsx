@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useAppliedJobsViewModel } from "../../viewmodel/jobs/AppliedJob";
-import { JobData } from "../../models/Jobs/ApplyJobmodel";
+import { JobData } from "@models/Model";
 import { useAuth } from "../../context/Authcontext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@models/home/model";
+import { RootStackParamList } from "@models/Model";
  
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();

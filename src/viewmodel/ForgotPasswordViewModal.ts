@@ -1,8 +1,8 @@
 import { useState , useEffect } from "react";
-import { ForgotErrors } from "../models/Autherrors";
+import { ForgotErrors } from "@models/Model";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList
- } from "@models/home/model";
+ } from "@models/Model";
  import { StackNavigationProp } from "@react-navigation/stack";
  import useOtpManager from "../hooks/useOtpManager";
  import { showToast } from "../services/login/ToastService";

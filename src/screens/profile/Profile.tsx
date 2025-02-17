@@ -19,10 +19,10 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
 import { useAuth } from '@context/Authcontext';
-import { ApplicantSkillBadge } from '@models/profile/profile';
+import { ApplicantSkillBadge } from '@models/Model';
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import Fileupload from '@assests/icons/Fileupload';
 import GradientButton from '@components/styles/GradientButton';

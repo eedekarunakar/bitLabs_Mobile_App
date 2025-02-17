@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { FlatList, ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useSavedJobs } from '@services/Jobs/SavedJob';
-import { JobData1 } from '@models/Jobs/SavedJob';
+import { JobData1 } from '@models/Model';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import { SafeAreaView } from 'react-native-safe-area-context';
  
 const SavedJobs = () => {
