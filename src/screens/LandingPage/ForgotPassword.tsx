@@ -3,8 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvo
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../New';
-import Icon from 'react-native-vector-icons/AntDesign';
-import LinearGradient from 'react-native-linear-gradient';
+import Navbar from '../../components/styles/Head';
+import ActionButtons from '../../components/styles/ActionButton';
 import { useForgotPasswordViewModal } from '../../viewmodel/ForgotPasswordViewModal';
 
 const ForgotPassword = () => {
@@ -37,27 +37,13 @@ const ForgotPassword = () => {
     setIsResetPasswordVisible
   } = useForgotPasswordViewModal();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Image source={require('../../assests/Images/logo.png')} style={styles.logo} />
-        </View>
-        <View style={styles.separator} />
-        <View style={styles.headerContainer}>
-          {/* Back Arrow */}
-          <TouchableOpacity onPress={() => { navigation.navigate('LandingPage') }} style={styles.backButton}>
-            <Icon name="left" size={24} color="#495057" />
-          </TouchableOpacity>
-
-          {/* Screen Name */}
-          <Text style={styles.title}>Forgot Password</Text>
-        </View>
-        <View style={styles.separator} />
+        <Navbar title="Forgot Password" onBackPress={() => navigation.navigate('LandingPage')} />
         <TextInput
           style={styles.input}
-          placeholder="Email"  placeholderTextColor="#B1B1B1" 
+          placeholder="Email" placeholderTextColor="#B1B1B1"
           value={email}
           onChangeText={setEmail}
           editable={!isOtpVerified}
@@ -68,7 +54,7 @@ const ForgotPassword = () => {
             <View style={styles.form}>
               <View style={styles.passwordContainer}>
                 <TextInput
-                  placeholder="New Password"  placeholderTextColor="#B1B1B1" 
+                  placeholder="New Password" placeholderTextColor="#B1B1B1"
                   style={styles.passwordInput}
                   secureTextEntry={!isPasswordVisible}
                   onBlur={() => { setIsPasswordVisible(false) }}
@@ -86,17 +72,17 @@ const ForgotPassword = () => {
                   />
                 </TouchableOpacity>
               </View>
-              
+ 
               <View style={styles.passwordContainer}>
                 <TextInput
-                  placeholder="Confirm Password"  placeholderTextColor="#B1B1B1" 
+                  placeholder="Confirm Password" placeholderTextColor="#B1B1B1"
                   style={styles.passwordInput}
                   secureTextEntry={!isResetPasswordVisible}
                   value={confirmPassword}
                   onBlur={() => { setIsResetPasswordVisible(false) }}
                   onChangeText={setConfirmPassword}
                 />
-                 
+ 
                 <TouchableOpacity onPress={() => setIsResetPasswordVisible(!isResetPasswordVisible)}>
                   <Image
                     source={
@@ -110,12 +96,12 @@ const ForgotPassword = () => {
               </View>
               {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
             </View>
-
+ 
           ) : (
             <View style={styles.form}>
               <TextInput
                 style={styles.input}
-                placeholder="Enter OTP"  placeholderTextColor="#B1B1B1" 
+                placeholder="Enter OTP" placeholderTextColor="#B1B1B1"
                 value={otp}
                 onChangeText={setOtp}
               />
@@ -132,40 +118,20 @@ const ForgotPassword = () => {
             </View>
           )
         ) : null}
-        <View style={[styles.buttonContainer, { alignSelf: 'center' }]}>
-          <TouchableOpacity style={styles.backButtonBottom} onPress={() => navigation.navigate('LandingPage')}>
-            <Text style={{
-              color: '#F46F16',
-              fontSize: 15,
-              fontFamily: 'PlusJakartaSans-Bold',
-            }}>Back
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.backButtonBottom}
-            onPress={otpReceived ? (isOtpVerified ? resetUserPassword : verifyOTP) : sendOTP}
-          >
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[ styles.applyButtonGradient]}
-            >
-              <Text style={styles.buttonText}>
-                {otpReceived ? (isOtpVerified ? 'Save' : 'Verify OTP') : 'Send OTP'}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+        <ActionButtons
+          onPressAction={otpReceived ? (isOtpVerified ? resetUserPassword : verifyOTP) : sendOTP}
+          actionTitle={otpReceived ? (isOtpVerified ? 'Save' : 'Verify OTP') : 'Send OTP'}
+        />
+ 
       </View>
     </KeyboardAvoidingView >
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 2,
     backgroundColor: '#FFFFFF',
   },
   separator: {
@@ -224,11 +190,11 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
     textAlign: 'center',
-
+ 
     fontFamily: 'PlusJakartaSans-Medium',
-
-    fontSize:12,
-
+ 
+    fontSize: 12,
+ 
   },
   otpContainer: {
     top: -4,
@@ -242,16 +208,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   resendText: {
-    color: '#F97316',
+    color: '#74A2FA',
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  applyButtonGradient: {
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
+ 
   button: {
     height: 50,
     borderRadius: 8,
@@ -259,31 +219,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     marginHorizontal: 8,
-    width:'50%' // Add consistent spacing
+    width: '50%' // Add consistent spacing
   },
-  backButtonBottom: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#F46F16',
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 8,
-    width:'43%' // Add consistent spacing
-  },
-  buttonText: {
-    color: '#fff',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
   form: {
     width: '100%',
     alignItems: 'center',
     marginTop: 16,
   },
   passwordContainer: {
-    
+ 
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: '#ccc',
@@ -297,26 +242,17 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     height: 40,
-    color:'black',
+    color: 'black',
     fontFamily: 'PlusJakartaSans-Medium',
-    
+ 
   },
   eyeImage: {
     height: 20,
     width: 20,
     resizeMode: 'contain',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly', // Distribute space evenly
-    alignItems: 'center',
-    position: 'absolute',
-    width: '100%',
-    bottom: 20,
-    paddingHorizontal: 16,
-   
-
-  },
+ 
 });
-
+ 
 export default ForgotPassword;
+ 

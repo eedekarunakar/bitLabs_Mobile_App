@@ -1,25 +1,15 @@
-
-import React, { useState, useEffect, useContext } from 'react';
-
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView, ActivityIndicator ,Linking} from 'react-native';
-
-
-import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView,Linking } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { saveJob, applyJob } from '../../services/Jobs/JobDetails'; // Import API functions
 import { RootStackParamList } from '../../../New';
 import { useAuth } from '../../context/Authcontext';
 import SemiCircleProgress from '../../components/progessBar/SemiCircularProgressBar';
-
+import { ProfileService } from '../../services/profile/ProfileService';
 import { fetchJobDetails } from '../../services/Jobs/RecommendedJobs';
 import Toast from 'react-native-toast-message';
-import Savejob from '../../assests/icons/Savejob';
 import Alertcircle from '../../assests/icons/Alertcircle';
-import Savedjob from '../../assests/icons/Savedjob';
-import UserContext from '../../context/UserContext';
-import useRecommendedJobsViewModel from '../../viewmodel/jobs/RecommendedJobs';
-import Icon from 'react-native-vector-icons/Feather';
+
 
 // Type for navigation prop
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
@@ -32,21 +22,18 @@ type JobDetailsProps = {
   navigation: JobDetailsScreenNavigationProp;
 };
 
-const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
+const JobDetails: React.FC = ({ route, navigation }:any) => {
   const { job } = route.params; // job data passed from the previous screen
-  const [isJobSaved, setIsJobSaved] = useState(false);
+  
   const { userToken, userId } = useAuth();
-  const { reloadJobs } = useRecommendedJobsViewModel();
-  const [isJobApplied, setIsJobApplied] = useState(false);
+  
+  const [skills, setSkills] = useState<string[]>([]); // Explicitly setting the type as string[]
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
+  
   const [percent, setPercent] = useState<number>(0);
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]); // State for perfect match skills
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
-
-  const [isLoading, setIsLoading] = useState(true); // Loading state
-  const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext)
-
 
 
   const courseImages: Record<string, any> = {
@@ -62,10 +49,13 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
+
+  // Format creation date
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };
+
   const courseUrlMap: Record<string, any> = {
     "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
     "JAVA": "https://upskill.bitlabs.in/course/view.php?id=22",
@@ -80,21 +70,30 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
     const fetchProfileData = async () => {
       try {
-        const jobData = await fetchJobDetails(job.id, userId, userToken);
+        const profileData = await ProfileService.fetchProfile(userToken, userId);
+        const applicantSkills = profileData.skillsRequired.map((skill: { skillName: string }) =>
+          skill.skillName.toUpperCase()
+        );
 
+        // Storing applicant skills
+        console.log("Applicant Skills:", applicantSkills);
+        const jobData = await fetchJobDetails(job.id, userId, userToken);
+        console.log(jobData);
         setSkillProgressText(jobData.matchStatus);
         const Scourse = jobData.sugesstedCourses;
 
+        setSkills(job.skillsRequired.map((skill: { skillName: string }) => skill.skillName.toUpperCase()));
         setSuggestedCourses(Scourse);
 
         const matchPercentage = jobData.matchPercentage;
         const skillsRequired = jobData.skillsRequired.map(skill => skill.skillName.toUpperCase());
-   
-
+       
+        console.log("skillsrequired", skillsRequired);
 
         setPerfectMatchSkills(jobData.matchedSkills.map((skill: any) => skill.skillName));
         setUnmatchedSkills(skillsRequired);
-
+    
+        console.log(matchPercentage);
         setPercent(matchPercentage);
       } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -104,125 +103,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
     fetchProfileData();
   }, [job.id, userId, userToken]);
 
-  const handleSaveJob = async () => {
-    try {
-      const result = await saveJob(job.id, userId, userToken);
-      if (result) {
-        setIsJobSaved(true);
-
-        setIsJobsLoaded(false);
-        refreshJobCounts();
-        console.log('loading recommended for saved')
-        // reloadJobs(); // Reload jobs
-
-        Toast.show({
-          type: 'success',
-          text1: '',
-          text2: 'Job saved successfully!',
-          text1Style: {
-            fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Bold',
-            color: 'black'
-          },
-          text2Style: {
-            fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Bold',
-            color: 'black'
-          },
-          position: 'bottom',
-          bottomOffset: 80,
-          visibilityTime: 5000
-        });
-        // Alert.alert('Success', 'Job saved successfully!')
-     
-      }
-    } catch (error) {
-      console.error('Error saving job:', error);
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to save job.',
-        text1Style: {
-          fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Bold',
-          color: 'black'
-        },
-        text2Style: {
-          fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Bold',
-          color: 'black'
-        },
-        position: 'bottom',
-        bottomOffset: 80,
-        visibilityTime: 5000
-      });
-    }
-  };
-
-  const handleApplyJob = async () => {
-    try {
-      const result = await applyJob(userId, job.id, userToken);
-      if (result) {
-        setIsJobApplied(true);
-
-        console.log("loading for apply job")
-        setIsJobsLoaded(false);
-        refreshJobCounts();
-        // Alert.alert('Success', 'Job application submitted successfully!');
-       
-        
-        
-        // reloadJobs(); // Reload jobs
-
-        // After reload, mark as loaded
-
-        Toast.show({
-          type: 'success',
-          text1: '',
-          text2: 'Job application submitted successfully!',
-          text1Style: {
-            fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Medium'
-          },
-          text2Style: {
-            fontSize: 12,
-            fontFamily: 'PlusJakartaSans-Medium'
-          },
-          position: 'bottom',
-          bottomOffset: 80,
-          visibilityTime: 5000, // Set toast visibility duration to 5 seconds
-        });
-         refreshJobCounts();
-        console.log('loading recommended for applied ')
-        
-      }
-    } catch (error) {
-      console.error('Error applying for job:', error);
-  
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to apply for job.',
-        text1Style: {
-          fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Medium'
-        },
-        text2Style: {
-          fontSize: 12,
-          fontFamily: 'PlusJakartaSans-Medium'
-        },
-        position: 'bottom',
-        bottomOffset: 80,
-        visibilityTime: 5000, // Set toast visibility duration to 5 seconds
-      });
-    }
-  }
-
 
   return (
 
     <View style={styles.container}>
-
       <ScrollView>
         <View style={styles.jobCard}>
           <View style={styles.row}>
@@ -235,6 +119,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
               <Text style={styles.companyName}>{job.companyname}</Text>
             </View>
           </View>
+
           <View style={[styles.tag, styles.locationContainer]}>
             <Image
               source={require('../../assests/Images/rat/loc.png')}
@@ -242,7 +127,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             />
             <Text style={styles.locationText}>{job.location}</Text>
           </View>
-
 
           <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center', marginLeft: 10 }}>
 
@@ -272,8 +156,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             <Text style={styles.postedOn}>Posted on {formatDate(job.creationDate)}</Text>
           </View>
         </View>
-
-
         <View style={styles.jobCard}>
           <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
           <Text style={styles.message}>
@@ -283,7 +165,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
 
           <View>
             <View style={styles.centeredView}>
-              <Text style={styles.centeredText}>{skillProgressText}</Text>
+              <Text style={[styles.centeredText]}>{skillProgressText}</Text>
             </View>
           </View>
 
@@ -303,21 +185,26 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
 
         </View>
+
         <View style={styles.jobCard}>
           <Text style={styles.jobdestitle}>Full Job Description</Text>
+
           <Text style={styles.description}>
             {job.description.replace(/<[^>]+>/g, '')}
           </Text>
+
+
         </View>
 
 
+        {/* Suggested Courses Container */}
         {suggestedCourses && suggestedCourses.length > 0 && (
           <View style={styles.jobCard}>
             <Text style={styles.jobdestitle}>Suggested Courses</Text>
             <View>
               {suggestedCourses.map((course, index) => (
                 <View key={index} style={styles.courseCard}>
-           
+                  {/* Check if the course has a matching image */}
                   {courseImages[course] ? (
                     <TouchableOpacity
                       style={styles.imageRow}
@@ -333,6 +220,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
                   ) : (
                     <Text style={styles.fallbackText}>Image not found</Text>
                   )}
+
                 </View>
 
               ))}
@@ -340,55 +228,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
           </View>
         )}
       </ScrollView>
-
-
-      <View style={styles.footerContainer}>
-
-
-        {isJobSaved ? (
-          <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
-            <View style={styles.buttonContent}>
-              <Savedjob height={18} width={18} />
-              <Text style={styles.savedButtonText}> Saved</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.saveButton]}
-            onPress={handleSaveJob}
-          >
-            <View style={styles.buttonContent}>
- 
-              <Savejob height={18} width={18} />
-              <Text style={styles.buttonText}> Save Job</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-
-
-        {isJobApplied ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name="check" size={18} color="white" />
-              <Text style={styles.appliedButtonText}>Applied</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.applyButton]}
-            onPress={handleApplyJob}
-          >
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.button, styles.applyButtonGradient]}
-            >
-              <Text style={styles.applybuttonText}>Apply Now</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-      </View>
+      <Toast />
     </View>
   );
 };
@@ -397,51 +237,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f6f6f6',
-    justifyContent: 'space-between',
   },
   jobdestitle: {
     color: '#F46F16',
-    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
     marginBottom: 8,
-    fontFamily: 'PlusJakartaSans-Bold'
   },
   appliedButton: {
-    backgroundColor: '#08921E', // Gray background for "Applied"
+    backgroundColor: '#d3d3d3', // Gray background for "Applied"
     marginLeft: 5,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#08921E',
-  },
-  savedButton: {
-    backgroundColor: 'white',
-    marginRight: 5,
-    borderColor: '#F46F16',
-    borderWidth: 1,
-    borderRadius: 8,
+    borderColor: '#a9a9a9',
   },
   appliedButtonText: {
-    color: '#fff', // Gray text for "Applied"
-    fontFamily: 'PlusJakartaSans-Bold'
-  },
-  savedButtonText: {
-    color: '#F46F16', // Gray text for "Applied"
-    fontFamily: 'PlusJakartaSans-Bold'
+    color: '#555', // Gray text for "Applied"
+    fontWeight: 'bold',
   },
   description: {
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
-    flexShrink: 1,
-    fontFamily: 'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   oval: {
     flexDirection: 'row',
     alignItems: 'center',
-    // Background color for the oval
+    backgroundColor: '#f6f6f6',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    // Makes the container oval
-    marginBottom: 7,
+    borderRadius: 50,
+    marginBottom: 8,
     marginRight: 3
   },
   ovalText: {
@@ -450,8 +277,8 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium'
   },
   brieficon: {
-    height: 11,
-    width: 11,
+    height: 10,
+    width: 12,
     marginRight: 8,
   },
   saveIcon: {
@@ -461,7 +288,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 16,
-    flexGrow: 1,
   },
   progressContainer: {
     flexDirection: 'row',
@@ -470,7 +296,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   progressText: {
-    marginRight: 30,
+    marginLeft: 10,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
@@ -490,16 +316,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(236, 78, 29, 0.7)',
   },
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
-    margin: 12,
-    marginBottom: 2,
     paddingHorizontal: 8,
-
+    marginBottom: 10,
+    marginLeft: 16,
+    marginTop: 10,
+    marginRight: 13
   },
   row: {
     flexDirection: 'row',
@@ -546,14 +372,14 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium'
   },
   tag: {
-    marginTop: -10,
+
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 50,
     marginRight: 3,
     marginBottom: 8,
-    fontSize: 11,
+    fontSize: 8.5,
     fontFamily: 'PlusJakartaSans-Medium'
   },
   skillTags: {
@@ -585,7 +411,7 @@ const styles = StyleSheet.create({
     lineHeight: 23.76, // Line height (in points, not percentage)
     marginTop: 10,
     display: 'flex',
-    marginLeft: '60%'
+    marginLeft: '50%'
   },
   tabs: {
     flexDirection: 'row',
@@ -606,14 +432,15 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     color: '#888',
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   activeTabText: {
     color: '#FF8C00',
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   footerContainer: {
     flexDirection: 'row',
-    position: 'relative',
+    position: 'absolute',
     bottom: 0,
     width: '100%',
     backgroundColor: 'white',
@@ -623,7 +450,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: -2 },
+    elevation: 5,
   },
   button: {
     flex: 1,
@@ -636,26 +467,22 @@ const styles = StyleSheet.create({
   saveButton: {
     backgroundColor: 'white',
     marginRight: 5,
-    borderColor: '#F46F16',
-    borderWidth: 1,
+    borderColor: 'orange',
+    borderWidth: 2,
     borderRadius: 8,
   },
   applyButton: {
+    backgroundColor: '#FF8C00',
     marginLeft: 5,
     marginRight: 10
   },
-  applyButtonGradient: {
-    borderRadius: 10,
-    flex: 1,
-    width: '100%'
-  },
   buttonText: {
-    color: '#F46F16',
+    color: 'orange',
     fontFamily: 'PlusJakartaSans-Bold'
   },
   locationIcon: {
     width: 11,
-    height: 11,
+    height: 12,
     marginRight: 4,
   },
   applybuttonText: {
@@ -679,9 +506,8 @@ const styles = StyleSheet.create({
 
   },
   skillMatchText: {
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 20,
-    fontWeight: '700',
     lineHeight: 27.27,
     textAlign: 'center',
     textDecorationStyle: 'solid',
@@ -699,6 +525,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   skillsContainer: {
     flexDirection: 'row',
@@ -716,7 +543,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontSize: 14,
     textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Medium'
   },
   skillRow: {
     flex: 0,
@@ -733,6 +559,7 @@ const styles = StyleSheet.create({
   courseTitle: {
     fontSize: 14,
     color: '#333',
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   fallbackText: {
     fontSize: 12,
@@ -743,55 +570,44 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     marginLeft: -20,
+    
 
   },
   centeredText: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 15,
     lineHeight: 35.27,
-
-    marginRight: '5%',
+    textAlign: 'left',
     color: '#000000',
+    
+    
   },
   matchedSkills: {
     color: '#fff',
     backgroundColor: '#498C07',
     fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
 
   unmatchedSkill: {
     color: '#fff',
-    fontFamily: 'PlusJakartaSans-Bold',
+    backgroundColor: '#BF2308',
     fontSize: 12,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonImage: {
-    width: 20, // Set the desired width
-    height: 20, // Set the desired height
-    marginRight: 8, // Add some space between the image and text
-  },
-  unmatchedSkillIcon: {
-    width: 16, // Adjust width as needed
-    height: 16, // Adjust height as needed
-    marginRight: 8, // Space between image and text
-  },
-  skillContainer: {
-    flexDirection: 'row', // Ensures image and text are side by side
-    alignItems: 'center', // Aligns items vertically in the center
-    marginBottom: 8, // Space between skill items
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   unmatchedSkillContainer: {
     flexDirection: 'row', // Align image and text side by side
     alignItems: 'center', // Vertically center image and text
     backgroundColor: '#BF2308', // Red background
-    padding: 3,
+    padding: 3, // Add padding to the top and bottom
     borderRadius: 10, // Rounded corners
     marginRight: 8, // Space between skill tags
     marginBottom: 4, // Space between rows of skills
+  },
+  unmatchedSkillIcon: {
+    width: 16, // Adjust width as needed
+    height: 16, // Adjust height as needed
+    marginRight: 8, // Space between image and text
   },
 
 

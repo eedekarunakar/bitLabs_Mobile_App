@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useCallback } from 'react';
+import GradientButton from '../../components/styles/GradientButton';
 import {
   View,
   Text,
@@ -519,20 +520,11 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   </View>
                 )}
               </View>
-              <LinearGradient
-                colors={['#F97316', '#FAA729']}  // Gradient colors
-                style={styles.button}            // Apply styles to the gradient button
-                start={{ x: 0, y: 0 }}           // Starting point of the gradient
-                end={{ x: 1, y: 0 }}             // Ending point of the gradient
-              >
-                <TouchableOpacity style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }} onPress={handleSaveChanges}>
-                  <Text style={styles.buttonText}>Save Changes</Text>
-                </TouchableOpacity>
-              </LinearGradient>
+              <GradientButton
+                title="Save Changes"
+                onPress={handleSaveChanges}
+                style={styles.button} // Apply button styles
+              />
               {/* </ScrollView> */}
             </View>
           </View>
@@ -657,20 +649,12 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   button: {
-    backgroundColor: '#F97316',
     alignItems: 'center',
     justifyContent: 'center',
     height: 34,
     width: '100%',
     borderRadius: 5,
     marginTop: 8
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    justifyContent: 'center'
-
   },
   scrollContainer: {
     maxHeight: 150,
