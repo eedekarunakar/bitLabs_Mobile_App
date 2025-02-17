@@ -1,20 +1,22 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { ScrollView, ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useSavedJobs } from '../../services/Jobs/SavedJob';
 import { JobData1 } from '../../models/Jobs/SavedJob';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../New';
+import UserContext from '../../context/UserContext';
  
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
   const [reload, setReload] = useState(false); // Reload state
- 
+  const {jobCounts} = useContext(UserContext);
+  const count = jobCounts?.savedJobs??300;
   // Automatically reload data when the screen is focused
   useFocusEffect(
     useCallback(() => {
-      fetchSavedJobs(); // Trigger a reload of the saved jobs data
+      fetchSavedJobs(count); // Trigger a reload of the saved jobs data
     }, [reload]) // Dependency ensures fresh data each time
   );
  
