@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet} from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import JobDetailsContent from './JobDetailsContent';
 import useJobDetailsViewModels  from '@viewmodel/jobs/JobDetailsViewModels';
 type JobDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;

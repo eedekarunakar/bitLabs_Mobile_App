@@ -11,7 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '@context/Authcontext';
 import { RouteProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 

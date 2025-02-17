@@ -6,7 +6,7 @@ import { JobAlert } from '@services/Alert/NotificationServieces'; // Importing J
 import { useNavigation } from '@react-navigation/native';
 import { useJobViewModel } from '@viewmodel/Alert/navigationModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 
 
 const NotificationsPage: React.FC = () => {

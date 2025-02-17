@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/home/model'; // Ensure this path is correct
+import { RootStackParamList } from '@models/Model'; // Ensure this path is correct
 import Savejob from '@assests/icons/Savejob';
 import Savedjob from '@assests/icons/Savedjob';
 import Icon from 'react-native-vector-icons/Feather';

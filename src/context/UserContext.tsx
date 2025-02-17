@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useAuth } from './Authcontext';
 import ProfileService from '../services/profile/ProfileService';
 import { fetchJobCounts } from '../services/Home/apiService';
-import { JobCounts } from '../models/home/model';
+import { JobCounts } from '@models/Model';
 
 interface UserContextProps {
   verifiedStatus: boolean;

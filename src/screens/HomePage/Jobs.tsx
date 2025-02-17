@@ -10,11 +10,11 @@ import {
 } from 'react-native';
 import { useNavigation, useIsFocused, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/home/model'; // Import navigation types
+import { RootStackParamList } from '@models/Model'; // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '@viewmodel/jobs/RecommendedJobs'; // Your ViewModel
-import { JobData } from '@models/Jobs/ApplyJobmodel'; // Your JobData interface
+import { JobData } from '@models/Model'; // Your JobData interface
 
 import UserContext from '@context/UserContext';
  

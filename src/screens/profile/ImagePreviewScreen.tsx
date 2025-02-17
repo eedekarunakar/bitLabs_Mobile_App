@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute, RouteProp,  } from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack'
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 type ImageScreenRouteProp = RouteProp<RootStackParamList, 'ImagePreview'>
 const ImagePreviewScreen = () => {
  

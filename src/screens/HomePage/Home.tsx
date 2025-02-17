@@ -4,7 +4,7 @@ import Navbar from '@components/Navigation/Navbar';
  
 import ExploreSection from "@components/home/ExploreSection"; // Hook for fetching job counts
 import { useAuth } from '@context/Authcontext';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
  
 import { useMessageContext, } from '../LandingPage/welcome';
