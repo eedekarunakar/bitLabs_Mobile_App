@@ -8,6 +8,8 @@ import { base64Image } from '@services/base64Image';
 import axios from 'axios';
 import UserContext from '@context/UserContext';
 import resumeCall from '@services/profile/Resume';
+import { useAuth } from '@context/Authcontext';
+import { usePdf } from '../screens/HomePage/resumestate';
 import {
   Platform, PermissionsAndroid,
 } from 'react-native';
@@ -16,6 +18,8 @@ import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, I
 export const useProfileViewModel = (userToken: string | null, userId: number | null) => {
   const [profileData, setProfileData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const userid = useAuth()
+  const {refreshPdf} = usePdf()
   const [error, setError] = useState<string | null>(null);
   const [isProfessionalFormVisible, setProfessionalFormVisible] = useState(false);
     const [isCameraOptionsVisible, setCameraOptionsVisible] = useState(false);
@@ -289,9 +293,14 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
           } as any);
           const response = await ProfileService.uploadResume(userToken, userId, formData);
           if (response.success) {
-              showToast('success', 'Resume uploaded successfully!');
-              setResumeModalVisible(false);
-              setShowBorder(false);
+            showToast('success', 'Resume uploaded successfully!');
+            setResumeModalVisible(false);
+            setShowBorder(false);
+            if (userid.userId !== null) {
+              refreshPdf(userid.userId.toString());
+          } else {
+              console.error('User ID is null');
+          }
           } else {
               console.error(response.message);
               showToast('error', 'Error uploading resume. Please try again later.');

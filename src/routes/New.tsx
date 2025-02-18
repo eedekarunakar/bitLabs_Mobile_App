@@ -29,11 +29,13 @@ import SavedDetails from '../screens/Jobs/SavedDetails';
 import { ProfilePhotoProvider } from '../context/ProfilePhotoContext';
 import ResumeBuilder from '../screens/profile/ResumeBuilder';
 import Drives from '../screens/HomePage/Drives';
+import { PdfProvider } from '../screens/HomePage/resumestate';
 
 import { useMessageContext, MessageProvider } from '../screens/LandingPage/welcome';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/Model';
 
 import { toastConfig } from '@components/Toast/toast_config';
+
 
 
 
@@ -271,6 +273,7 @@ const AppWithProfileProvider = () => {
   const { userToken, userId } = useAuth();
 
   return (
+    <PdfProvider>
     <MessageProvider>
       <ProfilePhotoProvider userToken={userToken} userId={userId}>
         <NavigationContainer >
@@ -279,6 +282,7 @@ const AppWithProfileProvider = () => {
         </NavigationContainer>
       </ProfilePhotoProvider>
     </MessageProvider>
+    </PdfProvider>
   );
 };
 

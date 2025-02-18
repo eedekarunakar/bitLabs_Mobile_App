@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import {
   View,
   Text,
@@ -20,7 +20,7 @@ import {
   fetchSkillBadges,
   fetchTestStatus,
 } from '@services/Home/BadgeService';
-
+import UserContext from '@context/UserContext';
 const { width } = Dimensions.get('window');
 
 const Badge = ({ navigation }: any) => {
@@ -36,7 +36,8 @@ const Badge = ({ navigation }: any) => {
   } = useBadgeViewModel();
   const { userId, userToken } = useAuth();
   const { profileData } = useProfileViewModel(userToken, userId);
-  const { skillsRequired = [], basicDetails } = profileData || {}; // Default to an empty array if skills are missing
+  const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
+  const { personalName } = useContext(UserContext);
 
   const testImage: Record<string, any> = {
     Angular: require('@assests/Images/Test/Angular.png'),
@@ -129,8 +130,8 @@ const Badge = ({ navigation }: any) => {
                       alignSelf: 'center',
                     }}>
                     <Text style={styles.name}>
-                      {basicDetails.firstName
-                        ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
+                      {personalName
+                        ? personalName.charAt(0).toUpperCase() + personalName.slice(1)
                         : 'Guest'}
                     </Text>
                     <Image

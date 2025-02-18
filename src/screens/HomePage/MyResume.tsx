@@ -1,4 +1,4 @@
-import React, { useState, useCallback, } from 'react';
+import React, { useState, useCallback,useEffect } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useAuth } from '@context/Authcontext';
@@ -9,60 +9,71 @@ import Resumebanner from '@assests/icons/Resumebanner';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { requestStoragePermission } from './permissions';
-import { RootStackParamList } from '@models/Model';
+import { RootStackParamList } from '@models/model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import RNFS from 'react-native-fs';
+import { usePdf } from './resumestate';
+import PDFExam from './Reusableresume';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
+
  
  
 const PDFExample = () => {
   const userid = useAuth();
-  const [pdfUri, setPdfUri] = useState<string | null>(null);
+  //const [pdfUri, setPdfUri] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation<NavigationProp>();
+  const {setPdfUri,pdfUri,refreshPdf} = usePdf()
   const fetchPdf = async () => {
-
-    try {
-      setLoading(true);
  
-      console.log('userid:', userid.userId);
-      const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
-      console.log(response);
-      const arrayBuffer = await response.arrayBuffer();
-      const base64Pdf = arrayBufferToBase64(arrayBuffer);
-      const pdfUri = `data:application/pdf;base64,${base64Pdf}`;
-      setPdfUri(pdfUri);
-    }
-    catch (error) {
-    console.error('Error fetching PDF:', error);
-    setError('Error fetching PDF');
-  }
-  finally {
-    setLoading(false);
-  }
-
-
-
+  //   try {
+  //     setLoading(true);
+ 
+  //     console.log('userid:', userid.userId);
+  //     const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
+  //     console.log(response);
+  //     const arrayBuffer = await response.arrayBuffer();
+  //     const base64Pdf = arrayBufferToBase64(arrayBuffer);
+  //     const pdfUri = `data:application/pdf;base64,${base64Pdf}`;
+  //     setPdfUri(pdfUri);
+  //   }
+  //   catch (error) {
+  //   console.error('Error fetching PDF:', error);
+  //   setError('Error fetching PDF');
+  // }
+  // finally {
+  //   setLoading(false);
+  // }
+ 
+ 
+ 
 };
-
+console.log('pdfUri',pdfUri)
+useEffect(() => {
+  if (userid.userId) {
+      refreshPdf(userid.userId.toString()); // Fetch PDF when component mounts
+  }
+}, [userid.userId]);
+ 
+ 
 useFocusEffect(
   useCallback(() => {
     fetchPdf();
   }, [userid.userId])
 );
-
+ 
 // Helper function to convert ArrayBuffer to Base64
-const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-};
-
+// const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
+//   let binary = '';
+//   const bytes = new Uint8Array(buffer);
+//   for (let i = 0; i < bytes.byteLength; i++) {
+//     binary += String.fromCharCode(bytes[i]);
+//   }
+//   return btoa(binary);
+// };
+ 
 const source = { uri: pdfUri };
 const downloadFile = async () => {
   if (!pdfUri) {
@@ -74,12 +85,12 @@ const downloadFile = async () => {
       visibilityTime: 5000, // Toast stays for 3 seconds
       text2Style: {
         fontSize: 14
-
+ 
       },
     });
     return;
   }
-
+ 
   const hasPermission = await requestStoragePermission();
   if (!hasPermission) {
     Toast.show({
@@ -92,11 +103,11 @@ const downloadFile = async () => {
     });
     return;
   }
-
-
+ 
+ 
   const fileName = `Resume_${new Date().getTime()}.pdf`;
   const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
-
+ 
   try {
     await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
     Toast.show({
@@ -121,13 +132,13 @@ const downloadFile = async () => {
     });
   }
 };
-
-
-
+ 
+ 
+ 
 return (
   <SafeAreaView style={{ flex: 1 }}>
-
-
+ 
+ 
     <View style={styles.headerContainer}>
       <Text style={styles.title}>My Resume</Text>
     </View>
@@ -147,40 +158,11 @@ return (
         <View>
           <Resumebanner width={130} height={130} />
         </View>
-
-
+ 
+ 
       </LinearGradient>
-      <View style={styles.pdfContainer}>
-
-        {pdfUri ? (
-          <>
-            <Pdf
-              source={source as { uri: string }}
-              onLoadComplete={(numberOfPages, filePath) => {
-                console.log(`Number of pages: ${numberOfPages}`);
-              }}
-              onPageChanged={(page, numberOfPages) => {
-                console.log(`Current page: ${page}`);
-              }}
-              onError={(error) => {
-                console.log(error);
-              }}
-              onPressLink={(uri) => {
-                console.log(`Link pressed: ${uri}`);
-              }}
-              style={styles.pdf}
-            />
-            <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
-              <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} />
-            </TouchableOpacity>
-          </>
-        ) : error ? (
-          <ScrollView>
-            <Text>{error}</Text>
-          </ScrollView>
-        ) : (
-          <ActivityIndicator size="large" color="#0000ff" />
-        )}
+      <View style={styles.pdf}>
+        <PDFExam/>
       </View>
     </View>
   </SafeAreaView>
@@ -190,7 +172,6 @@ return (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
- 
     paddingHorizontal: 20,
     paddingTop: 10,
     backgroundColor: '#fff',
@@ -205,14 +186,10 @@ const styles = StyleSheet.create({
     color: 'grey',
     textAlign: 'left',
   },
-  pdfContainer: {
-    flex: 1,
-    marginTop: 10,
- 
-  },
+
   pdf: {
     flex: 1,
-    width: Dimensions.get('window').width,
+    width: '100%',
     height: Dimensions.get('window').height,
   },
   gradientContainer: {
@@ -280,5 +257,5 @@ const styles = StyleSheet.create({
     height: 30,
   }
 });
-
+ 
 export default PDFExample;
