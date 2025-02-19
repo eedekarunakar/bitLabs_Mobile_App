@@ -1,5 +1,4 @@
-import axios from 'axios';
-import API_BASE_URL from './API_Service';
+import apiClient from './login/ApiClient';
 // Base URL for the API
 
  
@@ -7,7 +6,7 @@ import API_BASE_URL from './API_Service';
 export const getMobileNumber = async (id: number|null): Promise<string | null> => {
     try {
         // Construct the full API URL with the provided id
-        const response = await axios.get(`${API_BASE_URL}/applicant/getApplicantById/${id}`);
+        const response = await apiClient.get(`/applicant/getApplicantById/${id}`);
         if (response.status === 200) {
             const applicantData = response.data;
             return applicantData.mobilenumber; // Assuming the mobilenumber field exists

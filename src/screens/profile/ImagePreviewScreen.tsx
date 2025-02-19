@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute, RouteProp, NavigationProp, } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp,  } from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack'
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/Model';
 type ImageScreenRouteProp = RouteProp<RootStackParamList, 'ImagePreview'>
 const ImagePreviewScreen = () => {
  
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<ImageScreenRouteProp>();
-  const { uri ,retake} = route.params
+  const { uri } = route.params
   console.log('Navigated to ImagePreview with URI:', uri);
  
   const handleRetake = () => {

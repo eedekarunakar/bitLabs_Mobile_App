@@ -1,25 +1,21 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel'; // Importing useJobAlerts from Notificationmodel.ts
-import { JobAlert } from '../../services/Alert/NotificationServieces'; // Importing JobAlert interface from NotificationServieces.ts
+import { useJobAlerts } from '@viewmodel/Alert/Notificationmodel'; // Importing useJobAlerts from Notificationmodel.ts
+import { JobAlert } from '@services/Alert/NotificationServieces'; // Importing JobAlert interface from NotificationServieces.ts
 
-import { useAuth } from '../../context/Authcontext';
 import { useNavigation } from '@react-navigation/native';
-import { useJobViewModel } from '../../viewmodel/Alert/navigationModel';
-import JobDetailsScreen from '../Jobs/JobDetailsScreen';
-import jobs from '../../screens/Jobs/AppliedJobs';
-import { fetchJobDetails } from '../../services/Alert/NotificationServieces';
+import { useJobViewModel } from '@viewmodel/Alert/navigationModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../New';
+import { RootStackParamList } from '@models/Model';
 
 
 const NotificationsPage: React.FC = () => {
-  const { jobAlerts, unseenCount, handleMarkAsSeen } = useJobAlerts(); // useJobAlerts is used here to get job alerts and unseen count
+  const { jobAlerts,  handleMarkAsSeen } = useJobAlerts(); // useJobAlerts is used here to get job alerts and unseen count
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList, 'JobDetailsScreen'>>();
-  const { userId, userToken } = useAuth();
-  const { getJobDetails, jobDetails } = useJobViewModel();
+
+  const { getJobDetails } = useJobViewModel();
   const formatDate = (dateArray: number[]): string => {
     const [year, month, day, hour, minute, second] = dateArray;
     const date = new Date(year, month - 1, day, hour, minute, second);

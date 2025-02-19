@@ -1,18 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import Navbar from '../../components/Navigation/Navbar';
-
-import ExploreSection from "../../components/home/ExploreSection";
-import { useJobCounts } from '../../viewmodel/DashboardViewModel'; // Hook for fetching job counts
-import { useAuth } from '../../context/Authcontext';
-import AppliedJobs from '../Jobs/AppliedJobs';
-import { useNavigation } from '@react-navigation/native';
-import RecommendedJobs from './Jobs';
-import { RootStackParamList } from '../../../New';
+import React, {useState, useEffect,useContext} from 'react';
+ 
+import Navbar from '@components/Navigation/Navbar';
+ 
+import ExploreSection from "@components/home/ExploreSection"; // Hook for fetching job counts
+import { useAuth } from '@context/Authcontext';
+import { RootStackParamList } from '@models/Model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useMessageContext,MessageProvider } from '../LandingPage/welcome';
-import ProfileService from '../../services/profile/ProfileService';
-import { useRoute, RouteProp, useFocusEffect, useIsFocused } from '@react-navigation/native'; // Updated imports
+ 
+import { useMessageContext, } from '../LandingPage/welcome';
+
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
+
+
+ 
+import UserContext from '@context/UserContext';
 import {
   View,
   Image,
@@ -21,214 +23,176 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Dimensions,
 } from 'react-native';
-import {Dimensions} from 'react-native';
-const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+ 
+ 
+import LinearGradient from 'react-native-linear-gradient';
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+ 
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
-import {useProfileViewModel} from '../../viewmodel/Profileviewmodel';
+ 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
-
+ 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
+ 
 function Dashboard() {
-  const [verified,setVerified] = useState(false)
-  const {userId, userToken} = useAuth(); // Retrieve userId and userToken
+  const [verified, setVerified] = useState(false)
+  const [loading,setIsLoading] = useState(false);
+  const { userId, userToken } = useAuth(); // Retrieve userId and userToken
+  const { verifiedStatus, personalName, isLoading , jobCounts } = useContext(UserContext);
   const route = useRoute<HomeScreenRouteProp>(); // Handle route params
   useEffect(() => {
     console.log('Dashboard route.params:', route.params); // Debug log
   }, [route.params]);
-
-
-  //const [welcome, setWelcome] = useState(route.params?.welcome ?? 'Welcome Back');
-
+ 
+ 
+ 
+ 
   // Use the useJobCounts hook to fetch job counts
-  const { jobCounts, loading, error } = useJobCounts(userId, userToken);
+  // const { jobCounts, loading, error } = useJobCounts(userId, userToken);
   const { setmsg } = useMessageContext();
-
-
-  const {profileData} = useProfileViewModel(userToken, userId);
-  const {basicDetails} = profileData || [];
-  console.log('prof', basicDetails);
-
-
+ 
+ 
+ 
+ 
   const navigation = useNavigation<NavigationProp>();
+  console.log("verified status = ", verifiedStatus)
+  console.log("personal name =  ", personalName)
   useEffect(() => {
-          const checkVerification = async () => {
-            try {
-              const result = await ProfileService.checkVerified(userToken, userId);
-              if (result) {
-                  console.log("verified: "+result)
-                setVerified(result);
-              }
-            } catch (error) {
-              console.error('Error checking verification:', error);
-            }
-          };
-        
-          checkVerification();
-        }, [userId]);
-
+    setVerified(verifiedStatus);
+  }, [verifiedStatus]);
   // Handle loading state
-  if (loading) {
+  if ( loading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={{color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold'}}>
+        <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold' }}>
           Loading job data...
         </Text>
       </View>
     );
   }
-
+ 
   // Handle error state
-  if (error) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>{error}</Text>
-      </View>
-    );
-  }
-
+  // if (error) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <Text>{error}</Text>
+  //     </View>
+  //   );
+  // }
+ 
   return (
     <View style={styles.container}>
       <Navbar />
       <ScrollView
-        contentContainerStyle={{paddingBottom: screenHeight * 0.04}} // Add bottom padding
+        contentContainerStyle={{ paddingBottom: screenHeight * 0.04 }} // Add bottom padding
       >
-       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={styles.textBelowNavbar}>Hello, {basicDetails?.firstName
-          ? basicDetails.firstName.charAt(0).toUpperCase() + basicDetails.firstName.slice(1)
-          : 'Guest'}
-        </Text>
-        {verified&&<Icon5 name="verified" size={25} color="#334584" style={{marginLeft:4,marginTop: screenHeight * 0.025,}} />}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={styles.textBelowNavbar}>Hello, {personalName
+            ? personalName.charAt(0).toUpperCase() + personalName.slice(1)
+            : 'Guest'}
+          </Text>
+          {verified && <Icon5 name="verified" size={25} color="#F46F16" style={{ marginLeft: 4, marginTop: screenHeight * 0.025, }} />}
         </View>
         <Text style={styles.textBelowNavbar1}>
-            {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
+          {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
         </Text>
-
-
+ 
+ 
         <View style={styles.cardContainer}>
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={[
-                styles.card,
-                {
-                  borderColor: '#49C722',
-                  borderWidth: 1,
-                  backgroundColor: '#F3FFEF',
-                },
-              ]}
-              onPress={() => navigation.navigate('Jobs', {tab: 'recommended'})}>
-              <View
-                style={[
-                  styles.cardLogoContainer,
-                  {backgroundColor: '#0A89101A'},
-                ]}>
-                <Image
-                  source={require('../../assests/Images/Recommendedjobs.png')}
-                  style={styles.cardLogo}
-                />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Jobs', { tab: 'recommended' })}
+          >
+            <LinearGradient
+              colors={['#E6F5FF', '#E1EEFF']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
+              style={[styles.card,{borderColor:'#B5DAFF',borderWidth:1}]}
+            >
+              {/* Row container for Image and Text */}
+              <View style={styles.rowContainer}>
+                {/* Image */}
+                <View style={[styles.cardLogoContainer, { backgroundColor: '#D3EDFE' }]}>
+                  <Image
+                    source={require('../../assests/Images/Recommendedjobs.png')}
+                    style={styles.cardLogo}
+                  />
+                </View>
+ 
+                {/* Column container for Texts */}
+                <View style={styles.textContainer}>
+                  <Text style={[styles.cardText]}>
+                    Recommended Jobs
+                  </Text>
+                  <Text style={styles.cardNumber}>{jobCounts?.recommendedJobs ?? '0'}</Text>
+                </View>
               </View>
-              <Text style={[styles.cardText, {color: '#096E0E'}]}>
-                Recommended Jobs
-              </Text>
-              <Text style={styles.cardNumber}>
-                {jobCounts?.recommendedJobs ?? '0'}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.card,
-                {
-                  borderColor: '#FFBF4F',
-                  borderWidth: 1,
-                  backgroundColor: '#FFF7E9',
-                },
-              ]}
-              onPress={() => navigation.navigate('Jobs', {tab: 'saved'})}>
-              <View
-                style={[
-                  styles.cardLogoContainer,
-                  {backgroundColor: '#FFB3211A'},
-                ]}>
-                <Image
-                  source={require('../../assests/Images/Savedjobs.png')}
-                  style={styles.cardLogo}
-                />
+            </LinearGradient>
+          </TouchableOpacity>
+ 
+ 
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Jobs', { tab: 'saved' })}
+          >
+            <LinearGradient
+              colors={['#FFF9EE', '#FFECE7']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
+              style={[styles.card,{borderColor:'#FECBB6',borderWidth:1}]}
+            >
+ 
+              <View style={styles.rowContainer}>
+                <View style={[styles.cardLogoContainer, { backgroundColor: '#FFF3E0' }]}>
+                  <Image
+                    source={require('../../assests/Images/Savedjobs.png')}
+                    style={styles.cardLogo}
+                  />
+                </View>
+ 
+                <View style={styles.textContainer}>
+                  <Text style={[styles.cardText, { color: '#F08F6E' }]}>Saved Jobs</Text>
+                  <Text style={styles.cardNumber}>{jobCounts?.savedJobs ?? '0'}</Text>
+                </View>
               </View>
-              <Text style={[styles.cardText, {color: '#C48916'}]}>
-                Saved Jobs
-              </Text>
-              <Text style={styles.cardNumber}>
-                {jobCounts?.savedJobs ?? '0'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={[
-                styles.card,
-                {
-                  borderColor: '#FF9F7E',
-                  borderWidth: 1,
-                  backgroundColor: '#FFEEE9',
-                },
-              ]}
-              onPress={() => navigation.navigate('Jobs', {tab: 'applied'})}>
-              <View
-                style={[
-                  styles.cardLogoContainer,
-                  {backgroundColor: '#FFDCD0'},
-                ]}>
-                <Image
-                  source={require('../../assests/Images/Apply.png')}
-                  style={styles.cardLogo}
-                />
+            </LinearGradient>
+          </TouchableOpacity>
+ 
+ 
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Jobs', { tab: 'applied' })}
+          >
+            <LinearGradient
+              colors={['#F7FFED', '#E4FFED']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
+              style={[styles.card,{borderColor:'#A6D995',borderWidth:1}]}
+            >
+              <View style={[styles.rowContainer,]}>
+                <View style={[styles.cardLogoContainer, { backgroundColor: '#EEF9D5' }]}>
+                  <Image
+                    source={require('../../assests/Images/Apply.png')}
+                    style={styles.cardLogo}
+                  />
+                </View>
+ 
+                <View style={styles.textContainer}>
+                  <Text style={[styles.cardText, { color: '#228950' }]}>Applied Jobs</Text>
+                  <Text style={styles.cardNumber}>{jobCounts?.appliedJobs ?? '0'}</Text>
+                </View>
               </View>
-              <Text style={[styles.cardText, {color: '#DE4715'}]}>
-                Applied Jobs
-              </Text>
-              <Text style={styles.cardNumber}>
-                {jobCounts?.appliedJobs ?? '0'}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.card,
-                {
-                  borderColor: '#A075FB',
-                  borderWidth: 1,
-                  backgroundColor: '#F0E9FF',
-                },
-              ]}
-              onPress={() => navigation.navigate('Drives')}>
-              <View
-                style={[
-                  styles.cardLogoContainer,
-                  {backgroundColor: '#E5D9FF'},
-                ]}>
-                <Image
-                  source={require('../../assests/Images/Drive.png')}
-                  style={styles.cardLogo}
-                />
-              </View>
-              <Text style={[styles.cardText, {color: '#360D8D'}]}>
-                Drive Invites
-              </Text>
-              <Text style={styles.cardNumber}>0</Text>
-            </TouchableOpacity>
-          </View>
+            </LinearGradient>
+          </TouchableOpacity>
+ 
         </View>
-
         <ExploreSection />
       </ScrollView>
     </View>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -249,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     height: screenHeight * 0.095, // 10% of screen height
   },
-
+ 
   logo1Image: {
     width: screenWidth * 0.4,
     height: screenHeight * 0.04,
@@ -257,7 +221,7 @@ const styles = StyleSheet.create({
     top: screenHeight * 0.01,
     alignSelf: 'flex-start', // Aligns the logo to the left
   },
-
+ 
   logoContainer: {
     flex: 1,
     width: screenWidth * 0.1, // 10% of screen width
@@ -265,7 +229,7 @@ const styles = StyleSheet.create({
     paddingRight: screenWidth * 0.05, // Reduce padding-right to move image more to the left
     marginLeft: -screenWidth * 0.05, // Adjust left margin to move further left
   },
-
+ 
   profilePic: {
     width: screenWidth * 0.08, // Reduced to 8% of screen width
     height: screenWidth * 0.08, // Match height to width for a square shape
@@ -275,7 +239,7 @@ const styles = StyleSheet.create({
     top: screenHeight * 0.04, // Adjust to 3% from the top
     backgroundColor: '#ccc', // Optional: placeholder background for testing
   },
-
+ 
   textBelowNavbar: {
     textAlign: 'left',
     fontSize: 24, // Fixed font size of 24px
@@ -287,36 +251,36 @@ const styles = StyleSheet.create({
   textBelowNavbar1: {
     textAlign: 'left',
     fontSize: 14, // Fixed font size of 14px
-
+ 
     color: '#2F2F2F',
     marginBottom: screenHeight * 0.01,
     marginLeft: screenWidth * 0.03,
     fontFamily: 'PlusJakartaSans-Regular',
   },
-
+ 
   cardContainer: {
-    paddingHorizontal: screenWidth * 0.03, // Dynamic horizontal padding based on screen width
-    marginTop: screenHeight * 0.01, // Dynamic top margin based on screen height
+    flex: 1,
+    paddingHorizontal: 16,
+    alignItems: 'center', // Center align items in the column
   },
-
+ 
   row: {
     flexDirection: 'row', // Align cards horizontally
     justifyContent: 'space-between', // Space between cards in a row
     marginBottom: screenHeight * 0.02, // Dynamic spacing between rows
   },
-
+ 
   card: {
-    width: '48%', // Fit two cards in a row
-    aspectRatio: 1.09, // Adjusted aspect ratio to increase card height
+    width: '100%', // Full width to make them appear in a column
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 12, // Add spacing between cards
     backgroundColor: '#fff',
-    padding: screenWidth * 0.04, // Scales padding with screen width
-    borderRadius: screenWidth * 0.03, // Rounded corners scale
-    alignItems: 'flex-start', // Align content to the left within the card
-    justifyContent: 'flex-start', // Align content to the top (vertical alignment)
-    //marginBottom: screenHeight * 0.01, // Space between cards
-    overflow: 'hidden', // Prevent overflow of content
   },
-
+ 
   cardLogoContainer: {
     width: screenWidth * 0.15, // Scaled logo container width
     height: screenWidth * 0.15, // Scaled logo container height
@@ -326,13 +290,13 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Align logo in the center of the container
     marginBottom: screenHeight * 0.012, // Space between logo and text/number
   },
-
+ 
   cardLogo: {
-    width: '30%', // Logo size within its container
-    height: '30%',
+    width: '31%', // Logo size within its container
+    height: '31%',
     resizeMode: 'contain',
   },
-
+ 
   cardContent: {
     flexDirection: 'column', // Stack text and number vertically
     alignItems: 'flex-start', // Align content to the left
@@ -340,20 +304,29 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.03, // Space between logo and text
     flex: 1, // Ensure the content takes available space
   },
-
+ 
   cardText: {
-    fontSize: 13, // Set text size to 14px
-    color: '#333', // Text color
-    fontFamily: 'PlusJakartaSans-Medium', // Font family
-    textAlign: 'left', // Align text to the left
-    marginBottom: screenHeight * 0.006, // Space between text and number
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    textAlign: 'left',
+    gap: 10,
+    color: '#909090',
   },
-
+ 
   cardNumber: {
-    fontSize: screenWidth * 0.04, // Scales number size with screen width
+    fontSize: 24, // Scales number size with screen width
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#000',
     textAlign: 'left', // Align number to the left
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1, // Allows content to expand properly
+  },
+  textContainer: {
+    alignItems: 'flex-start',
+    marginLeft: 20, // Space between image and text
   },
 });
 export default Dashboard;

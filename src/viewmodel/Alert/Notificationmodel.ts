@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/Authcontext';
-import { fetchJobAlerts, markAlertAsSeen, JobAlert } from '../../services/Alert/NotificationServieces';
+import { useAuth } from '@context/Authcontext';
+import { fetchJobAlerts, markAlertAsSeen, JobAlert } from '@services/Alert/NotificationServieces';
 
 export const useJobAlerts = () => {
   const { userId, userToken } = useAuth(); // Getting userId and userToken from useAuth context

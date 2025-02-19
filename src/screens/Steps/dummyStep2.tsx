@@ -5,14 +5,11 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import ProgressBar from '../../components/progessBar/ProgressBar';
- 
+import ProgressBar from '@components/progessBar/ProgressBar';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { useFocusEffect } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
  
 const getSpecializationOptions = (qualification: string | any): string[] => {

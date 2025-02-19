@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity,BackHandler} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { View, Text, Image, StyleSheet, BackHandler } from 'react-native';
+import GradientButton from '@components/styles/GradientButton';
 import { useFocusEffect } from "@react-navigation/native";
 const FailureScreen = ({ navigation }: any) => {
   useFocusEffect(
@@ -33,19 +33,11 @@ const FailureScreen = ({ navigation }: any) => {
         </Text>
  
         {/* Exit Button with Gradient */}
-        <TouchableOpacity onPress={() =>
-            navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })
-          }
-          style={styles.buttonContainer}
-          >
-          <LinearGradient
-            colors={['#F97316', '#FAA729']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.gradientButton}>
-            <Text style={styles.buttonText}>Exit</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <GradientButton
+          title="Exit"
+          onPress={() => navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })}
+         
+        />
       </View>
     </View>
   );
@@ -107,9 +99,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 7.68,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+ 
 });
