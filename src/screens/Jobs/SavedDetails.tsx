@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     borderColor: '#F97316',
+    marginLeft:7
   },
   savedButton: {
     backgroundColor: 'white',

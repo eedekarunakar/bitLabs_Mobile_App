@@ -71,13 +71,17 @@ const styles = StyleSheet.create({
   centeredView: {
     justifyContent: 'center',
     alignSelf: 'center',
-    marginLeft: -20,
+    marginLeft: -11.5,
+    //width:100,
+    //alignItems:'center'
+    
   },
   centeredText: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 15,
     lineHeight: 35.27,
-    marginRight: '5%',
+    
+
     color: '#000000',
   },
   skillsContainer: {

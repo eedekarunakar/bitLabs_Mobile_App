@@ -16,8 +16,8 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuild
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
- 
- 
+const { width, height } = Dimensions.get('window');
+const BANNER_SIZE = Math.min(width * 0.2, 100); // Adjust the size dynamically
 const PDFExample = () => {
   const userid = useAuth();
   //const [pdfUri, setPdfUri] = useState<string | null>(null);
@@ -118,13 +118,14 @@ return (
           </TouchableOpacity>
         </View>
         <View>
-          <Resumebanner width={130} height={130} />
+          <Resumebanner width={width*0.35} height={height*0.2} right={10} />
         </View>
- 
- 
+
       </LinearGradient>
       <View style={styles.pdf}>
+     
         <PDFExam/>
+   
         <View>
         <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
               {/* <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} /> */}
@@ -138,11 +139,18 @@ return (
 };
  
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    backgroundColor: '#fff',
+    marginTop:10,
+    padding:10,
+    paddingRight:1.5
+
+  },
+  banner:{
+    position:'relative',
+    padding:5
+
   },
   header: {
     marginBottom: 10,
@@ -154,26 +162,28 @@ const styles = StyleSheet.create({
     color: 'grey',
     textAlign: 'left',
   },
+  pdfContainer: {
+    flex: 1,
 
+  },
   pdf: {
+    marginTop:20,
     flex: 1,
     width: '100%',
     height: Dimensions.get('window').height,
   },
   gradientContainer: {
-    width: 385,
-    height: 149,
+    width: '98%',
+    height: height*0.21,
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
-    marginBottom: 20,
   },
   textContainer: {
     flexDirection: 'column',
     width: 200,
     justifyContent: 'center',
-    marginLeft: 10,
+    marginLeft: 20,
   },
   resumeText: {
     fontSize: 16,
@@ -216,19 +226,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10, // Adjust as needed
     right: 10, // Adjust as needed
-    backgroundColor: '#fff',
-    padding: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 10,
     borderRadius: 50,
     marginRight: 1,
-    borderColor:'#00000040',
-    borderWidth:2
-
-    
   },
   downloadIcon: {
     width: 30,
     height: 30,
   }
+
 });
  
 export default PDFExample;

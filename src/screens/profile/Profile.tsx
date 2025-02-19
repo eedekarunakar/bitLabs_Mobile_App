@@ -370,9 +370,9 @@ function ProfileComponent() {
                                                 style={{
                                                     position: 'absolute',
                                                     right: 10,
-                                                    top: 30,
+                                                    top: 10,
                                                     zIndex: 1, // Ensure it's above the PDF
-                                                    backgroundColor: 'rgba(255,255,255,0.7)', // Optional: Light background for visibility
+                                                    backgroundColor: 'lightgrey', // Optional: Light background for visibility
                                                     padding: 5,
                                                     borderRadius: 20,
                                                 }}
