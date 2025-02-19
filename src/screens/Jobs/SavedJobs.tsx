@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
+    fontFamily:'PlusJakartaSans-Bold'
   },
   jobDetails: {
     flex: 1,

@@ -148,7 +148,7 @@ function ProfileComponent() {
                                 <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
                                     {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
                                 </Text>
-                                {verified && <Icon1 name="verified" size={25} color="#334584" style={{ marginLeft: 5 }} />}
+                                {verified && <Icon1 name="verified" size={25} color="#F46F16" style={{ marginLeft: 5 }} />}
 
                             </View>
 

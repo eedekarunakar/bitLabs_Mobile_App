@@ -251,7 +251,9 @@ const TestScreen = ({route, navigation}: any) => {
       case 'MySQL':
         fetchedTestData = require('../models/data/SQL.json');
         break;
-
+      case 'Vue':
+        fetchedTestData = require('../models/data/Vue.json');
+        break;
       case 'SQL-Server':
         fetchedTestData = require('../models/data/SQL.json');
         break;

@@ -1,5 +1,4 @@
-
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   View,
@@ -13,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  FlatList
 } from 'react-native';
 import GradientButton from '@components/styles/GradientButton';
 import { useAuth } from '@context/Authcontext';
@@ -21,7 +21,6 @@ import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
 import { ApplicantSkillBadge } from '@models/Model';
 import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import { showToast } from '@services/login/ToastService';
-
 
 interface Skill {
   id: number;
@@ -41,7 +40,6 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-import { FlatList } from 'react-native';
 const { width, height } = Dimensions.get('window');
 const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(({
   visible,
@@ -75,88 +73,90 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const { userToken, userId } = useAuth();
+  useEffect(() => {
+    if (visible) {
+      setQualification(initialQualification);
+      setSpecialization(initialSpecialization);
+      setLocations(initialLocations);
+      setSkills(initialSkills);
+      setExperience(initialExperience);
+    }
+  }, [
+    visible,
+    initialQualification,
+    initialSpecialization,
+    initialSkills,
+    initialExperience,
+    initialLocations,
+  ])
 
-  const qualificationsOptions = useMemo(
-    () => ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'], []
-  );
-  const specializationsByQualification: Record<string, string[]> = useMemo(() => ({
+  const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
+  const specializationsByQualification: Record<string, string[]> = {
     'B.Tech': ['Computer Science and Engineering (CSE)', 'Electronics and Communication Engineering (ECE)', 'Electrical and Electronics Engineering (EEE)', 'Mechanical Engineering (ME)', 'Civil Engineering (CE)', 'Aerospace Engineering', 'Information Technology(IT)', 'Chemical Engineering', 'Biotechnology Engineering'],
     'MCA': ['Software Engineering', 'Data Science', 'Artificial Intelligence', 'Machine Learning', 'Information Security', 'Cloud Computing', 'Mobile Application Development', 'Web Development', 'Database Management', 'Network Administration', 'Cyber Security', 'IT Project Management'],
     'Degree': ['Bachelor of Science (B.Sc) Physics', 'Bachelor of Science (B.Sc) Mathematics', 'Bachelor of Science (B.Sc) Statistics', 'Bachelor of Science (B.Sc) Computer Science', 'Bachelor of Science (B.Sc) Electronics', 'Bachelor of Science (B.Sc) Chemistry', 'Bachelor of Commerce (B.Com)'],
     'Intermediate': ['MPC', 'BiPC', 'CEC', 'HEC'],
     'Diploma': ['Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering', 'Electronics and Communication Engineering', 'Computer Engineering', 'Automobile Engineering', 'Chemical Engineering', 'Information Technology', 'Instrumentation Engineering', 'Mining Engineering', 'Metallurgical Engineering', 'Agricultural Engineering', 'Textile Technology', 'Architecture', 'Interior Designing', 'Fashion Designing', 'Hotel Management and Catering Technology', 'Pharmacy', 'Medical Laboratory Technology', 'Radiology and Imaging Technology']
-  }), [])
+  };
 
-  const skillsOptions = useMemo(
-    () => ['Java', 'C', 'C++', 'C Sharp', 'Python', 'HTML', 'CSS', 'JavaScript', 'TypeScript', 'Angular', 'React', 'Vue', 'JSP', 'Servlets', 'Spring', 'Spring Boot', 'Hibernate', '.Net', 'Django', 'Flask', 'SQL', 'MySQL', 'SQL-Server', 'Mongo DB', 'Selenium', 'Regression Testing', 'Manual Testing']
-    , [])
-  const cities = useMemo(
-    () => ['Chennai', 'Thiruvananthapuram', 'Bangalore', 'Hyderabad', 'Coimbatore', 'Kochi', 'Madurai', 'Mysore', 'Thanjavur', 'Pondicherry', 'Vijayawada', 'Pune', 'Gurgaon']
-    , [])
+  const skillsOptions = ['Java', 'C', 'C++', 'C Sharp', 'Python', 'HTML', 'CSS', 'JavaScript', 'TypeScript', 'Angular', 'React', 'Vue', 'JSP', 'Servlets', 'Spring', 'Spring Boot', 'Hibernate', '.Net', 'Django', 'Flask', 'SQL', 'MySQL', 'SQL-Server', 'Mongo DB', 'Selenium', 'Regression Testing', 'Manual Testing'];
+  const cities = ['Chennai', 'Thiruvananthapuram', 'Bangalore', 'Hyderabad', 'Coimbatore', 'Kochi', 'Madurai', 'Mysore', 'Thanjavur', 'Pondicherry', 'Vijayawada', 'Pune', 'Gurgaon'];
   const experienceOptions = Array.from({ length: 16 }, (_, i) => i.toString());
 
   const [skillBadgesState, setSkillBadgesState] = useState<ApplicantSkillBadge[]>(
     applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added')
   );
-  // const toggleQualificationDropdown = () => {
-  //   setShowQualificationList(!showQualificationList);
-  //   setShowSpecializationList(false);
-  //   setShowExperienceList(false);
-  //   setShowSkillsList(false);
-  //   setShowLocationList(false);
-  // };
 
-  // const toggleSpecializationDropdown = () => {
-  //   setShowSpecializationList(!showSpecializationList);
-  //   setShowQualificationList(false);
-  //   setShowExperienceList(false);
-  //   setShowSkillsList(false);
-  //   setShowLocationList(false);
-  // };
 
-  // const toggleExperienceDropdown = () => {
-  //   setShowExperienceList(!showExperienceList);
-  //   setShowQualificationList(false);
-  //   setShowSpecializationList(false);
-  //   setShowSkillsList(false);
-  //   setShowLocationList(false);
-  // };
 
-  // const toggleSkillsDropdown = () => {
-  //   setShowSkillsList(!showSkillsList);
-  //   setShowQualificationList(false);
-  //   setShowSpecializationList(false);
-  //   setShowExperienceList(false);
-  //   setShowLocationList(false);
-  // };
+  const toggleQualificationDropdown = () => {
+    setShowQualificationList(!showQualificationList);
+    setShowSpecializationList(false);
+    setShowExperienceList(false);
+    setShowSkillsList(false);
+    setShowLocationList(false);
+  };
 
-  // const toggleLocationDropdown = () => {
-  //   setShowLocationList(!showLocationList);
-  //   setShowQualificationList(false);
-  //   setShowSpecializationList(false);
-  //   setShowExperienceList(false);
-  //   setShowSkillsList(false);
-  // };
-  // Unified Dropdown Toggle (using useCallback)
-  const toggleDropdown = useCallback(
-    (dropdown: 'qualification' | 'specialization' | 'experience' | 'skills' | 'location') => {
-      setShowQualificationList(dropdown === 'qualification' ? !showQualificationList : false);
-      setShowSpecializationList(dropdown === 'specialization' ? !showSpecializationList : false);
-      setShowExperienceList(dropdown === 'experience' ? !showExperienceList : false);
-      setShowSkillsList(dropdown === 'skills' ? !showSkillsList : false);
-      setShowLocationList(dropdown === 'location' ? !showLocationList : false);
-    },
-    [showQualificationList, showSpecializationList, showExperienceList, showSkillsList, showLocationList]
-  );
-  const closeAllDropdowns = useCallback(() => {
+  const toggleSpecializationDropdown = () => {
+    setShowSpecializationList(!showSpecializationList);
+    setShowQualificationList(false);
+    setShowExperienceList(false);
+    setShowSkillsList(false);
+    setShowLocationList(false);
+  };
+
+  const toggleExperienceDropdown = () => {
+    setShowExperienceList(!showExperienceList);
+    setShowQualificationList(false);
+    setShowSpecializationList(false);
+    setShowSkillsList(false);
+    setShowLocationList(false);
+  };
+
+  const toggleSkillsDropdown = () => {
+    setShowSkillsList(!showSkillsList);
+    setShowQualificationList(false);
+    setShowSpecializationList(false);
+    setShowExperienceList(false);
+    setShowLocationList(false);
+  };
+
+  const toggleLocationDropdown = () => {
+    setShowLocationList(!showLocationList);
+    setShowQualificationList(false);
+    setShowSpecializationList(false);
+    setShowExperienceList(false);
+    setShowSkillsList(false);
+  };
+  const closeAllDropdowns = () => {
     setShowQualificationList(false);
     setShowSpecializationList(false);
     setShowExperienceList(false);
     setShowSkillsList(false);
     setShowLocationList(false);
     Keyboard.dismiss(); // Dismiss the keyboard if it's open
-  }, []);
-  const addSkill = useCallback((skillName: string) => {
+  };
+  const addSkill = (skillName: string) => {
     if (!skillsOptions.includes(skillName)) {
       showToast('error', `${skillName} is not a valid skill.`);
       return;
@@ -177,9 +177,9 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
 
     setSkillQuery('');
     setShowSkillsList(false);
-  }, [skills, skillBadgesState, skillsOptions])
+  };
 
-  const removeSkill = useCallback((id: number, fromBadge: boolean, skillName: string) => {
+  const removeSkill = (id: number, fromBadge: boolean, skillName: string) => {
     if (fromBadge) {
       const updatedSkillBadges = skillBadgesState.map((badge) =>
         badge.skillBadge.name === skillName ? { ...badge, flag: 'removed' } : badge
@@ -192,10 +192,16 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
 
     setSkillQuery('');
     // setShowSkillsList(true);  // Optionally show the list after removing a skill
-  }, [])
+  };
 
 
-  const addLocation = useCallback((location: string) => {
+  const toggleDropdown = (type: string) => {
+    if (type === 'skills') {
+      setShowSkillsList((prev) => !prev); // Toggle dropdown visibility
+    }
+  };
+
+  const addLocation = (location: string) => {
     if (!cities.includes(location)) {
       showToast('error', `${location} is not a valid location.`);
       return;
@@ -205,11 +211,11 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
     }
     setLocationQuery('');
     setShowLocationList(false);
-  }, [locations, cities])
+  };
 
-  const removeLocation = useCallback((location: string) => {
+  const removeLocation = (location: string) => {
     setLocations(locations.filter((loc) => loc !== location));
-  }, [])
+  };
 
   const handleSaveChanges = async () => {
     let errors: { [key: string]: string } = {};
@@ -299,7 +305,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   style={[styles.input, validationErrors.qualification ? styles.errorInput : {}]}
                   placeholder="Qualification" placeholderTextColor="#B1B1B1"
                   value={qualificationQuery}
-                  onFocus={() => toggleDropdown('qualification')}
+                  onFocus={toggleQualificationDropdown}
                   onChangeText={(text) => {
                     setQualificationQuery(text);
                     setQualification(text);
@@ -313,17 +319,13 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
                     <FlatList
-                      keyboardShouldPersistTaps='handled'
                       data={qualificationsOptions.filter((qual) => qual.toLowerCase().includes(qualificationQuery.toLowerCase()))}
                       keyExtractor={(item) => item}
                       renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => {
-                          Keyboard.dismiss(); // Dismiss the keyboard first
-                          setTimeout(() => {
-                            setQualification(item);
-                            setQualificationQuery(item);
-                            setShowQualificationList(false);
-                          }, 0); // Ensure it runs after the keyboard dismiss
+                          setQualification(item);
+                          setQualificationQuery(item);
+                          setShowQualificationList(false);
                         }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
@@ -342,7 +344,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   style={[styles.input, validationErrors.specialization ? styles.errorInput : {}]}
                   placeholder="Specialization" placeholderTextColor="#B1B1B1"
                   value={specializationQuery}
-                  onFocus={() => toggleDropdown('specialization')}
+                  onFocus={toggleSpecializationDropdown}
                   onChangeText={(text) => {
                     setSpecializationQuery(text);
                     setSpecialization(text);
@@ -356,7 +358,6 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
                     <FlatList
-                      keyboardShouldPersistTaps='handled'
                       data={(specializationsByQualification[qualification as keyof typeof specializationsByQualification] || [])
                         .filter((spec: string) => spec.toLowerCase().includes(specializationQuery.toLowerCase()))}
                       keyExtractor={(item) => item}
@@ -384,16 +385,21 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   placeholder="Search Skills"
                   placeholderTextColor="#0D0D0D"
                   value={skillQuery}
-                  onFocus={() => toggleDropdown('skills')}
-                  onChangeText={setSkillQuery}
+                  onFocus={() => setShowSkillsList(true)}
+                  onChangeText={(text) => {
+                    setSkillQuery(text);
+                    setShowSkillsList(true); // Ensure dropdown remains open
+                  }}
                 />
                 {validationErrors.skills && <Text style={styles.errorText}>{validationErrors.skills}</Text>}
+
+                {/* Dropdown Section */}
                 {showSkillsList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                  <View style={[styles.dropdown, { position: 'absolute', top: 50, left: 0, right: 0, maxHeight: 200, zIndex: 1000 }]}>
                     <FlatList
-                      keyboardShouldPersistTaps='handled'
                       data={skillQuery.length > 0
-                        ? skillsOptions.filter((s) => s.toLowerCase().includes(skillQuery.toLowerCase()) &&
+                        ? skillsOptions.filter((s) =>
+                          s.toLowerCase().includes(skillQuery.toLowerCase()) &&
                           !skills.some((skill) => skill.skillName === s) &&
                           !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
                         )
@@ -402,24 +408,38 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                           !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
                         )
                       }
-                      keyExtractor={(item) => item}
+                      keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => addSkill(item)}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            addSkill(item);
+                            setSkillQuery(''); // Clear input after selection
+                            // setShowSkillsList(true); // Keep dropdown open
+                          }}
+                        >
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
+                      keyboardShouldPersistTaps="handled"
+                      nestedScrollEnabled={true} // Important for Android
                       ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
-                      nestedScrollEnabled={true}
                     />
                   </View>
                 )}
+
+                {/* Selected Skills Section */}
                 <View style={styles.selectedItems}>
                   {skillBadgesState
                     .filter((badge) => badge.flag === 'added')
                     .map((badge) => (
                       <View key={badge.skillBadge.id} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
                         <Text style={styles.selectedItemText}>{badge.skillBadge.name}</Text>
-                        <TouchableOpacity onPress={() => removeSkill(badge.skillBadge.id, true, badge.skillBadge.name)}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            removeSkill(badge.skillBadge.id, true, badge.skillBadge.name);
+                            
+                          }}
+                        >
                           <Text style={styles.removeText}>x</Text>
                         </TouchableOpacity>
                       </View>
@@ -427,16 +447,18 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   {skills.map((skill) => (
                     <View key={skill.id} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
                       <Text style={styles.selectedItemText}>{skill.skillName}</Text>
-                      <TouchableOpacity onPress={() => removeSkill(skill.id, false, skill.skillName)}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          removeSkill(skill.id, false, skill.skillName);
+                         
+                        }}
+                      >
                         <Text style={styles.removeText}>x</Text>
                       </TouchableOpacity>
                     </View>
                   ))}
                 </View>
               </View>
-
-
-
               {/* Locations */}
               <View style={styles.inputContainer}>
                 <TextInput
@@ -444,33 +466,43 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   placeholder="Search Locations"
                   placeholderTextColor="#0D0D0D"
                   value={locationQuery}
-                  onFocus={() => toggleDropdown('location')}
-                  onChangeText={setLocationQuery}
+                  onFocus={() => setShowLocationList(true)}
+                  onChangeText={(text) => {
+                    setLocationQuery(text);
+                    setShowLocationList(true); // Ensure dropdown opens when typing
+                  }}
                 />
                 {validationErrors.locations && <Text style={styles.errorText}>{validationErrors.locations}</Text>}
+
                 {showLocationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                  <View style={[styles.dropdown, { position: 'absolute', top: 50, left: 0, right: 0, maxHeight: 200, zIndex: 1000 }]}>
                     <FlatList
-                      keyboardShouldPersistTaps='handled'
                       data={locationQuery.length > 0
-                        ? cities.filter((loc) => loc.toLowerCase().includes(locationQuery.toLowerCase()) &&
-                          !locations.some((location) => location === loc)
+                        ? cities.filter((loc) =>
+                          loc.toLowerCase().includes(locationQuery.toLowerCase()) &&
+                          !locations.includes(loc)
                         )
-                        : cities.filter((loc) =>
-                          !locations.some((location) => location === loc)
-                        )
+                        : cities.filter((loc) => !locations.includes(loc))
                       }
-                      keyExtractor={(item) => item}
+                      keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => addLocation(item)}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            addLocation(item);
+                            setLocationQuery(''); // Clear input after selection
+                            // setShowLocationList(true); // Keep dropdown open
+                          }}
+                        >
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
+                      keyboardShouldPersistTaps="handled"
                       nestedScrollEnabled={true}
+                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
                     />
                   </View>
                 )}
+
                 <View style={styles.selectedItems}>
                   {locations.map((location) => (
                     <View key={location} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
@@ -490,7 +522,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   style={[styles.input, validationErrors.experience ? styles.errorInput : {}]}
                   placeholder="Experience" placeholderTextColor="#B1B1B1"
                   value={experienceQuery}
-                  onFocus={() => toggleDropdown('experience')}
+                  onFocus={toggleExperienceDropdown}
                   onChangeText={(text) => {
                     setExperienceQuery(text);
                     setExperience(text);
@@ -503,7 +535,6 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                 {showExperienceList && (
                   <View style={[styles.dropdown, { zIndex: 1000 }]}>
                     <FlatList
-                      keyboardShouldPersistTaps='handled'
                       data={experienceQuery.length > 0 ? experienceOptions.filter((exp) => exp.toLowerCase().includes(experienceQuery.toLowerCase())) : experienceOptions}
                       keyExtractor={(item) => item}
                       renderItem={({ item }) => (
@@ -652,7 +683,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 34,
+    height: 40,
     width: '100%',
     borderRadius: 5,
     marginTop: 8

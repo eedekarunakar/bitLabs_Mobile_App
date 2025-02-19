@@ -1,6 +1,5 @@
 import React, { useState, useCallback,useEffect } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
-import Pdf from 'react-native-pdf';
 import { useAuth } from '@context/Authcontext';
 import LinearGradient from 'react-native-linear-gradient';
 import Resumebanner from '@assests/icons/Resumebanner';
@@ -194,6 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#F97517',
     textAlign: 'center',
+    fontFamily:'PlusJakartaSans-Bold'
   },
   headerContainer: {
     flexDirection: 'column',

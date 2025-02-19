@@ -223,7 +223,7 @@ const LandingPage = () => {
                                 {otpReceived === true && (
                                     <View >
  
-                                        <Text style={{ color: 'green', fontFamily: 'PlusJakartaSans-Regular' }}>Otp sent to your mail, Please check and enter below:</Text>
+                                        <Text style={{ color: 'green', fontFamily: 'PlusJakartaSans-Regular' }}>Otp sent to your mail.Please check and enter below:</Text>
  
                                         <TextInput placeholder='Enter OTP' placeholderTextColor="#B1B1B1" style={styles.input} value={otp} onChangeText={setOtp} allowFontScaling={false} />
  

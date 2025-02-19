@@ -239,7 +239,9 @@ const Step3: React.FC = ({route, navigation}: any) => {
             title="Save"
             onPress={() => {
               handleSaveResume();
+              if(resumeFile){
               handleAPI();
+              }
             }}
             style={[
               ...(isUploadComplete ? [{backgroundColor: '#D7D6D6'}] : []), // Apply background color only if true

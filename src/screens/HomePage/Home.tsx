@@ -95,7 +95,7 @@ function Dashboard() {
             ? personalName.charAt(0).toUpperCase() + personalName.slice(1)
             : 'Guest'}
           </Text>
-          {verified && <Icon5 name="verified" size={25} color="#334584" style={{ marginLeft: 4, marginTop: screenHeight * 0.025, }} />}
+          {verified && <Icon5 name="verified" size={25} color="#F46F16" style={{ marginLeft: 4, marginTop: screenHeight * 0.025, }} />}
         </View>
         <Text style={styles.textBelowNavbar1}>
           {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
