@@ -5,10 +5,12 @@ import { useAuth } from '../../context/Authcontext';
 import {API_BASE_URL} from '@env';
 import { usePdf } from './resumestate';
 
+
 const PDFExam = () => {
   const { pdfUri, setPdfUri } = usePdf(); // Get global PDF state
   const userid = useAuth();
   const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
     const fetchPdf = async () => {

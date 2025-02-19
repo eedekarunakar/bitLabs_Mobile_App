@@ -16,6 +16,8 @@ import RNFS from 'react-native-fs';
 import { usePdf } from './resumestate';
 import PDFExam from './Reusableresume';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
  
  
@@ -26,53 +28,16 @@ const PDFExample = () => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation<NavigationProp>();
   const {setPdfUri,pdfUri,refreshPdf} = usePdf()
-  const fetchPdf = async () => {
- 
-  //   try {
-  //     setLoading(true);
- 
-  //     console.log('userid:', userid.userId);
-  //     const response = await fetch(`${API_BASE_URL}/resume/pdf/${userid.userId}`);
-  //     console.log(response);
-  //     const arrayBuffer = await response.arrayBuffer();
-  //     const base64Pdf = arrayBufferToBase64(arrayBuffer);
-  //     const pdfUri = `data:application/pdf;base64,${base64Pdf}`;
-  //     setPdfUri(pdfUri);
-  //   }
-  //   catch (error) {
-  //   console.error('Error fetching PDF:', error);
-  //   setError('Error fetching PDF');
-  // }
-  // finally {
-  //   setLoading(false);
-  // }
  
  
- 
-};
+  
 console.log('pdfUri',pdfUri)
 useEffect(() => {
   if (userid.userId) {
       refreshPdf(userid.userId.toString()); // Fetch PDF when component mounts
   }
-}, [userid.userId]);
+}, [userid.userId]); 
  
- 
-useFocusEffect(
-  useCallback(() => {
-    fetchPdf();
-  }, [userid.userId])
-);
- 
-// Helper function to convert ArrayBuffer to Base64
-// const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
-//   let binary = '';
-//   const bytes = new Uint8Array(buffer);
-//   for (let i = 0; i < bytes.byteLength; i++) {
-//     binary += String.fromCharCode(bytes[i]);
-//   }
-//   return btoa(binary);
-// };
  
 const source = { uri: pdfUri };
 const downloadFile = async () => {
@@ -163,6 +128,12 @@ return (
       </LinearGradient>
       <View style={styles.pdf}>
         <PDFExam/>
+        <View>
+        <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
+              {/* <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} /> */}
+              <AntDesign name="download" size={24} color="gray" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   </SafeAreaView>
@@ -247,10 +218,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10, // Adjust as needed
     right: 10, // Adjust as needed
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 50,
     marginRight: 1,
+    borderColor:'#00000040',
+    borderWidth:2
+
+    
   },
   downloadIcon: {
     width: 30,

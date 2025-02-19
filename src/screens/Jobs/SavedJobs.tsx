@@ -1,24 +1,25 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { FlatList, ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useSavedJobs } from '@services/Jobs/SavedJob';
 import { JobData1 } from '@models/Model';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@models/Model';
-import { SafeAreaView } from 'react-native-safe-area-context';
- 
+import UserContext from '@context/UserContext';
+
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
   const [reload, setReload] = useState(false); // Reload state
- 
+  const { jobCounts } = useContext(UserContext);
+  const count = jobCounts?.savedJobs ?? 300;
   // Automatically reload data when the screen is focused
   useFocusEffect(
     useCallback(() => {
-      fetchSavedJobs(); // Trigger a reload of the saved jobs data
+      fetchSavedJobs(count); // Trigger a reload of the saved jobs data
     }, [reload]) // Dependency ensures fresh data each time
   );
- 
+
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -26,11 +27,11 @@ const SavedJobs = () => {
       </View>
     );
   }
- 
+
   if (error || savedJobs.length === 0) {
     return <Text style={styles.placeholderText}>No saved jobs available!</Text>;
   }
- 
+
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -39,77 +40,77 @@ const SavedJobs = () => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };
- 
-    const handleJobPress = (job: JobData1) => {
-      navigation.navigate('SavedDetails', { job });
-    };
+
+  const handleJobPress = (job: JobData1) => {
+    navigation.navigate('SavedDetails', { job });
+  };
   const renderItem = ({ item }: { item: JobData1 }) => (
-     <View key={item.id} style={styles.jobCard}>
-            <TouchableOpacity onPress={() => handleJobPress(item)}>
-              <View style={styles.row}>
-                <Image
-                  source={require('../../assests/Images/company.png')} // Placeholder image
-                  style={styles.companyLogo}
-                />
-                <View style={styles.jobDetails}>
-                  <Text style={styles.jobTitle} numberOfLines={1} ellipsizeMode="tail">
-                    {item.jobTitle}
-                  </Text>
-                  <Text style={styles.companyName}>{item.companyname}</Text>
-                </View>
-     
-              </View>
-              <View style={[styles.tag, styles.locationContainer]}>
-                <Image
-                  source={require('../../assests/Images/rat/loc.png')}
-                  style={styles.locationIcon}
-                />
-                <Text style={styles.locationText}>{item.location}</Text>
-              </View>
-     
-              <View style={{ flexDirection: 'row',justifyContent:'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
-                  <Image
-                    source={require('../../assests/Images/rat/exp.png')}
-                    style={styles.brieficon}
-                  />
-                  <Text style={styles.ovalText}>
-                    Exp: {item.minimumExperience} - {item.maximumExperience} years    
-                  </Text>
-                  <Text style={{color:'#E2E2E2',fontFamily: 'PlusJakartaSans-Bold'}}>   |</Text>
-                </View>
-     
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10,marginTop:1}}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <Text style={{fontSize:13}}>₹ </Text>
-                    <Text style={styles.ovalText}>{item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA  </Text>
-                    <Text style={{color:'#E2E2E2',fontFamily: 'PlusJakartaSans-Bold'}}>   |</Text>
-                  </View>
-     
-                     
-     
-                </View>
-     
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.ovalText}>{item.employeeType}</Text>
-                </View>
-              </View>
-     
-              <Text style={styles.postedOn}>
-                Posted on {formatDate(item.creationDate)}
-              </Text>
-            </TouchableOpacity>
+    <View key={item.id} style={styles.jobCard}>
+      <TouchableOpacity onPress={() => handleJobPress(item)}>
+        <View style={styles.row}>
+          <Image
+            source={require('../../assests/Images/company.png')} // Placeholder image
+            style={styles.companyLogo}
+          />
+          <View style={styles.jobDetails}>
+            <Text style={styles.jobTitle} numberOfLines={1} ellipsizeMode="tail">
+              {item.jobTitle}
+            </Text>
+            <Text style={styles.companyName}>{item.companyname}</Text>
           </View>
+
+        </View>
+        <View style={[styles.tag, styles.locationContainer]}>
+          <Image
+            source={require('../../assests/Images/rat/loc.png')}
+            style={styles.locationIcon}
+          />
+          <Text style={styles.locationText}>{item.location}</Text>
+        </View>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
+            <Image
+              source={require('../../assests/Images/rat/exp.png')}
+              style={styles.brieficon}
+            />
+            <Text style={styles.ovalText}>
+              Exp: {item.minimumExperience} - {item.maximumExperience} years
+            </Text>
+            <Text style={{ color: '#E2E2E2', fontFamily: 'PlusJakartaSans-Bold' }}>   |</Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+              <Text style={{ fontSize: 13 }}>₹ </Text>
+              <Text style={styles.ovalText}>{item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA  </Text>
+              <Text style={{ color: '#E2E2E2', fontFamily: 'PlusJakartaSans-Bold' }}>   |</Text>
+            </View>
+
+
+
+          </View>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={styles.ovalText}>{item.employeeType}</Text>
+          </View>
+        </View>
+
+        <Text style={styles.postedOn}>
+          Posted on {formatDate(item.creationDate)}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
- 
+
   return (
     <View style={styles.container}>
-          {loading && <ActivityIndicator size="large" color="#FF8C00" />}
-          {error && <Text style={styles.placeholderText}>{error}</Text>}
-          {!loading && savedJobs.length === 0 && (
-            <Text style={styles.placeholderText}>No applied jobs available!</Text>
-          )}
-     
+      {loading && <ActivityIndicator size="large" color="#FF8C00" />}
+      {error && <Text style={styles.placeholderText}>{error}</Text>}
+      {!loading && savedJobs.length === 0 && (
+        <Text style={styles.placeholderText}>No applied jobs available!</Text>
+      )}
+
       <FlatList
         data={savedJobs}
         renderItem={renderItem}
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     height: 10,
     width: 12,
     marginRight: 8,
-    marginLeft:8
+    marginLeft: 8
   },
   briefcon: {
     flexDirection: 'row',
@@ -201,8 +202,8 @@ const styles = StyleSheet.create({
   },
   jobDetails: {
     flex: 1,
- 
- 
+
+
   },
   jobTitle: {
     color: '#121212', // Text color
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginBottom: 12,
     marginTop: 6,
- 
+
   },
   locationContainer: {
     flexDirection: 'row',
@@ -260,10 +261,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
-    marginLeft:'58%',
+    marginLeft: '58%',
     lineHeight: 23.76, // Line height (in points, not percentage)
-    marginTop:10,
-    display:'flex'
+    marginTop: 10,
+    display: 'flex'
   },
   tabs: {
     flexDirection: 'row',
@@ -280,8 +281,8 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomColor: '#F97316',
- 
- 
+
+
   },
   tabText: {
     fontSize: 12,
@@ -293,8 +294,8 @@ const styles = StyleSheet.create({
     color: '#F97316',
     marginLeft: 12,
     fontFamily: 'PlusJakartaSans-Bold'
- 
+
   },
 });
- 
+
 export default SavedJobs;

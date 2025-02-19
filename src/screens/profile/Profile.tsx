@@ -355,22 +355,40 @@ function ProfileComponent() {
                             </TouchableOpacity>
                         </View>
 
-                        {resumedisplay && <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={resumedisplay}
-                            onRequestClose={() => setresumedisplay(false)}
-                        >
-                            <View style={styles.pdf}>
-                                <PDFExam/>
-                            </View>
-                            <TouchableOpacity style={{ position: 'absolute', left: '93%', top: 10, right: -10 }} onPress={() => { setresumedisplay(false) }}>
-                                <View>
-                                    <Icon1 name='close' size={20} color='#000'></Icon1>
-                                </View>
-                            </TouchableOpacity>
+                        <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={resumedisplay}
+                                onRequestClose={() => setresumedisplay(false)}
+                            >
 
-                        </Modal>}
+                                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
+                                    
+                                        <View style={{ width: '90%', height: '80%', backgroundColor: 'white', borderRadius: 10, overflow: 'hidden' }}>
+                                            {/* Close Button */}
+                                            <TouchableOpacity
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: 10,
+                                                    top: 30,
+                                                    zIndex: 1, // Ensure it's above the PDF
+                                                    backgroundColor: 'rgba(255,255,255,0.7)', // Optional: Light background for visibility
+                                                    padding: 5,
+                                                    borderRadius: 20,
+                                                }}
+                                                onPress={() => setresumedisplay(false)}
+                                            >
+                                                <Icon1 name="close" size={20} color="#000" />
+                                            </TouchableOpacity>
+
+                                            {/* PDF Viewer */}
+                                            <PDFExam />
+                                        </View>
+                                  
+                                </View>
+
+
+                            </Modal>
                     </View>
                 </View>
 

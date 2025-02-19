@@ -1,20 +1,21 @@
 // /src/ViewModels/RecommendedJobsViewModel.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect ,useContext} from 'react';
 import { Alert } from 'react-native';
-import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { JobData } from '@models/Model';
 import { fetchRecommendedJobs, fetchJobDetails } from '@services/Jobs/RecommendedJobs'
 import { useAuth } from '@context/Authcontext';
+import UserContext from '@context/UserContext';
 
 const useRecommendedJobsViewModel = () => {
   const { userId, userToken } = useAuth();
   const [jobs, setJobs] = useState<JobData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const {jobCounts} = useContext(UserContext)
   // Function to load jobs from the API
   const loadJobs = async () => {
     setLoading(true); // Start loading
     try {
-      const data = await fetchRecommendedJobs(userId, userToken);
+      const data = await fetchRecommendedJobs(userId, userToken ,jobCounts);
       setJobs(data);
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch job data');
