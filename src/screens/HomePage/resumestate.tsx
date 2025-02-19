@@ -1,68 +1,37 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import API_BASE_URL from '../../services/API_Service';
- 
-interface PdfContextType {
-  pdfUri: string;
-  refreshPdf: (userId: string) => Promise<void>;
-  setPdfUri: React.Dispatch<React.SetStateAction<string>>;  // Add this line
-}
- 
-interface PdfProviderProps {
-  children: ReactNode;
-}
- 
+import { createContext, useContext, useState, ReactNode } from 'react';
+
+// Define the context type
+type PdfContextType = {
+  pdfUri: string | null;
+  setPdfUri: (uri: string | null) => void;
+  refreshPdf: () => void;
+};
+
+// Create the context with a default value
 const PdfContext = createContext<PdfContextType>({
-  pdfUri: '',
-  setPdfUri: () => {},  // Provide a default empty function
-  refreshPdf: async () => {},
+  pdfUri: null,
+  setPdfUri: () => {},
+  refreshPdf: () => {},
 });
- 
+
+// Define props type for PdfProvider
+type PdfProviderProps = {
+  children: ReactNode; // Explicitly type `children`
+};
+
 export const PdfProvider: React.FC<PdfProviderProps> = ({ children }) => {
-  const [pdfUri, setPdfUri] = useState<string>('');
- 
- 
-  const refreshPdf = async (userId: string) => {
-    try {
-      console.log('Fetching PDF for user:', userId);
-     
-      const response = await fetch(`${API_BASE_URL}/resume/pdf/${userId}`);
-      console.log(response)
- 
-      console.log('Response Status:', response.status);
- 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
- 
-      const arrayBuffer = await response.arrayBuffer();
-      console.log('ArrayBuffer Length:', arrayBuffer.byteLength);
- 
-      const base64Pdf = arrayBufferToBase64(arrayBuffer);
-      console.log('Base64 PDF (First 100 chars):', base64Pdf.substring(0, 100));
- 
-      const pdfUri = `data:application/pdf;base64,${base64Pdf}`;
-      setPdfUri(pdfUri);
-    } catch (error) {
-      console.error('Error fetching PDF:', error);
-    }
+  const [pdfUri, setPdfUri] = useState<string | null>(null);
+
+  const refreshPdf = () => {
+    setPdfUri(null); // Reset pdfUri to trigger re-fetch
   };
- 
- 
- 
-  const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  };
- 
+
   return (
-    <PdfContext.Provider value={{ pdfUri, refreshPdf,setPdfUri}}>
+    <PdfContext.Provider value={{ pdfUri, setPdfUri, refreshPdf }}>
       {children}
     </PdfContext.Provider>
   );
 };
- 
+
+// Hook to use the context
 export const usePdf = () => useContext(PdfContext);

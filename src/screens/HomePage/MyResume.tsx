@@ -2,8 +2,6 @@ import React, { useState, useCallback,useEffect } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useAuth } from '@context/Authcontext';
-import API_BASE_URL from '@services/API_Service';
-import { useFocusEffect } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Resumebanner from '@assests/icons/Resumebanner';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -34,7 +32,7 @@ const PDFExample = () => {
 console.log('pdfUri',pdfUri)
 useEffect(() => {
   if (userid.userId) {
-      refreshPdf(userid.userId.toString()); // Fetch PDF when component mounts
+      refreshPdf(); // Fetch PDF when component mounts
   }
 }, [userid.userId]); 
  
@@ -131,7 +129,7 @@ return (
         <View>
         <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
               {/* <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} /> */}
-              <AntDesign name="download" size={24} color="gray" />
+              <AntDesign name="download" size={20} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
@@ -219,7 +217,7 @@ const styles = StyleSheet.create({
     bottom: 10, // Adjust as needed
     right: 10, // Adjust as needed
     backgroundColor: '#fff',
-    padding: 10,
+    padding: 5,
     borderRadius: 50,
     marginRight: 1,
     borderColor:'#00000040',

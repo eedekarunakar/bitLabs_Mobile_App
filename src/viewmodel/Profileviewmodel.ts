@@ -297,7 +297,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
             setResumeModalVisible(false);
             setShowBorder(false);
             if (userid.userId !== null) {
-              refreshPdf(userid.userId.toString());
+              refreshPdf();
           } else {
               console.error('User ID is null');
           }

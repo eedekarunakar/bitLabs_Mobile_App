@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState,useContext} from 'react';
+import UserContext from '@context/UserContext';
 
 import { ProfileModel } from '@services/step/stepServices';
 import { ToastAndroid } from 'react-native';
@@ -22,6 +23,7 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
+  const {setPersonalName,refreshJobCounts,refreshVerifiedStatus} = useContext(UserContext)
 const nav = useNavigation<navigation>();
   const showToast = (message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -56,12 +58,16 @@ const nav = useNavigation<navigation>();
         preferredJobLocations: route.params.preferredJobLocations,
         skillsRequired: route.params.skillsRequired.map((skill: any) => ({ skillName: skill.skillName })),
       };
-
+ 
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
-
+ 
       if (response) {
-        navigation();
-        
+        if(route ?.params ?.firstName){
+        setPersonalName(route.params.firstName)
+        }
+        refreshJobCounts();
+        refreshVerifiedStatus();
+       navigation();
       }
     } catch (error) {
       console.error('Error creating profile:', error);
