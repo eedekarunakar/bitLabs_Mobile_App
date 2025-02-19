@@ -9,7 +9,7 @@ import DocumentPicker, {
     DocumentPickerResponse,
   } from "react-native-document-picker";
 import { NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/model';
 
 type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
 
