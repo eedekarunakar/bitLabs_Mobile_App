@@ -57,7 +57,7 @@ const PDFExam = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
     paddingTop: 10,
     backgroundColor: '#fff',
   },
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: Dimensions.get('window').height,
+    backgroundColor:'white'
   },
 })
 
