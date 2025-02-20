@@ -326,6 +326,8 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               dropDownContainerStyle={styles.dropdownContainer}
               placeholderStyle={styles.placeholderText}
               textStyle={styles.dropdownText}
+              dropDownDirection="BOTTOM" 
+             
               zIndex={990}
             />
             {errors.specialization && (
@@ -537,6 +539,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: '#F5F5F5',
     fontFamily: 'PlusJakartaSans-Bold',
+    marginTop: 0 ,
   },
   dropdownContainer: {
     borderWidth: 1,
