@@ -101,7 +101,7 @@ const Appnavigator = () => {
 
   return (
     <Stack.Navigator>
-      {!shouldShowStep1 ? (
+      {shouldShowStep1 ? (
         <>
           <Stack.Screen name="Step1" component={Dummystep1} initialParams={{ email: userEmail }} options={{ headerShown: false }} />
           <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
