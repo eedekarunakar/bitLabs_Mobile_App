@@ -28,6 +28,7 @@ export const applyJob = async (applicantId: number|null, jobId: number,userToken
       {},
       { headers: getAuthHeader(userToken) }
     );
+    console.log("Job applied data: ...............",response.data)
     return response.data;
   } catch (error: any) {
     console.error("Failed to apply for job:", error.response?.data || error.message);

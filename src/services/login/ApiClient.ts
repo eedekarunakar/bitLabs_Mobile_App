@@ -26,7 +26,7 @@ const responseInterceptor = async (error: any) => {
  // Handle no internet / network errors:
  if (!error.response) {
   const now = Date.now();
-  // Check if 4 minutes have passed since the last no internet alert
+  // Check if 1 minutes have passed since the last no internet alert
   if (now - lastNoInternetAlertTime > 1 * 60 * 1000) {
     lastNoInternetAlertTime = now;
     Alert.alert(
