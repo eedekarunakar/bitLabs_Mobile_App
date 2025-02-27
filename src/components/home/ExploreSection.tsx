@@ -20,7 +20,7 @@ const ExploreSection = () => {
       <Text style={styles.textBelowCard}>Explore</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
         {/* Second Section - Larger Cards */}
-        <View style={styles.largeCard}>
+        {/* <View style={styles.largeCard}>
           <Text style={styles.cardTitle}>
             Build your professional{"\n"}
             {"        "}resume for free
@@ -35,7 +35,7 @@ const ExploreSection = () => {
             style={styles.cardButton}
            
           />
-        </View>
+        </View> */}
         {!verifiedStatus && (
           <View style={styles.largeCard}>
             <View style={{ borderColor: 'red', borderRadius: 10, borderWidth: 1.5, paddingHorizontal: 5, marginLeft: '80%' }}>

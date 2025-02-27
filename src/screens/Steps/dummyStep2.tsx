@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -132,6 +133,8 @@ interface FormData {
   experience: string;
   preferredLocation: string[];
 }
+
+const {height,width} = Dimensions.get('window');
 const Dummystep2: React.FC = ({route, navigation}: any) => {
   const qual = route.params?.formData?.skills ?? '';
   console.log("R",route.params)
@@ -450,7 +453,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    height: '100%',
+    height: height*1.05,
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -537,6 +540,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: '#F5F5F5',
     fontFamily: 'PlusJakartaSans-Bold',
+    marginTop: 0 ,
   },
   dropdownContainer: {
     borderWidth: 1,
@@ -552,7 +556,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
- 
 export default Dummystep2;
  
  

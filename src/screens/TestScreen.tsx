@@ -24,7 +24,7 @@ import {useSkillTestViewModel} from '@viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import {decode} from 'html-entities';
 
-const {width} = Dimensions.get('window');
+const {width,height} = Dimensions.get('window');
 
 const TestScreen = ({route, navigation}: any) => {
   const {testName} = route.params;
@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 14.5,
     color: '#000000',
-    marginLeft: 5,
+    marginLeft: 10,
     lineHeight: 25,
   },
   errorText: {
@@ -783,7 +783,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EAEAEA', // Initially filled with grey
-    marginRight: 10,
+    
   },
   selectedRadioButton: {
     backgroundColor: '#EAEAEA', // Keep grey when selected
@@ -797,9 +797,8 @@ const styles = StyleSheet.create({
   optionsContainer: {
     flexDirection: 'column',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    marginVertical: 5, // Space between options
+    padding: width*0.05,
+    
   },
 });
 export default TestScreen;

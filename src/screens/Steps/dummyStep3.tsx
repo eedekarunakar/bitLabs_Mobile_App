@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import {useAuth} from '@context/Authcontext';
 import GradientButton from '@components/styles/GradientButton';
@@ -201,7 +202,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                       {marginTop: -26, marginVertical: 20},
                     ]}>
                     <View style={styles.line}></View>
-                    <Text
+                    {/* <Text
                       style={{
                         marginTop: -12,
                         fontWeight: '600',
@@ -209,13 +210,13 @@ const Step3: React.FC = ({route, navigation}: any) => {
                       }}>
                       {' '}
                       Or{' '}
-                    </Text>
+                    </Text> */}
                     <View style={[styles.line, {marginLeft: 3}]}></View>
                   </View>
                 )}
               </View>
 
-              <View>
+              {/* <View>
                 <TouchableOpacity
                   style={styles.uploadButton}
                   onPress={() => navigation.navigate('ResumeBuilder')}>
@@ -227,39 +228,41 @@ const Step3: React.FC = ({route, navigation}: any) => {
                     Create Resume
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
-        <View style={styles.buttonContainer}>
-          <GradientButton
-            title="Save"
-            onPress={() => {
-              handleSaveResume();
-              if(resumeFile){
-              handleAPI();
-              }
-            }}
-            style={[
-              ...(isUploadComplete ? [{backgroundColor: '#D7D6D6'}] : []), // Apply background color only if true
-            ]}
-            textStyle={[
-              ...(isUploadComplete
-                ? [{color: '#A0A0A0', fontFamily: 'PlusJakartaSans-Medium'}]
-                : []), // Apply text color only if true
-            ]}
-            disabled={isUploadComplete} // Disable button when upload is complete
-          />
-        </View>
+      <TouchableOpacity style={[styles.saveButton, { borderWidth: 0 }]} disabled={isUploadComplete} onPress={() => { handleSaveResume(); if (resumeFile){ handleAPI(); handleSave()}; }}>
+          {
+            isUploadComplete ? (
+              <View style={[styles.saveButton, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
+                <Text style={[styles.nextButtonText, { color: "#A0A0A0", fontFamily: 'PlusJakartaSans-Medium' }]}>Save</Text>
+              </View>
+            ) : (
+ 
+              <LinearGradient
+ 
+                colors={['#F97316', '#FAA729']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[styles.saveButton]} // Combine backButton styling with gradient-specific overrides
+              >
+                <Text style={styles.nextButtonText}>Save</Text>
+              </LinearGradient>
+            )
+          }
+ 
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+
   fileContainer: {
     padding: 10,
     marginBottom: 10,
@@ -462,7 +465,7 @@ const styles = StyleSheet.create({
     borderRadius: 6, // Consistent with backButton
     alignItems: 'center',
     justifyContent: 'center',
-    width: '95%',
+    width: '100%',
   },
 });
 

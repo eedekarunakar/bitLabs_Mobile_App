@@ -492,16 +492,16 @@ function ProfileComponent() {
 
                                 <View>
 
-                                    <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
+                                    {/* <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
                                         <View style={styles.line}></View>
                                         <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
                                         <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                    </View>
+                                    </View> */}
 
 
 
                                 </View>
-                                <View>
+                                {/* <View>
                                     <TouchableOpacity
                                         style={styles.uploadButton}
                                         onPress={() => navigation.navigate('ResumeBuilder')}
@@ -510,7 +510,7 @@ function ProfileComponent() {
                                         <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
 
                                     </TouchableOpacity>
-                                </View>
+                                </View> */}
 
                                 <TouchableOpacity
                                     style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]}
@@ -590,6 +590,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 10,//we have to remove this
     },
 
     uploadButton: {
@@ -843,7 +844,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
     },
 
     // Modal Card Style

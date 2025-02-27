@@ -388,7 +388,12 @@ const Test = ({route, navigation}: any) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.goBack()} // Navigate back
+                onPress={() => {
+                  setShowExitModal(false); // Close modal first
+                  setTimeout(() => {
+                    navigation.goBack(); // Navigate after a short delay
+                  }, 300); // Adjust timing as needed
+                }}
               >
                 <LinearGradient
                   colors={['#F97316', '#FAA729']} // Gradient colors
