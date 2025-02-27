@@ -79,7 +79,7 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
       Toast.show({
         type: 'error',
         position: 'bottom',
-        text1: 'Error',
+        text1: '',
         text2: 'Old password and new password cannot be the same',
         visibilityTime: 5000,
       });
