@@ -61,14 +61,14 @@ export const changePassword = async (
           type: 'success',
           position: 'bottom',
           text1: 'Password changed successfully',
-          text2: 'Your password has been updated.',
+          text2: '',
           visibilityTime: 5000,
         });
       } else {
         Toast.show({
           type: 'error',
           position: 'bottom',
-          text1: 'Error',
+          text1: '',
           text2: response.data.message || 'Old password is incorrect',
           visibilityTime: 5000,
         });
@@ -77,8 +77,8 @@ export const changePassword = async (
       Toast.show({
         type: 'error',
         position: 'bottom',
-        text1: 'Error',
-        text2: 'JWT Token not found',
+        text1: '',
+        text2: 'Retry after some time',
         visibilityTime: 5000,
       });
     }
@@ -90,7 +90,7 @@ export const changePassword = async (
           Toast.show({
             type: 'error',
             position: 'bottom',
-            text1: 'Error',
+            text1: '',
             text2: 'Old password is incorrect',
             visibilityTime: 5000,
           });
@@ -98,7 +98,7 @@ export const changePassword = async (
           Toast.show({
             type: 'error',
             position: 'bottom',
-            text1: 'Unknown Error',
+            text1: '',
             text2: 'An unexpected error occurred',
             visibilityTime: 5000,
           });
@@ -108,7 +108,7 @@ export const changePassword = async (
       Toast.show({
         type: 'error',
         position: 'bottom',
-        text1: 'Unknown Error',
+        text1: '',
         text2: 'An unexpected error occurred',
         visibilityTime: 5000,
       });
@@ -121,7 +121,7 @@ export const checkPasswordsMatch = (oldPassword: string, newPassword: string) =>
     Toast.show({
       type: 'error',
       position: 'bottom',
-      text1: 'Error',
+      text1: '',
       text2: 'Old password and new password cannot be the same',
       visibilityTime: 5000,
     });

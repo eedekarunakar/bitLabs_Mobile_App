@@ -490,7 +490,7 @@ function ProfileComponent() {
                                 </View>
 
 
-                                <View>
+                                {/* <View>
 
                                     <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
                                         <View style={styles.line}></View>
@@ -500,8 +500,8 @@ function ProfileComponent() {
 
 
 
-                                </View>
-                                <View>
+                                </View> */}
+                                {/* <View>
                                     <TouchableOpacity
                                         style={styles.uploadButton}
                                         onPress={() => navigation.navigate('ResumeBuilder')}
@@ -510,10 +510,10 @@ function ProfileComponent() {
                                         <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
 
                                     </TouchableOpacity>
-                                </View>
+                                </View> */}
 
                                 <TouchableOpacity
-                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]}
+                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10,marginTop:10 }]}
                                     onPress={handleSaveResume}
                                     disabled={isUploadComplete}
                                 >
