@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import {
-    View, Text, Image, StyleSheet, TouchableOpacity, ScrollView,
-    KeyboardAvoidingView, Platform, Modal, TextInput, Button, PermissionsAndroid, ActivityIndicator,
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform,
+    Modal,
+    TextInput,
+    ActivityIndicator,
+    Dimensions
+
 } from 'react-native';
+import PDFExam from '../HomePage/Reusableresume';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon5 from 'react-native-vector-icons/MaterialIcons'
-import { RootStackParamList } from '../../../New';
-import { useProfileViewModel } from '../../viewmodel/Profileviewmodel';
-import { useAuth } from '../../context/Authcontext';
-import { Skill, ApplicantSkillBadge } from '../../models/profile/profile';
-import { ProfileService } from '../../services/profile/ProfileService';
-import { ToastAndroid } from 'react-native';
-import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
-import { useProfilePhoto } from '../../context/ProfilePhotoContext';
-import { base64Image } from '../../services/base64Image';
-import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
-import axios from 'axios';
-
- 
- 
- 
- 
+import { RootStackParamList } from '@models/Model';
+import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
+import { useAuth } from '@context/Authcontext';
+import { ApplicantSkillBadge } from '@models/Model';
+import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
+import Fileupload from '@assests/icons/Fileupload';
+import GradientButton from '@components/styles/GradientButton';
+import * as Progress from 'react-native-progress';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { usePdf } from '../HomePage/resumestate';
+import Pdf from 'react-native-pdf';
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
-    const [isProfessionalFormVisible, setProfessionalFormVisible] = useState(false);
-    const [isCameraOptionsVisible, setCameraOptionsVisible] = useState(false);
-    // const [photo, setPhoto] = useState<string | null>(null);
-    const [isPersonalDetailsFormVisible, setPersonalDetailsFormVisible] = useState(false);
-    const [isResumeModalVisible, setResumeModalVisible] = useState(false);
-    const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
-    const [resumeText, setResumeText] = useState<string>('');
-    const { fetchProfilePhoto,photo } = useProfilePhoto();
- 
- 
+
+
+    const nav = useNavigation<any>();
+    const{pdfUri}=usePdf()
+
+    
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-   
-    const DEFAULT_PROFILE_IMAGE = require('../../assests/profile/profile.png');
-    console.log(userId, userToken)
+    console.log('pdf',pdfUri)
     const {
         profileData,
         isLoading,
@@ -53,191 +53,39 @@ function ProfileComponent() {
         formErrors,
         setFormErrors,
         handleInputChange,
-        updateBasicDetails,
-        reloadProfile
+        reloadProfile,
+        resetPersonalDetails,
+        handleCamera,
+        handleCancelUpload,
+        handleUploadResume,
+        handleSaveChanges,
+        handleSaveResume,
+        handleLibrary,
+        isProfessionalFormVisible,
+        setProfessionalFormVisible,
+        isPersonalDetailsFormVisible,
+        setPersonalDetailsFormVisible,
+        isResumeModalVisible, setResumeModalVisible,
+        loading, setLoading, progress, setProgress,
+        isCameraOptionsVisible, setCameraOptionsVisible,
+        resumeFile, setResumeFile, showBorder, bgcolor, verified, setShowBorder, isUploadComplete, setIsUploadComplete, hasResume,
+        isResumeRemoved, photo
+
+
     } = useProfileViewModel(userToken, userId);
+    const[resumedisplay,setresumedisplay] = useState(false)
     const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
- 
- 
- 
-    const handlePermission = async () => {
-        if (Platform.OS === 'android') {
-            const permissions = Platform.Version >= 33
-                ? [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES]
-                : [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE];
-            for (const permission of permissions) {
-                const status = await PermissionsAndroid.check(permission);
-                console.log(`Permission ${permission}:`, status ? 'GRANTED' : 'DENIED');
-            }
-            const grantedStatuses = await Promise.all(
-                permissions.map((permission) => PermissionsAndroid.check(permission))
-            );
- 
- 
-            const allPermissionsGranted = grantedStatuses.every((status) => status);
- 
-            if (!allPermissionsGranted) {
-                const granted = await PermissionsAndroid.requestMultiple(permissions);
-                return Object.values(granted).every(status => status === PermissionsAndroid.RESULTS.GRANTED);
-            }
-            return true;
-        }
-        return true; // For iOS or platforms other than Android
-    };
     const [key, setKey] = useState(0);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-             console.log('Profile screen is focused');
-             setKey(prevKey => (prevKey + 1) % 1000);
-         // Change the key to force re-render
-         });
-          return unsubscribe;
-         }, [navigation]);
+            console.log('Profile screen is focused');
+            setKey(prevKey => (prevKey + 1) % 1000);
+            // Change the key to force re-render
+        });
+        return unsubscribe;
+    }, [navigation]);
 
 
-    useEffect(() => {
-        if (userId && userToken) {
-            fetchProfilePhoto(userToken, userId);
-        }
-    }, [userId, userToken]);
-    
-    const showToast = (message: string) => {
-        ToastAndroid.show(message, ToastAndroid.SHORT);
-    };
- 
-    const validatePhoto = (photoFile: any) => {
-        const allowedTypes = ['image/jpeg', 'image/png'];
-        const maxSize = 1048576; // 1 MB in bytes
- 
-        if (!allowedTypes.includes(photoFile.type)) {
-            showToast('Only JPEG and PNG files are allowed.');
-            return false;
-        }
- 
-        if (photoFile.fileSize > maxSize) {
-            showToast('File size must be less than 1 MB.');
-            return false;
-        }
- 
-        return true;
-    };
- 
- 
-    const uploadProfilePhoto = async (photoFile: any) => {
-        setIsLoading(true);
-        try {
-            const result = await ProfileService.uploadProfilePhoto(userToken, userId, photoFile);
-            if (result.success) {
-                console.log('Photo uploaded successfully');
-                fetchProfilePhoto(userToken, userId);
-                showToast('Profile photo uploaded successfully!');
-            } else {
-                console.log('Failed to upload photo:', result.message);
-                showToast('Failed to upload photo.');
-            }
-        } catch (error) {
-            console.error('Error uploading photo:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
- 
-    const handleCamera = async () => {
-        const isPermissionGranted = await handlePermission();
-        if (!isPermissionGranted) {
-            console.log('Permission denied');
-            return;
-        }
-        const options: CameraOptions = {
-            mediaType: 'photo',
-            saveToPhotos: true
-        };
-        launchCamera(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled');
-            } else if (response.errorCode) {
-                console.log('Image picker error');
-            } else if (response.assets && response.assets.length > 0) {
-                const photoFile = response.assets[0];
-                if (validatePhoto(photoFile)) {
-                    console.log('uploading......');
-                    uploadProfilePhoto(photoFile);
-                } else {
-                    console.log('Invalid file type or size.');
-                }
-            } else {
-                console.log('Error storing image');
-            }
-            setCameraOptionsVisible(false);
-        });
- 
-    };
-    const removePhoto = async () => {
-        if (photo === DEFAULT_PROFILE_IMAGE) {
-            showToast('No photo to remove.');
-            return;
-        }
-        setIsLoading(true);
-        try {
-            // Prepare the default image file object
-            const defaultImageFile = {
-                uri: base64Image,
-                type: 'image/png', // Correct MIME type
-                fileName: 'default_profile.png',
-            };
-   
-            console.log('Default Image File:', defaultImageFile);
-   
-            // Upload the default image
-            const result = await ProfileService.uploadProfilePhoto(userToken, userId, defaultImageFile);
-   
-            if (result.success) {
-                await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
-                console.log('Default photo uploaded successfully');
-                showToast('Default image set successfully!');
-            } else {
-                console.log('Failed to set default photo:', result.message);
-                showToast('Failed to remove photo.');
-            }
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Error setting default photo:', error.message);
-            }
-            showToast('Error removing photo. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-   
-   
-   
- 
-    const handleLibrary = () => {
-        const options: ImageLibraryOptions = {
-            mediaType: 'photo',
-        };
-        launchImageLibrary(options, (response: ImagePickerResponse) => {
-            if (response.didCancel) {
-                console.log('User cancelled');
-            } else if (response.errorCode) {
-                console.log(response.errorMessage);
-            } else if (response.assets && response.assets.length > 0) {
-                const photoFile = response.assets[0];
-                if (validatePhoto(photoFile)) {
-                    console.log('uploading......');
-                    console.log(photoFile)
-                    uploadProfilePhoto(photoFile);
-                } else {
-                    console.log('Invalid file type or size.');
-                }
-            }
-            setCameraOptionsVisible(false);
-        });
-    };
- 
- 
- 
- 
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
@@ -261,91 +109,11 @@ function ProfileComponent() {
     if (!profileData || !profileData.applicant) {
         setIsLoading(true)
         return (
-           
             <View>
-               
                 <Text>No Applicant Data Found</Text>
             </View>
         );
     }
- 
-    const handleUploadResume = async () => {
-        try {
-            const result: DocumentPickerResponse[] = await DocumentPicker.pick({
-                type: [DocumentPicker.types.pdf], // Ensure only PDF files are shown
-            });
- 
-            if (!result || result.length === 0) {
-                showToast('No file selected.');
-                return;
-            }
- 
-            const selectedFile: DocumentPickerResponse = result[0];
-            const maxSize = 1048576; // 1MB size limit
- 
-            // Validate file size
-            if (selectedFile.size && selectedFile.size > maxSize) {
-                showToast('File size exceeds the 1MB limit.');
-                return;
-            }
- 
-            // Set selected file but do not upload yet
-            setResumeFile(selectedFile);
-            setResumeText(selectedFile.name || '');
- 
-            showToast('Resume selected. Remember to save changes.');
-        } catch (err) {
-            if (DocumentPicker.isCancel(err)) {
-                console.log('User canceled the picker');
-                showToast('Upload canceled.');
-            } else if ((err as { message: string }).message === 'Network Error') {
-                console.log('Network Error:', err);
-                showToast('Network error. Please check your internet connection and try again.');
-            } else {
-                console.error('Unknown error: ', err);
-                showToast('Error selecting file. Please try again.');
-            }
-        }
-    };
- 
- 
- 
-    const handleSaveResume = async () => {
-        if (resumeFile) {
-            const formData = new FormData();
-            formData.append('resume', {
-                uri: resumeFile.uri,
-                type: resumeFile.type,
-                name: resumeFile.name,
-            } as any);
- 
-            
- 
- 
-const response = await ProfileService.uploadResume(userToken, userId, formData);
-            if (response.success) {
-                setResumeFile(response.data.fileName);
-                showToast('Resume uploaded successfully!');
-                setResumeModalVisible(false)
-            } else {
-                console.error(response.message);
-                showToast('Error uploading resume. Please try again later.');
-                setResumeModalVisible(false)
-            }
-        } else {
-            showToast('No file selected to upload.');
-        }
-    };
- 
-    const handleSaveChanges = async () => {
-        const success = await updateBasicDetails();
-        if (success) {
-            console.log('Personal details updated successfully');
-            setPersonalDetailsFormVisible(false);
-            reloadProfile();
-        }
-    };
- 
     return (
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} key={key}>
             <ScrollView>
@@ -353,8 +121,8 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                     <View style={styles.card}>
                         <View style={styles.container}>
                             <View style={styles.pencil}>
-                                <TouchableOpacity onPress={() => setPersonalDetailsFormVisible(true)}>
-                                    <Icon3 name='pencil' size={24} color='black' />
+                                <TouchableOpacity onPress={() => { setPersonalDetailsFormVisible(true); resetPersonalDetails() }}>
+                                    <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.imageContainer}>
@@ -363,29 +131,34 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                         navigation.navigate('ImagePreview', { uri: photo, retake: false });
                                     }
                                 }}>
-                                    <Image source={photo ? { uri: photo } :require('../../assests/profile/profile.png')} style={styles.image} />
+                                    <Image source={photo ? { uri: photo } : require('../../assests/profile/profile.png')} style={styles.image} />
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.cameraIcon}
                                     accessible={true} accessibilityLabel="Open Camera Options"
-                                    onPress={() => setCameraOptionsVisible(true)
- 
+                                    onPress={() => { setCameraOptionsVisible(true) }
+
                                     }
                                 >
                                     <Icon1 name="camera-alt" size={24} color="#6C757D" />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={styles.name}>
-                                {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
-                            </Text>
- 
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={[styles.name, { textAlign: 'center', alignSelf: 'center' }]}>
+                                    {`${basicDetails?.firstName || ''} ${basicDetails?.lastName || ''}`.trim()}
+                                </Text>
+                                {verified && <Icon1 name="verified" size={25} color="#F46F16" style={{ marginLeft: 5 }} />}
+
+                            </View>
+
                             <View style={styles.infoContainer}>
                                 <View style={styles.info}>
-                                    <Icon name="mail" size={24} color="#6C757D" />
+                                    <Icon name="mail" size={16} color="#6C757D" />
                                     <Text style={styles.text}>{basicDetails?.email}</Text>
                                 </View>
                                 <View style={styles.info}>
-                                    <Icon name="phone" size={24} color="#6C757D" />
+                                    <Icon name="phone" size={16} color="#6C757D" />
                                     <Text style={styles.text}>{basicDetails?.alternatePhoneNumber}</Text>
                                 </View>
                             </View>
@@ -394,21 +167,20 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                     <View style={styles.professional}>
                         <View style={{ flexDirection: 'row' }}>
                             <Icon2 name='graduation-cap' size={24} style={styles.cap} />
-                            <Text style={{ left: 3, fontWeight: 'bold', fontSize: 18, color: '#F97316' }}>Professional Details</Text>
+                            <Text style={{ left: 3, fontFamily: 'PlusJakartaSans-Bold', fontSize: 14, color: '#F97316' }}>Professional Details</Text>
                             <View style={styles.pencil}>
                                 <TouchableOpacity onPress={() => setProfessionalFormVisible(true)}>
-                                    <Icon3 name='pencil' size={24} color='black' />
+                                    <Icon3 name='pencil' size={18} color='black' />
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={{ margin: 2 }}>
                             <Text style={styles.subheading}>Qualification</Text>
-                            {/* {qualification||'no qualification details availiable !!'} */}
                             <Text style={styles.details}>{qualification}</Text>
                             <Text style={styles.subheading}>Specilization</Text>
-                            <Text style={styles.details}> {specialization}</Text>
+                            <Text style={styles.details}>{specialization}</Text>
                             <Text style={styles.subheading}>Skills</Text>
- 
+
                             <View style={styles.skillContainer}>
                                 {applicantSkillBadges
                                     .filter((badge: ApplicantSkillBadge) => badge.flag === 'added') // Filter badges based on flag
@@ -423,11 +195,11 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                             key={index}
                                             style={[
                                                 styles.skillBadge,
-                                                { backgroundColor: badge.status === 'PASSED' ? '#498C07' : '#334584' },
+                                                { backgroundColor: badge.status === 'PASSED' ? '#498C07' : '#498C07' },
                                             ]}
                                         >
                                             {badge.status === 'PASSED' && (
-                                                <Icon5 name="verified" size={16} color="white" />
+                                                <Icon1 name="verified" size={16} color="white" />
                                             )}
                                             <Text style={styles.skillBadgeText}>
                                                 {badge.skillBadge.name}
@@ -435,241 +207,456 @@ const response = await ProfileService.uploadResume(userToken, userId, formData);
                                         </View>
                                     ))
                                 }
- 
- 
+
+
                                 {skillsRequired.length > 0 && skillsRequired.map((skill: { id: number; skillName: string }, index: number) => (
                                     <Text key={index} style={styles.skillcolor}>
                                         {skill.skillName}
                                     </Text>
                                 ))}
- 
+
                                 {skillsRequired.length === 0 && applicantSkillBadges.length === 0 && (
                                     <Text>No skills added yet.</Text>
                                 )}
- 
- 
+
+
                             </View>
- 
- 
- 
- 
+
+
+
+
                             <Text style={styles.subheading}>Experience</Text>
                             <Text style={styles.details}>{experience}</Text>
                             <View>
                                 <Text style={styles.subheading}>Preferred Location</Text>
                                 {preferredJobLocations.length > 0 && (
-                                    <Text style={{ color: '#000',fontWeight:'bold' }}>
+
+
+                                    <Text style={{ color: '#000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 12 }}>
+
+
                                         {preferredJobLocations.join(', ')}
                                     </Text>
                                 )}
                             </View>
- 
+
                         </View>
-                        <ProfessionalDetailsForm
-                            visible={isProfessionalFormVisible}
-                            onClose={() => setProfessionalFormVisible(false)}
-                            qualification={qualification}
-                            specialization={specialization}
-                            skillsRequired={skillsRequired}
-                            experience={experience}
-                            preferredJobLocations={preferredJobLocations}
-                            skillBadges={applicantSkillBadges}
-                            onReload={reloadProfile}
- 
-                        />
- 
-                        <Modal
-                            transparent={true}
-                            animationType="slide"
-                            visible={isCameraOptionsVisible}
-                            onRequestClose={() => setCameraOptionsVisible(false)}
-                        >
-                            <View style={styles.modalView5}>
-                                <View style={styles.modalCard5}>
- 
- 
-                                    <TouchableOpacity style={styles.customButton} onPress={handleCamera}>
-                                        <Text style={styles.buttonText1}>Take a photo</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.customButton} onPress={handleLibrary}>
-                                        <Text style={styles.buttonText1}>Choose a photo</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.customButton} onPress={removePhoto}>
-                                        <Text style={styles.buttonText1}>Remove a photo</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
-                                        <Text style={styles.modalButtonText7}>Cancel</Text>
-                                    </TouchableOpacity>
- 
-                                </View>
- 
- 
- 
-                            </View>
- 
-                        </Modal>
-                        <Modal
-                            transparent={true}
-                            animationType='slide'
-                            visible={isPersonalDetailsFormVisible}
-                            onRequestClose={() => {
-                                setPersonalDetailsFormVisible(false);
-                                setFormErrors({});
-                            }}>
-                            <View style={styles.modalView}>
-                                <View style={styles.modalCard}>
-                                    <TextInput placeholder='FirstName'placeholderTextColor="#B1B1B1" style={styles.input}
-                                        value={personalDetails.firstName}
-                                        onChangeText={(text) => handleInputChange('firstName', (text))} />
-                                    {formErrors?.firstName && (
-                                        <Text style={styles.errorText}>{formErrors.firstName}</Text>
-                                    )}
-                                    <TextInput placeholder='LastName'placeholderTextColor="#B1B1B1" style={styles.input}
-                                        value={personalDetails.lastName}
-                                        onChangeText={(text) => handleInputChange('lastName', (text))} />
-                                    {formErrors?.lastName && (
-                                        <Text style={styles.errorText}>{formErrors.lastName}</Text>
-                                    )}
-                                    <TextInput placeholder={basicDetails?.email || 'Email'}placeholderTextColor="#B1B1B1" editable={false} style={styles.input} />
-                                    <TextInput placeholder='+91*******' style={styles.input}placeholderTextColor="#B1B1B1"
-                                        value={personalDetails.alternatePhoneNumber}
-                                        onChangeText={(text) => handleInputChange('alternatePhoneNumber', (text))} />
-                                    {formErrors?.alternatePhoneNumber && (
-                                        <Text style={styles.errorText}>{formErrors.alternatePhoneNumber}</Text>
-                                    )}
- 
-                                    <View style={{ alignItems: 'flex-end' }}>
-                                        <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Save Changes</Text>
+                        {isProfessionalFormVisible && (
+                            <ProfessionalDetailsForm
+                                visible={isProfessionalFormVisible}
+                                onClose={() => { setProfessionalFormVisible(false); resetPersonalDetails() }}
+                                qualification={qualification}
+                                specialization={specialization}
+                                skillsRequired={skillsRequired}
+                                experience={experience}
+                                preferredJobLocations={preferredJobLocations}
+                                skillBadges={applicantSkillBadges}
+                                onReload={reloadProfile}
+
+                            />
+                        )}
+
+                        {isCameraOptionsVisible && (
+                            <Modal
+                                transparent={true}
+                                animationType="slide"
+                                visible={isCameraOptionsVisible}
+                                onRequestClose={() => setCameraOptionsVisible(false)}
+                            >
+                                <View style={styles.modalView5}>
+                                    <View style={styles.modalCard5}>
+                                        <TouchableOpacity style={styles.customButton} onPress={handleCamera}>
+                                            <Text style={styles.buttonText1}>Take a photo</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.modalButton7} onPress={handleLibrary}>
+                                            <Text style={styles.buttonText1}>Choose a photo</Text>
                                         </TouchableOpacity>
                                     </View>
+                                    <View style={styles.modalCard6}>
+                                        <TouchableOpacity style={styles.modalButton7} onPress={() => setCameraOptionsVisible(false)}>
+                                            <Text style={styles.modalButtonText7}>Cancel</Text>
+                                        </TouchableOpacity>
+
+                                    </View>
                                 </View>
-                            </View>
-                        </Modal>
- 
- 
- 
+
+                            </Modal>
+                        )}
+                        {isPersonalDetailsFormVisible && (
+                            <Modal
+                                transparent={true}
+                                animationType='slide'
+                                visible={isPersonalDetailsFormVisible}
+                                onRequestClose={() => {
+                                    setPersonalDetailsFormVisible(false);
+                                    setFormErrors({});
+                                }}>
+                                <View style={styles.modalView}>
+                                    <View style={styles.modalCard}>
+                                        <View style={{ alignItems: 'flex-end' }}>
+                                            <TouchableOpacity onPress={() => setPersonalDetailsFormVisible(false)} >
+                                                <Icon7 name="close" size={20} color={'0D0D0D'} />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Text style={styles.modalTitle1}>Personal Details</Text>
+                                        </View>
+                                        <TextInput placeholder='FirstName' placeholderTextColor="#B1B1B1" style={styles.input}
+                                            value={personalDetails.firstName}
+                                            onChangeText={(text) => handleInputChange('firstName', (text))} />
+                                        {formErrors?.firstName && (
+                                            <Text style={styles.errorText}>{formErrors.firstName}</Text>
+                                        )}
+                                        <TextInput placeholder='LastName' placeholderTextColor="#B1B1B1" style={styles.input}
+                                            value={personalDetails.lastName}
+                                            onChangeText={(text) => handleInputChange('lastName', (text))} />
+                                        {formErrors?.lastName && (
+                                            <Text style={styles.errorText}>{formErrors.lastName}</Text>
+                                        )}
+                                        <TextInput placeholder={basicDetails?.email || 'Email'} placeholderTextColor="#B1B1B1" editable={false} style={styles.input} />
+                                        <TextInput placeholder='+91*******' style={styles.input} placeholderTextColor="#B1B1B1"
+                                            value={personalDetails.alternatePhoneNumber}
+                                            onChangeText={(text) => handleInputChange('alternatePhoneNumber', (text))} />
+                                        {formErrors?.alternatePhoneNumber && (
+                                            <Text style={styles.errorText}>{formErrors.alternatePhoneNumber}</Text>
+                                        )}
+
+                                        <View >
+                                            <GradientButton
+                                                title="Save Changes"
+                                                onPress={handleSaveChanges}
+                                                style={styles.button} // Apply button styles         
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                            </Modal>
+                        )}
+
+
                     </View>
                 </View>
- 
+
                 <View style={{ flex: 1, padding: 10 }}>
                     <View style={styles.card1}>
-                        <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
- 
-                        <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
-                            <Icon3 name='pencil' size={24} color='black' />
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                            <Text style={[styles.resumeText, { color: '#F97316' }]}>Resume</Text>
+                            <TouchableOpacity onPress={() => setResumeModalVisible(true)}>
+                                <Icon3 name="pencil" size={18} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.touchableTextContainer}>
+                            <TouchableOpacity onPress={() => setresumedisplay(true)}
+                            >
+                                <Text style={[styles.resumeText, {
+                                    color: '#74A2FA', // Typical link blue color
+                                    textDecorationLine: 'underline',
+                                }]}>{basicDetails.firstName}_{basicDetails.lastName}.pdf</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={resumedisplay}
+                                onRequestClose={() => setresumedisplay(false)}
+                            >
+
+                                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
+                                    
+                                        <View style={{ width: '90%', height: '80%', backgroundColor: 'white', borderRadius: 10, overflow: 'hidden' }}>
+                                            {/* Close Button */}
+                                            <TouchableOpacity
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: 10,
+                                                    top: 10,
+                                                    zIndex: 1, // Ensure it's above the PDF
+                                                    backgroundColor: 'lightgrey', // Optional: Light background for visibility
+                                                    padding: 5,
+                                                    borderRadius: 20,
+                                                }}
+                                                onPress={() => setresumedisplay(false)}
+                                            >
+                                                <Icon1 name="close" size={20} color="#000" />
+                                            </TouchableOpacity>
+
+                                            {/* PDF Viewer */}
+                                            <PDFExam />
+                                        </View>
+                                  
+                                </View>
+
+
+                            </Modal>
                     </View>
                 </View>
- 
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={isResumeModalVisible}
-                    onRequestClose={() => setResumeModalVisible(false)}
-                >
-                    <View style={styles.modalView1}>
-                        <View style={styles.modalCard1}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
-                                <Text style={styles.modalTitle1}>Resume</Text>
-                                <TouchableOpacity onPress={() => setResumeModalVisible(false)} style={{marginLeft:'70%'}}>
-                                    <Text style={{ fontSize: 16, color: 'red', top: -10 }}>X</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ alignItems: 'center' }}>
-                                <TextInput
-                                    style={styles.input1}
-                                    placeholder='Search from device'
-                                    placeholderTextColor="#B1B1B1"
-                                    value={resumeText} // Ensure string type
-                                    onChangeText={setResumeText}
-                                />
+
+
+                {isResumeModalVisible && (
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={isResumeModalVisible}
+                        onRequestClose={() => setResumeModalVisible(false)}
+                    >
+                        <View style={styles.modalView1}>
+                            <View style={styles.modalCard1}>
+                                <View style={{ marginLeft: '95%' }}>
+                                    <TouchableOpacity onPress={() => { setResumeModalVisible(false); setIsUploadComplete(false); setLoading(false); setProgress(0); setResumeFile(null); setShowBorder(false) }} >
+                                        <Icon7 name="close" size={20} color={'0D0D0D'} />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+                                    <Text style={styles.modalTitle1}>Upload Resume</Text>
+                                </View>
+                                <View style={[styles.uploadContainer, { borderColor: bgcolor ? '#DE3A3A' : '#3A76DE', borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: bgcolor ? "#FFEAE7" : "#E7F2FF", borderRadius: 20 }]}>
+                                    <TouchableOpacity onPress={handleUploadResume}>
+                                        <View style={{ alignItems: 'center' }}>
+                                            {/* <Image
+                                            source={require('../../../src/assests/Images/file1.png')}
+                                            style={{ position: 'absolute', top: 30 }}
+                                        /> */}
+                                            <Fileupload style={{ position: 'absolute', top: 30 }} />
+                                        </View>
+
+                                        <View style={{ padding: 10, }}>
+                                            <Text style={{ fontSize: 17, marginTop: 65, textAlign: 'center', fontFamily: 'PlusJakartaSans-Bold' }} >Select File</Text>
+                                            <Text style={{ color: '#6C6C6C', textAlign: 'center', fontFamily: 'PlusJakartaSans-Medium' }}>File must be less than 1Mb</Text>
+                                            <Text style={{ color: '#6C6C6C', textAlign: 'center', fontFamily: 'PlusJakartaSans-Medium' }}>Only .doc or .PDFs are allowed.</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ marginBottom: 50 }}>
+                                    {bgcolor ? (
+                                        <Text style={{ color: 'red', marginBottom: 25, marginTop: 10, fontFamily: 'PlusJakartaSans-Bold' }}>File Not selected</Text>
+                                    ) : (
+                                        <Text></Text>
+                                    )}
+                                </View>
+
+                                <View style={[styles.fileContainer, ((showBorder) || (hasResume && !isResumeRemoved)) && styles.showborder
+                                ]}>
+
+                                    {resumeFile ? (
+
+                                        <View style={{ flexDirection: 'row', }}>
+                                            <FontAwesome name="file-text-o" size={20} color="#000" />
+
+                                            <Text style={[styles.fileNameText, { marginLeft: 12 }]}>
+                                                {resumeFile?.name ? (resumeFile.name.length > 20 ? `${resumeFile.name.substring(0, 17)}...` : resumeFile.name) : "No file selected"}
+                                            </Text>
+                                            <TouchableOpacity
+                                                style={styles.closeIcon}
+                                                onPress={handleCancelUpload}
+                                            >
+                                                <View style={{ marginLeft: 50, position: 'absolute', top: 2.5 }}>
+                                                    <Icon7 name="close" size={15} />
+                                                </View>
+
+                                            </TouchableOpacity>
+                                        </View>
+                                    ) : (!isResumeRemoved && hasResume) ?
+                                        <View style={{ flexDirection: 'row', }}>
+                                            <FontAwesome name="file-text-o" size={20} color="#000" />
+
+                                            <Text style={[styles.fileNameText, { marginLeft: 12 }]}>
+                                                {basicDetails.firstName}.pdf
+                                            </Text>
+                                            <TouchableOpacity
+                                                style={styles.closeIcon}
+                                                onPress={handleCancelUpload}
+                                            >
+                                                <View style={{ marginLeft: 50, position: 'absolute', top: 2.5 }}>
+                                                    <Icon7 name="close" size={15} />
+                                                </View>
+
+                                            </TouchableOpacity>
+                                        </View>
+                                        : null}
+
+                                    {loading && (
+                                        <View style={styles.progressContainer}>
+                                            <Progress.Bar
+                                                progress={progress}
+                                                width={290}
+                                                color="#F97316" // Progress bar color
+                                                unfilledColor="#D7D6D6" // Unfilled background color
+                                                borderColor="#D7D6D6" // Outline color
+                                            />
+                                        </View>
+                                    )}
+
+                                </View>
+
+
+                                {/* <View>
+
+                                    <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
+                                        <View style={styles.line}></View>
+                                        <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
+                                        <View style={[styles.line, { marginLeft: 3 }]}></View>
+                                    </View>
+
+
+
+                                </View> */}
+                                {/* <View>
+                                    <TouchableOpacity
+                                        style={styles.uploadButton}
+                                        onPress={() => navigation.navigate('ResumeBuilder')}
+                                    >
+
+                                        <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
+
+                                    </TouchableOpacity>
+                                </View> */}
+
                                 <TouchableOpacity
-                                    style={styles.uploadButton}
-                                    onPress={handleUploadResume}
+                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10,marginTop:10 }]}
+                                    onPress={handleSaveResume}
+                                    disabled={isUploadComplete}
                                 >
-                                    <Text style={styles.saveButtonText}>Upload</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.separator} />
-                            <View style={styles.resumeModal}>
-                                <TouchableOpacity
-                                    style={[styles.uploadButton, { marginRight: 10 }]}
-                                    onPress={() => navigation.navigate('ResumeBuilder')}
-                                >
-                                    <Text style={styles.saveButtonText}>Build your Resume</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ alignItems: 'flex-end' }}>
-                                <TouchableOpacity
-                                    style={styles.button}
-                                    onPress={handleSaveResume} // Save changes and upload the file to the backend
-                                >
-                                    <Text style={styles.saveButtonText}>Save Changes</Text>
+                                    {isUploadComplete ? (
+                                        <View style={[styles.button, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
+                                            <Text style={[styles.saveButtonText, { fontFamily: 'PlusJakartaSans-Bold' }]}>Save Changes</Text>
+                                        </View>
+                                    ) : (
+                                        <GradientButton
+                                            title="Save Changes"
+                                            onPress={handleSaveResume}
+                                            style={styles.button} // Apply button styles
+                                        />
+                                    )}
+
                                 </TouchableOpacity>
                             </View>
                         </View>
-                    </View>
-                </Modal>
- 
- 
- 
- 
+                    </Modal>
+                )}
+
+
+
             </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView >
     )
+
 }
- 
- 
- 
+
+
+
 const styles = StyleSheet.create({
-    uploadButton: {
-        backgroundColor: '#778289',
-        borderRadius: 8,
-        margin: 4,
+    line: {
+        width: '20%',
+        height: 1,
+        backgroundColor: '#D8D8D8',
+        position: 'static',
+        top: '60%',
+        marginBottom: 10,
+    },
+    uploadContainer: {
+        //flexDirection: "row",
+        //justifyContent: "space-between",
+        padding: 5,
+
+    },
+    fileNameText: {
+        fontSize: 16,
+        color: '#000',
+        fontFamily: 'PlusJakartaSans-Medium',
+    },
+    orContainer: {
+        display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
-        // paddingHorizontal: 12,
-        padding: 8
- 
+
     },
-    skillBadge: {
-        height: 30,
-    flexDirection: 'row',
-    alignItems: 'center', // Align children vertically
-    justifyContent: 'center', // Center children horizontally
-    paddingHorizontal: 8, // Consistent padding inside badges
-    backgroundColor: '#334584', // Default background color
-    borderRadius: 15,
-    marginRight: 8,
-    marginBottom: 5, 
- 
+    fileContainer: {
+        padding: 10,
+        marginBottom: 15,
+        marginTop: -55
     },
-    skillBadgeText: {
-        color: 'white',
-        fontSize: 14,
+    progressContainer: {
+        marginTop: 20,
+        alignItems: 'center',
     },
-    button: {
-        backgroundColor: '#F97316',
+    showborder: {
+        borderWidth: 1,
+        borderColor: '#D7D6D6',
+        borderRadius: 10,
+    },
+    buttonContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    uploadButton: {
+        width: '100%',
+        backgroundColor: '#4B4A4A',
         alignItems: 'center',
         justifyContent: 'center',
         height: 30,
-        width: 120,
+        borderRadius: 5,
+        marginBottom: 55
+
+    },
+    closeIcon: {
+        position: 'absolute',
+        left: 220,
+
+    },
+      pdf: {
+        
+        flex: 1,
+        width: '100%',
+        height: Dimensions.get('window').height,
+      },
+    skillBadge: {
+        height: 30,
+        flexDirection: 'row',
+        alignItems: 'center', // Align children vertically
+        justifyContent: 'center', // Center children horizontally
+        paddingHorizontal: 8, // Consistent padding inside badges
+        backgroundColor: '#334584', // Default background color
+        borderRadius: 15,
+        marginRight: 8,
+        marginBottom: 5,
+
+    },
+
+    skillBadgeText: {
+        color: 'white',
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Medium',
+
+    },
+    button: {
+        marginTop: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 34,
+        width: '100%',
         borderRadius: 5
- 
+
     },
     input: {
         height: 40,
         borderColor: '#ccc',
         borderWidth: 1,
-        marginBottom: 15,
+        marginBottom: 8,
+        marginTop: 4,
         paddingHorizontal: 10,
         borderRadius: 2,
         backgroundColor: '#E5E5E5',
-        color:'#0D0D0D',
- 
+        color: '#0D0D0D',
+        fontFamily: 'PlusJakartaSans-Medium'
+
+
     },
     skillContainer: {
+        alignItems: 'center',
         marginTop: 5,
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -678,21 +665,25 @@ const styles = StyleSheet.create({
         height: 30,
         width: 'auto',
         padding: 5,
-        backgroundColor: '#334584',
+        backgroundColor: '#498C07',
         borderRadius: 15,
         marginRight: 8,
         justifyContent: 'space-between',
         margin: 5,
         color: '#fff',
-        paddingHorizontal: 8
- 
+
+        paddingHorizontal: 8,
+        fontFamily: 'PlusJakartaSans-Medium',
+
+
+
     },
     card: {
         margin: 10,
         padding: 20,
         backgroundColor: '#fff',
         borderRadius: 10,
-       
+
     },
     container: {
         alignItems: 'center',
@@ -701,15 +692,17 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignItems: 'center', // Center the image horizontally
     },
- 
+
     pencil: {
         marginLeft: 'auto'
     },
     name: {
-        fontWeight: 'bold',
-        fontSize: 30,
-        color: '#424242'
- 
+
+        fontSize: 24,
+        color: '#424242',
+        fontFamily: 'PlusJakartaSans-Bold',
+
+
     },
     image: {
         width: 150,
@@ -717,11 +710,11 @@ const styles = StyleSheet.create({
         borderRadius: 75, // Ensure the image is circular
         shadowColor: 'transparent', // Remove shadow
         elevation: 0, // Remove elevation shadow
-        resizeMode:'cover'
+        resizeMode: 'cover'
     },
     cameraIcon: {
         position: 'absolute',
-        right: 5,  // Reduce the right margin
+        right: 5, // Reduce the right margin
         bottom: 1, // Reduce the bottom margin
         backgroundColor: '#EAF0F1',
         borderRadius: 20,
@@ -734,12 +727,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 4,
- 
+
     },
     text: {
         marginLeft: 10,
-        fontSize: 16,
-        color: '#6C757D'
+        fontSize: 14,
+        color: '#6C757D',
+        fontFamily: 'PlusJakartaSans-Medium'
     },
     professional: {
         backgroundColor: '#fff',
@@ -751,8 +745,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         padding: 20
- 
- 
+
+
     },
     cap: {
         margin: 2,
@@ -761,19 +755,20 @@ const styles = StyleSheet.create({
     },
     subheading: {
         color: '#A1A1A1',
-        fontSize: 18,
-        marginTop: 10
+        fontSize: 14,
+        marginTop: 10,
+        fontFamily: 'PlusJakartaSans-Medium'
     },
     details: {
-        fontWeight: 'bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         color: '#463F3F',
-        fontSize: 18
+        fontSize: 14,
     },
     modalView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
- 
+
     },
     modalCard: {
         width: 300,
@@ -790,50 +785,59 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 5,
     },
- 
+
     resumeModal: {
         // flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
- 
+
     resumeText: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Bold'
     },
-    // Add the new style for the container
- 
     card1: {
-        width: '100%', // Adjust width to 90% of the screen width
+        width: '100%',
         backgroundColor: '#fff',
-        //paddingTop: 10, // Increase top padding for more height
-        paddingBottom: 40, // Increase bottom padding for more height
-        paddingLeft: 40, // Space from the left side of the card
-        paddingRight: 20, // Space from the right side of the card
-        flexDirection: 'row', // Horizontally align the text and the button
-        justifyContent: 'space-between', // Space between the text and logo
-        alignItems: 'center', // Vertically center the content inside the card
-        borderRadius: 10, // Rounded corners for the card
-        shadowColor: '#000', // Shadow color
-        shadowOffset: { width: 0, height: 2 }, // Shadow offset
-        shadowOpacity: 0.8, // Shadow opacity
-        shadowRadius: 2, // Shadow blur radius
-        elevation: 5, // Elevation for Android
-        marginVertical: 10, // Space between cards
-        height: 100, // Increase height of the card
+        paddingBottom: 40,
+        paddingLeft: 40,
+        paddingRight: 20,
+        alignItems: 'center',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+        marginVertical: 10,
+        height: 100, // Increase height to accommodate extra text
     },
- 
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        marginTop: 16
+    },
+    touchableTextContainer: {
+        marginTop: 6, // Add margin to separate the touchable text from the row above
+        // alignItems: 'center', // Center align the touchable text
+        width: '100%',
+    },
+
+
+
     // Style for the static Resume Text (left side)
-   
+
     // Style for the Edit Logo (right side)
-   
- 
+
+
     editLogo: {
         width: 18,
         height: 18,
     },
- 
- 
+
+
     // Modal View for the Resume Edit
     modalView1: {
         flex: 1,
@@ -841,10 +845,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
     },
- 
+
     // Modal Card Style
     modalCard1: {
-        width: 300,
+        width: 350,
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
@@ -854,15 +858,15 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 5,
     },
- 
+
     // Modal Title
     modalTitle1: {
-        color: '#333333',
+        color: '#666666',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         marginBottom: 20,
     },
- 
+
     // Text Input for editing the resume
     input1: {
         height: 40,
@@ -874,37 +878,52 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#E5E5E5',
         // textAlignVertical: 'top', // Makes the text align from top in the input box
+        fontFamily: 'PlusJakartaSans-Medium',
     },
- 
-   
- 
+
+
+
     // Save Button Text
     saveButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
+        color: 'white',
+
+
     },
- 
+
     modalView5: {
         flex: 1,
         justifyContent: 'flex-end', // Align modal at the bottom
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Background overlay
+
     },
- 
+
     modalCard5: {
         width: '95%', // Adjusts modal width
         marginHorizontal: '5%', // Centers the modal horizontally
         backgroundColor: 'white',
         borderRadius: 10,
-        paddingVertical: 20, // Padding for top and bottom, reducing the space inside the modal
-        paddingHorizontal: 20, // Horizontal padding to keep space on sides
+        paddingVertical: 3, // Padding for top and bottom, reducing the space inside the modal
+        paddingHorizontal: 2, // Horizontal padding to keep space on sides
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
+        marginBottom: 10
     },
- 
+
+    modalCard6: {
+        width: '95%',
+        marginHorizontal: '5%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        marginBottom: 10,
+        paddingLeft: 5
+    },
+
     customButton: {
         width: '100%', // Full-width button
         backgroundColor: 'white',
@@ -914,15 +933,25 @@ const styles = StyleSheet.create({
         borderColor: '#ccc', // Divider color
         justifyContent: 'flex-start', // Align text to the left
     },
- 
-    buttonText1: {
- 
-        fontWeight: 400,
-        fontSize: 18,
-        color: '#0D0D0D',
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+    customButton1: {
+        width: '100%', // Full-width button
+        backgroundColor: 'white',
+        paddingVertical: 15, // Vertical padding for button height
+        paddingHorizontal: 10, // Left and right padding
+        borderColor: '#ccc', // Divider color
+        justifyContent: 'flex-start', // Align text to the left
     },
- 
+
+    buttonText1: {
+
+
+
+
+        fontSize: 14,
+        color: '#0D0D0D',
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
+    },
+
     modalButton7: {
         width: '100%', // Full-width cancel button
         fontSize: 18,
@@ -931,20 +960,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         // marginTop: 5, // Reduce margin to avoid excessive space before "Cancel"
     },
- 
+
     modalButtonText7: {
-        color: 'red', // Text color for the Cancel button
+        color: '#E35D6A', // Text color for the Cancel button
         fontWeight: 400,
-        fontSize: 18,
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
- 
+
     separator: {
         height: 1,
         width: '100%',
         backgroundColor: '#ccc', // Add a grey line as separator
         marginVertical: 15,
- 
+
     },
     errorContainer: {
         flex: 1,
@@ -953,7 +982,8 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
-        fontSize: 16
+        fontSize: 12,
+        fontFamily: 'PlusJakartaSans-Medium'
     }
     ,
     retryText: {
@@ -961,9 +991,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 10
     },
- 
+
 });
- 
 export default ProfileComponent;
- 
- 
+

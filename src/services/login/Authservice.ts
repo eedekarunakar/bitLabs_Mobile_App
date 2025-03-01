@@ -1,8 +1,6 @@
-import axios, {AxiosError} from 'axios';
-import * as Keychain from 'react-native-keychain';
- 
+import axios  from 'axios';
 import * as CryptoJS from 'crypto-js';
-import API_BASE_URL from '../API_Service';
+import apiClient from './ApiClient';
  
 export interface AuthResponse {
   success: boolean;
@@ -26,7 +24,7 @@ const encryptPassword = (password: string, secretkey: string) => {
 };
 export const handleLoginWithEmail = async (email: string): Promise<AuthResponse> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/applicant/applicantLogin`, { email:email });
+    const response = await apiClient.post(`/applicant/applicantLogin`, { email:email });
     if (response.status === 200) {
       const token = response.data.data.jwt;
       const id = response.data.id;
@@ -56,21 +54,19 @@ export const handleLogin = async (
     const {encryptedPassword, iv} = encryptPassword(loginpassword, secretkey);
  
     console.log('Encrypted Password:', encryptedPassword);
-    const response = await axios.post(
-      `${API_BASE_URL}/applicant/applicantLogin`,
+    const response = await apiClient.post(
+      `/applicant/applicantLogin`,
       {
         email: loginemail.toLowerCase(),
         password: encryptedPassword,
         iv: iv,
       }
- 
     );
  
     if (response.status === 200) {
       console.log(response);
       const token = response.data.data.jwt;
       const id = response.data.id;
- 
       if (token && id) {
         return {success: true, data: {token, id}};
       }
@@ -88,13 +84,15 @@ export const handleLogin = async (
     }
   }
 };
+
+
 export const handleSignup = async (
   signupEmail: string,
   signupNumber: string,
 ): Promise<AuthResponse> => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applicant/applicantsendotp`,
+    const response = await apiClient.post(
+      `/applicant/applicantsendotp`,
       {
         email: signupEmail.toLowerCase(),
         mobilenumber: signupNumber,
@@ -122,27 +120,29 @@ export const handleOTP = async (
   signupNumber: string,
   signupPassword: string,
 ): Promise<AuthResponse> => {
+const lowerCaseEmail = signupEmail.toLowerCase();
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/applicant/applicantverify-otp`,
+    const response = await apiClient.post(
+      `/applicant/applicantverify-otp`,
       {
         otp: otp,
-        email: signupEmail.toLowerCase(),
+        email: lowerCaseEmail,
       },
     );
  
     if (response.status === 200) {
-      const registeruser = await axios.post(
-        `${API_BASE_URL}/applicant/saveApplicant`,
+      const registeruser = await apiClient.post(
+        `/applicant/saveApplicant`,
         {
           name: signupName,
-          email: signupEmail,
+          email: lowerCaseEmail,
           mobilenumber: signupNumber,
           password: signupPassword,
         },
       );
  
       if (registeruser.status === 200) {
+        await handleLogin(lowerCaseEmail,signupPassword)
         return {success: true, data: registeruser.data};
       } else {
         return {success: false, message: registeruser.data};

@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { DocumentPickerResponse } from 'react-native-document-picker';
-import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
 
-// const API_BASE_URL = 'https://g23jza8mtp.ap-south-1.awsapprunner.com'; // Replace with actual API base URL
-
+interface TestData {
+  testStatus: string;
+}
 export const ProfileService = {
   async fetchProfile(userToken: string | null, userId: number | null) {
     try {
@@ -14,7 +14,7 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.get(`${API_BASE_URL}/applicantprofile/${userId}/profile-view`, {
+      const response = await apiClient.get(`/applicantprofile/${userId}/profile-view`, {
         headers: {
           Authorization: `Bearer ${userToken}`, // Embed token in the Authorization header
         },
@@ -49,8 +49,8 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.put(
-        `${API_BASE_URL}/applicantprofile/${userId}/basic-details`,
+      const response = await apiClient.put(
+        `/applicantprofile/${userId}/basic-details`,
         updatedProfileData,
         {
           headers: {
@@ -58,11 +58,14 @@ export const ProfileService = {
           },
         }
       );
-
-      if (response.data?.formErrors) {
+      if (response.status !== 200) {
+        return false;
+      }
+      else if (response.data?.formErrors) {
         // If the API returns form errors, return them so that they can be displayed in the UI
         return { success: false, formErrors: response.data.formErrors };
       }
+
 
       // If update is successful, return the updated data
       return { success: true, profileData: response.data };
@@ -71,7 +74,6 @@ export const ProfileService = {
       if (axios.isAxiosError(error)) {
 
         console.log('Axios error:', error.response?.data || error.message);
-        // throw new Error(error.response?.data?.message || 'An error occurred while updating profile data.');
         return (error?.response?.data);
       } else {
         console.log('Unexpected error:', error);
@@ -85,8 +87,8 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.put(
-        `${API_BASE_URL}/applicantprofile/${userId}/professional-details`,
+      const response = await apiClient.put(
+        `/applicantprofile/${userId}/professional-details`,
         updatedProfileData,
         {
           headers: {
@@ -118,8 +120,8 @@ export const ProfileService = {
       }
       const formData = new FormData();
       formData.append('photo', { uri: photoFile.uri, type: photoFile.type, name: photoFile.fileName, });
-      console.log('FormData prepared:', formData);
-      const response = await axios.post(`${API_BASE_URL}/applicant-image/${userId}/upload`,
+      // console.log('FormData prepared:', formData);
+      const response = await apiClient.post(`/applicant-image/${userId}/upload`,
         formData,
         {
           headers: {
@@ -127,6 +129,7 @@ export const ProfileService = {
             'Content-Type': 'multipart/form-data',
           },
         });
+
       return { success: true, data: response.data };
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -144,7 +147,7 @@ export const ProfileService = {
       if (!userToken || !userId) {
         throw new Error('Authentication data is missing or incomplete.');
       }
-      const response = await axios.get(`${API_BASE_URL}/applicant-image/getphoto/${userId}`, {
+      const response = await apiClient.get(`/applicant-image/getphoto/${userId}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
         }, responseType: 'arraybuffer',
@@ -173,8 +176,8 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await axios.post(
-        `${API_BASE_URL}/resume/upload/${userId}`,
+      const response = await apiClient.post(
+        `/resume/upload/${userId}`,
         formData,
         {
           headers: {
@@ -195,8 +198,25 @@ export const ProfileService = {
       }
     }
   },
+  async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean> {
+    try {
+      const response = await apiClient.get<TestData[]>(`/applicant1/tests/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      const data = response.data;
 
 
-  
+      // Check if both aptitude and technical tests have status "P" or "p"
+      const allTestsPassed = data.length >= 2 && data.every(test => test.testStatus.toLowerCase() === 'p');
+      console.log("verified = " +allTestsPassed);
+      return allTestsPassed;
+    } catch (error) {
+      console.error('Error fetching test data:', error);
+      return false
+    }
+
+  }
 }
 export default ProfileService;

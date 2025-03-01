@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 700,
+    fontFamily: 'PlusJakartaSans-Bold',
     color: '#495057',
     lineHeight:25,
     marginLeft:50

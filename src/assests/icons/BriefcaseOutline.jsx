@@ -1,5 +1,6 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
+import PropTypes from 'prop-types'; // Import prop-types
 
 const BriefcaseOutline = ({ width = 24, height = 24, color = 'currentColor' }) => {
   return (
@@ -19,6 +20,20 @@ const BriefcaseOutline = ({ width = 24, height = 24, color = 'currentColor' }) =
       />
     </Svg>
   );
+};
+
+// Prop validation
+BriefcaseOutline.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
+  color: PropTypes.string,
+};
+
+// Default values for props
+BriefcaseOutline.defaultProps = {
+  width: 24,
+  height: 24,
+  color: 'currentColor',
 };
 
 export default BriefcaseOutline;

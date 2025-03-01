@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState} from "react";
+
 import { View, Image, StyleSheet, Dimensions, TouchableOpacity, Modal, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "../../context/Authcontext";
-import { useJobAlerts } from '../../viewmodel/Alert/Notificationmodel';
-import ProfileService from '../../services/profile/ProfileService';
-import { useProfilePhoto } from '../../context/ProfilePhotoContext';
-import useGoogleSignIn from '../../services/google/google';
- 
+import { useAuth } from "@context/Authcontext";
+import { useJobAlerts } from '@viewmodel/Alert/Notificationmodel';
+import { useProfilePhoto } from '@context/ProfilePhotoContext';
+import useGoogleSignIn from '@services/google/google';
+import Notification from "@assests/icons/notification";
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
- 
+
 const Navbar = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
-    // const [photo, setPhoto] = useState('');
-    const { authData, logout, userId, userToken } = useAuth();
-    const { unseenCount, handleMarkAsSeen } = useJobAlerts();
+
+    const { logout } = useAuth();
+    const { unseenCount } = useJobAlerts();
     const {photo} = useProfilePhoto();
     const{signOut} = useGoogleSignIn();
 
- 
+
     const handleProfilePress = () => {
         setModalVisible(true);
     };
- 
-    const handleLogout = () => {logout(); signOut();};    
+
+    const handleLogout = () => {
+        logout();
+        signOut();
+    };
     return (
         <View style={styles.navbar}>
- 
+
             <View style={styles.logoContainer}>
                 <Image
-                    source={require('../../assests/Images/logo.png')}
+                    source={require('../../assests/LandingPage/logo.png')}
                     style={styles.logo1Image}
                 />
             </View>
@@ -37,10 +42,7 @@ const Navbar = () => {
                 {/* Notification Bell */}
                 <View style={styles.notificationContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-                        <Image
-                            source={require('../../assests/Images/rat/notification.png')}
-                            style={styles.notification}
-                        />
+                        <Notification width={28} heigth={22} />
                     </TouchableOpacity>
                     {unseenCount > 0 && (
                         <View style={styles.notificationBadge}>
@@ -68,13 +70,14 @@ const Navbar = () => {
                     >
                         <View style={styles.modalView5}>
                             <View style={styles.modalCard5}>
-                                <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate("Profile")} >
+                                <TouchableOpacity style={styles.customButton} onPress={() => {navigation.navigate("Profile");setModalVisible(false);}}>
                                     <Text style={styles.buttonText1}>View Profile</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate('ChangePassword')} >
-                                    <Text style={styles.buttonText1}>Change Password</Text>
+                                <TouchableOpacity style={styles.customButton1} onPress={() =>{ navigation.navigate('ChangePassword');setModalVisible(false);}} >
+                                    <Text style={styles.buttonText1}>Change password</Text>
                                 </TouchableOpacity>
-                                <View style={styles.separator}></View>
+                            </View>
+                            <View style={[styles.modalCard6, { marginTop: 10, }]}>
                                 <TouchableOpacity style={styles.modalButton7} onPress={handleLogout} >
                                     <Text style={styles.modalButtonText7}>Logout</Text>
                                 </TouchableOpacity>
@@ -86,9 +89,9 @@ const Navbar = () => {
         </View>
     );
 };
- 
- 
- 
+
+
+
 const styles = StyleSheet.create({
     navbar: {
         flexDirection: "row",
@@ -96,32 +99,32 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: screenWidth * 0.02,
         backgroundColor: "#fff",
-   
+
         height: screenHeight * 0.08,
-      },
-      logo1Image: {
+    },
+    logo1Image: {
         width: screenWidth * 0.4,
         height: screenHeight * 0.04,
         resizeMode: "contain",
-       
-      },
-      logoContainer: {
+
+    },
+    logoContainer: {
         flex: 1,
-      },
-      rightContainer: {
+    },
+    rightContainer: {
         flexDirection: "row",
         alignItems: "center",
-      },
-      notificationContainer: {
+    },
+    notificationContainer: {
         position: "relative",
         marginRight: 15, // Space between notification and profile picture
-      },
-      notification: {
+    },
+    notification: {
         width: 24,
         height: 24,
         resizeMode: "contain",
-      },
-      notificationBadge: {
+    },
+    notificationBadge: {
         position: "absolute",
         top: -5, // Adjust position of the badge
         right: -5,
@@ -129,23 +132,23 @@ const styles = StyleSheet.create({
         borderRadius: 12, // Circular shape
         height: 18,
         width: 18
-       
+
         ,
         justifyContent: "center",
         alignItems: "center",
         borderColor: "#fff", // Optional: Border to make it stand out
-      },
-      notificationText: {
+    },
+    notificationText: {
         color: "#fff",
         fontSize: 12,
         fontWeight: "bold",
-      },
-      profilePic: {
+    },
+    profilePic: {
         width: screenWidth * 0.08,
         height: screenWidth * 0.08,
         borderRadius: (screenWidth * 0.08) / 2,
         backgroundColor: "#ccc",
-      },
+    },
     modalView5: {
         flex: 1,
         justifyContent: 'flex-end',
@@ -157,9 +160,20 @@ const styles = StyleSheet.create({
         marginHorizontal: '5%',
         backgroundColor: 'white',
         borderRadius: 10,
-        paddingVertical: 20,
-        paddingHorizontal: 20,
-       
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        paddingLeft: 5
+
+    },
+    modalCard6: {
+        width: '95%',
+        marginHorizontal: '5%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingVertical: 2,
+        paddingHorizontal: 3,
+        marginBottom: 10,
+        paddingLeft: 5
     },
     customButton: {
         width: '100%',
@@ -167,6 +181,15 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 10,
         borderBottomWidth: 1,
+        borderColor: '#ccc',
+        justifyContent: 'center',
+    },
+    customButton1: {
+        width: '100%',
+        backgroundColor: 'white',
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderBottomWidth: 0,
         borderColor: '#ccc',
         justifyContent: 'center',
     },
@@ -178,17 +201,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     modalButtonText7: {
-        color: 'red', // Text color for the Cancel button
-        fontWeight: 400,
-        fontSize: 18,
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
+        color: '#E35D6A', // Text color for the Cancel button
+        fontWeight:400,
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
     },
- 
+
     buttonText1: {
-        fontWeight: 400,
-        fontSize: 18,
-        fontFamily: 'JakartaSans', // Set font to Jakarta Sans
-        color:'#2f2f2f'
+        fontWeight:400,
+        fontSize: 14,
+        fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
+        color: '#2f2f2f'
     },
     buttonText: {
         color: 'black',
@@ -198,5 +221,5 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 });
- 
+
 export default Navbar;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
   View,
   Text,
@@ -6,17 +7,20 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Platform
-
+  Platform,
+  Dimensions,
+  FlatList
 } from 'react-native';
-import { useAuth } from '../../context/Authcontext';
-import { ProfileViewModel } from '../../viewmodel/Profileviewmodel';
-import Toast from 'react-native-toast-message';
-import { ApplicantSkillBadge } from '../../models/profile/profile';
+import GradientButton from '@components/styles/GradientButton';
+import { useAuth } from '@context/Authcontext';
+import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
+
+import { ApplicantSkillBadge } from '@models/Model';
+import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
+import { showToast } from '@services/login/ToastService';
 
 interface Skill {
   id: number;
@@ -36,9 +40,8 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-import { FlatList } from 'react-native';
-
-const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
+const { width, height } = Dimensions.get('window');
+const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(({
   visible,
   onClose,
   qualification: initialQualification = '',
@@ -70,6 +73,22 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const { userToken, userId } = useAuth();
+  useEffect(() => {
+    if (visible) {
+      setQualification(initialQualification);
+      setSpecialization(initialSpecialization);
+      setLocations(initialLocations);
+      setSkills(initialSkills);
+      setExperience(initialExperience);
+    }
+  }, [
+    visible,
+    initialQualification,
+    initialSpecialization,
+    initialSkills,
+    initialExperience,
+    initialLocations,
+  ])
 
   const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
   const specializationsByQualification: Record<string, string[]> = {
@@ -88,14 +107,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added')
   );
 
-  const showToast = (type1: 'success' | 'error', message: string) => {
-    Toast.show({
-      type: type1,
-      text1: message,
-      position: 'bottom',
-      visibilityTime: 3000,
-    });
-  };
+
 
   const toggleQualificationDropdown = () => {
     setShowQualificationList(!showQualificationList);
@@ -162,6 +174,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
       const newSkill: Skill = { id: skills.length + 1, skillName, experience: 0 };
       setSkills([...skills, newSkill]);
     }
+
     setSkillQuery('');
     setShowSkillsList(false);
   };
@@ -175,6 +188,16 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     } else {
       const updatedSkills = skills.filter((s) => s.id !== id);
       setSkills(updatedSkills);
+    }
+
+    setSkillQuery('');
+    // setShowSkillsList(true);  // Optionally show the list after removing a skill
+  };
+
+
+  const toggleDropdown = (type: string) => {
+    if (type === 'skills') {
+      setShowSkillsList((prev) => !prev); // Toggle dropdown visibility
     }
   };
 
@@ -246,17 +269,17 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
       if (response.formErrors) {
         setValidationErrors(response.formErrors);
       } else if (response.success) {
-        showToast('success', 'Professional Details updated successfully');
+        showToast('success', 'Professional details updated successfully');
         onClose();
         onReload();
       } else {
-        showToast('error', 'Error updating Professional Details');
+        showToast('error', 'Error updating professional details');
         onClose();
         onReload();
       }
     } catch (error) {
       console.error('Internal error:', error);
-      showToast('error', 'Internal error occurred while updating Professional Details');
+      showToast('error', 'Internal error occurred while updating professional details');
     }
   };
 
@@ -266,11 +289,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
         <TouchableWithoutFeedback onPress={closeAllDropdowns}>
           <View style={styles.modalView}>
             <View style={styles.modalCard}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
-                <Text style={styles.modalTitle}>Professional Details</Text>
+              <View style={{ alignItems: 'flex-end' }}>
                 <TouchableOpacity onPress={onClose}>
-                  <Text style={{ fontSize: 24, color: 'red', top: -10 }}>X</Text>
+                  <Icon name="close" size={20} color={'0D0D0D'} />
                 </TouchableOpacity>
+              </View>
+              {/* <ScrollView contentContainerStyle={{ padding: 10 }}> */}
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={styles.modalTitle}>Professional Details</Text>
               </View>
 
               {/* Qualification */}
@@ -356,83 +382,130 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.skills ? styles.errorInput : {}]}
-                  placeholder="Search Skills" placeholderTextColor="#0D0D0D"
+                  placeholder="Search Skills"
+                  placeholderTextColor="#0D0D0D"
                   value={skillQuery}
-                  onFocus={toggleSkillsDropdown}
-                  onChangeText={setSkillQuery}
+                  onFocus={() => setShowSkillsList(true)}
+                  onChangeText={(text) => {
+                    setSkillQuery(text);
+                    setShowSkillsList(true); // Ensure dropdown remains open
+                  }}
                 />
                 {validationErrors.skills && <Text style={styles.errorText}>{validationErrors.skills}</Text>}
-                {showSkillsList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
+                {/* Dropdown Section */}
+                {showSkillsList && (
+                  <View style={[styles.dropdown, { position: 'absolute', top: 50, left: 0, right: 0, maxHeight: 200, zIndex: 1000 }]}>
                     <FlatList
-                      data={skillQuery.length > 0 ? skillsOptions.filter((s) => s.toLowerCase().includes(skillQuery.toLowerCase())) : skillsOptions}
-                      keyExtractor={(item) => item}
+                      data={skillQuery.length > 0
+                        ? skillsOptions.filter((s) =>
+                          s.toLowerCase().includes(skillQuery.toLowerCase()) &&
+                          !skills.some((skill) => skill.skillName === s) &&
+                          !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
+                        )
+                        : skillsOptions.filter((s) =>
+                          !skills.some((skill) => skill.skillName === s) &&
+                          !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
+                        )
+                      }
+                      keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => addSkill(item)}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            addSkill(item);
+                            setSkillQuery(''); // Clear input after selection
+                            // setShowSkillsList(true); // Keep dropdown open
+                          }}
+                        >
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
+                      keyboardShouldPersistTaps="handled"
+                      nestedScrollEnabled={true} // Important for Android
                       ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
-                      nestedScrollEnabled={true}
                     />
-
                   </View>
                 )}
+
+                {/* Selected Skills Section */}
                 <View style={styles.selectedItems}>
                   {skillBadgesState
                     .filter((badge) => badge.flag === 'added')
                     .map((badge) => (
-                      <View key={badge.skillBadge.id} style={[styles.selectedItem, { backgroundColor: '#4CAF50' }]}>
+                      <View key={badge.skillBadge.id} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
                         <Text style={styles.selectedItemText}>{badge.skillBadge.name}</Text>
-                        <TouchableOpacity onPress={() => removeSkill(badge.skillBadge.id, true, badge.skillBadge.name)}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            removeSkill(badge.skillBadge.id, true, badge.skillBadge.name);
+                            
+                          }}
+                        >
                           <Text style={styles.removeText}>x</Text>
                         </TouchableOpacity>
                       </View>
                     ))}
                   {skills.map((skill) => (
-                    <View key={skill.id} style={[styles.selectedItem, { backgroundColor: '#4CAF50' }]}>
+                    <View key={skill.id} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
                       <Text style={styles.selectedItemText}>{skill.skillName}</Text>
-                      <TouchableOpacity onPress={() => removeSkill(skill.id, false, skill.skillName)}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          removeSkill(skill.id, false, skill.skillName);
+                         
+                        }}
+                      >
                         <Text style={styles.removeText}>x</Text>
                       </TouchableOpacity>
                     </View>
                   ))}
                 </View>
               </View>
-
               {/* Locations */}
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.locations ? styles.errorInput : {}]}
-                  placeholder="Search Locations" placeholderTextColor="#0D0D0D"
+                  placeholder="Search Locations"
+                  placeholderTextColor="#0D0D0D"
                   value={locationQuery}
-                  onFocus={toggleLocationDropdown}
-                  onChangeText={setLocationQuery}
+                  onFocus={() => setShowLocationList(true)}
+                  onChangeText={(text) => {
+                    setLocationQuery(text);
+                    setShowLocationList(true); // Ensure dropdown opens when typing
+                  }}
                 />
                 {validationErrors.locations && <Text style={styles.errorText}>{validationErrors.locations}</Text>}
-                {showLocationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
 
+                {showLocationList && (
+                  <View style={[styles.dropdown, { position: 'absolute', top: 50, left: 0, right: 0, maxHeight: 200, zIndex: 1000 }]}>
                     <FlatList
-                      data={locationQuery.length > 0 ? cities.filter((loc) => loc.toLowerCase().includes(locationQuery.toLowerCase())) : cities}
-                      keyExtractor={(item) => item}
+                      data={locationQuery.length > 0
+                        ? cities.filter((loc) =>
+                          loc.toLowerCase().includes(locationQuery.toLowerCase()) &&
+                          !locations.includes(loc)
+                        )
+                        : cities.filter((loc) => !locations.includes(loc))
+                      }
+                      keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => addLocation(item)}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            addLocation(item);
+                            setLocationQuery(''); // Clear input after selection
+                            // setShowLocationList(true); // Keep dropdown open
+                          }}
+                        >
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
-                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>
-
-                      }
+                      keyboardShouldPersistTaps="handled"
                       nestedScrollEnabled={true}
+                      ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
                     />
-
                   </View>
                 )}
+
                 <View style={styles.selectedItems}>
                   {locations.map((location) => (
-                    <View key={location} style={[styles.selectedItem, { backgroundColor: '#FF9800' }]}>
+                    <View key={location} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
                       <Text style={styles.selectedItemText}>{location}</Text>
                       <TouchableOpacity onPress={() => removeLocation(location)}>
                         <Text style={styles.removeText}>x</Text>
@@ -442,7 +515,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                 </View>
               </View>
 
-              
+
               {/* Experience */}
               <View style={styles.inputContainer}>
                 <TextInput
@@ -479,11 +552,12 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
                   </View>
                 )}
               </View>
-
-
-              <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                <Text style={styles.buttonText}>Save Changes</Text>
-              </TouchableOpacity>
+              <GradientButton
+                title="Save Changes"
+                onPress={handleSaveChanges}
+                style={styles.button} // Apply button styles
+              />
+              {/* </ScrollView> */}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -491,6 +565,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = ({
     </KeyboardAvoidingView>
   );
 }
+)
 
 
 const styles = StyleSheet.create({
@@ -498,39 +573,43 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
   },
   modalCard: {
     width: '90%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    
   },
   inputContainer: {
     position: 'relative',
-    marginBottom: 20,
-    
+    marginBottom: 10,
+
+
   },
   modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
-    color:'#666666',
+    color: '#666666',
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   input: {
+    backgroundColor: '#E5E5E5',
     borderWidth: 1,
+    width: '100%',
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 10,
     padding: 10,
-    color:'#0D0D0D',
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   errorInput: {
     borderColor: 'red',
   },
   errorText: {
+    fontFamily: 'PlusJakartaSans-Medium',
     color: 'red',
     fontSize: 12,
     marginBottom: 10,
@@ -548,7 +627,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     overflow: 'hidden',
     elevation: 5, // Added elevation for better visibility
-   
+
   },
   suggestionItem: {
     padding: 10,
@@ -556,7 +635,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    color:'#0D0D0D'
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   autocompleteItem: {
     padding: 10,
@@ -564,20 +644,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    color:'#0D0D0D'
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   noMatchText: {
     padding: 10,
     fontSize: 16,
     color: '#bbb',
+    fontFamily: 'PlusJakartaSans-Medium'
   },
   selectedItems: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 10,
+    marginTop: 8
   },
   selectedItem: {
-    backgroundColor: '#4CAF50',
+
+    backgroundColor: '#334584',
     padding: 5,
     marginRight: 10,
     marginBottom: 5,
@@ -588,24 +672,21 @@ const styles = StyleSheet.create({
   selectedItemText: {
     color: 'white',
     fontSize: 14,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   removeText: {
     color: 'white',
     fontSize: 14,
     marginLeft: 5,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   button: {
-    backgroundColor: '#F97316',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 38,
-    width: 128,
+    height: 40,
+    width: '100%',
     borderRadius: 5,
-    alignSelf: 'flex-end',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
+    marginTop: 8
   },
   scrollContainer: {
     maxHeight: 150,

@@ -1,9 +1,10 @@
-import axios, { AxiosError } from 'axios';
-import API_BASE_URL from '../API_Service';
+import apiClient from '../login/ApiClient';
+
+
 export const fetchProfileId = async (id: number, token: string): Promise<{ success: boolean; profileid?: number }> => {
     try {
-        const response = await axios.get(
-            `${API_BASE_URL}/applicantprofile/${id}/profileid`,
+        const response = await apiClient.get(
+            `/applicantprofile/${id}/profileid`,
             {
                 headers: { Authorization: `Bearer ${token}` },
             }

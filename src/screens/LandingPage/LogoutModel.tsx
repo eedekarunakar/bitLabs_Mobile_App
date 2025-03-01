@@ -1,47 +1,49 @@
 // LogoutModal.tsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
- 
+import UserContext from '@context/UserContext';
+
 interface LogoutModalProps {
   visible: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 }
- 
+
 const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
+
+  //reset the total data while logout to ensure no credentilas left in authcontext
+  const {reset} = useContext(UserContext)
   return (
-<Modal
+    <Modal
       visible={visible}
       transparent={true}
       animationType="slide"
->
-<View style={styles.modalBackground}>
-<View style={styles.modalContainer}>
-<Icon name="logout" size={40} color="#F46F16" />
-<Text style={styles.modalTitle}>
+    >
+      <View style={styles.modalBackground}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>
             Are you sure you want to{"\n"}logout?
-</Text>
-<View style={styles.modalButtons}>
-<TouchableOpacity onPress={onCancel} style={[styles.modalButton, styles.cancelButton]}>
-<Text style={[styles.buttonText, { color: '#F46F16' }]}>Cancel</Text>
-</TouchableOpacity>
-<TouchableOpacity onPress={onConfirm} style={[styles.modalButton]}>
-<LinearGradient
+          </Text>
+          <View style={styles.modalButtons}>
+            <TouchableOpacity onPress={()=>{onCancel();reset();}} style={[styles.modalButton, styles.cancelButton]}>
+              <Text style={[styles.buttonText, { color: '#F46F16' }]}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{onConfirm()}} style={[styles.modalButton]}>
+              <LinearGradient
                 colors={['#F46F16', '#F8A44C']}
                 style={styles.gradientButton}
->
-<Text style={[styles.buttonText, { color: '#FFF' }]}>Logout</Text>
-</LinearGradient>
-</TouchableOpacity>
-</View>
-</View>
-</View>
-</Modal>
+              >
+                <Text style={[styles.buttonText, { color: '#FFF' }]}>Logout</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
- 
+
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
@@ -57,14 +59,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitle: {
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
-    fontWeight: 'bold',
+    marginTop:10,
     marginBottom: 20,
     lineHeight: 26,
     textAlign: 'center',
-    color:'#0D0D0D'
- 
+    color: '#0D0D0D'
+
   },
   modalButtons: {
     flexDirection: 'row',
@@ -93,8 +95,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   buttonText: {
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });
- 
+
 export default LogoutModal;

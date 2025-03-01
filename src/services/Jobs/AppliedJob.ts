@@ -1,19 +1,21 @@
 // /src/Services/JobService.ts
-import axios from 'axios';
-import { JobData } from '../../models/Jobs/ApplyJobmodel';
+// import axios from 'axios';
+import { JobData } from '@models/Model';
+import { JobCounts } from '@models/Model';
+import apiClient from '../login/ApiClient';
 
-import API_BASE_URL from '../API_Service';
+
 // API endpoint URL
-export const fetchAppliedJobs = async (userId: number |null, userToken: string|null): Promise<JobData[]> => {
-  const API_URL = `${API_BASE_URL}/applyjob/getAppliedJobs/${userId}`;
+export const fetchAppliedJobs = async (userId: number |null, userToken: string|null , jobCounts : JobCounts | null): Promise<JobData[]> => {
   try {
-    const response = await axios.get(API_URL, {
+    const applyJobsCount = jobCounts ?.appliedJobs ?? 300;
+    const response = await apiClient.get(`/applyjob/getAppliedJobs/${userId}?page=${0}&size=${applyJobsCount}`, {
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
     });
     return response.data;
   } catch (error) {
-    throw new Error('Failed to fetch applied jobs');
+    throw new Error('');
   }
 };

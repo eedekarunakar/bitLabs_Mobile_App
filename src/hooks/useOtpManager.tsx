@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 
 const useOtpManager = () => {
   const [otp, setOtp] = useState('');
@@ -6,10 +7,22 @@ const useOtpManager = () => {
   const [isOtpExpired, setIsOtpExpired] = useState(false);
   const [timer, setTimer] = useState(60);
   const [isOtpValid, setOtpValid] = useState(true);
-
+  const [lastTimeStamp, setLastTimeStamp] = useState(Date.now());
 
   useEffect(() => {
     let countdown: NodeJS.Timeout;
+
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active' && otpReceived && !isOtpExpired) {
+        const timeElapsed = Math.floor((Date.now() - lastTimeStamp) / 1000);
+        setTimer((prevTimer) => Math.max(prevTimer - timeElapsed, 0));
+      } else {
+        setLastTimeStamp(Date.now());
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
     if (otpReceived && !isOtpExpired) {
       countdown = setInterval(() => {
         setTimer((prevTimer) => {
@@ -22,10 +35,12 @@ const useOtpManager = () => {
         });
       }, 1000);
     }
-    return () => clearInterval(countdown);
-  }, [otpReceived, isOtpExpired]);
 
-
+    return () => {
+      clearInterval(countdown);
+      subscription.remove(); // Use the `remove` method on the subscription
+    };
+  }, [otpReceived, isOtpExpired, lastTimeStamp]);
 
   return {
     otp,
@@ -38,8 +53,6 @@ const useOtpManager = () => {
     setTimer,
     isOtpValid,
     setOtpValid,
-    
-    
   };
 };
 

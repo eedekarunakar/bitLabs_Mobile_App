@@ -1,13 +1,10 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import DashBoard from '../screens/HomePage/Home';
 import Jobs from '../screens/HomePage/Jobs';
 import Notification from '../screens/HomePage/Badge';
 import Resume from '../screens/HomePage/MyResume';
-import Drives from '../screens/HomePage/Drives';
-
 import HomeIconSolid from '../assests/icons/HomeSolid';
 import HomeIconOutline from '../assests/icons/HomeOutline';
 import JobsIconSolid from '../assests/icons/BriefcaseSolid';
@@ -16,11 +13,8 @@ import NotificationIconSolid from '../assests/icons/BellSolid';
 import NotificationIconOutline from '../assests/icons/BellOutline';
 import ResumeIconSolid from '../assests/icons/NewpaperSolid';
 import ResumeIconOutline from '../assests/icons/NewpaperOutline';
-import DrivesIconSolid from '../assests/icons/RocketSolid';
-import DrivesIconOutline from '../assests/icons/RocketOutline';
-import { RootStackParamList } from '../../new';
-import { RouteProp } from '@react-navigation/native';
-
+import { RootStackParamList } from '@models/model';
+import { RouteProp} from '@react-navigation/native';
 import { createTabScreenOptions } from '../components/Navigation/TabConfig';
 
 const Tabs = createBottomTabNavigator<RootStackParamList>();
@@ -49,6 +43,7 @@ const BottomTab = ({ route }: { route: BottomTabRouteProp }) => {
                     color: focused ? 'black' : 'grey',
                     fontSize: 10,
                     marginBottom: 30,
+                    fontFamily:'PlusJakartaSans-Bold'
                   }}
                 >
                   {route.name}
@@ -67,18 +62,18 @@ const BottomTab = ({ route }: { route: BottomTabRouteProp }) => {
               component={Jobs}
               {...createTabScreenOptions(JobsIconOutline, JobsIconSolid)}
             />
-            <Tabs.Screen
+            {/* <Tabs.Screen
               name="Drives"
               component={Drives}
               {...createTabScreenOptions(DrivesIconOutline, DrivesIconSolid)}
-            />
+            /> */}
             <Tabs.Screen
-              name="Badge"
+              name="Badges"
               component={Notification}
               {...createTabScreenOptions(NotificationIconOutline, NotificationIconSolid)}
             />
             <Tabs.Screen
-              name="MyResume"
+              name="My Resume"
               component={Resume}
               {...createTabScreenOptions(ResumeIconOutline, ResumeIconSolid)}
             />

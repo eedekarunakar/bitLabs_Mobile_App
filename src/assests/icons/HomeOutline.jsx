@@ -1,6 +1,6 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
-
+import PropTypes from 'prop-types'; // Import prop-types
 const HomeOutline = ({ width = 24, height = 24, color = 'currentColor' }) => {
   return (
     <Svg
@@ -19,5 +19,19 @@ const HomeOutline = ({ width = 24, height = 24, color = 'currentColor' }) => {
       />
     </Svg>
   );
+};
+
+// Prop validation
+HomeOutline.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
+  color: PropTypes.string,
+};
+
+// Default values for props
+HomeOutline.defaultProps = {
+  width: 24,
+  height: 24,
+  color: 'currentColor',
 };
 export default HomeOutline;
