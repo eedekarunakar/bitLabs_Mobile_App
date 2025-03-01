@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchJobCounts } from '@services/Home/apiService';
-import { JobCounts } from '@models/home/model';
+import { JobCounts } from '@models/model';
 import { useIsFocused } from '@react-navigation/native';
 
 export const useJobCounts = (applicantId: number | null, jwtToken: string | null) => {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback,useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import { useAuth } from '@context/Authcontext';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,132 +24,134 @@ const PDFExample = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation<NavigationProp>();
-  const {setPdfUri,pdfUri,refreshPdf} = usePdf()
- 
- 
-  
-console.log('pdfUri',pdfUri)
-useEffect(() => {
-  if (userid.userId) {
-      refreshPdf(); // Fetch PDF when component mounts
-  }
-}, [userid.userId]); 
- 
- 
-const source = { uri: pdfUri };
-const downloadFile = async () => {
-  if (!pdfUri) {
-    Toast.show({
-      type: 'error',
-      text1: '',
-      text2: 'No PDF available to download.',
-      position: 'bottom',
-      visibilityTime: 5000, // Toast stays for 3 seconds
-      text2Style: {
-        fontSize: 14
- 
-      },
-    });
-    return;
-  }
- 
-  const hasPermission = await requestStoragePermission();
-  if (!hasPermission) {
-    Toast.show({
-      type: 'error',
-      text1: '',
-      text2: 'Allow storage permission to download.',
-      position: 'bottom',
-      visibilityTime: 5000, // Toast stays for 4 seconds      
-      text2Style: { fontSize: 16 },
-    });
-    return;
-  }
- 
- 
-  const fileName = `Resume_${new Date().getTime()}.pdf`;
-  const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
- 
-  try {
-    await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
-    Toast.show({
-      type: 'success',
-      text1: '',
-      text2: `File saved successfully!`,
-      position: 'bottom',
-      visibilityTime: 5000, // Toast stays for 5 seconds
-      text1Style: { fontSize: 18, fontWeight: 'bold' },
-      text2Style: { fontSize: 16 },
-    });
-  } catch (error) {
-    console.error('Download Error:', error);
-    Toast.show({
-      type: 'error',
-      text1: '',
-      text2: 'Failed to save PDF file.',
-      position: 'bottom',
-      visibilityTime: 4000, // Toast stays for 4 seconds
-      text1Style: { fontSize: 18, fontWeight: 'bold' },
-      text2Style: { fontSize: 16 },
-    });
-  }
-};
- 
- 
- 
-return (
-  <SafeAreaView style={{ flex: 1 }}>
- 
- 
-    <View style={styles.headerContainer}>
-      <Text style={styles.title}>My Resume</Text>
-    </View>
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#FAA428', '#F97316']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
-        style={styles.gradientContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.resumeText}>Build your professional
-            resume for free.</Text>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ResumeBuilder')}>
-            <Text style={styles.buttonText}>Create Now</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Resumebanner width={width*0.35} height={height*0.2} right={10} />
-        </View>
+  const { setPdfUri, pdfUri, refreshPdf } = usePdf()
 
-      </LinearGradient>
-      <View style={styles.pdf}>
-     
-        <PDFExam/>
-   
-        <View>
-        <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
-              {/* <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} /> */}
-              <AntDesign name="download" size={20} color="gray" />
-          </TouchableOpacity>
+
+
+  console.log('pdfUri', pdfUri)
+  useEffect(() => {
+    if (userid.userId) {
+      refreshPdf(); // Fetch PDF when component mounts
+    }
+  }, [userid.userId]);
+
+
+  const source = { uri: pdfUri };
+  const downloadFile = async () => {
+    if (!pdfUri) {
+      Toast.show({
+        type: 'error',
+        text1: '',
+        text2: 'No PDF available to download.',
+        position: 'bottom',
+        visibilityTime: 5000, // Toast stays for 3 seconds
+        text2Style: {
+          fontSize: 14
+
+        },
+      });
+      return;
+    }
+
+    const hasPermission = await requestStoragePermission();
+    if (!hasPermission) {
+      Toast.show({
+        type: 'error',
+        text1: '',
+        text2: 'Allow storage permission to download.',
+        position: 'bottom',
+        visibilityTime: 5000, // Toast stays for 4 seconds      
+        text2Style: { fontSize: 16 },
+      });
+      return;
+    }
+
+
+    const fileName = `Resume_${new Date().getTime()}.pdf`;
+    const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+
+    try {
+      await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
+      Toast.show({
+        type: 'success',
+        text1: '',
+        text2: `File saved successfully!`,
+        position: 'bottom',
+        visibilityTime: 5000, // Toast stays for 5 seconds
+        text1Style: { fontSize: 18, fontWeight: 'bold' },
+        text2Style: { fontSize: 16 },
+      });
+    } catch (error) {
+      console.error('Download Error:', error);
+      Toast.show({
+        type: 'error',
+        text1: '',
+        text2: 'Failed to save PDF file.',
+        position: 'bottom',
+        visibilityTime: 4000, // Toast stays for 4 seconds
+        text1Style: { fontSize: 18, fontWeight: 'bold' },
+        text2Style: { fontSize: 16 },
+      });
+    }
+  };
+
+
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+
+
+      <View style={styles.headerContainer}>
+        <Text style={styles.title}>My Resume</Text>
+      </View>
+      <View style={styles.container}>
+        <LinearGradient
+          colors={['#FAA428', '#F97316']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
+          style={styles.gradientContainer}>
+          <View style={styles.textContainer}>
+            <Text style={styles.resumeText}>Build your professional
+              resume for free.</Text>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ResumeBuilder')}>
+              <Text style={styles.buttonText}>Create Now</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Resumebanner width={width * 0.35} height={height * 0.2} right={10} />
+          </View>
+
+        </LinearGradient>
+        <View style={styles.pdf}>
+
+          <PDFExam />
+
+          <View>
+            {pdfUri &&
+              <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
+                {/* <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} /> */}
+                <AntDesign name="download" size={20} color="gray" />
+              </TouchableOpacity>
+            }
+          </View>
         </View>
       </View>
-    </View>
-  </SafeAreaView>
-);
+    </SafeAreaView>
+  );
 };
- 
+
 const styles = StyleSheet.create({
-  
+
   container: {
     flex: 1,
-    marginTop:10,
-    padding:10,
-    paddingRight:1.5
+    marginTop: 10,
+    padding: 10,
+    paddingRight: 1.5
 
   },
-  banner:{
-    position:'relative',
-    padding:5
+  banner: {
+    position: 'relative',
+    padding: 5
 
   },
   header: {
@@ -167,14 +169,14 @@ const styles = StyleSheet.create({
 
   },
   pdf: {
-    marginTop:20,
+    marginTop: 20,
     flex: 1,
     width: '100%',
     height: Dimensions.get('window').height,
   },
   gradientContainer: {
     width: '98%',
-    height: height*0.21,
+    height: height * 0.21,
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -203,7 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#F97517',
     textAlign: 'center',
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   headerContainer: {
     flexDirection: 'column',
@@ -237,5 +239,5 @@ const styles = StyleSheet.create({
   }
 
 });
- 
+
 export default PDFExample;

@@ -46,7 +46,7 @@ const PDFExam = () => {
       {pdfUri ? (
         <Pdf source={{ uri: pdfUri }} style={styles.pdf} />
       ) : error ? (
-        <ScrollView><Text>{error}</Text></ScrollView>
+         <Text>{error}</Text>
       ) : (
         <ActivityIndicator size="large" color="#0000ff" />
       )}

@@ -120,12 +120,13 @@ export const handleOTP = async (
   signupNumber: string,
   signupPassword: string,
 ): Promise<AuthResponse> => {
+const lowerCaseEmail = signupEmail.toLowerCase();
   try {
     const response = await apiClient.post(
       `/applicant/applicantverify-otp`,
       {
         otp: otp,
-        email: signupEmail.toLowerCase(),
+        email: lowerCaseEmail,
       },
     );
  
@@ -134,14 +135,14 @@ export const handleOTP = async (
         `/applicant/saveApplicant`,
         {
           name: signupName,
-          email: signupEmail,
+          email: lowerCaseEmail,
           mobilenumber: signupNumber,
           password: signupPassword,
         },
       );
  
       if (registeruser.status === 200) {
-        await handleLogin(signupEmail,signupPassword)
+        await handleLogin(lowerCaseEmail,signupPassword)
         return {success: true, data: registeruser.data};
       } else {
         return {success: false, message: registeruser.data};

@@ -1,6 +1,6 @@
 import { useState,useRef } from 'react';
 import { handleLogin, handleSignup, handleOTP } from '../services/login/Authservice';
-import { LoginErrors, SignupErrors } from '../models/Autherrors';
+import { LoginErrors, SignupErrors } from '../models/Model';
 import { useAuth } from '@context/Authcontext';
 import useOtpManager from '../hooks/useOtpManager';
 import Toast from 'react-native-toast-message';
