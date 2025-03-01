@@ -18,7 +18,7 @@ export const useAppliedJobsViewModel = (userId:number |null,token: string | null
         const jobs = await fetchAppliedJobs(userId,token , jobCounts);
         setAppliedJobs(jobs);
       } catch (err) {
-        setError('Failed to load applied jobs');
+        setError('');
       } finally {
         setLoading(false);
       }

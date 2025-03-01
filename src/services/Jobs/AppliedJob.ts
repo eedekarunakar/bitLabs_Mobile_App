@@ -16,6 +16,6 @@ export const fetchAppliedJobs = async (userId: number |null, userToken: string|n
     });
     return response.data;
   } catch (error) {
-    throw new Error('Failed to fetch applied jobs');
+    throw new Error('');
   }
 };

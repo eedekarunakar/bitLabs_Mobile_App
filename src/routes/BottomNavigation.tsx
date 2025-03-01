@@ -13,7 +13,7 @@ import NotificationIconSolid from '../assests/icons/BellSolid';
 import NotificationIconOutline from '../assests/icons/BellOutline';
 import ResumeIconSolid from '../assests/icons/NewpaperSolid';
 import ResumeIconOutline from '../assests/icons/NewpaperOutline';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/model';
 import { RouteProp} from '@react-navigation/native';
 import { createTabScreenOptions } from '../components/Navigation/TabConfig';
 

@@ -820,7 +820,7 @@ const styles = StyleSheet.create({
         marginTop: 16
     },
     touchableTextContainer: {
-        marginTop: 20, // Add margin to separate the touchable text from the row above
+        marginTop: 6, // Add margin to separate the touchable text from the row above
         // alignItems: 'center', // Center align the touchable text
         width: '100%',
     },
