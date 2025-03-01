@@ -105,7 +105,7 @@ const PDFExample = () => {
         <Text style={styles.title}>My Resume</Text>
       </View>
       <View style={styles.container}>
-        <LinearGradient
+        {/* <LinearGradient
           colors={['#FAA428', '#F97316']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
@@ -121,7 +121,7 @@ const PDFExample = () => {
             <Resumebanner width={width * 0.35} height={height * 0.2} right={10} />
           </View>
 
-        </LinearGradient>
+        </LinearGradient> */}
         <View style={styles.pdf}>
 
           <PDFExam />

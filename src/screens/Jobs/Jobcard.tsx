@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     lineHeight: 23.76,
     marginTop: 10,
     display: 'flex',
-    marginLeft: '60%',
+    marginLeft: '55%',
   },
   locationIcon: {
     width: 11,
