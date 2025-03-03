@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,20 +9,20 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from '@components/progessBar/ProgressBar';
-import {useAuth} from '@context/Authcontext';
+import { useAuth } from '@context/Authcontext';
 import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
 import Fileupload from '@assests/icons/Fileupload';
-import {ScrollView} from 'react-native-gesture-handler';
-const {width} = Dimensions.get('window');
-import {useStep3ViewModel} from '@viewmodel/step/step3';
+import { ScrollView } from 'react-native-gesture-handler';
+const { width } = Dimensions.get('window');
+import { useStep3ViewModel } from '@viewmodel/step/step3';
 
-const Step3: React.FC = ({route, navigation}: any) => {
-  const {updateShouldShowStep1} = route.params;
+const Step3: React.FC = ({ route, navigation }: any) => {
+  const { updateShouldShowStep1 } = route.params;
 
-  const {userId, userToken} = useAuth();
+  const { userId, userToken } = useAuth();
 
   const handleSave = () => {
     if (!resumeFile) {
@@ -69,7 +69,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
 
           <ProgressBar initialStep={3} />
           <View>
-            <View style={{paddingHorizontal: 15}}>
+            <View style={{ paddingHorizontal: 15 }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -92,11 +92,11 @@ const Step3: React.FC = ({route, navigation}: any) => {
                   },
                 ]}>
                 <TouchableOpacity onPress={handleUploadResume}>
-                  <View style={{alignItems: 'center'}}>
-                    <Fileupload style={{position: 'absolute', top: 30}} />
+                  <View style={{ alignItems: 'center' }}>
+                    <Fileupload style={{ position: 'absolute', top: 30 }} />
                   </View>
 
-                  <View style={{padding: 10}}>
+                  <View style={{ padding: 10 }}>
                     <Text
                       style={{
                         fontSize: 17,
@@ -125,7 +125,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{marginBottom: 50}}>
+              <View style={{ marginBottom: 50 }}>
                 {bgcolor ? (
                   <Text
                     style={{
@@ -144,9 +144,9 @@ const Step3: React.FC = ({route, navigation}: any) => {
               <View
                 style={[styles.fileContainer, showBorder && styles.showborder]}>
                 {resumeFile && (
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: 'row' }}>
                     <FontAwesome name="file-text-o" size={20} color="#000" />
-                    <Text style={[styles.fileNameText, {marginLeft: 12}]}>
+                    <Text style={[styles.fileNameText, { marginLeft: 12 }]}>
                       {resumeFile?.name
                         ? resumeFile.name.length > 20
                           ? `${resumeFile.name.substring(0, 17)}...`
@@ -156,7 +156,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                     <TouchableOpacity
                       style={styles.closeIcon}
                       onPress={handleCancelUpload}>
-                      <View style={{position: 'absolute', right: 5, top: 1.5}}>
+                      <View style={{ position: 'absolute', right: 5, top: 1.5 }}>
                         <Icon7 name="close" size={15} color={'0D0D0D'} />
                       </View>
                     </TouchableOpacity>
@@ -181,7 +181,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                   <View
                     style={[
                       styles.orContainer,
-                      {marginTop: 15, marginVertical: 10},
+                      { marginTop: 15, marginVertical: 10 },
                     ]}>
                     <View style={styles.line}></View>
                     <Text
@@ -193,16 +193,16 @@ const Step3: React.FC = ({route, navigation}: any) => {
                       {' '}
                       Or{' '}
                     </Text>
-                    <View style={[styles.line, {marginLeft: 3}]}></View>
+                    <View style={[styles.line, { marginLeft: 3 }]}></View>
                   </View>
                 ) : (
                   <View
                     style={[
                       styles.orContainer,
-                      {marginTop: -26, marginVertical: 20},
+                      { marginTop: -26, marginVertical: 20 },
                     ]}>
                     <View style={styles.line}></View>
-                    {/* <Text
+                    <Text
                       style={{
                         marginTop: -12,
                         fontWeight: '600',
@@ -210,8 +210,8 @@ const Step3: React.FC = ({route, navigation}: any) => {
                       }}>
                       {' '}
                       Or{' '}
-                    </Text> */}
-                    <View style={[styles.line, {marginLeft: 3}]}></View>
+                    </Text>
+                    <View style={[styles.line, { marginLeft: 3 }]}></View>
                   </View>
                 )}
               </View> */}
@@ -232,21 +232,22 @@ const Step3: React.FC = ({route, navigation}: any) => {
             </View>
           </View>
         </View>
+
       </ScrollView>
 
       <View style={styles.footer}>
 
-      <TouchableOpacity style={[styles.saveButton, { borderWidth: 0 }]} disabled={isUploadComplete } onPress={() => { handleSaveResume(); if (resumeFile){ handleAPI(); handleSave()}; }}>
+        <TouchableOpacity style={[styles.saveButton, { borderWidth: 0 }]} disabled={isUploadComplete} onPress={() => { handleSaveResume(); if (resumeFile) { handleAPI(); handleSave() }; }}>
           {
-            isUploadComplete   ? (
+            isUploadComplete ? (
 
               <View style={[styles.saveButton, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
                 <Text style={[styles.nextButtonText, { color: "#A0A0A0", fontFamily: 'PlusJakartaSans-Medium' }]}>Save</Text>
               </View>
             ) : (
- 
+
               <LinearGradient
- 
+
                 colors={['#F97316', '#FAA729']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
@@ -256,7 +257,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
               </LinearGradient>
             )
           }
- 
+
         </TouchableOpacity>
       </View>
     </View>
