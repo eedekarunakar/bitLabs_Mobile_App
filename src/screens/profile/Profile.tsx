@@ -490,18 +490,18 @@ function ProfileComponent() {
                                 </View>
 
 
-                                {/* <View>
+                                 {/* <View>
 
-                                    {/* <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
+                                     <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
                                         <View style={styles.line}></View>
                                         <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
                                         <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                    </View> */}
+                                    </View> 
 
 
 
 
-                                </View> */}
+                                </View>  */}
 
                                 {/* <View>
                                     <TouchableOpacity
@@ -846,7 +846,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
+         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
     },
 
     // Modal Card Style
