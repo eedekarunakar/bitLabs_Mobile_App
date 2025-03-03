@@ -1,7 +1,7 @@
 import React from 'react';
 import { AuthProvider } from '@context/Authcontext';
 import { UserProvider } from '@context/UserContext';
-import AppWithProfileProvider from '@routes/New';
+import AppWithProfileProvider from '@routes/stackNavigation';
 const App = () => {
   return (
     <AuthProvider>

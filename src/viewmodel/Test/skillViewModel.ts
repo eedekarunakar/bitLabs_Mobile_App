@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { submitSkillBadge } from '@services/Test/SkillBadgeService';
-import { RootStackParamList } from '@models/home/model';
+import { RootStackParamList } from '@models/model';
 
 export const useSkillTestViewModel = (userId: number | any, jwtToken: string | null, testName: string) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

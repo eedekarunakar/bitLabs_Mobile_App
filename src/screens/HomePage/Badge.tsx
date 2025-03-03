@@ -75,9 +75,6 @@ const Badge = ({ navigation }: any) => {
       // Reset all states or trigger re-fetching data
       fetchTestStatus(userId, userToken);
       fetchSkillBadges(userId, userToken);
-      return () => {
-        // Optional cleanup logic
-      };
     }, [userId, userToken]),
   );
 

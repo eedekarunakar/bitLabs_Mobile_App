@@ -16,6 +16,7 @@ const ProfilePhotoContext = createContext<ProfilePhotoContextProps | undefined>(
  
 export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({ children, userToken, userId }) => {
     const [photo, setPhoto] = useState<string | null>(null);
+    
  
     const fetchProfilePhoto = async (token: string | null, id: number | null) => {
         if (!token || !id) return;

@@ -36,8 +36,6 @@ const TestScreen = ({route, navigation}: any) => {
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message state
   const [testData, setTestData] = useState<{questions: any[]}>({questions: []});
   const [isNetworkAvailable, setIsNetworkAvailable] = useState<boolean>(true); // Default to true // Network state
-  const [disconnectedTime, setDisconnectedTime] = useState<number>(0); // Time duration of network disconnection
-  const [hasExceededTimeout, setHasExceededTimeout] = useState(false);
   const [isTestSubmitted, setIsTestSubmitted] = useState(false);
   const {submitSkillTest} = useSkillTestViewModel(userId, userToken, testName);
 
@@ -48,8 +46,7 @@ const TestScreen = ({route, navigation}: any) => {
     setIsTestComplete,
     submitTest,
   } = useTestViewModel(userId, userToken, testName);
-
-  const [finalScore, setFinalScore] = useState<number>(0); // State to hold final score
+  
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
@@ -97,30 +94,7 @@ const TestScreen = ({route, navigation}: any) => {
       unsubscribe();
     };
   }, []);
-  useEffect(() => {
-    if (!isNetworkAvailable) {
-      setDisconnectedTime(prevTime => prevTime + 1);
-    } else if (disconnectedTime >= 60) {
-      setHasExceededTimeout(true); // Mark that the timeout was exceeded
-    } else {
-      setDisconnectedTime(0);
-    }
-  }, [isNetworkAvailable]);
-
-  useEffect(() => {
-    if (disconnectedTime >= 60) {
-      clearInterval(timerInterval);
-      handleModalConfirm();
-      setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
-    }
-  }, [disconnectedTime]);
-
-  useEffect(() => {
-    if (isNetworkAvailable && hasExceededTimeout) {
-      handleModalConfirm(); // Call again if needed
-    }
-  }, [isNetworkAvailable, hasExceededTimeout]);
-
+  
   useEffect(() => {
     if (isTestComplete || showEarlySubmissionModal || isTestSubmitted) {
       clearInterval(timerInterval);
