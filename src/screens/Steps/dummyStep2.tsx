@@ -7,7 +7,9 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+
   Dimensions,
+
 } from 'react-native';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -329,6 +331,8 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               dropDownContainerStyle={styles.dropdownContainer}
               placeholderStyle={styles.placeholderText}
               textStyle={styles.dropdownText}
+              dropDownDirection="BOTTOM" 
+             
               zIndex={990}
             />
             {errors.specialization && (

@@ -70,7 +70,9 @@ const Navbar = () => {
                     >
                         <View style={styles.modalView5}>
                             <View style={styles.modalCard5}>
-                            <TouchableOpacity style={styles.customButton} onPress={() => {navigation.navigate("Profile");setModalVisible(false);}} >
+
+                                <TouchableOpacity style={styles.customButton} onPress={() => {navigation.navigate("Profile");setModalVisible(false);}}>
+
                                     <Text style={styles.buttonText1}>View Profile</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.customButton1} onPress={() =>{ navigation.navigate('ChangePassword');setModalVisible(false);}} >

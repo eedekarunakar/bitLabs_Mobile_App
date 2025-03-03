@@ -237,6 +237,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
           // Validate file size
           if (selectedFile.size && selectedFile.size > maxSize) {
               showToast('error', 'File size exceeds the 1MB limit.');
+              setIsUploadComplete(false)
               return;
           }
 

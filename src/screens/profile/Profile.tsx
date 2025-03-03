@@ -490,7 +490,7 @@ function ProfileComponent() {
                                 </View>
 
 
-                                <View>
+                                {/* <View>
 
                                     {/* <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
                                         <View style={styles.line}></View>
@@ -500,7 +500,9 @@ function ProfileComponent() {
 
 
 
-                                </View>
+
+                                </View> */}
+
                                 {/* <View>
                                     <TouchableOpacity
                                         style={styles.uploadButton}
@@ -513,7 +515,7 @@ function ProfileComponent() {
                                 </View> */}
 
                                 <TouchableOpacity
-                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10 }]}
+                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10,marginTop:10 }]}
                                     onPress={handleSaveResume}
                                     disabled={isUploadComplete}
                                 >
@@ -821,7 +823,7 @@ const styles = StyleSheet.create({
         marginTop: 16
     },
     touchableTextContainer: {
-        marginTop: 20, // Add margin to separate the touchable text from the row above
+        marginTop: 6, // Add margin to separate the touchable text from the row above
         // alignItems: 'center', // Center align the touchable text
         width: '100%',
     },

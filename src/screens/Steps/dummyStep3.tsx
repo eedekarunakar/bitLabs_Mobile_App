@@ -176,7 +176,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                 )}
               </View>
 
-              <View>
+              {/* <View>
                 {showBorder ? (
                   <View
                     style={[
@@ -214,7 +214,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                     <View style={[styles.line, {marginLeft: 3}]}></View>
                   </View>
                 )}
-              </View>
+              </View> */}
 
               {/* <View>
                 <TouchableOpacity
@@ -235,9 +235,11 @@ const Step3: React.FC = ({route, navigation}: any) => {
       </ScrollView>
 
       <View style={styles.footer}>
-      <TouchableOpacity style={[styles.saveButton, { borderWidth: 0 }]} disabled={isUploadComplete} onPress={() => { handleSaveResume(); if (resumeFile){ handleAPI(); handleSave()}; }}>
+
+      <TouchableOpacity style={[styles.saveButton, { borderWidth: 0 }]} disabled={isUploadComplete } onPress={() => { handleSaveResume(); if (resumeFile){ handleAPI(); handleSave()}; }}>
           {
-            isUploadComplete ? (
+            isUploadComplete   ? (
+
               <View style={[styles.saveButton, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
                 <Text style={[styles.nextButtonText, { color: "#A0A0A0", fontFamily: 'PlusJakartaSans-Medium' }]}>Save</Text>
               </View>

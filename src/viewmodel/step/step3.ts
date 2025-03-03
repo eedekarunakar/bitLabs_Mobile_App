@@ -90,6 +90,7 @@ const nav = useNavigation<navigation>();
 
       if (selectedFile.size && selectedFile.size > maxSize) {
         toastmsg('error', 'File size exceeds the 1MB limit.');
+        setIsUploadComplete(false);
         return;
       }
 
@@ -128,7 +129,7 @@ const nav = useNavigation<navigation>();
     setResumeFile(null);
     setLoading(false);
     setProgress(0);
-    toastmsg('error', 'Upload canceled.');
+    toastmsg('error', 'Upload cancelled.');
     setShowBorder(false);
   };
 

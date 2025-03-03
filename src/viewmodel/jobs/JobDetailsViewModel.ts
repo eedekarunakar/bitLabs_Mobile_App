@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchJobStatus } from '@services/Jobs/JobDetailsService';
-import { JobDetails } from '@models/Jobs/JobDetails';
+import { JobDetails } from '@models/Model';
 
 type JobStatus = {
   id: number;
