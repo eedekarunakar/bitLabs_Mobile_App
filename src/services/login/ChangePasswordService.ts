@@ -60,8 +60,9 @@ export const changePassword = async (
         Toast.show({
           type: 'success',
           position: 'bottom',
-          text1: 'Password changed successfully',
-          text2: '',
+          text1: '',
+          text2: 'Password changed successfully',
+
           visibilityTime: 5000,
         });
       } else {
@@ -73,6 +74,7 @@ export const changePassword = async (
           visibilityTime: 5000,
         });
       }
+
     } else {
       Toast.show({
         type: 'error',
@@ -82,6 +84,7 @@ export const changePassword = async (
         visibilityTime: 5000,
       });
     }
+
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errResponse = error as AxiosError;

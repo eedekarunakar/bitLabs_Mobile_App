@@ -7,7 +7,9 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Dimensions
+
+  Dimensions,
+
 } from 'react-native';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -558,7 +560,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
- 
 export default Dummystep2;
  
  

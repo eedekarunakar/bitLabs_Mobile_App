@@ -268,7 +268,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       } catch (err) {
           if (DocumentPicker.isCancel(err)) {
               console.log('User canceled the picker');
-              showToast('error', 'Upload canceled.');
+              showToast('error', 'Upload cancelled.');
               setIsUploadComplete(false)
           } else if ((err as { message: string }).message === 'Network Error') {
               console.log('Network Error:', err);
