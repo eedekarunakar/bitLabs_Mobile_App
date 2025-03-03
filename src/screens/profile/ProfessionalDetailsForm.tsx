@@ -229,11 +229,12 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
     if (!specialization || !specializationOptions?.includes(specialization)) {
       errors.specialization = 'Specialization is required';
     }
+    const totalValidSkills = skills.length + skillBadgesState.filter(badge => badge.flag === 'added').length;
 
-    if (skills.length === 0) {
+    if (totalValidSkills === 0) {
       errors.skills = 'At least one valid skill is required';
     }
-
+    
     if (locations.length === 0) {
       errors.locations = 'At least one location is required';
     }

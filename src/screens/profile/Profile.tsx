@@ -37,13 +37,13 @@ function ProfileComponent() {
 
 
     const nav = useNavigation<any>();
-    const{pdfUri}=usePdf()
+    const { pdfUri } = usePdf()
 
-    
+
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-    console.log('pdf',pdfUri)
+    console.log('pdf', pdfUri)
     const {
         profileData,
         isLoading,
@@ -73,7 +73,7 @@ function ProfileComponent() {
 
 
     } = useProfileViewModel(userToken, userId);
-    const[resumedisplay,setresumedisplay] = useState(false)
+    const [resumedisplay, setresumedisplay] = useState(false)
     const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
     const [key, setKey] = useState(0);
     useEffect(() => {
@@ -356,39 +356,39 @@ function ProfileComponent() {
                         </View>
 
                         <Modal
-                                animationType="slide"
-                                transparent={true}
-                                visible={resumedisplay}
-                                onRequestClose={() => setresumedisplay(false)}
-                            >
+                            animationType="slide"
+                            transparent={true}
+                            visible={resumedisplay}
+                            onRequestClose={() => setresumedisplay(false)}
+                        >
 
-                                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
-                                    
-                                        <View style={{ width: '90%', height: '80%', backgroundColor: 'white', borderRadius: 10, overflow: 'hidden' }}>
-                                            {/* Close Button */}
-                                            <TouchableOpacity
-                                                style={{
-                                                    position: 'absolute',
-                                                    right: 10,
-                                                    top: 10,
-                                                    zIndex: 1, // Ensure it's above the PDF
-                                                    backgroundColor: 'lightgrey', // Optional: Light background for visibility
-                                                    padding: 5,
-                                                    borderRadius: 20,
-                                                }}
-                                                onPress={() => setresumedisplay(false)}
-                                            >
-                                                <Icon1 name="close" size={20} color="#000" />
-                                            </TouchableOpacity>
+                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
 
-                                            {/* PDF Viewer */}
-                                            <PDFExam />
-                                        </View>
-                                  
+                                <View style={{ width: '90%', height: '80%', backgroundColor: 'white', borderRadius: 10, overflow: 'hidden' }}>
+                                    {/* Close Button */}
+                                    <TouchableOpacity
+                                        style={{
+                                            position: 'absolute',
+                                            right: 10,
+                                            top: 10,
+                                            zIndex: 1, // Ensure it's above the PDF
+                                            backgroundColor: 'lightgrey', // Optional: Light background for visibility
+                                            padding: 5,
+                                            borderRadius: 20,
+                                        }}
+                                        onPress={() => setresumedisplay(false)}
+                                    >
+                                        <Icon1 name="close" size={20} color="#000" />
+                                    </TouchableOpacity>
+
+                                    {/* PDF Viewer */}
+                                    <PDFExam />
                                 </View>
 
+                            </View>
 
-                            </Modal>
+
+                        </Modal>
                     </View>
                 </View>
 
@@ -610,12 +610,12 @@ const styles = StyleSheet.create({
         left: 220,
 
     },
-      pdf: {
-        
+    pdf: {
+
         flex: 1,
         width: '100%',
         height: Dimensions.get('window').height,
-      },
+    },
     skillBadge: {
         height: 30,
         flexDirection: 'row',
@@ -846,7 +846,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
     },
 
     // Modal Card Style
