@@ -89,12 +89,13 @@ function ProfileComponent() {
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
-            navigation.setOptions({
-                headerShown: false // Hide the header button to prevent re-navigation
-            });
+            // navigation.setOptions({
+            //     headerShown: false // Hide the header button to prevent re-navigation
+            // });
             navigation.setParams({ retake: false });
         }
     }, [route.params]);
+ 
     if (isLoading) {
         return <ActivityIndicator size="large" color="#F97316" />;
     }

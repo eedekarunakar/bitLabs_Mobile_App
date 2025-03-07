@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,7 +14,8 @@ import { useAuth } from "../../context/Authcontext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@models/Model";
- 
+import { fetchCompanyLogo } from "../../services/Jobs/AppliedJob"; // Import the service to fetch the logo
+import { Buffer } from "buffer";
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
   const { appliedJobs, loading, error } = useAppliedJobsViewModel(
@@ -25,7 +26,9 @@ const AppliedJobs = () => {
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, "AppliedJobs">
     >();
- 
+
+  const [logos, setLogos] = useState<{ [key: string]: string | null }>({});
+  const [logosLoading, setLogosLoading] = useState(true); 
   const monthNames = [
     "January",
     "February",
@@ -40,11 +43,43 @@ const AppliedJobs = () => {
     "November",
     "December",
   ];
+
   const formatDate = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };
- 
+
+  // Fetch company logos for all jobs
+  useEffect(() => {
+    const fetchLogos = async () => {
+      if (appliedJobs.length > 0) {
+        const logoPromises = appliedJobs.map(async (job) => {
+          if (job.recruiterId) {
+            try {
+              const logo = await fetchCompanyLogo(job.recruiterId, userToken);
+              return { [job.id]: logo };
+            } catch (error) {
+              console.error(`Error fetching logo for recruiterId ${job.recruiterId}:`, error);
+              return { [job.id]: null }; // Set null if logo fetch fails
+            }
+          }
+          return { [job.id]: null }; // Handle cases where recruiterId is missing
+        });
+  
+        // Resolve all promises in parallel
+        const logoDataArray = await Promise.all(logoPromises);
+        const logoData = logoDataArray.reduce((acc, logo) => ({ ...acc, ...logo }), {});
+        setLogos(logoData);
+      }
+      setLogosLoading(false); // Mark logo fetching as completed
+    };
+  
+    if (!loading) {
+      fetchLogos(); // Trigger logo fetching after jobs are loaded
+    }
+  }, [appliedJobs, userToken, loading]);
+  
+
   // Renders each job item
   const renderJobItem = ({ item }: { item: JobData }) => (
     <TouchableOpacity
@@ -53,7 +88,11 @@ const AppliedJobs = () => {
     >
       <View style={styles.row}>
         <Image
-          source={require("../../assests/Images/company.png")}
+          source={
+            logos[item.id] === 'data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y' // Check for the specific invalid Base64 string
+              ? require('../../assests/Images/company.png') // Display the default placeholder
+              : { uri: logos[item.id] } // Display the dynamically fetched logo
+          }
           style={styles.companyLogo}
         />
         <View style={styles.jobDetails}>
@@ -63,7 +102,7 @@ const AppliedJobs = () => {
           <Text style={styles.companyName}>{item.companyname}</Text>
         </View>
       </View>
- 
+
       <View style={[styles.tag, styles.locationContainer]}>
         <Image
           source={require("../../assests/Images/rat/loc.png")}
@@ -71,59 +110,77 @@ const AppliedJobs = () => {
         />
         <Text style={styles.locationText}>{item.location}</Text>
       </View>
- 
-           <View style={{ flexDirection: 'row',justifyContent:'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
-                    <Image
-                      source={require('../../assests/Images/rat/exp.png')}
-                      style={styles.brieficon}
-                    />
-                    <Text style={styles.ovalText}>
-                      Exp: {item.minimumExperience} - {item.maximumExperience} years    
-                    </Text>
-                    <Text style={{color:'#E2E2E2',fontFamily: 'PlusJakartaSans-Bold'}}>   |</Text>
-                  </View>
-       
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10,marginTop:1}}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                      <Text style={{fontSize:13}}>₹ </Text>
-                      <Text style={styles.ovalText}>{item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA  </Text>
-                      <Text style={{color:'#E2E2E2',fontFamily: 'PlusJakartaSans-Bold'}}>   |</Text>
-                    </View>
-       
-                       
-       
-                  </View>
-       
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={styles.ovalText}>{item.employeeType}</Text>
-                  </View>
-                </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          flexWrap: "nowrap",
+          alignItems: "center",
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
+          <Image
+            source={require("../../assests/Images/rat/exp.png")}
+            style={styles.brieficon}
+          />
+          <Text style={styles.ovalText}>
+            Exp: {item.minimumExperience} - {item.maximumExperience} years
+          </Text>
+          <Text style={{ color: "#E2E2E2", fontFamily: "PlusJakartaSans-Bold" }}>   |</Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginRight: 10,
+            marginTop: 1,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ fontSize: 13 }}>₹ </Text>
+            <Text style={styles.ovalText}>
+              {item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA{" "}
+            </Text>
+            <Text style={{ color: "#E2E2E2", fontFamily: "PlusJakartaSans-Bold" }}>   |</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={styles.ovalText}>{item.employeeType}</Text>
+        </View>
+      </View>
       <View>
         <Text style={styles.postedOn}>Posted on {formatDate(item.creationDate)}</Text>
       </View>
     </TouchableOpacity>
   );
- 
+
   return (
     <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#FF8C00" />}
+      {/* Show loader until both jobs and logos are loaded */}
+      {(loading || logosLoading) && <ActivityIndicator size="large" color="#FF8C00" />}
+
+      {/* Show error if any */}
       {error && <Text style={styles.placeholderText}>{error}</Text>}
-      {!loading && appliedJobs.length === 0 && (
+
+      {/* Render jobs only when loading is complete */}
+      {!loading && !logosLoading && (
+        <FlatList
+          data={appliedJobs}
+          renderItem={renderJobItem}
+          keyExtractor={(item) => item.id.toString()}
+          onEndReachedThreshold={0.5}
+        />
+      )}
+
+      {!loading && !logosLoading && appliedJobs.length === 0 && (
         <Text style={styles.placeholderText}>No applied jobs available!</Text>
       )}
- 
-   
-      <FlatList
-        data={appliedJobs}
-        renderItem={renderJobItem}
-        keyExtractor={(item) => item.id.toString()}
-        onEndReachedThreshold={0.5}
-      />
     </View>
   );
 };
- 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f6f6f6',
@@ -160,7 +217,7 @@ const styles = StyleSheet.create({
     height: 10,
     width: 12,
     marginRight: 8,
-    marginLeft:8
+    marginLeft: 8
   },
   briefcon: {
     flexDirection: 'row',
@@ -202,12 +259,12 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   jobDetails: {
     flex: 1,
- 
- 
+
+
   },
   jobTitle: {
     color: '#121212', // Text color
@@ -232,7 +289,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginBottom: 12,
     marginTop: 6,
- 
+
   },
   locationContainer: {
     flexDirection: 'row',
@@ -240,11 +297,13 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap'
   },
   locationIcon: {
+    marginTop: 6,
     width: 11,
     height: 12,
     marginRight: 6,
   },
   locationText: {
+    marginTop: 6,
     fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
@@ -265,10 +324,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
-    marginLeft:'58%',
+    marginLeft: '58%',
     lineHeight: 23.76, // Line height (in points, not percentage)
-    marginTop:10,
-    display:'flex'
+    marginTop: 10,
+    display: 'flex'
   },
   tabs: {
     flexDirection: 'row',
@@ -285,8 +344,8 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomColor: '#F97316',
- 
- 
+
+
   },
   tabText: {
     fontSize: 12,
@@ -298,8 +357,8 @@ const styles = StyleSheet.create({
     color: '#F97316',
     marginLeft: 12,
     fontFamily: 'PlusJakartaSans-Bold'
- 
+
   },
 });
- 
+
 export default AppliedJobs;

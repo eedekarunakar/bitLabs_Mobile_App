@@ -23,6 +23,7 @@ const JobDetails: React.FC = ({ route, navigation }:any) => {
     skillProgressText,
     perfectMatchSkills,
     unmatchedSkills,
+    companyLogo
   } = useJobDetailsViewModels(job.id);
 
   return (
@@ -35,6 +36,7 @@ const JobDetails: React.FC = ({ route, navigation }:any) => {
         perfectMatchSkills={perfectMatchSkills}
         unmatchedSkills={unmatchedSkills}
         suggestedCourses={suggestedCourses}
+        companyLogo={companyLogo || undefined}
       />
     </View>
   );

@@ -15,14 +15,14 @@ import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '@viewmodel/jobs/RecommendedJobs'; // Your ViewModel
 import { JobData } from '@models/Model'; // Your JobData interface
-
+import { fetchCompanyLogo } from '@services/Jobs/AppliedJob';
 import UserContext from '@context/UserContext';
- 
+import { useAuth } from '@context/Authcontext';
 
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 type JobsRouteProp = RouteProp<RootStackParamList, 'Jobs'>;
- 
+
 const RecommendedJobs = () => {
   const route = useRoute<JobsRouteProp>(); // Specify the route type
   //const { tab = 'recommended' } = route.params || {}; // Now TypeScript knows about 'tab'
@@ -33,22 +33,53 @@ const RecommendedJobs = () => {
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]); // State to store saved jobs
   const isFocused = useIsFocused();
   const [visibleJobsCount, setVisibleJobsCount] = useState(10); // Number of jobs to display initially
-  const {isJobsLoaded,setIsJobsLoaded} = useContext(UserContext);
+  const { isJobsLoaded, setIsJobsLoaded } = useContext(UserContext);
+  const [logos, setLogos] = useState<{ [key: string]: string | null }>({});
   const [isInitialLoad, setIsInitialLoad] = useState(isJobsLoaded);
-
+  const { userId, userToken } = useAuth();
+const [logosLoading, setLogosLoading] = useState(true); 
+   useEffect(() => {
+      const fetchLogos = async () => {
+        if (jobs.length > 0) {
+          const logoPromises = jobs.map(async (job) => {
+            if (job.recruiterId) {
+              try {
+                const logo = await fetchCompanyLogo(job.recruiterId, userToken);
+                return { [job.id]: logo };
+              } catch (error) {
+                console.error(`Error fetching logo for recruiterId ${job.recruiterId}:`, error);
+                return { [job.id]: null }; // Set null if logo fetch fails
+              }
+            }
+            return { [job.id]: null }; // Handle cases where recruiterId is missing
+          });
+    
+          // Resolve all promises in parallel
+          const logoDataArray = await Promise.all(logoPromises);
+          const logoData = logoDataArray.reduce((acc, logo) => ({ ...acc, ...logo }), {});
+          setLogos(logoData);
+        }
+        setLogosLoading(false); // Mark logo fetching as completed
+      };
+    
+      if (!loading) {
+        fetchLogos(); // Trigger logo fetching after jobs are loaded
+      }
+    }, [jobs, userToken, loading]);
+     // Trigger when jobs list changes
   useEffect(() => {
     if (route.params?.tab) {
       setActiveTab(route.params.tab); // Set the active tab from the passed parameter
     }
   }, [route.params?.tab]);
- 
+
   useEffect(() => {
     if (!isJobsLoaded) {
       reloadJobs();  // Reload jobs only when `isJobsLoaded` is false
       setIsJobsLoaded(true);  // Mark as loaded after fetching
     }
   }, [isJobsLoaded]);
-// To reload in recommended jobs only if focus is on recommende djobs even a reload happens at saved jobs.
+  // To reload in recommended jobs only if focus is on recommende djobs even a reload happens at saved jobs.
   // useFocusEffect(
   //   useCallback(() => {
   //     if (activeTab==='recommended' && !isJobsLoaded) {
@@ -57,13 +88,13 @@ const RecommendedJobs = () => {
   //     }
   //   }, [isJobsLoaded, reloadJobs, setIsJobsLoaded])
   // );
-  
- 
+
+
   // Handle tab press
   const handleTabPress = (tab: 'recommended' | 'applied' | 'saved') => {
     setActiveTab(tab);
   };
- 
+
   // Filter applied and saved jobs
   const filterAppliedJobs = (jobsToFilter: JobData[]) => {
     return jobsToFilter.filter((job) => {
@@ -71,14 +102,14 @@ const RecommendedJobs = () => {
         !savedJobs.some((savedJob) => savedJob.id === job.id);
     });
   };
- 
+
   // Load more jobs when the user scrolls to the bottom
   const loadMoreJobs = () => {
     if (visibleJobsCount < jobs.length) {
       setVisibleJobsCount(visibleJobsCount + 16); // Load 10 more jobs
     }
   };
- 
+
   // Render job cards
   const renderJobs = ({ item }: { item: JobData }) => {
     return (
@@ -86,16 +117,21 @@ const RecommendedJobs = () => {
         <TouchableOpacity onPress={() => handleJobPress(item)}>
           <View style={styles.row}>
             <Image
-              source={require('../../assests/Images/company.png')} // Placeholder image
+              source={
+                logos[item.id] === 'data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y' // Check for the specific invalid Base64 string
+                  ? require('../../assests/Images/company.png') // Display the default placeholder
+                  : { uri: logos[item.id] } // Display the dynamically fetched logo
+              }
               style={styles.companyLogo}
             />
+
             <View style={styles.jobDetails}>
               <Text style={styles.jobTitle} numberOfLines={1} ellipsizeMode="tail">
                 {item.jobTitle}
               </Text>
               <Text style={styles.companyName}>{item.companyname}</Text>
             </View>
- 
+
           </View>
           <View style={[styles.tag, styles.locationContainer]}>
             <Image
@@ -104,35 +140,35 @@ const RecommendedJobs = () => {
             />
             <Text style={styles.locationText}>{item.location}</Text>
           </View>
- 
-          <View style={{ flexDirection: 'row',justifyContent:'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
               <Image
                 source={require('../../assests/Images/rat/exp.png')}
                 style={styles.brieficon}
               />
               <Text style={styles.ovalText}>
-                Exp: {item.minimumExperience} - {item.maximumExperience} years    
+                Exp: {item.minimumExperience} - {item.maximumExperience} years
               </Text>
-              <Text style={{color:'#E2E2E2',fontFamily: 'PlusJakartaSans-Bold'}}>   |</Text>
+              <Text style={{ color: '#E2E2E2', fontFamily: 'PlusJakartaSans-Bold' }}>   |</Text>
             </View>
- 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10,marginTop:1}}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-               <Text style={{ fontSize: 13 }}>{"\u20B9"}</Text>
+                <Text style={{ fontSize: 13 }}>{"\u20B9"}</Text>
                 <Text style={styles.ovalText}>{item.minSalary.toFixed(2)} - {item.maxSalary.toFixed(2)} LPA  </Text>
-                <Text style={{color:'#E2E2E2',fontFamily: 'PlusJakartaSans-Bold'}}>   |</Text>
+                <Text style={{ color: '#E2E2E2', fontFamily: 'PlusJakartaSans-Bold' }}>   |</Text>
               </View>
- 
-                 
- 
+
+
+
             </View>
- 
+
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.ovalText}>{item.employeeType}</Text>
             </View>
           </View>
- 
+
           <Text style={styles.postedOn}>
             Posted on {formatDate(item.creationDate)}
           </Text>
@@ -140,7 +176,7 @@ const RecommendedJobs = () => {
       </View>
     );
   };
- 
+
   // Format creation date
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -150,18 +186,18 @@ const RecommendedJobs = () => {
     const [year, month, day] = dateArray;
     return `${monthNames[month - 1]} ${day}, ${year}`;
   };
- 
+
   // Handle job press to navigate to JobDetails
   const handleJobPress = (job: JobData) => {
     navigation.navigate('JobDetails', { job });
   };
- 
+
   // Get the first `visibleJobsCount` jobs
   const visibleJobs = jobs.slice(0, visibleJobsCount);
- 
+
   // Render content based on active tab
   const renderContent = () => {
-    if (loading) {
+    if (loading || logosLoading) {
       return <ActivityIndicator size="large" color="#FF8C00" style={styles.loader} />;
     }
     switch (activeTab) {
@@ -193,7 +229,7 @@ const RecommendedJobs = () => {
         return null;
     }
   };
- 
+
   return (
     <View style={styles.container}>
       <View style={styles.jobstextcon}>
@@ -244,7 +280,7 @@ const RecommendedJobs = () => {
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -281,7 +317,7 @@ const styles = StyleSheet.create({
     height: 10,
     width: 12,
     marginRight: 8,
-    marginLeft:8
+    marginLeft: 8
   },
   briefcon: {
     flexDirection: 'row',
@@ -323,12 +359,12 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   jobDetails: {
     flex: 1,
- 
- 
+
+
   },
   jobTitle: {
     color: '#121212', // Text color
@@ -353,19 +389,22 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginBottom: 12,
     marginTop: 6,
- 
+
   },
   locationContainer: {
+    //marginTop: 1,
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'nowrap'
   },
   locationIcon: {
+    marginTop: 6,
     width: 11,
     height: 12,
     marginRight: 6,
   },
   locationText: {
+    marginTop: 6,
     fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'
@@ -386,10 +425,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium', // Custom font
     fontSize: 9, // Font size
     fontStyle: 'normal', // Font style
-    marginLeft:'58%',
+    marginLeft: '58%',
     lineHeight: 23.76, // Line height (in points, not percentage)
-    marginTop:10,
-    display:'flex'
+    marginTop: 10,
+    display: 'flex'
   },
   tabs: {
     flexDirection: 'row',
@@ -406,8 +445,8 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomColor: '#F97316',
- 
- 
+
+
   },
   tabText: {
     fontSize: 13,
@@ -419,8 +458,8 @@ const styles = StyleSheet.create({
     color: '#F97316',
     marginLeft: 12,
     fontFamily: 'PlusJakartaSans-Bold'
- 
+
   },
 });
- 
+
 export default RecommendedJobs;

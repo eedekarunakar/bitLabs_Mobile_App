@@ -31,6 +31,7 @@ const JobDetails: React.FC = ({ route, navigation }: any) => {
     skillProgressText,
     perfectMatchSkills,
     unmatchedSkills,
+    companyLogo,
     handleRemoveJob,
     handleApplyJob,
   } = useJobDetailsViewModels(job.id);
@@ -46,6 +47,7 @@ const JobDetails: React.FC = ({ route, navigation }: any) => {
         perfectMatchSkills={perfectMatchSkills}
         unmatchedSkills={unmatchedSkills}
         suggestedCourses={suggestedCourses}
+        companyLogo={companyLogo || undefined}
       />
 
       <View style={{ height: 20 }} />

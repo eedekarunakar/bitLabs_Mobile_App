@@ -11,6 +11,7 @@ type JobCardProps = {
   maxSalary: number;
   employeeType: string;
   creationDate: [number, number, number];
+  logoUrl?: string;
 };
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -23,6 +24,7 @@ const JobCard: React.FC<JobCardProps> = ({
   maxSalary,
   employeeType,
   creationDate,
+  logoUrl,
 }) => {
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -38,9 +40,18 @@ const JobCard: React.FC<JobCardProps> = ({
     <View style={styles.jobCard}>
       <View style={styles.row}>
         <Image
-          source={require('../../assests/Images/company.png')}
+          source={
+            logoUrl && logoUrl.includes('data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y') // Check for invalid Base64 error
+              ? require('../../assests/Images/company.png') // Display default fallback image
+              : logoUrl && logoUrl.startsWith('data:image/') // Valid Base64 format
+                ? { uri: logoUrl } // Display Base64 logo
+                : logoUrl // Assume it's a normal image URL
+                  ? { uri: logoUrl } // Display image URL
+                  : require('../../assests/Images/company.png') // Fallback to default image
+          }
           style={styles.companyLogo}
         />
+
         <View style={styles.jobDetails}>
           <Text style={styles.jobTitle}>{jobTitle}</Text>
           <Text style={styles.companyName}>{companyName}</Text>
@@ -101,8 +112,9 @@ const styles = StyleSheet.create({
   companyLogo: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 15,
     marginRight: 16,
+
   },
   jobDetails: {
     flex: 1,

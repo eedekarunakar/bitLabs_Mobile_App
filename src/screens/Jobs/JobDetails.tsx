@@ -18,7 +18,7 @@ type JobDetailsProps = {
   navigation: JobDetailsScreenNavigationProp;
 };
 
-const JobDetails: React.FC<JobDetailsProps> = ({ route }) => {
+const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
   const { job } = route.params;
 
   // Use the ViewModel
@@ -30,6 +30,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route }) => {
     skillProgressText,
     perfectMatchSkills,
     unmatchedSkills,
+    companyLogo,
     handleSaveJob,
     handleApplyJob,
   } = useJobDetailsViewModels(job.id);
@@ -43,6 +44,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route }) => {
         perfectMatchSkills={perfectMatchSkills}
         unmatchedSkills={unmatchedSkills}
         suggestedCourses={suggestedCourses}
+        companyLogo={companyLogo || undefined}
       />
 
       <View style={styles.footerContainer}>
@@ -70,7 +72,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route }) => {
             </View>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={handleApplyJob}>
+          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={() => { handleApplyJob(); navigation.goBack(); }}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{ x: 0, y: 0 }}
