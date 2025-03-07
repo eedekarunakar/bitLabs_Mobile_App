@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useEffect, useContext, useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -33,8 +33,11 @@ const Badge = ({ navigation }: any) => {
     testStatus,
     loading,
     applicantSkillBadges,
+    loadSkillBadges,
   } = useBadgeViewModel();
   const { userId, userToken } = useAuth();
+  const [skillBadges, setSkillBadges] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { profileData } = useProfileViewModel(userToken, userId);
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const { personalName } = useContext(UserContext);
@@ -72,15 +75,29 @@ const Badge = ({ navigation }: any) => {
 
   useFocusEffect(
     useCallback(() => {
-      // Reset all states or trigger re-fetching data
-      fetchTestStatus(userId, userToken);
-      fetchSkillBadges(userId, userToken);
-      return () => {
-        // Optional cleanup logic
+      let isActive = true; // Prevent updating state if component unmounts
+ 
+      const fetchData = async () => {
+        setIsLoading(true);
+        await fetchTestStatus(userId, userToken); // Fetch test status first
+        const badges = await fetchSkillBadges(userId, userToken);
+       
+        if (isActive) {
+          setSkillBadges(badges.filter((badge: any) => badge.flag === "added")); // Only set "added" skills
+          setIsLoading(false);
+        }
       };
-    }, [userId, userToken]),
+ 
+      loadSkillBadges();
+      fetchData();
+ 
+      return () => {
+        isActive = false; // Cleanup function to prevent memory leaks
+      };
+    }, [userId, userToken])
   );
-
+ 
+ 
   if (loading) {
     return (
       <View style={styles.loaderContainer}>

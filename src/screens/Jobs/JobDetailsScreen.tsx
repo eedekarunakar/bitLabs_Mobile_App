@@ -14,7 +14,7 @@ import { RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@models/Model';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import useJobDetailsViewModels from '@viewmodel/jobs/JobDetailsViewModels';
 import { useJobDetailsViewModel } from '@viewmodel/jobs/JobDetailsViewModel';
 
 
@@ -26,7 +26,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
   const { job } = route.params;
   const { userToken } = useAuth();
   const { jobStatus, loading, formatDate, formatDates } = useJobDetailsViewModel(job, userToken ?? '');
-
+  const { companyLogo } = useJobDetailsViewModels(job.id);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'JobDetails'>>();
 
   return (
@@ -41,7 +41,11 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
             <View style={styles.jobCard}>
               <View style={styles.row}>
                 <Image
-                  source={require('../../assests/Images/company.png')}
+                  source={
+                    companyLogo && !companyLogo.includes('data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y')
+                      ? { uri: companyLogo } // Use the Base64 string or valid image URL
+                      : require('../../assests/Images/company.png') // Fallback to default image
+                  }
                   style={styles.companyLogo}
                 />
                 <View style={styles.jobDetails}>
@@ -78,7 +82,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.ovalText }>{job.employeeType}</Text>
+                  <Text style={styles.ovalText}>{job.employeeType}</Text>
                 </View>
               </View>
               <View>
@@ -171,8 +175,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     margin: 2,
     marginBottom: 6,
- 
- 
+
+
   },
   oval: {
     flexDirection: 'row',
@@ -199,11 +203,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tag: {
- 
+
     color: 'black',
     paddingVertical: 4,
     paddingHorizontal: 8,
- 
+
     marginRight: 3,
     marginBottom: 8,
     fontSize: 11,
@@ -212,13 +216,13 @@ const styles = StyleSheet.create({
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:-10
+    marginTop: -10
   },
   locationIcon: {
     width: 11,
     height: 12,
     marginRight: 6,
-    
+
   },
   locationText: {
     fontSize: 11,
@@ -363,9 +367,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
- 
+
   },
- 
+
   button: {
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -390,7 +394,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
   viewJobButton: {
- 
+
   },
   applyButtonGradient: {
     borderRadius: 10,
@@ -398,10 +402,9 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20
   },
- 
- 
+
+
 });
- 
+
 export default JobDetailsScreen;
- 
- 
+

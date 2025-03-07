@@ -12,7 +12,19 @@ const ImagePreviewScreen = () => {
   console.log('Navigated to ImagePreview with URI:', uri);
  
   const handleRetake = () => {
-    navigation.replace('Profile',{retake:true})
+    navigation.reset({
+      index: 1,
+      routes: [
+        {
+          name:'BottomTab'
+       
+        },
+        {
+          name: 'Profile',
+          params: { retake: true },
+        },
+      ],
+    });
   };
  
   const handleSave = () => {

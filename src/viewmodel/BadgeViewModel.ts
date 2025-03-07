@@ -128,6 +128,7 @@ export const useBadgeViewModel = () => {
     } catch (error) {
       console.error('Error fetching skill badges:', error);
     }
+    setLoading(false);
   }, [userId, userToken]);
  
   useEffect(() => {
@@ -155,5 +156,6 @@ export const useBadgeViewModel = () => {
     testStatus,
     loading,
     applicantSkillBadges,
+    loadSkillBadges
   };
 };

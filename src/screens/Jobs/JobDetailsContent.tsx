@@ -17,6 +17,7 @@ type JobDetailsContentProps = {
     creationDate: [number, number, number];
     description: string;
   };
+  companyLogo: string | undefined;
   percent: number;
   skillProgressText: string | null;
   perfectMatchSkills: string[];
@@ -26,6 +27,7 @@ type JobDetailsContentProps = {
 
 const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
   job,
+  companyLogo,
   percent,
   skillProgressText,
   perfectMatchSkills,
@@ -44,8 +46,8 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
         maxSalary={job.maxSalary}
         employeeType={job.employeeType}
         creationDate={job.creationDate}
+        logoUrl={companyLogo}
       />
-
       <SkillMatchProbability
         percent={percent}
         skillProgressText={skillProgressText}
