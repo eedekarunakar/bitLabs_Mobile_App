@@ -9,11 +9,14 @@ import axios from 'axios';
 import UserContext from '@context/UserContext';
 import resumeCall from '@services/profile/Resume';
 import { useAuth } from '@context/Authcontext';
-import { usePdf } from '../screens/HomePage/resumestate';
+import { usePdf } from '../context/ResumeContext';
 import {
-  Platform, PermissionsAndroid,
+  Platform, PermissionsAndroid, 
 } from 'react-native';
-import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions  } from 'react-native-image-picker';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+
+
 
 export const useProfileViewModel = (userToken: string | null, userId: number | null) => {
   const [profileData, setProfileData] = useState<any>(null);
@@ -77,7 +80,12 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
               }
               return true;
           }
-          return true; // For iOS or platforms other than Android
+          // return true; // For iOS or platforms other than Android
+          else if (Platform.OS === 'ios') {
+            const cameraPermission = await request(PERMISSIONS.IOS.CAMERA);
+            console.log(`iOS Camera Permission: ${cameraPermission}`);
+            return cameraPermission === RESULTS.GRANTED;
+          }
       };
       const validatePhoto = (photoFile: any) => {
         const allowedTypes = ['image/jpeg', 'image/png'];
