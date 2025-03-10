@@ -1,4 +1,4 @@
-import { useState,useRef } from 'react';
+import { useState,useRef, useCallback } from 'react';
 import { handleLogin, handleSignup, handleOTP } from '../services/login/Authservice';
 import { LoginErrors, SignupErrors } from '../models/Model';
 import { useAuth } from '@context/Authcontext';
@@ -15,7 +15,8 @@ const useLoginViewModel = () => {
   const showNotification =  useRef(false);
   //declare in a use ref
   const notificationType= useRef('');
-  const showToast =(type: 'success'|'error',message:string)=>{
+
+  const showToast =useCallback((type: 'success'|'error',message:string)=>{
     Toast.show({
       type:type,
       text1:'',
@@ -28,7 +29,7 @@ const useLoginViewModel = () => {
         fontSize:12
       }
     })
-  }
+  },[])
 
   const validateLogin = () => {
     const errors: LoginErrors = {};
@@ -46,12 +47,12 @@ const useLoginViewModel = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const isValidEmail = (email: string) => {
+  const isValidEmail = useCallback((email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
-  };
+  },[])
 
-  const validateAndLogin = async () => {
+  const validateAndLogin = useCallback( async () => {
     try{
     if (validateLogin()) {
       const result = await login(loginUserName, loginPassword);
@@ -68,7 +69,7 @@ const useLoginViewModel = () => {
   }catch(error){
     console.log(error)
   }
-  };
+  },[loginUserName, loginPassword])
 
   return {
     loginUserName,
@@ -96,7 +97,7 @@ const useSignupViewModel = () => {
   
   const [registration, setRegistration] = useState(false);
   
-  const showToast =(type: 'success'|'error',message:string)=>{
+  const showToast =useCallback((type: 'success'|'error',message:string)=>{
     Toast.show({
       type:type,
       text1:'',
@@ -109,7 +110,7 @@ const useSignupViewModel = () => {
         fontSize:12
       }
     })
-  }
+  },[])
 
 
   
@@ -164,17 +165,17 @@ const useSignupViewModel = () => {
 
     setSignUpErrors(errors);
     return Object.keys(errors).length === 0;
-};
+}
 
   
   
   
-  const isValidEmail = (email: string) => {
+  const isValidEmail = useCallback((email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
-  };
+  },[])
 
-  const validateAndSignup = async () => {
+  const validateAndSignup = useCallback(async () => {
     if (validateSignup()) {
       const result = await handleSignup(signupEmail, signupNumber);
       if (result.success) {
@@ -190,9 +191,9 @@ const useSignupViewModel = () => {
         setSignUpErrors({ userRegistered: result.message });
       }
     }
-  };
+  },[signupEmail, signupNumber])
 
-  const handleOtp = async () => {
+  const handleOtp = useCallback(async () => {
     try{
     const result = await handleOTP(otpManager.otp, signupEmail, signupName, signupNumber, signupPassword);
     if (result.success) {
@@ -212,7 +213,7 @@ const useSignupViewModel = () => {
     console.error('Error occurred:', error);
     showToast('error','An Error Occured')
   }
-  };
+  },[otpManager.otp, signupEmail, signupName, signupNumber, signupPassword])
 
   return {
     signupName,

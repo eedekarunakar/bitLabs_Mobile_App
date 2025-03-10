@@ -79,7 +79,8 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
           }
           return true; // For iOS or platforms other than Android
       };
-      const validatePhoto = (photoFile: any) => {
+  
+      const validatePhoto = useCallback((photoFile: any) => {
         const allowedTypes = ['image/jpeg', 'image/png'];
         const maxSize = 1048576; // 1 MB in bytes
 
@@ -94,7 +95,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
         }
 
         return true;
-    };
+    },[])
 
 
     const uploadProfilePhoto = async (photoFile: any) => {
@@ -146,6 +147,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
         });
 
     };
+
     const removePhoto = async () => {
         if (photo === DEFAULT_PROFILE_IMAGE) {
             showToast('error', 'No photo to remove.');
@@ -370,28 +372,45 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       setIsLoading(false);
     }
   },[]);
-  const resetPersonalDetails = () => {
+
+  const resetPersonalDetails = useCallback(() => {
     setPersonalDetails(personalData);
-  };
-  // Ensure function doesn't recreate on every render
+  },[personalData])
+
+
+  // This approach forces the render to complete in 1 second 
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const timeoutPromise = new Promise((_, reject) =>
+  //       setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
+  //     );
+
+
+  //     const reloadWithTimeout = async () => {
+  //       try {
+  //         await Promise.race([loadProfile(), timeoutPromise]);
+  //       } catch (error) {
+  //         console.warn(); // Handle timeout error gracefully
+  //       }
+  //     };
+
+  //     reloadWithTimeout();
+  //   }, [userToken, userId])
+  // );
 
   useFocusEffect(
     useCallback(() => {
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
-      );
-
-
-      const reloadWithTimeout = async () => {
+      const reloadProfile = async () => {
         try {
-          await Promise.race([loadProfile(), timeoutPromise]);
+          await loadProfile(); // Let it fully resolve
         } catch (error) {
-          console.warn(); // Handle timeout error gracefully
+          console.warn('Failed to load profile:', error);
         }
       };
-
-      reloadWithTimeout();
-    }, [userToken, userId])
+  
+      reloadProfile();
+    }, [userToken, userId, loadProfile])
   );
 
   useEffect(() => {
@@ -405,7 +424,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   };
 
   // Validate Form
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const errors: { [key: string]: string } = {};
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!personalDetails.firstName)
@@ -430,10 +449,10 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     setFormErrors(errors);
     console.log(errors);
     return Object.keys(errors).length === 0;
-  };
+  },[personalDetails])
 
   // Update Basic Details
-  const updateBasicDetails = async () => {
+  const updateBasicDetails = useCallback(async () => {
 
     // Trigger form validation
     const isValid = validateForm();
@@ -452,7 +471,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       console.log('Error updating personal details:', error);
       return false; // Indicate failure
     }
-  };
+  },[userToken, userId, personalDetails])
 
   // Handle Input Changes
   const handleInputChange = (field: string, value: string) => {
@@ -501,6 +520,7 @@ useEffect(() => {
         fetchProfilePhoto(userToken, userId);
     }
 }, [userId, userToken]);
+
 useEffect(() => {
     const checkVerification = async () => {
         try {
@@ -518,19 +538,6 @@ useEffect(() => {
 }, [userId]);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   return {
     profileData,
     isLoading,
@@ -544,10 +551,7 @@ useEffect(() => {
     setFormErrors,
     resetPersonalDetails, // Add reset function to return object
     handleCamera,
-    handlePermission,
     validatePhoto,
-    uploadProfilePhoto,
-    removePhoto,
     handleCancelUpload,
     handleUploadResume,
     handleSaveChanges,

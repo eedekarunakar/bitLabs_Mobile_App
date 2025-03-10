@@ -31,7 +31,6 @@ import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { usePdf } from '../HomePage/resumestate';
-import Pdf from 'react-native-pdf';
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
 
@@ -89,9 +88,9 @@ function ProfileComponent() {
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
-            navigation.setOptions({
-                headerShown: false // Hide the header button to prevent re-navigation
-            });
+            // navigation.setOptions({
+            //     headerShown: false // Hide the header button to prevent re-navigation
+            // });
             navigation.setParams({ retake: false });
         }
     }, [route.params]);

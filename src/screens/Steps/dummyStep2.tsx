@@ -270,11 +270,11 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
  
   return (
     <View style={styles.screen}>
+      <ScrollView scrollEnabled={!isAnyDropdownOpen} style={styles.scrollView}>
       <Image
         style={styles.logo}
         source={require('../../assests/LandingPage/logo.png')}
       />
-      <ScrollView scrollEnabled={!isAnyDropdownOpen}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
@@ -454,6 +454,7 @@ const styles = StyleSheet.create({
     width: 150, // Decreased width
     height: 45,
     marginBottom: 20,
+    alignSelf:'center'
   },
   container: {
     width: '100%',
@@ -558,6 +559,10 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 14,
+  },
+  scrollView: {
+    flexGrow: 1,
+    paddingBottom: 100, // Adds padding to avoid initial overlap
   },
 });
 export default Dummystep2;

@@ -275,7 +275,7 @@ const AppWithProfileProvider = () => {
   return (
     <PdfProvider>
     <MessageProvider>
-      <ProfilePhotoProvider userToken={userToken} userId={userId}>
+      <ProfilePhotoProvider >
         <NavigationContainer >
           <Appnavigator />
           <Toast config={toastConfig} /> {/* Pass the toastConfig */}

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import ProfileService from '../services/profile/ProfileService';
+import { AuthContext, useAuth } from './Authcontext';
  
 interface ProfilePhotoContextProps {
     photo: string | null;
@@ -7,16 +8,14 @@ interface ProfilePhotoContextProps {
 }
  
 interface ProfilePhotoProviderProps {
-    userToken: string | null;
-    userId: number | null;
     children: ReactNode; // Define the type for children
 }
  
 const ProfilePhotoContext = createContext<ProfilePhotoContextProps | undefined>(undefined);
  
-export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({ children, userToken, userId }) => {
+export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({ children }) => {
     const [photo, setPhoto] = useState<string | null>(null);
- 
+    const {userToken,userId} = useAuth();
     const fetchProfilePhoto = async (token: string | null, id: number | null) => {
         if (!token || !id) return;
         try {
