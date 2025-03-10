@@ -2,8 +2,9 @@ import { useState, useEffect,useContext } from 'react';
 import {  saveJob, applyJob, removeSavedJob } from '../../services/Jobs/JobDetails'; // Add removeSavedJob
 import { useAuth } from '@context/Authcontext';
 import Toast from 'react-native-toast-message';
-import { fetchJobDetails } from '@services/Jobs/RecommendedJobs';
+import { fetchJobDetails,fetchCompanyLogo } from '@services/Jobs/RecommendedJobs';
 import UserContext from '@context/UserContext';
+import { Buffer } from 'buffer';
 const useJobDetailsViewModel = (jobId: string) => {
   const { userToken, userId } = useAuth();
   const [isJobSaved, setIsJobSaved] = useState(false);
@@ -13,6 +14,7 @@ const useJobDetailsViewModel = (jobId: string) => {
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]);
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null); 
   const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext)
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -28,7 +30,28 @@ const useJobDetailsViewModel = (jobId: string) => {
         setPerfectMatchSkills(jobData.matchedSkills.map((skill: any) => skill.skillName));
         setUnmatchedSkills(skillsRequired);
         setPercent(matchPercentage);
-      } catch (error) {
+
+        // Fetch company logo
+        if (jobData.recruiterId) {
+          try {
+            const logoData = await fetchCompanyLogo(jobData.recruiterId, userToken);
+
+            if (logoData) {
+              // Assuming logoData is an ArrayBuffer, convert it to Base64
+              const base64Logo = logoData;
+              console.log('Logo URL/Base64:', base64Logo);
+              setCompanyLogo(base64Logo); // Set the Base64-encoded company logo
+            } else {
+              setCompanyLogo(null); // Set to null if no logo data is received
+            }
+          } catch (error) {
+            console.error('Error fetching or converting company logo:', error);
+            setCompanyLogo(null); // Default to null in case of an error
+          }
+        } else {
+          setCompanyLogo(null); // Default if no recruiterId
+        }
+      }catch (error) {
         console.error('Error fetching profile data:', error);
       }
     };
@@ -143,6 +166,7 @@ const useJobDetailsViewModel = (jobId: string) => {
     skillProgressText,
     perfectMatchSkills,
     unmatchedSkills,
+    companyLogo, 
     handleSaveJob,
     handleApplyJob,
     handleRemoveJob, // Expose the new function

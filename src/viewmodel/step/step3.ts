@@ -10,6 +10,9 @@ import DocumentPicker, {
   } from "react-native-document-picker";
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@models/model';
+
+import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
+
 import ProfileService from '@services/profile/ProfileService';
 
 type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
@@ -145,7 +148,9 @@ const nav = useNavigation<navigation>();
       } as any);
 
       const response = await ProfileService.uploadResume(userToken, userId, formData);
+
       if (response.success) {
+
         //setResumeFile(response.fileName);
         toastmsg('success', 'Resume uploaded successfully!');
       } else {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { FlatList, ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useSavedJobs } from '@services/Jobs/SavedJob';
 import { JobData1 } from '@models/Model';
@@ -6,20 +6,54 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@models/Model';
 import UserContext from '@context/UserContext';
+import { fetchCompanyLogo } from '@services/Jobs/AppliedJob';
+import { useAuth } from '@context/Authcontext';
 
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
   const [reload, setReload] = useState(false); // Reload state
   const { jobCounts } = useContext(UserContext);
+  const [logos, setLogos] = useState<{ [key: string]: string | null }>({});
   const count = jobCounts?.savedJobs ?? 300;
+  const { userId, userToken } = useAuth();
+   const [logosLoading, setLogosLoading] = useState(true); 
+  // Automatically reload data when the screen is focused
+  useEffect(() => {
+      const fetchLogos = async () => {
+        if (savedJobs.length > 0) {
+          const logoPromises = savedJobs.map(async (job) => {
+            if (job.recruiterId) {
+              try {
+                const logo = await fetchCompanyLogo(job.recruiterId, userToken);
+                return { [job.id]: logo };
+              } catch (error) {
+                console.error(`Error fetching logo for recruiterId ${job.recruiterId}:`, error);
+                return { [job.id]: null }; // Set null if logo fetch fails
+              }
+            }
+            return { [job.id]: null }; // Handle cases where recruiterId is missing
+          });
+    
+          // Resolve all promises in parallel
+          const logoDataArray = await Promise.all(logoPromises);
+          const logoData = logoDataArray.reduce((acc, logo) => ({ ...acc, ...logo }), {});
+          setLogos(logoData);
+        }
+        setLogosLoading(false); // Mark logo fetching as completed
+      };
+    
+      if (!loading) {
+        fetchLogos(); // Trigger logo fetching after jobs are loaded
+      }
+    }, [savedJobs, userToken, loading]);// Trigger when savedJobs changes
+
   // Automatically reload data when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchSavedJobs(count); // Trigger a reload of the saved jobs data
-    }, [reload]) // Dependency ensures fresh data each time
+    }, [fetchSavedJobs, count])
   );
-
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -49,7 +83,11 @@ const SavedJobs = () => {
       <TouchableOpacity onPress={() => handleJobPress(item)}>
         <View style={styles.row}>
           <Image
-            source={require('../../assests/Images/company.png')} // Placeholder image
+            source={
+              logos[item.id] === 'data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y' // Check for the specific invalid Base64 string
+                ? require('../../assests/Images/company.png') // Display the default placeholder
+                : { uri: logos[item.id] } // Display the dynamically fetched logo
+            }
             style={styles.companyLogo}
           />
           <View style={styles.jobDetails}>
@@ -104,20 +142,27 @@ const SavedJobs = () => {
   );
 
   return (
-    <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#FF8C00" />}
-      {error && <Text style={styles.placeholderText}>{error}</Text>}
-      {!loading && savedJobs.length === 0 && (
-        <Text style={styles.placeholderText}>No applied jobs available!</Text>
-      )}
-
-      <FlatList
-        data={savedJobs}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.container}
-      />
-    </View>
+   <View style={styles.container}>
+         {/* Show loader until both jobs and logos are loaded */}
+         {(loading || logosLoading) && <ActivityIndicator size="large" color="#FF8C00" />}
+   
+         {/* Show error if any */}
+         {error && <Text style={styles.placeholderText}>{error}</Text>}
+   
+         {/* Render jobs only when loading is complete */}
+         {!loading && !logosLoading && (
+           <FlatList
+             data={savedJobs}
+             renderItem={renderItem}
+             keyExtractor={(item) => item.id.toString()}
+             onEndReachedThreshold={0.5}
+           />
+         )}
+   
+         {!loading && !logosLoading && savedJobs.length === 0 && (
+           <Text style={styles.placeholderText}>No applied jobs available!</Text>
+         )}
+       </View>
   );
 };
 const styles = StyleSheet.create({
@@ -187,19 +232,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
+  
   },
   companyLogo: {
     width: 50,
     height: 50,
     borderRadius: 15,
     marginRight: 16,
+   // backgroundColor:'black'
+    
   },
   placeholderText: {
     fontSize: 16,
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
-    fontFamily:'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold'
   },
   jobDetails: {
     flex: 1,
@@ -237,11 +285,13 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap'
   },
   locationIcon: {
+    marginTop: 6,
     width: 11,
     height: 12,
     marginRight: 6,
   },
   locationText: {
+    marginTop: 6,
     fontSize: 11,
     color: 'black',
     fontFamily: 'PlusJakartaSans-Medium'

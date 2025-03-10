@@ -72,6 +72,7 @@ export interface Skill {
     skillsRequired: Skill[];
     jobStatus: string;
     logoFile: string | null;
+    recruiterId: number;
   }
   export type JobDetails = {
     applyJobId: number;
@@ -112,6 +113,7 @@ export type RootStackParamList1 = {
       matchStatus: string;
       sugesstedCourses: string[];
       matchedSkills :string[];
+      recruiterId: number;
     }
     
   
