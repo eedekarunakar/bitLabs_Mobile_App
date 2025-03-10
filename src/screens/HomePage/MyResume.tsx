@@ -10,10 +10,11 @@ import { RootStackParamList } from '@models/model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import RNFS from 'react-native-fs';
-import { usePdf } from './resumestate';
+import { usePdf } from '../../context/ResumeContext';
 import PDFExam from './Reusableresume';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -124,6 +125,8 @@ const PDFExample = () => {
         </LinearGradient> */}
         <View style={styles.pdf}>
 
+
+
           <PDFExam />
 
           <View>
@@ -146,12 +149,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
     padding: 10,
-    paddingRight: 1.5
+    //paddingRight: 1.5
 
   },
   banner: {
     position: 'relative',
-    padding: 5
+    //padding: 5
 
   },
   header: {
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
 
   },
   pdf: {
-    marginTop: 20,
+    marginTop: 10,
     flex: 1,
     width: '100%',
     height: Dimensions.get('window').height,

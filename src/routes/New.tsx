@@ -29,7 +29,7 @@ import SavedDetails from '../screens/Jobs/SavedDetails';
 import { ProfilePhotoProvider } from '../context/ProfilePhotoContext';
 import ResumeBuilder from '../screens/profile/ResumeBuilder';
 import Drives from '../screens/HomePage/Drives';
-import { PdfProvider } from '../screens/HomePage/resumestate';
+import { PdfProvider } from '../context/ResumeContext';
 
 import { useMessageContext, MessageProvider } from '../screens/LandingPage/welcome';
 import { RootStackParamList } from '@models/Model';

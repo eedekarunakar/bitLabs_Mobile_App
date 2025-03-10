@@ -30,7 +30,7 @@ import Fileupload from '@assests/icons/Fileupload';
 import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { usePdf } from '../HomePage/resumestate';
+import { usePdf } from '../../context/ResumeContext';
 import Pdf from 'react-native-pdf';
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
