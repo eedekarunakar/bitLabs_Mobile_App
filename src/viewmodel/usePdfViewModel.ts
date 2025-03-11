@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { useAuth } from '@context/Authcontext';
 import { usePdf } from '@context/ResumeContext';
 import resumeCall from '@services/profile/Resume';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const usePdfViewModel = () => {
   const { pdfUri, setPdfUri } = usePdf();
@@ -32,6 +33,12 @@ export const usePdfViewModel = () => {
       }
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchPdf(); // Function that updates pdfUri
+    }, [])
+  );
 
   const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
     let binary = '';

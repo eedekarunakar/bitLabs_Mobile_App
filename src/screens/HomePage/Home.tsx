@@ -1,7 +1,7 @@
 import React, {useState, useEffect,useContext} from 'react';
  
 import Navbar from '@components/Navigation/Navbar';
- 
+import NetInfo from '@react-native-community/netinfo';
 import ExploreSection from "@components/home/ExploreSection"; // Hook for fetching job counts
 import { useAuth } from '@context/Authcontext';
 import { RootStackParamList } from '@models/Model';
@@ -28,6 +28,7 @@ import {
  
  
 import LinearGradient from 'react-native-linear-gradient';
+import { Use } from 'react-native-svg';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
  
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
@@ -38,6 +39,8 @@ type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
  
 function Dashboard() {
+  const {refreshJobCounts , refreshPersonalName , refreshVerifiedStatus} = useContext(UserContext)
+  const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
   const { userId, userToken } = useAuth(); // Retrieve userId and userToken
@@ -46,6 +49,29 @@ function Dashboard() {
   useEffect(() => {
     console.log('Dashboard route.params:', route.params); // Debug log
   }, [route.params]);
+
+  useEffect(()=>{
+    const unsubscribe = NetInfo.addEventListener((state)=>{
+      if(state.isConnected && !isConnected){
+        // Internet is back online, refetch data
+        console.log('inter connection is back ') 
+        refetchData();
+      }
+
+      setIsConnected(state.isConnected)
+    })
+    return () => {
+      unsubscribe();
+    }
+
+  },[isConnected])
+
+  const refetchData = async ()=>{
+    refreshJobCounts();
+    refreshPersonalName();
+    refreshVerifiedStatus();
+  }
+
  
  
  

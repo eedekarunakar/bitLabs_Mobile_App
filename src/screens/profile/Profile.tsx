@@ -103,7 +103,7 @@ function ProfileComponent() {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>{error}</Text>
-                <Text onPress={reloadProfile} style={styles.retryText}>Tap to Retry</Text>
+                <Text onPress={() => reloadProfile()} style={styles.retryText}>Tap to Retry</Text>
             </View>
         );
     }

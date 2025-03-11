@@ -14,7 +14,7 @@ import {
   Platform, PermissionsAndroid, 
 } from 'react-native';
 import { launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions  } from 'react-native-image-picker';
-import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+
 
 
 
@@ -81,11 +81,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
               return true;
           }
           // return true; // For iOS or platforms other than Android
-          else if (Platform.OS === 'ios') {
-            const cameraPermission = await request(PERMISSIONS.IOS.CAMERA);
-            console.log(`iOS Camera Permission: ${cameraPermission}`);
-            return cameraPermission === RESULTS.GRANTED;
-          }
+    
       };
       const validatePhoto = (photoFile: any) => {
         const allowedTypes = ['image/jpeg', 'image/png'];
@@ -352,6 +348,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
  //to memoize and  maintain reference 
 
   const loadProfile = useCallback(async () => {
+    setError(null)
     setIsLoading(true);
     try {
       const data = await ProfileService.fetchProfile(userToken, userId);
@@ -373,7 +370,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
       setProfileData(data);
     } catch (err) {
-      setError('Failed to load profile data.');
+      setError('Poor Network Connection.');
     } finally {
       setIsLoading(false);
     }
@@ -386,7 +383,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   useFocusEffect(
     useCallback(() => {
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Reload timeout exceeded')), 1000)
+        setTimeout(() => reject(new Error('Reload timeout exceeded')), 4000)
       );
 
 

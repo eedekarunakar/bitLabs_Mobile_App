@@ -11,9 +11,10 @@ const PDFExam = () => {
       {pdfUri ? (
         <Pdf source={{ uri: pdfUri }} style={styles.pdf} />
       ) : error ? (
-        <Text>{error}</Text>
+        <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
+        
       ) : (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#F46F16" />
       )}
     </View>
   );
