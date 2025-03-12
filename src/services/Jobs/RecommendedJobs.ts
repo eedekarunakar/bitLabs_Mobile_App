@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useState } from 'react';
 import { JobData } from '@models/Model';
 import { JobCounts } from '@models/Model';
 import {API_BASE_URL} from '@env';
@@ -19,26 +18,10 @@ export const fetchRecommendedJobs = async (userId: number | null, userToken: str
   const response = await axios.get(API_URLS.recommendedJobs(userId, count), {
     headers: { Authorization: `Bearer ${userToken}` },
   });
-  //console.log(response.data)
- 
+
   return response.data;
   
- 
 };
-// export const fetchCompanyLogo = async (
-//   recruiterId: number | null,
-//   userToken: string | null
-// ): Promise<any> => {
-//   if (!recruiterId) {
-//     console.error("Recruiter ID is null");
-//     return null;
-//   }
-//   const response = await axios.get(`${API_BASE_URL}/recruiters/companylogo/download/50000`, {
-//     headers: { Authorization: `Bearer ${userToken}` },
-//   });
-//   console.log("Company logo data:", response.data);
-//   return response.data;
-// };
 export const fetchCompanyLogo = async (
   recruiterId: number | null,
   userToken: string | null

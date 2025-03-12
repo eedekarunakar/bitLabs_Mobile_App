@@ -1,6 +1,5 @@
 import apiClient from '../login/ApiClient';
 
-
 export const fetchProfileId = async (id: number, token: string): Promise<{ success: boolean; profileid?: number }> => {
     try {
         const response = await apiClient.get(

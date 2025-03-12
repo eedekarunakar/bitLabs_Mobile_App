@@ -25,7 +25,6 @@ export const changePassword = async (
   newPassword: string,
   userToken: string,
   userId: string,
-  setMessage: (msg: string) => void,
 ) => {
   const oldPasswordEncrypt = encryptPassword(oldPassword, secretKey);
   const newPasswordEncrypt = encryptPassword(newPassword, secretKey);
@@ -62,7 +61,6 @@ export const changePassword = async (
           position: 'bottom',
           text1: '',
           text2: 'Password changed successfully',
-
           visibilityTime: 5000,
         });
       } else {
