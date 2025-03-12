@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import UserContext from '@context/UserContext';
-
+import { usePdf } from '../HomePage/resumestate';
 interface LogoutModalProps {
   visible: boolean;
   onCancel: () => void;
@@ -11,7 +11,8 @@ interface LogoutModalProps {
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
-
+  const { setPdfUri } = usePdf();
+ 
   //reset the total data while logout to ensure no credentilas left in authcontext
   const {reset} = useContext(UserContext)
   return (
@@ -29,7 +30,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm 
             <TouchableOpacity onPress={()=>{onCancel();reset();}} style={[styles.modalButton, styles.cancelButton]}>
               <Text style={[styles.buttonText, { color: '#F46F16' }]}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{onConfirm()}} style={[styles.modalButton]}>
+            <TouchableOpacity onPress={()=>{onConfirm();setPdfUri(null);}} style={[styles.modalButton]}>
               <LinearGradient
                 colors={['#F46F16', '#F8A44C']}
                 style={styles.gradientButton}
