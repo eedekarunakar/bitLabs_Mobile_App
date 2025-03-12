@@ -327,6 +327,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                           setQualification(item);
                           setQualificationQuery(item);
                           setShowQualificationList(false);
+                          setValidationErrors(({ qualification, ...restErrors }) => restErrors);
                         }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
@@ -367,6 +368,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                           setSpecialization(item);
                           setSpecializationQuery(item);
                           setShowSpecializationList(false);
+                          setValidationErrors(({ specialization, ...restErrors }) => restErrors);
                         }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
@@ -416,6 +418,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                             addSkill(item);
                             setSkillQuery(''); // Clear input after selection
                             // setShowSkillsList(true); // Keep dropdown open
+                            setValidationErrors(({ skills, ...restErrors }) => restErrors);
                           }}
                         >
                           <Text style={styles.autocompleteItem}>{item}</Text>
@@ -492,6 +495,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                             addLocation(item);
                             setLocationQuery(''); // Clear input after selection
                             // setShowLocationList(true); // Keep dropdown open
+                            setValidationErrors(({ locations, ...restErrors }) => restErrors);
                           }}
                         >
                           <Text style={styles.autocompleteItem}>{item}</Text>
@@ -543,6 +547,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                           setExperience(item);
                           setExperienceQuery(item);
                           setShowExperienceList(false);
+                          setValidationErrors(({ experience, ...restErrors }) => restErrors);
                         }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>

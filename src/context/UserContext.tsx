@@ -15,6 +15,7 @@ interface UserContextProps {
   setPersonalName: (value: React.SetStateAction<string>) => void;
   isLoading: boolean;
   refreshJobCounts: () => Promise<void>;
+  refreshPersonalName:() => Promise<void>;
   jobCounts: JobCounts | null;
   reset :()=>Promise<void>;
 }
@@ -30,7 +31,8 @@ const UserContext = createContext<UserContextProps>({
   refreshJobCounts: async () => { },
   setPersonalName: () => { },
   isLoading: true,
-  reset:async ()=>{ }
+  reset:async ()=>{ },
+  refreshPersonalName: async () => {},
 });
 
 interface UserProviderProps {
@@ -135,6 +137,23 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
+  const refreshPersonalName = async()  =>{
+    try{
+    const user = await ProfileService.fetchProfile(userToken,userId);
+    const name = user ?.basicDetails ?.firstName
+
+    if(name){
+      setPersonalName(name)
+    }else{
+      console.error('Error fetching name in usercontext ')
+    }
+    }catch(error){
+      console.error('Error fetching name :', error)
+    }
+
+
+  }
+
   
  // Reset the information before logging out 
  const reset = async()=>{
@@ -156,7 +175,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         isLoading,
         reset,
         isJobsLoaded,
-        setIsJobsLoaded
+        setIsJobsLoaded,
+        refreshPersonalName
       }}
     >
       {children}
