@@ -9,6 +9,7 @@ import { requestStoragePermission } from './permissions';
 import { RootStackParamList } from '@models/model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
+import { showToast } from '@services/login/ToastService';
 import RNFS from 'react-native-fs';
 import { usePdf } from './resumestate';
 import PDFExam from './Reusableresume';
@@ -39,30 +40,13 @@ const PDFExample = () => {
   const source = { uri: pdfUri };
   const downloadFile = async () => {
     if (!pdfUri) {
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'No PDF available to download.',
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 3 seconds
-        text2Style: {
-          fontSize: 14
-
-        },
-      });
+      showToast('error','No PDF available to download.');
       return;
     }
 
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Allow storage permission to download.',
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 4 seconds      
-        text2Style: { fontSize: 16 },
-      });
+      showToast('error', 'Allow storage permission to download.');
       return;
     }
 
@@ -72,26 +56,10 @@ const PDFExample = () => {
 
     try {
       await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
-      Toast.show({
-        type: 'success',
-        text1: '',
-        text2: `File saved successfully!`,
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 5 seconds
-        text1Style: { fontSize: 18, fontWeight: 'bold' },
-        text2Style: { fontSize: 16 },
-      });
+     showToast('success',`File saved successfully!`);
     } catch (error) {
       console.error('Download Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to save PDF file.',
-        position: 'bottom',
-        visibilityTime: 4000, // Toast stays for 4 seconds
-        text1Style: { fontSize: 18, fontWeight: 'bold' },
-        text2Style: { fontSize: 16 },
-      });
+      showToast('error','Failed to save PDF file.');
     }
   };
 

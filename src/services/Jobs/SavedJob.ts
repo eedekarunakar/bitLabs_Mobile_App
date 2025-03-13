@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback,useContext } from 'react';
-import { JobData1 } from '@models/Model';
+import { JobData } from '@models/Model';
 import { useAuth } from '@context/Authcontext';
 import apiClient from '../login/ApiClient';
 import { JobCounts } from '@models/Model';
@@ -8,7 +8,7 @@ import UserContext from '@context/UserContext';
 export const useSavedJobs = () => {
   const { userId, userToken } = useAuth();
   const { jobCounts } = useContext(UserContext);
-  const [savedJobs, setSavedJobs] = useState<JobData1[]>([]);
+  const [savedJobs, setSavedJobs] = useState<JobData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
 

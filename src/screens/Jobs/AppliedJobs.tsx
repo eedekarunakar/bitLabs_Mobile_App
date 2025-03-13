@@ -14,9 +14,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@models/Model";
 import JobCard from "./Jobcard";
 import { JobData } from "@models/Model";
+import { useLogos } from "../../hooks/useLogos";
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
-  const { appliedJobs, logos, loading, error } = useAppliedJobsViewModel(
+  const { appliedJobs, loading, error } = useAppliedJobsViewModel(
     userId,
     userToken
   );
@@ -24,8 +25,8 @@ const AppliedJobs = () => {
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, "AppliedJobs">
     >();
-
-  // Renders each job item
+const { logos, loading: logosLoading }: { logos: { [key: number]: string }, loading: boolean } = useLogos(appliedJobs, userToken ?? '');
+  
   const renderJobItem = ({ item }: { item: JobData }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate("JobDetailsScreen", { job: item })}
@@ -46,6 +47,7 @@ const AppliedJobs = () => {
             ? undefined // Use fallback for invalid Base64
             : logos[item.id] ?? undefined
         }
+        truncateTitle={true}
       />
     </TouchableOpacity>
   );
@@ -53,13 +55,17 @@ const AppliedJobs = () => {
   return (
     <View style={styles.container}>
       {/* Show loader until data is fully loaded */}
-      {loading && <ActivityIndicator size="large" color="#FF8C00" />}
-      
+      {(loading || logosLoading) && (
+  <View style={styles.loader}>
+    <ActivityIndicator size="large" color="#FF8C00" />
+  </View>
+)}
+
       {/* Display any errors */}
       {error && <Text style={styles.placeholderText}>{error}</Text>}
       
       {/* Render jobs if loading is complete and no error */}
-      {!loading && (
+      {!loading && !logosLoading&& (
         <FlatList
           data={appliedJobs}
           renderItem={renderJobItem}
@@ -69,7 +75,7 @@ const AppliedJobs = () => {
       )}
 
       {/* Handle empty list */}
-      {!loading && appliedJobs.length === 0 && (
+      {!loading && !logosLoading&& appliedJobs.length === 0 && (
         <Text style={styles.placeholderText}>No applied jobs available!</Text>
       )}
     </View>
@@ -78,9 +84,10 @@ const AppliedJobs = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "#f6f6f6",
     top: 0,
-    marginBottom: 112,
+   // marginBottom: 112,
   },
   placeholderText: {
     fontSize: 16,
@@ -89,6 +96,12 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontFamily: "PlusJakartaSans-Bold",
   },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+ 
 });
 
 export default AppliedJobs;
