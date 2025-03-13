@@ -24,7 +24,6 @@ export const changePassword = async (
   newPassword: string,
   userToken: string,
   userId: string,
-  setMessage: (msg: string) => void,
 ) => {
   const oldPasswordEncrypt = encryptPassword(oldPassword, secretKey);
   const newPasswordEncrypt = encryptPassword(newPassword, secretKey);
@@ -56,6 +55,7 @@ export const changePassword = async (
         response.status === 200 &&
         response.data === 'Password updated and stored'
       ) {
+
         showToast('success','Password changed successfully');
       } else {
         showToast('error',response.data.message || 'Old password is incorrect');

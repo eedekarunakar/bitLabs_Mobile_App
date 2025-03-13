@@ -38,7 +38,7 @@ const useJobDetailsViewModel = (jobId: string) => {
             if (logoData) {
               // Assuming logoData is an ArrayBuffer, convert it to Base64
               const base64Logo = logoData;
-              console.log('Logo URL/Base64:', base64Logo);
+              
               setCompanyLogo(base64Logo); // Set the Base64-encoded company logo
             } else {
               setCompanyLogo(null); // Set to null if no logo data is received

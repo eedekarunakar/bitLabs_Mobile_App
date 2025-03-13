@@ -25,7 +25,7 @@ export const useSkillTestViewModel = (userId: number | any, jwtToken: string | n
   
       // Only send the necessary data to the API for the skill test
       const response = await submitSkillBadge(data.applicantId, data.skillBadgeName, data.status, jwtToken);
-      console.log('Skill Test submission response:', response);
+      
 
       if (response==='ApplicantSkillBadge saved successfully') {
         setIsTestComplete(true);

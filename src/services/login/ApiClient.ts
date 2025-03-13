@@ -41,7 +41,7 @@ const responseInterceptor = async (error: any) => {
   if (error.response?.status === 401 || error.response?.status === 403) {
     if (!sessionExpiredAlertActive) {
       sessionExpiredAlertActive = true; // Activate the flag so it won't trigger again immediately
-      console.log('Token expired! Logging out...');
+  
 
       if (logoutHandler) {
         logoutHandler(); // Log out user

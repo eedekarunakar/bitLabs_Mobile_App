@@ -24,7 +24,7 @@ import {useSkillTestViewModel} from '@viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import {decode} from 'html-entities';
 
-const {width,height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const TestScreen = ({route, navigation}: any) => {
   const {testName} = route.params;
@@ -83,10 +83,6 @@ const TestScreen = ({route, navigation}: any) => {
     return () => subscription.remove();
   }, []);
 
-  useEffect(() => {
-    // Log the testName to check what value was sent
-    console.log('Test Name received in TestScreen:', testName);
-  }, [testName]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -97,24 +93,7 @@ const TestScreen = ({route, navigation}: any) => {
       unsubscribe();
     };
   }, []);
-  useEffect(() => {
-    if (!isNetworkAvailable) {
-      setDisconnectedTime(prevTime => prevTime + 1);
-    } else if (disconnectedTime >= 60) {
-      setHasExceededTimeout(true); // Mark that the timeout was exceeded
-    } else {
-      setDisconnectedTime(0);
-    }
-  }, [isNetworkAvailable]);
-
-  useEffect(() => {
-    if (disconnectedTime >= 60) {
-      clearInterval(timerInterval);
-      handleModalConfirm();
-      setHasExceededTimeout(true); // Ensure reconnection doesn't overwrite
-    }
-  }, [disconnectedTime]);
-
+ 
   useEffect(() => {
     if (isNetworkAvailable && hasExceededTimeout) {
       handleModalConfirm(); // Call again if needed
@@ -257,10 +236,6 @@ const TestScreen = ({route, navigation}: any) => {
       case 'SQL-Server':
         fetchedTestData = require('../models/data/SQL.json');
         break;
-
-      default:
-        console.error(`No data found for test: ${testName}`);
-        return;
     }
 
     if (fetchedTestData) {
@@ -309,7 +284,7 @@ const TestScreen = ({route, navigation}: any) => {
     setShowEarlySubmissionModal(false);
     clearInterval(timerInterval); // Ensure the timer is cleared for early submission
     const finalScore = 0; // Score is 0 for early submission
-    console.log('Submitting test with score:', finalScore);
+
     if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
       await submitTest(finalScore, true);
     } else {
@@ -373,7 +348,7 @@ const TestScreen = ({route, navigation}: any) => {
       const percentageScore = parseFloat(
         ((finalScore / testData.questions.length) * 100).toFixed(2),
       );
-      console.log('Final score (on submit):', percentageScore); // Debug
+
       if (
         testName === 'Technical Test' ||
         testName === 'General Aptitude Test'

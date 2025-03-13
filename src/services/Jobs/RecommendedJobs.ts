@@ -1,4 +1,3 @@
-
 import apiClient from '@services/login/ApiClient';
 import { JobData } from '@models/Model';
 import { JobCounts } from '@models/Model';
@@ -13,16 +12,15 @@ const API_URLS = {
 
 export const fetchRecommendedJobs = async (userId: number | null, userToken: string | null, jobCounts: JobCounts | null): Promise<JobData[]> => {
   const count = jobCounts?.recommendedJobs ?? 300;
-  console.log("recommended jobs count: " + count);
+
  
   const response = await apiClient.get(API_URLS.recommendedJobs(userId, count), {
     headers: { Authorization: `Bearer ${userToken}` },
   });
-  //console.log(response.data)
- 
+
+
   return response.data;
   
- 
 };
 
 export const fetchCompanyLogo = async (
@@ -39,9 +37,9 @@ export const fetchCompanyLogo = async (
       headers: { Authorization: `Bearer ${userToken}` },
       responseType: 'arraybuffer', // Specify binary data response
     });
+
     // Convert binary data to Base64
     const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
-
     return base64Logo;
   } catch (error) {
     console.error("Error fetching or converting company logo:", error);
@@ -61,7 +59,7 @@ export const fetchJobDetails = async (
   });
 
   const jobData = response.data.body;
-  console.log("Job details:", jobData);
+
 
   // Fetch company logo using recruiterId
   if (jobData.recruiterId) {

@@ -1,6 +1,5 @@
 import apiClient from '../login/ApiClient';
 
-
 export const fetchProfileId = async (id: number, token: string): Promise<{ success: boolean; profileid?: number }> => {
     try {
         const response = await apiClient.get(
@@ -9,7 +8,7 @@ export const fetchProfileId = async (id: number, token: string): Promise<{ succe
                 headers: { Authorization: `Bearer ${token}` },
             }
         );
-        console.log("API",response.data)
+
 
         if (response.status === 200) {
             return { success: true, profileid: response.data};

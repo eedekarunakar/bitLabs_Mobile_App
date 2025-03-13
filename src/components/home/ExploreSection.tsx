@@ -1,20 +1,20 @@
 import React, { useContext } from "react";
-import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity, Linking } from "react-native";
+import { View, Text, Image, ScrollView, StyleSheet, Dimensions, Linking } from "react-native";
 import GradientButton from "../styles/GradientButton";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from '@models/Model';
 import UserContext from "../../context/UserContext";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
- 
- 
+
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Badges'>;
- 
+
 const ExploreSection = () => {
   const { verifiedStatus } = useContext(UserContext)
   const navigation = useNavigation<NavigationProp>();
- 
- 
+
+
   return (
     <View>
       <Text style={styles.textBelowCard}>Explore</Text>
@@ -43,37 +43,38 @@ const ExploreSection = () => {
             </View>
             <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"}             Badge</Text>
             <Image
-              source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Taketest.f9b04fc56b4d85d488be.png" }}
+              source={require('../../assests/Images/Earn_badge.png')}
               style={styles.cardImage}
             />
+
             <GradientButton
               title="Take Test"
               onPress={() => navigation.navigate('Badges')}
               style={styles.cardButton}
-             
+
             />
           </View>
         )}
- 
+
         <View style={[styles.largeCard, styles.lastCard]}>
           <Text style={styles.cardTitle}>Get Certified on Advanced{"\n"}{"                 "}Technologies</Text>
           <Image
-            source={{ uri: "https://d1sq67t1c2pewz.cloudfront.net/static/media/Certificate.cf13aa641913a67cb502.png" }}
-            style={styles.cardImage}
-          />
+              source={require('../../assests/Images/Certificate.png')}
+              style={styles.cardImage}
+            />
           <GradientButton
             title="Start Learning"
             onPress={() => Linking.openURL('https://upskill.bitlabs.in/login/index.php')}
             style={styles.cardButton}
-           
+
           />
         </View>
       </ScrollView>
     </View>
   );
 };
- 
- 
+
+
 const styles = StyleSheet.create({
   textBelowCard: {
     textAlign: "left",
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.07,
     fontFamily: "PlusJakartaSans-Bold",
     marginTop: screenHeight * 0.025,
- 
+
   },
   scrollContainer: {
     width: "100%",
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     padding: screenWidth * 0.05,
     marginRight: screenWidth * 0.03,
     borderRadius: screenWidth * 0.04,
- 
+
     fontFamily: "PlusJakartaSans-Bold",
     width: screenWidth * 0.7,
     alignItems: "center",
@@ -128,8 +129,8 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.06,
     justifyContent: "center",
     alignItems: "center",
-    borderTopLeftRadius:0,
-    borderTopRightRadius:0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   lastCard: {
     marginRight: screenWidth * 0.09,
@@ -143,5 +144,5 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.075, // Same height as the button
   },
 });
- 
+
 export default ExploreSection;

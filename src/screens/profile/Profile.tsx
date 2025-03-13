@@ -14,7 +14,7 @@ import {
     Dimensions
 
 } from 'react-native';
-import PDFExam from '../HomePage/Reusableresume';
+import PDFExam from '../../components/progessBar/Resume';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -30,20 +30,20 @@ import Fileupload from '@assests/icons/Fileupload';
 import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { usePdf } from '../HomePage/resumestate';
-import Pdf from 'react-native-pdf';
+import { usePdf } from '../../context/ResumeContext';
+
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
 
 
     const nav = useNavigation<any>();
-    const { pdfUri } = usePdf()
+
 
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-    console.log('pdf', pdfUri)
+
     const {
         profileData,
         isLoading,
@@ -78,7 +78,7 @@ function ProfileComponent() {
     const [key, setKey] = useState(0);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log('Profile screen is focused');
+
             setKey(prevKey => (prevKey + 1) % 1000);
             // Change the key to force re-render
         });
@@ -97,13 +97,13 @@ function ProfileComponent() {
     }, [route.params]);
  
     if (isLoading) {
-        return <ActivityIndicator size="large" color="#F97316" />;
+        return <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />;
     }
     if (error) {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>{error}</Text>
-                <Text onPress={reloadProfile} style={styles.retryText}>Tap to Retry</Text>
+                <Text onPress={() => reloadProfile()} style={styles.retryText}>Tap to Retry</Text>
             </View>
         );
     }

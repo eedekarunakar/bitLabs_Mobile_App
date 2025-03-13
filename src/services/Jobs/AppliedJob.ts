@@ -19,10 +19,10 @@ export const fetchCompanyLogo = async (
       headers: { Authorization: `Bearer ${userToken}` },
       responseType: 'arraybuffer', // Specify binary data response
     });
-    //console.log("Company logo datass:", response);
-    // Convert binary data to Base64
+
+
     const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
-    //console.log("Company logo (Base64):", base64Logo);
+
 
     return base64Logo;
   } catch (error) {

@@ -14,7 +14,7 @@ export const useJobAlerts = () => {
     const fetchAlerts = async () => {
       try {
         const alerts = await fetchJobAlerts(userId, userToken);
-        console.log('alert',alerts)
+      
         setJobAlerts(alerts);
       } catch (error) {
         console.error('Error fetching job alerts:', error);

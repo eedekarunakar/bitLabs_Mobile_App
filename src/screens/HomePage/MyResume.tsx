@@ -11,10 +11,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import { showToast } from '@services/login/ToastService';
 import RNFS from 'react-native-fs';
-import { usePdf } from './resumestate';
-import PDFExam from './Reusableresume';
+import { usePdf } from '../../context/ResumeContext';
+import PDFExam from '../../components/progessBar/Resume';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -22,14 +23,12 @@ const BANNER_SIZE = Math.min(width * 0.2, 100); // Adjust the size dynamically
 const PDFExample = () => {
   const userid = useAuth();
   //const [pdfUri, setPdfUri] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation<NavigationProp>();
-  const { setPdfUri, pdfUri, refreshPdf } = usePdf()
+  //const navigation = useNavigation<NavigationProp>();
+  const {  pdfUri, refreshPdf } = usePdf()
 
 
 
-  console.log('pdfUri', pdfUri)
+
   useEffect(() => {
     if (userid.userId) {
       refreshPdf(); // Fetch PDF when component mounts
@@ -92,6 +91,8 @@ const PDFExample = () => {
         </LinearGradient> */}
         <View style={styles.pdf}>
 
+
+
           <PDFExam />
 
           <View>
@@ -114,12 +115,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
     padding: 10,
-    paddingRight: 1.5
+    //paddingRight: 1.5
 
   },
   banner: {
     position: 'relative',
-    padding: 5
+    //padding: 5
 
   },
   header: {
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
 
   },
   pdf: {
-    marginTop: 20,
+    marginTop: 10,
     flex: 1,
     width: '100%',
     height: Dimensions.get('window').height,

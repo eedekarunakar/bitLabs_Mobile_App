@@ -55,7 +55,7 @@ export const useBadgeViewModel = () => {
   const loadTestStatus = useCallback(async () => {
     try {
       const data = await fetchTestStatus(userId, userToken);
-      console.log('Test Data:', data);
+
  
       if (Array.isArray(data) && data.length > 0) {
         data.forEach(test => {
@@ -123,7 +123,7 @@ export const useBadgeViewModel = () => {
     setLoading(true);
     try {
       const data = await fetchSkillBadges(userId, userToken);
-      console.log('Skill Badge Data', data);
+
       setApplicantSkillBadges(data);
     } catch (error) {
       console.error('Error fetching skill badges:', error);

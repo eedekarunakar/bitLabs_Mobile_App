@@ -95,7 +95,7 @@ const RecommendedJobs = () => {
   // Render content based on active tab
   const renderContent = () => {
     if (loading || logosLoading) {
-      return <ActivityIndicator size="large" color="#FF8C00" style={styles.loader} />;
+      return <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />;
     }
     switch (activeTab) {
       case 'recommended':
@@ -113,7 +113,7 @@ const RecommendedJobs = () => {
             }
             ListFooterComponent={
               loading ? (
-                <ActivityIndicator size="large" color="#FF8C00" />
+                <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
               ) : null
             }
           />

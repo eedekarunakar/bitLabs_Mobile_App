@@ -1,5 +1,5 @@
 import { useState,useRef } from 'react';
-import { handleLogin, handleSignup, handleOTP } from '../services/login/Authservice';
+import { handleSignup, handleOTP } from '../services/login/Authservice';
 import { LoginErrors, SignupErrors } from '../models/Model';
 import { useAuth } from '@context/Authcontext';
 import useOtpManager from '../hooks/useOtpManager';
@@ -56,9 +56,9 @@ const useLoginViewModel = () => {
     if (validateLogin()) {
       const result = await login(loginUserName, loginPassword);
       if (result.success) {
-        console.log('toast displayed')
+
         showToast('success','Login successful')
-        console.log('login succesfull')
+
       } else {
         if (result.message !== null && result.message !== undefined) {
           setLoginMessage(result.message);
@@ -204,7 +204,7 @@ const useSignupViewModel = () => {
       // setShowNotification(true);
       // setTimeout(() => setShowNotification(false), 3000);
     } else {
-      console.log('error occured');
+
       otpManager.setOtpValid(false);
       setTimeout(() => otpManager.setOtpValid(true), 3000);
     }

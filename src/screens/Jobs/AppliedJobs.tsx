@@ -15,6 +15,7 @@ import { RootStackParamList } from "@models/Model";
 import JobCard from "./Jobcard";
 import { JobData } from "@models/Model";
 import { useLogos } from "../../hooks/useLogos";
+
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
   const { appliedJobs, loading, error } = useAppliedJobsViewModel(
@@ -61,7 +62,6 @@ const { logos, loading: logosLoading }: { logos: { [key: number]: string }, load
   </View>
 )}
 
-      {/* Display any errors */}
       {error && <Text style={styles.placeholderText}>{error}</Text>}
       
       {/* Render jobs if loading is complete and no error */}

@@ -1,13 +1,13 @@
 import React, {useState, useEffect,useContext} from 'react';
  
 import Navbar from '@components/Navigation/Navbar';
- 
+import NetInfo from '@react-native-community/netinfo';
 import ExploreSection from "@components/home/ExploreSection"; // Hook for fetching job counts
 import { useAuth } from '@context/Authcontext';
 import { RootStackParamList } from '@models/Model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
  
-import { useMessageContext, } from '../LandingPage/welcome';
+import { useMessageContext, } from '../../context/welcome';
 
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
@@ -28,6 +28,7 @@ import {
  
  
 import LinearGradient from 'react-native-linear-gradient';
+import { Use } from 'react-native-svg';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
  
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
@@ -38,14 +39,37 @@ type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
  
 function Dashboard() {
+  const {refreshJobCounts , refreshPersonalName , refreshVerifiedStatus} = useContext(UserContext)
+  const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
-  const { userId, userToken } = useAuth(); // Retrieve userId and userToken
+  
   const { verifiedStatus, personalName, isLoading , jobCounts } = useContext(UserContext);
   const route = useRoute<HomeScreenRouteProp>(); // Handle route params
-  useEffect(() => {
-    console.log('Dashboard route.params:', route.params); // Debug log
-  }, [route.params]);
+
+
+  useEffect(()=>{
+    const unsubscribe = NetInfo.addEventListener((state)=>{
+      if(state.isConnected && !isConnected){
+        // Internet is back online, refetch data
+
+        refetchData();
+      }
+
+      setIsConnected(state.isConnected)
+    })
+    return () => {
+      unsubscribe();
+    }
+
+  },[isConnected])
+
+  const refetchData = async ()=>{
+    refreshJobCounts();
+    refreshPersonalName();
+    refreshVerifiedStatus();
+  }
+
  
  
  
@@ -58,8 +82,7 @@ function Dashboard() {
  
  
   const navigation = useNavigation<NavigationProp>();
-  console.log("verified status = ", verifiedStatus)
-  console.log("personal name =  ", personalName)
+
   useEffect(() => {
     setVerified(verifiedStatus);
   }, [verifiedStatus]);
@@ -67,7 +90,7 @@ function Dashboard() {
   if ( loading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
         <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold' }}>
           Loading job data...
         </Text>

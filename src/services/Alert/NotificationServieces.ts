@@ -1,7 +1,6 @@
 import { JobData } from '@models/Model';
 import apiClient from '../login/ApiClient';
 
-
 export interface JobAlert {
   alertsId: string;
   status: string;
@@ -10,7 +9,6 @@ export interface JobAlert {
   changeDate: number[];
   applyJob: { applyjobid:number ,job:{id:number|null},jobTitle: string };
   seen: boolean;
-  
 }
 
 export const fetchJobAlerts = async (userId: number|null, userToken: string|null): Promise<JobAlert[]> => {
@@ -76,8 +74,7 @@ export const fetchJobDetails = async (jobId: number|null, userToken: string | nu
       }
     );
       const jobData = mapJobData(response.data,jobId,apply);
-      console.log('model',jobData)
-  
+
     return jobData;
     
   } catch (error) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback, useState } from 'react';
+import React, {  useContext, useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -101,7 +101,7 @@ const Badge = ({ navigation }: any) => {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
       </View>
     );
   }

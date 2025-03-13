@@ -8,10 +8,8 @@ import { useJobViewModel } from '@viewmodel/Alert/navigationModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@models/Model';
 
-
 const NotificationsPage: React.FC = () => {
   const { jobAlerts,  handleMarkAsSeen } = useJobAlerts(); // useJobAlerts is used here to get job alerts and unseen count
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList, 'JobDetailsScreen'>>();
 
@@ -30,14 +28,13 @@ const NotificationsPage: React.FC = () => {
     return date.toLocaleString('en-US', options);
   };
 
-
   const renderItem = ({ item }: { item: JobAlert }) => (
     <TouchableOpacity
       onPress={() => {
         handleMarkAsSeen(item.alertsId);
         const jobId = item.applyJob.job.id;
         const apply = item.applyJob.applyjobid
-        console.log('id', apply);
+
         getJobDetails(jobId, apply).then((jobDetails) => {
           navigation.navigate('JobDetailsScreen', { job: jobDetails });
         });
