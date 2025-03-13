@@ -4,8 +4,7 @@ import { JobData } from '@models/Model';
 import { JobCounts } from '@models/Model';
 import apiClient from '../login/ApiClient';
 import { Buffer } from 'buffer';
-import axios from 'axios';
-import { API_BASE_URL } from '@env';
+
 export const fetchCompanyLogo = async (
   recruiterId: number | null,
   userToken: string | null
@@ -16,7 +15,7 @@ export const fetchCompanyLogo = async (
   }
 
   try {
-    const response = await axios.get(`${API_BASE_URL}/recruiters/companylogo/download/${recruiterId}`, {
+    const response = await apiClient.get(`/recruiters/companylogo/download/${recruiterId}`, {
       headers: { Authorization: `Bearer ${userToken}` },
       responseType: 'arraybuffer', // Specify binary data response
     });

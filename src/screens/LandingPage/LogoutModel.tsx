@@ -11,7 +11,8 @@ interface LogoutModalProps {
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
-
+  const { setPdfUri } = usePdf();
+ 
   //reset the total data while logout to ensure no credentilas left in authcontext
   const {reset} = useContext(UserContext)
   const { setPdfUri } = usePdf(); // Get setPdfUri to clear the PDF
@@ -33,6 +34,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm 
               <Text style={[styles.buttonText, { color: '#F46F16' }]}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{onConfirm();setPdfUri(null)}} style={[styles.modalButton]}>
+
               <LinearGradient
                 colors={['#F46F16', '#F8A44C']}
                 style={styles.gradientButton}

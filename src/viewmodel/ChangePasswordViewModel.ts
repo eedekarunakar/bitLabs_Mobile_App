@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { changePassword, checkPasswordsMatch, encryptPassword } from '@services/login/ChangePasswordService';
 import Toast from 'react-native-toast-message';
+import { showToast } from '@services/login/ToastService';
 
 export const useChangePasswordViewModel = (userToken: string, userId: string) => {
   const [oldPassword, setOldPassword] = useState<string>('');
@@ -76,13 +77,7 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
 
     // Check if old and new passwords are the same
     if (oldPassword === newPassword && oldPassword) {
-      Toast.show({
-        type: 'error',
-        position: 'bottom',
-        text1: '',
-        text2: 'Old password and new password cannot be the same',
-        visibilityTime: 5000,
-      });
+      showToast('error','Old password and new password cannot be the same');
       return;
     }
 

@@ -72,7 +72,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             </View>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={() => { handleApplyJob(); navigation.goBack(); }}>
+          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={() => { handleApplyJob(); }}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{ x: 0, y: 0 }}

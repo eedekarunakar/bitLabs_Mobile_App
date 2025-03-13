@@ -1,9 +1,9 @@
 import { useState, useEffect,useContext } from 'react';
 import {  saveJob, applyJob, removeSavedJob } from '../../services/Jobs/JobDetails'; // Add removeSavedJob
 import { useAuth } from '@context/Authcontext';
-import Toast from 'react-native-toast-message';
 import { fetchJobDetails,fetchCompanyLogo } from '@services/Jobs/RecommendedJobs';
 import UserContext from '@context/UserContext';
+import { showToast } from '@services/login/ToastService';
 const useJobDetailsViewModel = (jobId: string) => {
   const { userToken, userId } = useAuth();
   const [isJobSaved, setIsJobSaved] = useState(false);
@@ -44,7 +44,7 @@ const useJobDetailsViewModel = (jobId: string) => {
               setCompanyLogo(null); // Set to null if no logo data is received
             }
           } catch (error) {
-            console.error('Error fetching or converting company logo:', error);
+            //console.error('Error fetching or converting company logo:', error);
             setCompanyLogo(null); // Default to null in case of an error
           }
         } else {
@@ -65,29 +65,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobSaved(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        Toast.show({
-          type: 'success',
-          text1: '',
-          text2: 'Job saved successfully!',
-          text1Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Bold', color: 'black' },
-          text2Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Bold', color: 'black' },
-          position: 'bottom',
-          bottomOffset: 80,
-          visibilityTime: 5000,
-        });
+        showToast('success','Job saved successfully!');
       }
     } catch (error) {
       console.error('Error saving job:', error);
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to save job.',
-        text1Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Bold', color: 'black' },
-        text2Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Bold', color: 'black' },
-        position: 'bottom',
-        bottomOffset: 80,
-        visibilityTime: 5000,
-      });
+      showToast('error','Failed to save job.');
     }
   };
 
@@ -98,29 +80,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobApplied(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        Toast.show({
-          type: 'success',
-          text1: '',
-          text2: 'Job application submitted successfully!',
-          text1Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-          text2Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-          position: 'bottom',
-          bottomOffset: 80,
-          visibilityTime: 5000,
-        });
+        showToast('success','Job application submitted successfully!');
       }
     } catch (error) {
       console.error('Error applying for job:', error);
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to apply for job.',
-        text1Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-        text2Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-        position: 'bottom',
-        bottomOffset: 80,
-        visibilityTime: 5000,
-      });
+      showToast('error','Failed to apply for job.');
     }
   };
 
@@ -131,29 +95,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobSaved(false); 
         setIsJobsLoaded(false);
         refreshJobCounts();
-        Toast.show({
-          type: 'success',
-          position: 'bottom',
-          bottomOffset: 80,
-          text1: '',
-          text2: 'Job removed successfully!',
-          text1Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-          text2Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-          visibilityTime: 5000,
-        });
+        showToast('success','Job removed successfully!');
       }
     } catch (error) {
       console.error('Error removing job:', error);
-      Toast.show({
-        type: 'error',
-        position: 'bottom',
-        bottomOffset: 80,
-        text1: '',
-        text2: 'Failed to remove job.',
-        text1Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-        text2Style: { fontSize: 12, fontFamily: 'PlusJakartaSans-Medium' },
-        visibilityTime: 5000,
-      });
+      showToast('error','Failed to remove job.');
     }
   };
 

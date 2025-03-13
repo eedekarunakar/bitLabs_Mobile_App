@@ -12,6 +12,7 @@ type JobCardProps = {
   employeeType: string;
   creationDate: [number, number, number];
   logoUrl?: string;
+  truncateTitle?: boolean;
 };
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -25,6 +26,7 @@ const JobCard: React.FC<JobCardProps> = ({
   employeeType,
   creationDate,
   logoUrl,
+  truncateTitle = false,
 }) => {
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -53,7 +55,13 @@ const JobCard: React.FC<JobCardProps> = ({
         />
 
         <View style={styles.jobDetails}>
-          <Text style={styles.jobTitle}>{jobTitle}</Text>
+          <Text
+            style={styles.jobTitle}
+            numberOfLines={truncateTitle ? 1 : undefined}
+            ellipsizeMode={truncateTitle ? "tail" : undefined}
+          >
+            {jobTitle}
+          </Text>
           <Text style={styles.companyName}>{companyName}</Text>
         </View>
       </View>
@@ -167,7 +175,7 @@ const styles = StyleSheet.create({
     lineHeight: 23.76,
     marginTop: 10,
     display: 'flex',
-    marginLeft: '55%',
+    marginLeft: '58%',
   },
   locationIcon: {
     width: 11,
