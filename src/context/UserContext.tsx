@@ -68,18 +68,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if (isMounted) {
           if (typeof status === 'boolean') {
             setVerifiedStatus(status);
-            console.log('Verified Status:', status);
           } else {
             console.error('Invalid verified status:', status);
           }
-
-          console.log('Fetched user data:', user);
 
           const name = user?.basicDetails?.firstName; // Note the capital "N"
 
           if (name) {
             setPersonalName(name);
-            console.log("User's Name:", name);
           } else {
             console.error('User basic details or firstName is missing');
           }
@@ -87,7 +83,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           // Set job counts
           if (jobs) {
             setJobCounts(jobs);
-            console.log('Job Counts:', jobs);
           } else {
             console.error('Failed to fetch job counts');
           }
@@ -115,7 +110,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       const status = await ProfileService.checkVerified(userToken, userId);
       if (typeof status === 'boolean') {
         setVerifiedStatus(status);
-        console.log('Verified Status Refreshed:', status);
       } else {
         console.error('Invalid verified status:', status);
       }
@@ -128,7 +122,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       const jobs = await fetchJobCounts(userId, userToken);
       if (jobs) {
         setJobCounts(jobs);
-        console.log('Job Counts Refreshed:', jobs);
+ 
       } else {
         console.error('Failed to fetch job counts');
       }

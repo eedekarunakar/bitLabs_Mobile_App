@@ -9,7 +9,7 @@ const ImagePreviewScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<ImageScreenRouteProp>();
   const { uri } = route.params
-  console.log('Navigated to ImagePreview with URI:', uri);
+
  
   const handleRetake = () => {
     navigation.reset({

@@ -262,7 +262,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
       skillsRequired,
     };
 
-    console.log('Request Body:', requestBody);
+
 
     try {
       const response = await ProfileViewModel.saveProfessionalDetails(userToken, userId, requestBody);

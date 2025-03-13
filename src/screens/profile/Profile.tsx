@@ -14,7 +14,7 @@ import {
     Dimensions
 
 } from 'react-native';
-import PDFExam from '../HomePage/Reusableresume';
+import PDFExam from '../../components/progessBar/Resume';
 import ProfessionalDetailsForm from './ProfessionalDetailsForm';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -43,7 +43,7 @@ function ProfileComponent() {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
-    console.log('pdf', pdfUri)
+
     const {
         profileData,
         isLoading,
@@ -78,7 +78,7 @@ function ProfileComponent() {
     const [key, setKey] = useState(0);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log('Profile screen is focused');
+
             setKey(prevKey => (prevKey + 1) % 1000);
             // Change the key to force re-render
         });
@@ -97,7 +97,7 @@ function ProfileComponent() {
     }, [route.params]);
  
     if (isLoading) {
-        return <ActivityIndicator size="large" color="#F97316" />;
+        return <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />;
     }
     if (error) {
         return (

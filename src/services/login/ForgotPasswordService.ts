@@ -25,7 +25,7 @@ const convertToLowerCase =(email:string)=>{
       const response = await apiClient.post(`/applicant/forgotpasswordsendotp`, {
        email:lowercaseEmail
       });
-      console.log(response)
+
       if (response.status === 200) {
         return { success: true, message: 'OTP sent to your email!' };
       } else {
@@ -38,7 +38,7 @@ const convertToLowerCase =(email:string)=>{
    
   const verifyOtp = async(otp:string,signupEmail:string ): Promise<AuthResponse> => {
    
-  console.log('verification otpp sent',otp)
+
   const lowercaseEmail = convertToLowerCase(signupEmail)
     try {
           const response = await apiClient.post(
@@ -48,8 +48,7 @@ const convertToLowerCase =(email:string)=>{
               email:lowercaseEmail,
             },
           );
-        console.log(response)
-       console.log('this is the response',response)
+
         return { success: true, data: response.data };
        
     }catch(error){
@@ -72,18 +71,17 @@ const resetPassword = async (email:string,password:string,confirmedPassword:stri
           
         },
       );
-      console.log('this hass hit the api')
-      console.log(response)
+
      
         return { success: true, data: response.data };
       
     
   } catch (error) {
     if(axios.isAxiosError(error)){
-      console.log('axois error')
+
     return { success: false, data: error.response?.data};
     }
-    console.log('not axois error, but error...')
+
     return { success: false, message:'error'}
   }
 };

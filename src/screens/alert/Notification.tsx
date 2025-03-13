@@ -37,7 +37,7 @@ const NotificationsPage: React.FC = () => {
         handleMarkAsSeen(item.alertsId);
         const jobId = item.applyJob.job.id;
         const apply = item.applyJob.applyjobid
-        console.log('id', apply);
+
         getJobDetails(jobId, apply).then((jobDetails) => {
           navigation.navigate('JobDetailsScreen', { job: jobDetails });
         });

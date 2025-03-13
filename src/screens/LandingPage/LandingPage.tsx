@@ -46,7 +46,7 @@ const LandingPage = () => {
                 const { login } = authContext;
                 try {
                     await login(signupEmail, signupPassword);
-                    console.log("Login handled successfully");
+
                 } catch (error) {
                     console.error("Error during login", error);
                 }
@@ -106,7 +106,7 @@ const LandingPage = () => {
                 loginErrors.username = '';
             }
             else if (loginErrorParam == 'password') {
-                console.log(loginErrors.password)
+
                 loginErrors.password = '';
             }
         }

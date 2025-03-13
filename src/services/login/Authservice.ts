@@ -53,7 +53,7 @@ export const handleLogin = async (
   try {
     const {encryptedPassword, iv} = encryptPassword(loginpassword, secretkey);
  
-    console.log('Encrypted Password:', encryptedPassword);
+
     const response = await apiClient.post(
       `/applicant/applicantLogin`,
       {
@@ -64,7 +64,7 @@ export const handleLogin = async (
     );
  
     if (response.status === 200) {
-      console.log(response);
+
       const token = response.data.data.jwt;
       const id = response.data.id;
       if (token && id) {

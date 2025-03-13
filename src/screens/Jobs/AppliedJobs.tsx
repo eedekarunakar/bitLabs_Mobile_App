@@ -160,7 +160,7 @@ const AppliedJobs = () => {
   return (
     <View style={styles.container}>
       {/* Show loader until both jobs and logos are loaded */}
-      {(loading || logosLoading) && <ActivityIndicator size="large" color="#FF8C00" />}
+      {(loading || logosLoading) && <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />}
 
       {/* Show error if any */}
       {error && <Text style={styles.placeholderText}>{error}</Text>}

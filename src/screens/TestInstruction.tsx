@@ -114,7 +114,7 @@ const Test = ({route, navigation}: any) => {
         }
 
         const data = await response.json();
-        console.log(data);
+ 
 
         if (Array.isArray(data) && data.length > 0) {
           const {testStatus: fetchedStatus, testName: fetchedName} = data[0];
@@ -274,7 +274,7 @@ const Test = ({route, navigation}: any) => {
     }
   }, [step, testType, testName]);
 
-  console.log(testType, skillName);
+
 
   if (loading) {
     return (
@@ -423,7 +423,7 @@ const Test = ({route, navigation}: any) => {
               // Determine the name to send based on testType
 
               const nameToSend = testType === 'SkillBadge' ? skillName : testData.testName;
-              console.log("Navigating with", nameToSend)
+
 
               // Navigate to the TestScreen with the determined name
               navigation.navigate('TestScreen', {testName: nameToSend});

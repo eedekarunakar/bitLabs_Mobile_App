@@ -198,7 +198,7 @@ const [logosLoading, setLogosLoading] = useState(true);
   // Render content based on active tab
   const renderContent = () => {
     if (loading || logosLoading) {
-      return <ActivityIndicator size="large" color="#FF8C00" style={styles.loader} />;
+      return <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />;
     }
     switch (activeTab) {
       case 'recommended':
@@ -216,7 +216,7 @@ const [logosLoading, setLogosLoading] = useState(true);
             }
             ListFooterComponent={
               loading ? (
-                <ActivityIndicator size="large" color="#FF8C00" />
+                <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
               ) : null
             }
           />
@@ -329,11 +329,7 @@ const styles = StyleSheet.create({
   rightAlignedText: {
     marginLeft: 20, // Adjust this value to set how far you want to move the text to the right
   },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   jobCard: {
     backgroundColor: '#fff',
     borderRadius: 18,

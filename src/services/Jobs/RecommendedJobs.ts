@@ -14,12 +14,12 @@ const API_URLS = {
 
 export const fetchRecommendedJobs = async (userId: number | null, userToken: string | null, jobCounts: JobCounts | null): Promise<JobData[]> => {
   const count = jobCounts?.recommendedJobs ?? 300;
-  console.log("recommended jobs count: " + count);
+
  
   const response = await axios.get(API_URLS.recommendedJobs(userId, count), {
     headers: { Authorization: `Bearer ${userToken}` },
   });
-  //console.log(response.data)
+
  
   return response.data;
   
@@ -36,7 +36,7 @@ export const fetchRecommendedJobs = async (userId: number | null, userToken: str
 //   const response = await axios.get(`${API_BASE_URL}/recruiters/companylogo/download/50000`, {
 //     headers: { Authorization: `Bearer ${userToken}` },
 //   });
-//   console.log("Company logo data:", response.data);
+
 //   return response.data;
 // };
 export const fetchCompanyLogo = async (
@@ -53,10 +53,10 @@ export const fetchCompanyLogo = async (
       headers: { Authorization: `Bearer ${userToken}` },
       responseType: 'arraybuffer', // Specify binary data response
     });
-//console.log("Company logo datass:", response);
+
     // Convert binary data to Base64
     const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
-   // console.log("Company logo (Base64):", base64Logo);
+
 
     return base64Logo;
   } catch (error) {
@@ -77,7 +77,7 @@ export const fetchJobDetails = async (
   });
 
   const jobData = response.data.body;
-  console.log("Job details:", jobData);
+
 
   // Fetch company logo using recruiterId
   if (jobData.recruiterId) {

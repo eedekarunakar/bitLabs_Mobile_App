@@ -85,7 +85,7 @@ const TestScreen = ({route, navigation}: any) => {
 
   useEffect(() => {
     // Log the testName to check what value was sent
-    console.log('Test Name received in TestScreen:', testName);
+
   }, [testName]);
 
   useEffect(() => {
@@ -309,7 +309,7 @@ const TestScreen = ({route, navigation}: any) => {
     setShowEarlySubmissionModal(false);
     clearInterval(timerInterval); // Ensure the timer is cleared for early submission
     const finalScore = 0; // Score is 0 for early submission
-    console.log('Submitting test with score:', finalScore);
+
     if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
       await submitTest(finalScore, true);
     } else {
@@ -373,7 +373,7 @@ const TestScreen = ({route, navigation}: any) => {
       const percentageScore = parseFloat(
         ((finalScore / testData.questions.length) * 100).toFixed(2),
       );
-      console.log('Final score (on submit):', percentageScore); // Debug
+
       if (
         testName === 'Technical Test' ||
         testName === 'General Aptitude Test'

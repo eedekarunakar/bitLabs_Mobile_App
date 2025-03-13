@@ -13,7 +13,7 @@ export const useJobViewModel = () => {
     setIsLoading(true);
     try {
       const data = await fetchJobDetails(jobId, userToken,apply);
-      console.log('view',data)
+  
       setJobDetails(data);
       return data;
     } catch (err: any) {

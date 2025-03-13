@@ -46,15 +46,13 @@ function Dashboard() {
   const { userId, userToken } = useAuth(); // Retrieve userId and userToken
   const { verifiedStatus, personalName, isLoading , jobCounts } = useContext(UserContext);
   const route = useRoute<HomeScreenRouteProp>(); // Handle route params
-  useEffect(() => {
-    console.log('Dashboard route.params:', route.params); // Debug log
-  }, [route.params]);
+
 
   useEffect(()=>{
     const unsubscribe = NetInfo.addEventListener((state)=>{
       if(state.isConnected && !isConnected){
         // Internet is back online, refetch data
-        console.log('inter connection is back ') 
+       
         refetchData();
       }
 
@@ -84,8 +82,7 @@ function Dashboard() {
  
  
   const navigation = useNavigation<NavigationProp>();
-  console.log("verified status = ", verifiedStatus)
-  console.log("personal name =  ", personalName)
+
   useEffect(() => {
     setVerified(verifiedStatus);
   }, [verifiedStatus]);
@@ -93,7 +90,7 @@ function Dashboard() {
   if ( loading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
         <Text style={{ color: '#0D0D0D', fontFamily: 'PlusJakartaSans-Bold' }}>
           Loading job data...
         </Text>

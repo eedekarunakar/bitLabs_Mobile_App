@@ -14,21 +14,20 @@ const ResumeBuilder = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching user data...');
+
         const response = await apiClient.get(
           `/applicant/getApplicantById/${userId}`,
         );
-        console.log('User data fetched:', response.data);
+
 
         const newData = {
           identifier: response.data.email,
           password: response.data.password,
         };
-        console.log('Prepared newData:', newData);
+
 
         const apiUrl1 = 'https://resume.bitlabs.in:5173/api/auth/login';
-        console.log('Starting fetch request to:', apiUrl1);
-        console.log('Payload:', JSON.stringify(newData));
+
 
         const loginResponse = await axios.post(apiUrl1, newData, {
           headers: {
@@ -36,15 +35,13 @@ const ResumeBuilder = () => {
           },
         });
 
-        console.log('Fetch request completed.');
-        console.log('Status:', loginResponse.status);
-        console.log('Data:', loginResponse.data);
+
 
         if (loginResponse.status === 200) {
           const loginUrl = `https://resume.bitlabs.in:5173/auth/login?identifier=${encodeURIComponent(
             newData.identifier,
           )}&password=${encodeURIComponent(newData.password)}`;
-          console.log('Login URL:', loginUrl);
+
           setLoginUrl(loginUrl);
         } else {
           console.error('Login failed:', loginResponse.data);
@@ -74,14 +71,14 @@ const ResumeBuilder = () => {
 
   const handleWebViewMessage = async (event: WebViewMessageEvent) => {
     const message = event.nativeEvent.data;
-    console.log('Received message from WebView:', message);
+
 
     if (message === 'close-modal-saveexit') {
       try {
         const response = await apiClient.put(
           `/applicantprofile/updateResumeSource/${userId}`,
         );
-        console.log('API call successful:', response.data);
+
         // Navigate back to Profile component
         navigation.goBack();
         Alert.alert('Save and Exit', 'Resume source updated successfully.');
