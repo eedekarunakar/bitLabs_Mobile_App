@@ -52,7 +52,7 @@ function Dashboard() {
     const unsubscribe = NetInfo.addEventListener((state)=>{
       if(state.isConnected && !isConnected){
         // Internet is back online, refetch data
-       
+
         refetchData();
       }
 

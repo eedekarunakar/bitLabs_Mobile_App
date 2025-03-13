@@ -19,25 +19,11 @@ export const fetchRecommendedJobs = async (userId: number | null, userToken: str
     headers: { Authorization: `Bearer ${userToken}` },
   });
 
- 
+
   return response.data;
   
- 
 };
-// export const fetchCompanyLogo = async (
-//   recruiterId: number | null,
-//   userToken: string | null
-// ): Promise<any> => {
-//   if (!recruiterId) {
-//     console.error("Recruiter ID is null");
-//     return null;
-//   }
-//   const response = await axios.get(`${API_BASE_URL}/recruiters/companylogo/download/50000`, {
-//     headers: { Authorization: `Bearer ${userToken}` },
-//   });
 
-//   return response.data;
-// };
 export const fetchCompanyLogo = async (
   recruiterId: number | null,
   userToken: string | null

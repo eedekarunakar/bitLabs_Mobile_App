@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin'; 
 import { useAuth } from '@context/Authcontext';  
 import { showToast } from '../login/ToastService';
-
 
 const useGoogleSignIn = () => {
   const [userInfo, setUserInfo] = useState(null);
