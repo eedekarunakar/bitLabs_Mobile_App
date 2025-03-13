@@ -1,5 +1,5 @@
 import { useState,useRef } from 'react';
-import { handleLogin, handleSignup, handleOTP } from '../services/login/Authservice';
+import { handleSignup, handleOTP } from '../services/login/Authservice';
 import { LoginErrors, SignupErrors } from '../models/Model';
 import { useAuth } from '@context/Authcontext';
 import useOtpManager from '../hooks/useOtpManager';

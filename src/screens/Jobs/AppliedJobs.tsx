@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@models/Model";
 import { fetchCompanyLogo } from "../../services/Jobs/AppliedJob"; // Import the service to fetch the logo
-import { Buffer } from "buffer";
+
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
   const { appliedJobs, loading, error } = useAppliedJobsViewModel(

@@ -22,10 +22,8 @@ const BANNER_SIZE = Math.min(width * 0.2, 100); // Adjust the size dynamically
 const PDFExample = () => {
   const userid = useAuth();
   //const [pdfUri, setPdfUri] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation<NavigationProp>();
-  const { setPdfUri, pdfUri, refreshPdf } = usePdf()
+  //const navigation = useNavigation<NavigationProp>();
+  const {  pdfUri, refreshPdf } = usePdf()
 
 
 

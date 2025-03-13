@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { fetchJobDetails } from '@services/Alert/NotificationServieces';
-import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { JobData } from '@models/Model';
 import { useAuth } from '@context/Authcontext';
 
 export const useJobViewModel = () => {

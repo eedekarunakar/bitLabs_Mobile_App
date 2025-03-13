@@ -24,7 +24,7 @@ import {useSkillTestViewModel} from '@viewmodel/Test/skillViewModel';
 import NetInfo from '@react-native-community/netinfo';
 import {decode} from 'html-entities';
 
-const {width,height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const TestScreen = ({route, navigation}: any) => {
   const {testName} = route.params;

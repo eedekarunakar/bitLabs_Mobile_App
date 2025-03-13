@@ -12,11 +12,10 @@ import { useAuth } from '@context/Authcontext';
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
-  const [reload, setReload] = useState(false); // Reload state
   const { jobCounts } = useContext(UserContext);
   const [logos, setLogos] = useState<{ [key: string]: string | null }>({});
   const count = jobCounts?.savedJobs ?? 300;
-  const { userId, userToken } = useAuth();
+  const {  userToken } = useAuth();
    const [logosLoading, setLogosLoading] = useState(true); 
   // Automatically reload data when the screen is focused
   useEffect(() => {

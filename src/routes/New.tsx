@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {TouchableOpacity, ActivityIndicator, View,Dimensions } from 'react-native';
+import {ActivityIndicator, View,} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from '../screens/LandingPage/LandingPage'; // Replace with actual path
@@ -7,7 +7,7 @@ import BottomTab from './BottomNavigation';
 import Dummystep1 from '../screens/Steps/dummyStep1'; // Replace with actual path
 import Dummystep2 from '../screens/Steps/dummyStep2';
 import dummyStep3 from '../screens/Steps/dummyStep3'
-import { useAuth, AuthProvider } from '../context/Authcontext'; // Replace with actual path
+import { useAuth,} from '../context/Authcontext'; // Replace with actual path
 import { fetchProfileId } from '../services/Create/createProfile'; // Replace with actual path
 import TestInstruction from '../screens/TestInstruction'; // Ensure the path is correct
 import TestScreen from '../screens/TestScreen';
@@ -27,11 +27,10 @@ import ViewJobDetails from '../screens/Jobs/ViewJobDetails';
 import Notification from '../screens/alert/Notification';
 import SavedDetails from '../screens/Jobs/SavedDetails';
 import { ProfilePhotoProvider } from '../context/ProfilePhotoContext';
-import ResumeBuilder from '../screens/profile/ResumeBuilder';
 import Drives from '../screens/HomePage/Drives';
 import { PdfProvider } from '../context/ResumeContext';
 
-import { useMessageContext, MessageProvider } from '../screens/LandingPage/welcome';
+import { useMessageContext, MessageProvider } from '../context/welcome';
 import { RootStackParamList } from '@models/Model';
 
 import { toastConfig } from '@components/Toast/toast_config';
@@ -106,7 +105,7 @@ const Appnavigator = () => {
           <Stack.Screen name="Step1" component={Dummystep1} initialParams={{ email: userEmail }} options={{ headerShown: false }} />
           <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
           <Stack.Screen name="Step3" component={dummyStep3} options={{ headerShown: false }} initialParams={{ updateShouldShowStep1: setShouldShowStep1 }} />
-          <Stack.Screen name="ResumeBuilder" component={ResumeBuilder} />
+          
         </>
       ) : (
         <>
@@ -245,7 +244,7 @@ const Appnavigator = () => {
               },
             }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ResumeBuilder"
             component={ResumeBuilder}
             options={{
@@ -255,7 +254,7 @@ const Appnavigator = () => {
                 fontSize: 16, // Customize the font size
               },
             }}
-          />
+          /> */}
           <Stack.Screen
             name="Drives"
             component={Drives}

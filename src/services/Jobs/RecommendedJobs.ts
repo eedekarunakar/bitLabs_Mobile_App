@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useState } from 'react';
 import { JobData } from '@models/Model';
 import { JobCounts } from '@models/Model';
 import {API_BASE_URL} from '@env';

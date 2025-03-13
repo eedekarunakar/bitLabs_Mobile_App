@@ -5,7 +5,7 @@ import { useTestViewModel } from '@viewmodel/Test/TestViewModel';  // Adjust the
 import { useAuth } from '@context/Authcontext';  // Adjust the import path for your auth hook
 import { useSkillTestViewModel } from '@viewmodel/Test/skillViewModel';
 import { useFocusEffect } from "@react-navigation/native";
-const { width } = Dimensions.get('window');
+
  
 const TimeUp = ({ route }: any) => {
   const { testName } = route.params;

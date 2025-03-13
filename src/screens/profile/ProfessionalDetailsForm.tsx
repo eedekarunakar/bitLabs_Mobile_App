@@ -40,7 +40,7 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-const { width, height } = Dimensions.get('window');
+
 const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(({
   visible,
   onClose,

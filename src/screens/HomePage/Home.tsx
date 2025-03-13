@@ -7,7 +7,7 @@ import { useAuth } from '@context/Authcontext';
 import { RootStackParamList } from '@models/Model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
  
-import { useMessageContext, } from '../LandingPage/welcome';
+import { useMessageContext, } from '../../context/welcome';
 
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
@@ -43,7 +43,7 @@ function Dashboard() {
   const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
-  const { userId, userToken } = useAuth(); // Retrieve userId and userToken
+  
   const { verifiedStatus, personalName, isLoading , jobCounts } = useContext(UserContext);
   const route = useRoute<HomeScreenRouteProp>(); // Handle route params
 

@@ -31,13 +31,13 @@ import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { usePdf } from '../../context/ResumeContext';
-import Pdf from 'react-native-pdf';
+
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
 
 
     const nav = useNavigation<any>();
-    const { pdfUri } = usePdf()
+
 
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();

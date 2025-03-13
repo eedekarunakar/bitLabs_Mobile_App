@@ -39,7 +39,5 @@ export const usePdfViewModel = () => {
   const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
     return Buffer.from(new Uint8Array(buffer)).toString("base64");
   };
-  
- 
   return { pdfUri, error, fetchPdf };
 };
