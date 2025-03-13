@@ -5,12 +5,12 @@ import { useTestViewModel } from '@viewmodel/Test/TestViewModel';  // Adjust the
 import { useAuth } from '@context/Authcontext';  // Adjust the import path for your auth hook
 import { useSkillTestViewModel } from '@viewmodel/Test/skillViewModel';
 import { useFocusEffect } from "@react-navigation/native";
-const { width } = Dimensions.get('window');
+
  
 const TimeUp = ({ route }: any) => {
   const { testName } = route.params;
   const { finalScore } = route.params;
-  console.log('fS', finalScore) // Get the final score from route params
+
   const { userId, userToken } = useAuth(); // Assuming you have a hook to get auth data
   const { submitTest } = useTestViewModel(userId, userToken, testName); // Call the useTestViewModel hook
   const { submitSkillTest } = useSkillTestViewModel(userId, userToken, testName)

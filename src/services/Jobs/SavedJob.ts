@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback,useContext } from 'react';
 import { JobData1 } from '@models/Model';
 import { useAuth } from '@context/Authcontext';
 import apiClient from '../login/ApiClient';
-import { JobCounts } from '@models/Model';
 import UserContext from '@context/UserContext';
 
 export const useSavedJobs = () => {

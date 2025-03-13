@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import RNFS from 'react-native-fs';
 import { usePdf } from '../../context/ResumeContext';
-import PDFExam from './Reusableresume';
+import PDFExam from '../../components/progessBar/Resume';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -22,14 +22,12 @@ const BANNER_SIZE = Math.min(width * 0.2, 100); // Adjust the size dynamically
 const PDFExample = () => {
   const userid = useAuth();
   //const [pdfUri, setPdfUri] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation<NavigationProp>();
-  const { setPdfUri, pdfUri, refreshPdf } = usePdf()
+  //const navigation = useNavigation<NavigationProp>();
+  const {  pdfUri, refreshPdf } = usePdf()
 
 
 
-  console.log('pdfUri', pdfUri)
+
   useEffect(() => {
     if (userid.userId) {
       refreshPdf(); // Fetch PDF when component mounts

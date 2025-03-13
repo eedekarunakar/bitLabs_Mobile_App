@@ -73,10 +73,10 @@ export const ProfileService = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
 
-        console.log('Axios error:', error.response?.data || error.message);
+  
         return (error?.response?.data);
       } else {
-        console.log('Unexpected error:', error);
+
         throw new Error('An unexpected error occurred while updating profile data.');
       }
     }
@@ -105,10 +105,10 @@ export const ProfileService = {
       return { success: true, profileData: response.data };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('Axios error:', error.response?.data || error.message);
+
         return { success: false, formErrors: error.response?.data };
       } else {
-        console.log('Unexpected error:', error);
+
         return { success: false, formErrors: { general: 'An unexpected error occurred while updating profile data.' } };
       }
     }
@@ -120,7 +120,7 @@ export const ProfileService = {
       }
       const formData = new FormData();
       formData.append('photo', { uri: photoFile.uri, type: photoFile.type, name: photoFile.fileName, });
-      // console.log('FormData prepared:', formData);
+
       const response = await apiClient.post(`/applicant-image/${userId}/upload`,
         formData,
         {
@@ -133,16 +133,16 @@ export const ProfileService = {
       return { success: true, data: response.data };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('Axios error:', error.response?.data || error.message);
+
         return { success: false, message: error.response?.data?.message || 'Failed to upload photo.' };
       } else {
-        console.log('Unexpected error:', error);
+
         return { success: false, message: 'An unexpected error occurred while uploading photo.' };
       }
     }
   },
   async fetchProfilePhoto(userToken: string | null, userId: number | null) {
-    console.log('fetchProfilePhoto called with:', userToken, userId);
+
     try {
       if (!userToken || !userId) {
         throw new Error('Authentication data is missing or incomplete.');
@@ -158,10 +158,10 @@ export const ProfileService = {
       return { success: true, photoUrl };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('Axios error:', error.response?.data || error.message);
+
         return { success: false, message: error.response?.data?.message || 'Failed to fetch photo.' };
       } else {
-        console.log('Unexpected error:', error);
+
         return { success: false, message: 'An unexpected error occurred while fetching photo.' };
       }
     }
@@ -170,7 +170,7 @@ export const ProfileService = {
 
 
   async uploadResume(userToken: string | null, userId: number | null, formData: FormData) {
-    console.log('uploadResume called with:', userToken, userId, formData);
+
     try {
       if (!userToken || !userId) {
         throw new Error('Authentication data is missing or incomplete.');
@@ -190,10 +190,10 @@ export const ProfileService = {
       return { success: true, data: response.data };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('Axios error:', error.response?.data || error.message);
+
         return { success: false, message: error.response?.data?.message || 'Failed to upload resume.' };
       } else {
-        console.log('Unexpected error:', error);
+
         return { success: false, message: 'An unexpected error occurred while uploading resume.' };
       }
     }
@@ -210,7 +210,7 @@ export const ProfileService = {
 
       // Check if both aptitude and technical tests have status "P" or "p"
       const allTestsPassed = data.length >= 2 && data.every(test => test.testStatus.toLowerCase() === 'p');
-      console.log("verified = " +allTestsPassed);
+
       return allTestsPassed;
     } catch (error) {
       console.error('Error fetching test data:', error);

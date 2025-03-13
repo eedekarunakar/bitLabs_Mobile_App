@@ -4,7 +4,6 @@ import { useAuth } from '@context/Authcontext';
 import Toast from 'react-native-toast-message';
 import { fetchJobDetails,fetchCompanyLogo } from '@services/Jobs/RecommendedJobs';
 import UserContext from '@context/UserContext';
-import { Buffer } from 'buffer';
 const useJobDetailsViewModel = (jobId: string) => {
   const { userToken, userId } = useAuth();
   const [isJobSaved, setIsJobSaved] = useState(false);
@@ -39,7 +38,7 @@ const useJobDetailsViewModel = (jobId: string) => {
             if (logoData) {
               // Assuming logoData is an ArrayBuffer, convert it to Base64
               const base64Logo = logoData;
-              console.log('Logo URL/Base64:', base64Logo);
+              
               setCompanyLogo(base64Logo); // Set the Base64-encoded company logo
             } else {
               setCompanyLogo(null); // Set to null if no logo data is received

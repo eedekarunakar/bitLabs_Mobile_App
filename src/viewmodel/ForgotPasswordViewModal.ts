@@ -111,8 +111,6 @@ export const useForgotPasswordViewModal =()=>{
         navigation.navigate('LandingPage');
         showToast('success', 'Password reset Successfully');
       } else {
-        console.log(newPassword, confirmPassword);
-        console.log('Error resetting password');
         showToast('error', 'Error resetting Password');
       }
     }

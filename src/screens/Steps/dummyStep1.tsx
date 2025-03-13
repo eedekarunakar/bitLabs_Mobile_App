@@ -86,9 +86,9 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
   };
  
   const handleNext = () => {
-    console.log('Route Params:', route.params);
+
     if (validateForm()) {
-      console.log('Form Data:', { ...formData, email });
+
       const totalSteps = 3;
       setCurrentStep((prevStep) => Math.min(prevStep + 1, totalSteps));
       navigation.navigate('Step2', {

@@ -12,7 +12,7 @@ export const submitTestResult = async (userId: number, testDetails: object, jwtT
    
     });
     if(response.status===200){
-        console.log('Test Submitted Successfully')
+
         return {status:true} 
     }
     return response.data; // Return the response data (success/failure message)

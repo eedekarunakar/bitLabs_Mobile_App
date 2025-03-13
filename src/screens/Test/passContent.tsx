@@ -24,9 +24,7 @@ const Pass = ({ navigation }: any) => {
   const { basicDetails } = profileData || [];// Fallback to an empty object
  
   const roundedScore = Math.round(finalScore);
-  console.log('Final Score:', finalScore);
-  console.log('Applicant:', basicDetails);
-  console.log('Test Name:', testName);
+
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => true; // Returning true disables back action

@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@models/Model";
 import { fetchCompanyLogo } from "../../services/Jobs/AppliedJob"; // Import the service to fetch the logo
-import { Buffer } from "buffer";
+
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
   const { appliedJobs, loading, error } = useAppliedJobsViewModel(
@@ -160,7 +160,7 @@ const AppliedJobs = () => {
   return (
     <View style={styles.container}>
       {/* Show loader until both jobs and logos are loaded */}
-      {(loading || logosLoading) && <ActivityIndicator size="large" color="#FF8C00" />}
+      {(loading || logosLoading) && <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />}
 
       {/* Show error if any */}
       {error && <Text style={styles.placeholderText}>{error}</Text>}

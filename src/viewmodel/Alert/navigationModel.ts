@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { fetchJobDetails } from '@services/Alert/NotificationServieces';
-import { JobData } from '@models/Jobs/ApplyJobmodel';
+import { JobData } from '@models/Model';
 import { useAuth } from '@context/Authcontext';
 
 export const useJobViewModel = () => {
@@ -13,7 +13,7 @@ export const useJobViewModel = () => {
     setIsLoading(true);
     try {
       const data = await fetchJobDetails(jobId, userToken,apply);
-      console.log('view',data)
+  
       setJobDetails(data);
       return data;
     } catch (err: any) {
