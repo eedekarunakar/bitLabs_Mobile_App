@@ -11,7 +11,7 @@ interface LogoutModalProps {
 }
 
 const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
-  const { setPdfUri } = usePdf();
+  
  
   //reset the total data while logout to ensure no credentilas left in authcontext
   const {reset} = useContext(UserContext)

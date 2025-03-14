@@ -52,44 +52,49 @@ const JobDetails: React.FC = ({ route, navigation }: any) => {
 
       <View style={{ height: 20 }} />
       <View style={styles.footerContainer}>
-        {/* Save Job Button */}
-        {isJobSaved ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>Removed</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.saveButton]}
-            onPress={() => { handleRemoveJob(); navigation.goBack(); }}
-          >
-            <Text style={styles.buttonText}>Remove</Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Apply Now Button */}
-        {isJobApplied ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name="check" size={18} color="white" />
-              <Text style={styles.appliedButtonText}>Applied</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.applyButton]}
-            onPress={handleApplyJob}
-          >
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.button, styles.applyButtonGradient]}
-            >
-              <Text style={styles.applybuttonText}>Apply Now</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
+  {isJobApplied ? (
+    // Full-width Applied Button
+    <TouchableOpacity style={[styles.button, styles.fullWidthAppliedButton]} disabled>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Icon name="check" size={18} color="white" />
+        <Text style={styles.appliedButtonText}>Applied</Text>
       </View>
+    </TouchableOpacity>
+  ) : (
+    // Render both Save and Apply buttons if job is not applied
+    <>
+      {isJobSaved ? (
+        <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
+          <Text style={styles.savedButtonText}>Removed</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={[styles.button, styles.saveButton]}
+          onPress={() => {
+            handleRemoveJob();
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.buttonText}>Remove</Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity
+        style={[styles.button, styles.applyButton]}
+        onPress={handleApplyJob}
+      >
+        <LinearGradient
+          colors={['#F97316', '#FAA729']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.button, styles.applyButtonGradient]}
+        >
+          <Text style={styles.applybuttonText}>Apply Now</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </>
+  )}
+</View>
+
     </View >
   );
 };
@@ -172,6 +177,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'PlusJakartaSans-Bold',
   },
+  fullWidthAppliedButton: {
+    flex: 1,
+    backgroundColor: '#08921E',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#08921E',
+  },
+  
 
 });
 
