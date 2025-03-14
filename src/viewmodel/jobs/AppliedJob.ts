@@ -1,5 +1,5 @@
 import { useContext,useEffect, useState } from 'react';
-import { fetchAppliedJobs, fetchCompanyLogo } from '@services/Jobs/AppliedJob';
+import { fetchAppliedJobs } from '@services/Jobs/AppliedJob';
 import { JobData } from '@models/Model';
 import UserContext from '@context/UserContext';
 import { useLogos } from '../../hooks/useLogos';

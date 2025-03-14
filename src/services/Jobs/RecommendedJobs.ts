@@ -2,7 +2,7 @@ import apiClient from '@services/login/ApiClient';
 import { JobData } from '@models/Model';
 import { JobCounts } from '@models/Model';
 import { Buffer } from 'buffer';
-
+import { fetchCompanyLogo } from './AppliedJob';
 const API_URLS = {
   recommendedJobs: (userId: number | null, size: number = 300) =>
     `/recommendedjob/findrecommendedjob/${userId}?page=${0}&size=${size}`,
@@ -22,32 +22,6 @@ export const fetchRecommendedJobs = async (userId: number | null, userToken: str
   return response.data;
   
 };
-
-export const fetchCompanyLogo = async (
-  recruiterId: number | null,
-  userToken: string | null
-): Promise<string | null> => {
-  if (!recruiterId) {
-    console.error("Recruiter ID is null");
-    return null;
-  }
-
-  try {
-    const response = await apiClient.get(`/recruiters/companylogo/download/${recruiterId}`, {
-      headers: { Authorization: `Bearer ${userToken}` },
-      responseType: 'arraybuffer', // Specify binary data response
-    });
-
-    // Convert binary data to Base64
-    const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
-    return base64Logo;
-  } catch (error) {
-    console.error("Error fetching or converting company logo:", error);
-    return null;
-  }
-};
-
-
 
 export const fetchJobDetails = async (
   jobId: number,
