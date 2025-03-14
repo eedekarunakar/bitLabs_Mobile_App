@@ -2,20 +2,7 @@ import axios from 'axios';
 import { AuthResponse } from './Authservice';
 import apiClient from './ApiClient';
 
-const secretkey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
-const encryptPassword = (password: string, secretkey: string) => {
-  const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV (16 bytes for AES)
-  const encryptedPassword = CryptoJS.AES.encrypt(
-    password,
-    CryptoJS.enc.Utf8.parse(secretkey),
-    {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    },
-  ).toString();
-  return {encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64)};
-};
+
 const convertToLowerCase =(email:string)=>{
   return email.toLowerCase();
   }

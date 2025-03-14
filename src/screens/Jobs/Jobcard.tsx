@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { DefaultLogoUrl } from "@components/constant";
 
 type JobCardProps = {
   jobTitle: string;
@@ -43,7 +44,7 @@ const JobCard: React.FC<JobCardProps> = ({
       <View style={styles.row}>
         <Image
           source={
-            logoUrl && logoUrl.includes('data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y') // Check for invalid Base64 error
+            logoUrl && logoUrl.includes(DefaultLogoUrl) // Check for invalid Base64 error
               ? require('../../assests/Images/company.png') // Display default fallback image
               : logoUrl && logoUrl.startsWith('data:image/') // Valid Base64 format
                 ? { uri: logoUrl } // Display Base64 logo

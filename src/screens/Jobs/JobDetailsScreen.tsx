@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useJobDetailsViewModels from '@viewmodel/jobs/JobDetailsViewModels';
 import { useJobDetailsViewModel } from '@viewmodel/jobs/JobDetailsViewModel';
-
+import { DefaultLogoUrl } from "@components/constant";
 
 type JobDetailsScreenProps = {
   route: RouteProp<RootStackParamList, 'JobDetailsScreen'>;
@@ -42,7 +42,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
               <View style={styles.row}>
                 <Image
                   source={
-                    companyLogo && !companyLogo.includes('data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y')
+                    companyLogo && !companyLogo.includes(DefaultLogoUrl)
                       ? { uri: companyLogo } // Use the Base64 string or valid image URL
                       : require('../../assests/Images/company.png') // Fallback to default image
                   }
