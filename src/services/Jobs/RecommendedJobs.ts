@@ -15,7 +15,6 @@ export const fetchRecommendedJobs = async (userId: number | null, userToken: str
 
  
   const response = await apiClient.get(API_URLS.recommendedJobs(userId, count), {
-    headers: { Authorization: `Bearer ${userToken}` },
   });
 
 
@@ -34,7 +33,6 @@ export const fetchCompanyLogo = async (
 
   try {
     const response = await apiClient.get(`/recruiters/companylogo/download/${recruiterId}`, {
-      headers: { Authorization: `Bearer ${userToken}` },
       responseType: 'arraybuffer', // Specify binary data response
     });
 
@@ -54,9 +52,7 @@ export const fetchJobDetails = async (
   userId: number | null,
   userToken: string | null
 ): Promise<JobData> => {
-  const response = await apiClient.get(API_URLS.jobDetails(jobId, userId), {
-    headers: { Authorization: `Bearer ${userToken}` },
-  });
+  const response = await apiClient.get(API_URLS.jobDetails(jobId, userId));
 
   const jobData = response.data.body;
 

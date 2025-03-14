@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
 import {API_BASE_URL} from '@env';
+import * as Keychain from 'react-native-keychain';
+import { getCachedToken,setCachedToken } from '@services/TokenManager';
 
 let logoutHandler: (() => void) | null = null;
 let sessionExpiredAlertActive = false;
@@ -21,6 +23,26 @@ const apiClient = axios.create({
   },
 });
 
+//Takes token from keychain , 
+apiClient.interceptors.request.use(
+
+  async (config) => {
+    let token = getCachedToken(); // Get token from memory
+    if (!token) {
+      const tokenData = await Keychain.getGenericPassword({ service: 'authToken' });
+      if (tokenData) {
+        token = tokenData.password;  // Update the outer token variable
+        setCachedToken(token);       // Cache it for future requests
+      }
+    }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;  // Attach token to header
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+)
+
 // Interceptor to handle errors
 const responseInterceptor = async (error: any) => {
  // Handle no internet / network errors:
@@ -38,7 +60,7 @@ const responseInterceptor = async (error: any) => {
   return Promise.reject(error);
 }
 
-  if (error.response?.status === 401 || error.response?.status === 403) {
+  if ( error.response?.status === 403) {
     if (!sessionExpiredAlertActive) {
       sessionExpiredAlertActive = true; // Activate the flag so it won't trigger again immediately
   

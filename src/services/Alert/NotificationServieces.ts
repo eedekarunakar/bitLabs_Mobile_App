@@ -14,7 +14,6 @@ export interface JobAlert {
 export const fetchJobAlerts = async (userId: number|null, userToken: string|null): Promise<JobAlert[]> => {
   try {
     const response = await apiClient.get(`/applyjob/applicant/job-alerts/${userId}`, {
-      headers: { Authorization: `Bearer ${userToken}` },
     });
     return response.data;
   } catch (error) {
@@ -28,7 +27,7 @@ export const markAlertAsSeen = async (alertId: string, userToken: string|null): 
     await apiClient.put(
       `/applyjob/applicant/mark-alert-as-seen/${alertId}`,
       {},
-      { headers: { Authorization: `Bearer ${userToken}` } }
+      
     );
   } catch (error) {
     console.error('Error marking alert as seen:', error);
@@ -69,9 +68,6 @@ export const fetchJobDetails = async (jobId: number|null, userToken: string | nu
   try {
     const response = await apiClient.get(
       `/viewjob/applicant/viewjob/${jobId}`,
-      {
-        headers: { Authorization: `Bearer ${userToken}` },
-      }
     );
       const jobData = mapJobData(response.data,jobId,apply);
 

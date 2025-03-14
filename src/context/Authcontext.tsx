@@ -4,6 +4,7 @@ import { handleLogin ,handleLoginWithEmail,AuthResponse } from '../services/logi
 import { showToast } from '@services/login/ToastService';
 import LogoutModal from '../screens/LandingPage/LogoutModel'; // Import the modal component
 import { setLogoutHandler,removeInterceptors } from '@services/login/ApiClient';
+import { setCachedToken } from '@services/TokenManager';
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -34,6 +35,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       setAuthData({ token, id, email: loginemail });
       setIsAuthenticated(true);
+      setCachedToken(token)
     }
     return response;
   };
@@ -50,6 +52,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       setAuthData({ token, id, email: loginemail });  // Update state with user info
       setIsAuthenticated(true); // Mark the user as signed in
+      setCachedToken(token)
     }
     return response;
   };
@@ -71,13 +74,15 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     showToast('success', 'Logout Successful');
     hideLogoutModal();
     removeInterceptors();
+    setCachedToken(null);
   };
 
   const checkAuth = async () => {
     try {
       const userDetails = await Keychain.getGenericPassword({ service: 'userDetails' });
       const authToken = await Keychain.getGenericPassword({ service: 'authToken' });
-
+      
+      
       if (userDetails && authToken) {
         const parsedUserDetails = JSON.parse(userDetails.password);  // Parse user details stored as JSON
         setAuthData({
