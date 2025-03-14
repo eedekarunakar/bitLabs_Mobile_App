@@ -47,43 +47,46 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         companyLogo={companyLogo || undefined}
       />
 
-      <View style={styles.footerContainer}>
-        {isJobSaved ? (
-          <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
-            <View style={styles.buttonContent}>
-              <Savedjob height={18} width={18} />
-              <Text style={styles.savedButtonText}> Saved</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSaveJob}>
-            <View style={styles.buttonContent}>
-              <Savejob height={18} width={18} />
-              <Text style={styles.buttonText}> Save Job</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-
-        {isJobApplied ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name="check" size={18} color="white" />
-              <Text style={styles.appliedButtonText}>Applied</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={() => { handleApplyJob(); }}>
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.button, styles.applyButtonGradient]}
-            >
-              <Text style={styles.applybuttonText}>Apply Now</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
+<View style={styles.footerContainer}>
+  {isJobApplied ? (
+    // Render only the Applied Button taking up full space
+    <TouchableOpacity style={[styles.button, styles.fullWidthAppliedButton]} disabled>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Icon name="check" size={18} color="white" />
+        <Text style={styles.appliedButtonText}>Applied</Text>
       </View>
+    </TouchableOpacity>
+  ) : (
+    // Render both Save and Apply buttons if the job is not applied
+    <>
+      {isJobSaved ? (
+        <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
+          <View style={styles.buttonContent}>
+            <Savedjob height={18} width={18} />
+            <Text style={styles.savedButtonText}> Saved</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSaveJob}>
+          <View style={styles.buttonContent}>
+            <Savejob height={18} width={18} />
+            <Text style={styles.buttonText}> Save Job</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={() => { handleApplyJob(); }}>
+        <LinearGradient
+          colors={['#F97316', '#FAA729']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.button, styles.applyButtonGradient]}
+        >
+          <Text style={styles.applybuttonText}>Apply Now</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </>
+  )}
+</View>
     </View>
   );
 };
@@ -166,6 +169,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'PlusJakartaSans-Bold',
   },
+  fullWidthAppliedButton: {
+    flex: 1,
+    backgroundColor: '#08921E',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#08921E',
+  },
+  
 });
 
 export default JobDetails;
