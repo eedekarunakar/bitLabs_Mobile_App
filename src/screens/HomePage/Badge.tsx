@@ -30,36 +30,6 @@ const Badge = ({ navigation }: any) => {
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const { personalName } = useContext(UserContext);
 
-  const testImage: Record<string, any> = {
-    Angular: require('@assests/Images/Test/Angular.png'),
-    Java: require('@assests/Images/Test/Java.png'),
-    C: require('@assests/Images/Test/C.png'),
-    'C++': require('@assests/Images/Test/CPlusPlus.png'),
-    'C Sharp': require('@assests/Images/Test/CSharp.png'),
-    CSS: require('@assests/Images/Test/CSS.png'),
-    Django: require('@assests/Images/Test/Django.png'),
-    '.Net': require('@assests/Images/Test/DotNet.png'),
-    Flask: require('@assests/Images/Test/Flask.png'),
-    Hibernate: require('../../assests/Images/Test/Hibernate.png'),
-    HTML: require('@assests/Images/Test/HTML.png'),
-    JavaScript: require('@assests/Images/Test/JavaScript.png'),
-    JSP: require('@assests/Images/Test/JSP.png'),
-    'Manual Testing': require('@assests/Images/Test/ManualTesting.png'),
-    'Mongo DB': require('@assests/Images/Test/MongoDB.png'),
-    Python: require('@assests/Images/Test/Python.png'),
-    React: require('@assests/Images/Test/React.png'),
-    'Regression Testing': require('@assests/Images/Test/RegressionTesting.png'),
-    Selenium: require('@assests/Images/Test/Selenium.png'),
-    Servlets: require('@assests/Images/Test/Servlets.png'),
-    'Spring Boot': require('@assests/Images/Test/SpringBoot.png'),
-    TypeScript: require('@assests/Images/Test/TypeScript.png'),
-    Spring: require('@assests/Images/Test/Spring.png'),
-    SQL: require('@assests/Images/Test/MySQL.png'),
-    Css: require('@assests/Images/Test/CSS.png'),
-    MySQL: require('@assests/Images/Test/MySQL.png'),
-    Vue: require('@assests/Images/Test/Vue.png'),
-    'SQL-Server': require('@assests/Images/Test/sqlserver.png'),
-  };
   useFocusEffect(
     useCallback(() => {
       let isActive = true; // Prevent updating state if component unmounts
@@ -275,7 +245,6 @@ const Badge = ({ navigation }: any) => {
                 key={`skill-${index}`}
                 skillName={skill.skillName}
                 status={null} // Add the status property
-                imageSource={testImage[skill.skillName] || require('@assests/Images/Test/NotFound.png')}
                 onPress={() => navigation.navigate('TestInstruction', { skillName: skill.skillName, testType: 'SkillBadge' })}
               />
             ))}
@@ -283,7 +252,6 @@ const Badge = ({ navigation }: any) => {
               <SkillCard
                 key={`badge-${badge.id}`}
                 skillName={badge.skillBadge.name}
-                imageSource={testImage[badge.skillBadge.name] || require('@assests/Images/Test/NotFound.png')}
                 status="PASSED"
                 onPress={() => {}}
               />
@@ -294,7 +262,6 @@ const Badge = ({ navigation }: any) => {
                 <SkillCard
                   key={`failed-badge-${badge.id}`}
                   skillName={badge.skillBadge.name}
-                  imageSource={testImage[badge.skillBadge.name] || require('@assests/Images/Test/NotFound.png')}
                   status="FAILED"
                   timer={timer}
                   onPress={() => navigation.navigate('TestInstruction', { skillName: badge.skillBadge.name, testType: 'SkillBadge', timer: true })}

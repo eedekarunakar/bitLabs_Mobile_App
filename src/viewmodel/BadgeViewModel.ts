@@ -9,7 +9,7 @@ export const useBadgeViewModel = () => {
   const [timer, setTimer] = useState<null | { days: number, hours: number, minutes: number }>(null);
   const [timerState, setTimerState] = useState<any>({});
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [testName, setTestName] = useState('');
+  const [testName, setTestName] = useState('General Aptitude Test');
   const [testStatus, setTestStatus] = useState('');
   const [loading, setLoading] = useState(true);
   const [applicantSkillBadges, setApplicantSkillBadges] = useState<any[]>([]);
