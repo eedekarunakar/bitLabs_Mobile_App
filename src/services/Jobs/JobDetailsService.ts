@@ -4,11 +4,6 @@ export const fetchJobStatus = async (applyJobId: number, userToken: string) => {
   try {
     const response = await apiClient.get(
       `/applyjob/recruiters/applyjob-status-history/${applyJobId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
     );
 
     return response.data;

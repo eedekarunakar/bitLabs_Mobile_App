@@ -9,6 +9,7 @@ import UserContext from '@context/UserContext';
 import { useAuth } from '@context/Authcontext';
 import JobCard from './Jobcard';
 import { useLogos } from '../../hooks/useLogos';
+import { DefaultLogoUrl } from "@components/constant";
 const SavedJobs = () => {
   const { savedJobs, loading, error, fetchSavedJobs } = useSavedJobs(); // Assuming `fetchSavedJobs` is available to manually trigger data fetch
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'SavedJobs'>>();
@@ -53,7 +54,7 @@ const SavedJobs = () => {
         creationDate={item.creationDate}
         logoUrl={
           logos[item.id] ===
-            'data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y'
+          DefaultLogoUrl
             ? undefined // Use fallback for invalid Base64
             : logos[item.id] ?? undefined
         }

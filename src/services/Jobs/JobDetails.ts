@@ -11,8 +11,7 @@ export const saveJob = async (jobId: number, applicantId: number |null,userToken
   try {
     const response = await apiClient.post(
       `/savedjob/applicants/savejob/${applicantId}/${jobId}`,
-      {},
-      {  headers: { Authorization: `Bearer ${userToken}` }, }
+      {}
     );
     return response.data;
   } catch (error: any) {
@@ -25,8 +24,7 @@ export const applyJob = async (applicantId: number|null, jobId: number,userToken
   try {
     const response = await apiClient.post(
       `/applyjob/applicants/applyjob/${applicantId}/${jobId}`,
-      {},
-      { headers: getAuthHeader(userToken) }
+      {}
     );
     return response.data;
   } catch (error: any) {
@@ -39,7 +37,6 @@ export const removeSavedJob = async (jobId: number, applicantId: number |null,us
   try {
     const response = await apiClient.delete(
       `/savedjob/applicants/deletejob/${applicantId}/${jobId}`,
-      {  headers: { Authorization: `Bearer ${userToken}` } }
     );
     return response.data;
   } catch (error: any) {

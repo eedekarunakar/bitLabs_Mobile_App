@@ -15,6 +15,7 @@ import { RootStackParamList } from "@models/Model";
 import JobCard from "./Jobcard";
 import { JobData } from "@models/Model";
 import { useLogos } from "../../hooks/useLogos";
+import { DefaultLogoUrl } from "@components/constant";
 
 const AppliedJobs = () => {
   const { userId, userToken } = useAuth();
@@ -44,7 +45,7 @@ const { logos, loading: logosLoading }: { logos: { [key: number]: string }, load
         creationDate={item.creationDate}
         logoUrl={
           logos[item.id] ===
-          "data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y"
+          DefaultLogoUrl
             ? undefined // Use fallback for invalid Base64
             : logos[item.id] ?? undefined
         }
