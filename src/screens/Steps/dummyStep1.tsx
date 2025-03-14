@@ -56,22 +56,15 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     };
  
     // Validate first name
-    if (!formData.firstName) {
-      newErrors.firstName = 'First name is required.';
-      isValid = false;
-    } else if (formData.firstName.length < 3) {
-      newErrors.firstName = 'First name should be at least 3 characters long.';
-      isValid = false;
-    }
- 
-    // Validate last name
-    if (!formData.lastName) {
-      newErrors.lastName = 'Last name is required.';
-      isValid = false;
-    } else if (formData.lastName.length < 3) {
-      newErrors.lastName = 'Last name should be at least 3 characters long.';
-      isValid = false;
-    }
+    (['firstName', 'lastName'] as Array<keyof typeof formData>).forEach((field) => {
+      if (!formData[field]) {
+        newErrors[field] = `${field === 'firstName' ? 'First' : 'Last'} name is required.`;
+        isValid = false;
+      } else if (formData[field].length < 3) {
+        newErrors[field] = `${field === 'firstName' ? 'First' : 'Last'} name should be at least 3 characters long.`;
+        isValid = false;
+      }
+    });
  
     // Validate WhatsApp number
     const whatsappRegex = /^[6-9]\d{9}$/;
