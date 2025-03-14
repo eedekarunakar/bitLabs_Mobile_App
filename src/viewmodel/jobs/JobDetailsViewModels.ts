@@ -1,7 +1,8 @@
 import { useState, useEffect,useContext } from 'react';
 import {  saveJob, applyJob, removeSavedJob } from '../../services/Jobs/JobDetails'; // Add removeSavedJob
 import { useAuth } from '@context/Authcontext';
-import { fetchJobDetails,fetchCompanyLogo } from '@services/Jobs/RecommendedJobs';
+import { fetchJobDetails } from '@services/Jobs/RecommendedJobs';
+import { fetchCompanyLogo } from '@services/Jobs/AppliedJob';
 import UserContext from '@context/UserContext';
 import { showToast } from '@services/login/ToastService';
 const useJobDetailsViewModel = (jobId: string) => {
