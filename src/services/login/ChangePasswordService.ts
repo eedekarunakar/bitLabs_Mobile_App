@@ -44,11 +44,6 @@ export const changePassword = async (
       const response = await apiClient.post(
         `/applicant/authenticateUsers/${userId}`,
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
       );
 
       if (

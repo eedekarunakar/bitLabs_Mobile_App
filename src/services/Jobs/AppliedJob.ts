@@ -16,7 +16,6 @@ export const fetchCompanyLogo = async (
 
   try {
     const response = await apiClient.get(`/recruiters/companylogo/download/${recruiterId}`, {
-      headers: { Authorization: `Bearer ${userToken}` },
       responseType: 'arraybuffer', // Specify binary data response
     });
 
@@ -37,9 +36,6 @@ export const fetchAppliedJobs = async (userId: number |null, userToken: string|n
   try {
     const applyJobsCount = jobCounts ?.appliedJobs ?? 300;
     const response = await apiClient.get(`/applyjob/getAppliedJobs/${userId}?page=${0}&size=${applyJobsCount}`, {
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-      },
     });
     return response.data;
   } catch (error) {

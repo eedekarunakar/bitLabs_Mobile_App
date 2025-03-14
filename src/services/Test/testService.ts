@@ -4,13 +4,7 @@ import apiClient from "../login/ApiClient";
 // Function to submit test results
 export const submitTestResult = async (userId: number, testDetails: object, jwtToken: string | null) => {
   try {
-    const response = await apiClient.post(`/applicant1/saveTest/${userId}`, JSON.stringify(testDetails), {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`, // Add the JWT token for authorization
-        'Content-Type': 'application/json', // Set the content type
-      },
-   
-    });
+    const response = await apiClient.post(`/applicant1/saveTest/${userId}`, JSON.stringify(testDetails));
     if(response.status===200){
 
         return {status:true} 

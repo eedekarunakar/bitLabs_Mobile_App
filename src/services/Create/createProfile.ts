@@ -4,9 +4,6 @@ export const fetchProfileId = async (id: number, token: string): Promise<{ succe
     try {
         const response = await apiClient.get(
             `/applicantprofile/${id}/profileid`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
-            }
         );
 
 

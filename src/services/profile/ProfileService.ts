@@ -14,11 +14,7 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
 
-      const response = await apiClient.get(`/applicantprofile/${userId}/profile-view`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`, // Embed token in the Authorization header
-        },
-      });
+      const response = await apiClient.get(`/applicantprofile/${userId}/profile-view`);
 
       return {
 
@@ -52,11 +48,6 @@ export const ProfileService = {
       const response = await apiClient.put(
         `/applicantprofile/${userId}/basic-details`,
         updatedProfileData,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
       );
       if (response.status !== 200) {
         return false;
@@ -90,11 +81,6 @@ export const ProfileService = {
       const response = await apiClient.put(
         `/applicantprofile/${userId}/professional-details`,
         updatedProfileData,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
       );
 
       if (response.data?.formErrors) {
@@ -125,7 +111,6 @@ export const ProfileService = {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${userToken}`,
             'Content-Type': 'multipart/form-data',
           },
         });
@@ -148,9 +133,7 @@ export const ProfileService = {
         throw new Error('Authentication data is missing or incomplete.');
       }
       const response = await apiClient.get(`/applicant-image/getphoto/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        }, responseType: 'arraybuffer',
+       responseType: 'arraybuffer',
         // Ensure the response is handled as an arraybuffer 
       });
       const base64Image = btoa(new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), ''));
@@ -181,7 +164,6 @@ export const ProfileService = {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${userToken}`,
             'Content-Type': 'multipart/form-data',
           },
         }
@@ -200,11 +182,8 @@ export const ProfileService = {
   },
   async checkVerified(jwtToken: string | null, userId: number | null): Promise<boolean> {
     try {
-      const response = await apiClient.get<TestData[]>(`/applicant1/tests/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      const response = await apiClient.get<TestData[]>(`/applicant1/tests/${userId}`
+      );
       const data = response.data;
 
 

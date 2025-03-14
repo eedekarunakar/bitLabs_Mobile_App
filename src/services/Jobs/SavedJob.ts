@@ -16,13 +16,7 @@ export const useSavedJobs = () => {
     setError(false); // Reset error state before fetching
     try {
       const response = await apiClient.get(
-       `/savedjob/getSavedJobs/${userId}?page=${0}&size=${savedJobCount}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`, // Replace with actual token
-          },
-        }
-      );
+       `/savedjob/getSavedJobs/${userId}?page=${0}&size=${savedJobCount}`);
       setSavedJobs(response.data);
     } catch (err) {
       setError(true);
