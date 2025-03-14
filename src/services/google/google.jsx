@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin'; 
 import { useAuth } from '@context/Authcontext';  
 import { showToast } from '../login/ToastService';
+import {CLIENT_ID} from '@env';
 
 const useGoogleSignIn = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -10,7 +11,7 @@ const useGoogleSignIn = () => {
   
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '1012652072709-si1433abp421jlvlf3qtljm8jgheqdvo.apps.googleusercontent.com', // Replace with your webClientId
+      webClientId: CLIENT_ID, // Replace with your webClientId
     });
   }, []);
 

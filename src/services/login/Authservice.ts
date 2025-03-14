@@ -1,6 +1,7 @@
 import axios  from 'axios';
 import * as CryptoJS from 'crypto-js';
 import apiClient from './ApiClient';
+import {SECRET_KEY} from '@env';
  
 export interface AuthResponse {
   success: boolean;
@@ -8,7 +9,7 @@ export interface AuthResponse {
   message?: string;
 }
  
-const secretkey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
+const secretkey = SECRET_KEY;
 const encryptPassword = (password: string, secretkey: string) => {
   const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV (16 bytes for AES)
   const encryptedPassword = CryptoJS.AES.encrypt(
