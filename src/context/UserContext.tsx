@@ -95,8 +95,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         console.error('Failed to fetch user data:', error);
       }
     };
-
+    if(isMounted) {
     fetchUserData();
+    }
 
     return () => {
       isMounted = false;

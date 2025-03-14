@@ -5,13 +5,7 @@ export const ProfileModel = {
     try {
       const response = await apiClient.post(
         `/applicantprofile/createprofile/${userId}`,
-        requestData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
+        requestData
       );
 
       return response.data;
@@ -28,7 +22,6 @@ export const ProfileModel = {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${userToken}`,
           },
         }
       );

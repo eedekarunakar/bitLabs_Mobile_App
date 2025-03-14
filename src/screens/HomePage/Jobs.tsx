@@ -18,6 +18,8 @@ import UserContext from '@context/UserContext';
 import { useAuth } from '@context/Authcontext';
 import JobCard from '../Jobs/Jobcard';
 import { useLogos } from '../../hooks/useLogos';
+import { DefaultLogoUrl } from "@components/constant";
+
 // Navigation prop type for RecommendedJobs
 type RecommendedJobsNavigationProp = StackNavigationProp<RootStackParamList, 'JobDetails'>;
 type JobsRouteProp = RouteProp<RootStackParamList, 'Jobs'>;
@@ -31,6 +33,7 @@ const RecommendedJobs = () => {
   const { isJobsLoaded, setIsJobsLoaded } = useContext(UserContext);
   const [isInitialLoad, setIsInitialLoad] = useState(isJobsLoaded);
   const { userId, userToken } = useAuth();
+  
 
   const { logos, loading: logosLoading }: { logos: { [key: number]: string }, loading: boolean } = useLogos(jobs, userToken ?? '');
   useEffect(() => {
@@ -80,7 +83,7 @@ const RecommendedJobs = () => {
       creationDate={item.creationDate}
       logoUrl={
         logos[item.id] ===
-          'data:image/jpeg;base64,SW50ZXJuYWwgU2VydmVyIEVycm9y'
+        DefaultLogoUrl
           ? undefined // Use fallback for invalid Base64
           : logos[item.id] ?? undefined
       }

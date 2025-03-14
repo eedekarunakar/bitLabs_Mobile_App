@@ -8,19 +8,10 @@ export const fetchJobCounts = async (applicantId: number|null,jwtToken:string|nu
 
     const [recommendedResponse, appliedResponse, savedResponse] = await Promise.all([
       apiClient.get(`/recommendedjob/countRecommendedJobsForApplicant/${applicantId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
       }),
       apiClient.get(`/applyjob/countAppliedJobs/${applicantId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
       }),
       apiClient.get(`/savedjob/countSavedJobs/${applicantId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
       }),
     ]);
 

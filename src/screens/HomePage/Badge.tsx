@@ -16,25 +16,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
 import { useAuth } from '@context/Authcontext';
 import { useBadgeViewModel } from '@viewmodel/BadgeViewModel';
-import {
-  fetchSkillBadges,
-  fetchTestStatus,
-} from '@services/Home/BadgeService';
+import {fetchSkillBadges,fetchTestStatus,} from '@services/Home/BadgeService';
 import UserContext from '@context/UserContext';
-const { width } = Dimensions.get('window');
+import SkillCard from '@components/Cards/SkillCard';
 
+const { width } = Dimensions.get('window');
 const Badge = ({ navigation }: any) => {
-  const {
-    selectedStep,
-    timer,
-    timerState,
-    isButtonDisabled,
-    testName,
-    testStatus,
-    loading,
-    applicantSkillBadges,
-    loadSkillBadges,
-  } = useBadgeViewModel();
+  const {selectedStep,timer,timerState,isButtonDisabled,testName,testStatus,loading,applicantSkillBadges,loadSkillBadges} = useBadgeViewModel();
   const { userId, userToken } = useAuth();
   const [skillBadges, setSkillBadges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,32 +60,25 @@ const Badge = ({ navigation }: any) => {
     Vue: require('@assests/Images/Test/Vue.png'),
     'SQL-Server': require('@assests/Images/Test/sqlserver.png'),
   };
-
   useFocusEffect(
     useCallback(() => {
       let isActive = true; // Prevent updating state if component unmounts
- 
       const fetchData = async () => {
         setIsLoading(true);
         await fetchTestStatus(userId, userToken); // Fetch test status first
         const badges = await fetchSkillBadges(userId, userToken);
-       
         if (isActive) {
           setSkillBadges(badges.filter((badge: any) => badge.flag === "added")); // Only set "added" skills
           setIsLoading(false);
         }
       };
- 
       loadSkillBadges();
       fetchData();
- 
       return () => {
         isActive = false; // Cleanup function to prevent memory leaks
       };
     }, [userId, userToken])
   );
- 
- 
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -115,181 +96,82 @@ const Badge = ({ navigation }: any) => {
           <View style={styles.textContainer}>
             <Text style={styles.text}>Verified Badges</Text>
           </View>
-
-          {/* Pre-Screened Badge with Progress Bar */}
           <View style={selectedStep === 3 ? null : styles.box1}>
             {selectedStep === 3 ? (
-              // Show this view when Step 3 is completed
               <View style={styles.badge}>
                 <LinearGradient
-                  colors={['#FFEAC4', '#FFF9D6']} // Set the gradient colors
-                  style={styles.gradientBackground1} // Style to ensure the gradient takes the full width and height
-                >
+                  colors={['#FFEAC4', '#FFF9D6']} 
+                  style={styles.gradientBackground1}>
                   <Text style={[styles.content, { marginLeft: 10 }]}>
                     Pre-Screened badge
                   </Text>
-
-                  {/* Image Section (Middle) */}
                   <View>
-                    <Image
-                      source={require('@assests/Images/Test/Badge.png')}
-                      style={styles.congratulationsImage}
-                    />
+                    <Image source={require('@assests/Images/Test/Badge.png')} style={styles.congratulationsImage}/>
                   </View>
-                  {/* Congratulations Message */}
                   <Text style={styles.congratulationsMessage}>
                     Congratulations, You are now Verified
                   </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
                     <Text style={styles.name}>
                       {personalName
                         ? personalName.charAt(0).toUpperCase() + personalName.slice(1)
                         : 'Guest'}
                     </Text>
-                    <Image
-                      source={require('@assests/Images/Test/verified.png')}
-                      style={styles.verified}
-                    />
+                    <Image source={require('@assests/Images/Test/verified.png')} style={styles.verified}/>
                   </View>
                 </LinearGradient>
               </View>
             ) : (
-              // Show the original view when Step 3 is not yet completed
               <View style={styles.badge1}>
                 <Text style={styles.content}>Pre-Screened Badge</Text>
                 <Text style={styles.matter1}>
                   Achieve your dream job faster by demonstrating your aptitude
                   and technical skills
                 </Text>
-
-                {/* Progress Bar */}
                 <View style={styles.progressContainer}>
-                  <View
-                    style={[
-                      styles.stepCircle,
-                      {
-                        backgroundColor:
-                          selectedStep >= 1 ? '#219734' : '#BFBFBF',
-                        marginLeft: 15,
-                      },
-                    ]}>
-                    {(testName === 'General Aptitude Test' &&
-                      testStatus === 'P') ||
-                      selectedStep > 1 ? (
+                  <View style={[styles.stepCircle,{backgroundColor: selectedStep >= 1 ? '#219734' : '#BFBFBF',marginLeft: 15,}]}>
+                    {(testName === 'General Aptitude Test' && testStatus === 'P') ||selectedStep > 1 ? 
+                    (
                       <Icon name="check" size={16} color="white" />
                     ) : (
                       <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
                     )}
                   </View>
-                  <View
-                    style={[
-                      styles.stepLine,
-                      {
-                        backgroundColor:
-                          selectedStep >= 2 ? '#219734' : '#BFBFBF',
-                      },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      styles.stepCircle,
-                      {
-                        backgroundColor:
-                          selectedStep >= 2 ? '#219734' : '#BFBFBF',
-                      },
-                    ]}>
+                  <View style={[styles.stepLine,{ backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF'}]}/>
+                  <View style={[styles.stepCircle,{backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF'}]}>
                     {selectedStep >= 2 ? (
                       <Text style={[styles.stepText, { color: '#fff' }]}>2</Text>
                     ) : (
                       <Text style={styles.stepText}>2</Text>
                     )}
                   </View>
-                  <View
-                    style={[
-                      styles.stepLine,
-                      {
-                        backgroundColor:
-                          selectedStep >= 3 ? '#219734' : '#BFBFBF',
-                      },
-                    ]}
-                  />
-                  <View
-                    style={[
-                      styles.stepCircle,
-                      {
-                        backgroundColor:
-                          selectedStep >= 3 ? '#219734' : '#BFBFBF',
-                        marginRight: 15,
-                      },
-                    ]}>
-                    <Icon
-                      name="flag"
-                      size={12}
-                      style={{ color: selectedStep >= 3 ? 'white' : '#6D6969' }}
-                    />
+                  <View style={[styles.stepLine,{ backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF'}]}/>
+                  <View style={[styles.stepCircle,{ backgroundColor:selectedStep >= 3 ? '#219734' : '#BFBFBF',marginRight: 15}]}>
+                    <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : '#6D6969' }}/>
                   </View>
                 </View>
-                {/* Other Sections */}
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
+                  style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center'}}>
                   <View style={{ alignItems: 'center' }}>
-                    <Text
-                      style={{
-                        color: '#434343',
-                        fontSize: 13,
-                        fontFamily: 'PlusJakartaSans-Medium',
-                        textAlign: 'center',
-                      }}>
+                    <Text style={{ color: '#434343',fontSize: 13,fontFamily: 'PlusJakartaSans-Medium',textAlign: 'center'}}>
                       General{'\n'}Aptitude Test
                     </Text>
                   </View>
                   <View style={{ alignItems: 'center' }}>
-                    <Text
-                      style={{
-                        color: '#434343',
-                        fontSize: 13,
-                        fontFamily: 'PlusJakartaSans-Medium',
-                        textAlign: 'center',
-                      }}>
+                    <Text style={{color: '#434343',fontSize: 13,fontFamily: 'PlusJakartaSans-Medium',textAlign: 'center'}}>
                       Technical{'\n'}Test
                     </Text>
                   </View>
                   <View style={{ alignItems: 'center' }}>
-                    <Text
-                      style={{
-                        color: '#434343',
-                        fontSize: 13,
-                        fontFamily: 'PlusJakartaSans-Medium',
-                        textAlign: 'center',
-                        marginRight: 10,
-                      }}>
+                    <Text style={{color: '#434343',fontSize: 13,fontFamily: 'PlusJakartaSans-Medium',textAlign: 'center',marginRight: 10,}}>
                       Verification{'\n'}Done
                     </Text>
                   </View>
                 </View>
-
                 <View
-                  style={{
-                    marginVertical: 30,
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
+                  style={{ marginVertical: 30,flexDirection: 'column',alignItems: 'flex-start',
                   }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      width: '100%',
-                    }}>
+                  <View style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center',width: '100%'}}>
                     <View style={{ flex: 1 }}>
                       <Text style={styles.content}>{testName}</Text>
                       <Text style={styles.matter1}>
@@ -304,8 +186,6 @@ const Badge = ({ navigation }: any) => {
                       />
                     </View>
                   </View>
-
-                  {/* TouchableOpacity */}
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <LinearGradient
                       colors={
@@ -319,29 +199,18 @@ const Badge = ({ navigation }: any) => {
                         styles.gradientBackground,
                         isButtonDisabled &&
                         testName !== 'Technical Test' &&
-                        styles.disabledButton, // Apply disabled styles only for non-technical t
-                      ]}>
-                      <TouchableOpacity
-                        // style={[styles.progressButton, isButtonDisabled && styles.disabledButton]}
-                        style={[
-                          styles.progressButton,
-                          isButtonDisabled &&
-                          testName !== 'Technical Test' &&
-                          styles.disabledButton, // Apply disabled button styles
-                          // Apply resizing only when it's not a Technical Test and the timer is present
+                        styles.disabledButton]}>
+                      <TouchableOpacity style={[styles.progressButton,isButtonDisabled &&testName !== 'Technical Test' &&
+                          styles.disabledButton,
                           testName === 'General Aptitude Test' &&
                           testStatus === 'F' &&
                           timer &&
                           styles.disabledButton,
                         ]}
-                        onPress={() => {
-                          if (!isButtonDisabled && selectedStep < 3) {
+                        onPress={() => {if (!isButtonDisabled && selectedStep < 3) {
                             navigation.navigate('TestInstruction');
-                          }
-                          // If button is disabled (timer running), do nothing
-                        }}
-                        disabled={isButtonDisabled} // Disable the button when the timer is running
-                      >
+                          }}}
+                        disabled={isButtonDisabled}>
                         <Text style={styles.progressButtonText}>
                           {testStatus === 'F' && timer
                             ? 'Retake Test'
@@ -349,7 +218,6 @@ const Badge = ({ navigation }: any) => {
                         </Text>
                       </TouchableOpacity>
                     </LinearGradient>
-                    {/* Timer Container placed beside the Button */}
                     {testName === 'General Aptitude Test' &&
                       testStatus === 'F' &&
                       timer && (
@@ -398,156 +266,41 @@ const Badge = ({ navigation }: any) => {
           <View style={styles.textContainer}>
             <Text style={styles.text}>Skill Badges</Text>
           </View>
-
-          {/* Horizontal ScrollView for Cards */}
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={true}
             contentContainerStyle={styles.horizontalScrollContent}>
-            {[
-              // Step 1: Display "Take Test" skills first
-              ...skillsRequired.map((skill: any, index: any) => (
-                <View key={`skill-${index}`} style={styles.card}>
-                  <Image
-                    source={
-                      testImage[skill.skillName] ||
-                      require('@assests/Images/Test/NotFound.png')
-                    }
-                    style={styles.cardImage}
-                  />
-                  <Text style={styles.cardTitle}>
-                    {skill.skillName || 'Skill Name Not Available'}
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() =>
-                      navigation.navigate('TestInstruction', {
-                        skillName: skill.skillName,
-                        testType: 'SkillBadge',
-                      })
-                    }>
-                    <Text style={styles.buttonText}>Take Test</Text>
-                    <Icon
-                      name="external-link"
-                      size={20}
-                      color="white"
-                      style={{ marginRight: 15 }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )),
-
-              // Step 2: Display "Passed" skill badges
-              ...applicantSkillBadges
-                .filter((badge: any) => badge.status === 'PASSED')
-                .map((badge: any) => (
-                  <View key={`badge-${badge.id}`} style={styles.card}>
-                    <View style={styles.statusContainer}>
-                      <Text style={[styles.badgeStatus, styles.passed]}>
-                        Passed
-                      </Text>
-                    </View>
-                    <Image
-                      source={
-                        testImage[badge.skillBadge.name] ||
-                        require('@assests/Images/Test/NotFound.png')
-                      }
-                      style={styles.cardImage}
-                    />
-                    <Text style={styles.cardTitle}>
-                      {badge.skillBadge.name}
-                    </Text>
-                    <TouchableOpacity
-                      style={[styles.button, styles.verifiedButton]}
-                      disabled>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
-                        <Icon
-                          name="check"
-                          size={19}
-                          color="white"
-                          style={{ marginRight: 5 }}
-                        />
-                        <Text style={[styles.verifiedText, { lineHeight: 19 }]}>
-                          Verified
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )),
-
-              // Step 3: Display "Failed" skill badges
-              ...applicantSkillBadges
-                .filter((badge: any) => badge.status === 'FAILED')
-                .map((badge: any) => {
-                  const timer = timerState[badge.skillBadge.id];
-                  return (
-                    <View key={`failed-badge-${badge.id}`} style={styles.card}>
-                      <View style={styles.statusContainer}>
-                        <Text style={[styles.badgeStatus, styles.failed]}>
-                          Failed
-                        </Text>
-                      </View>
-                      <Image
-                        source={
-                          testImage[badge.skillBadge.name] ||
-                          require('@assests/Images/Test/NotFound.png')
-                        }
-                        style={styles.cardImage}
-                      />
-                      <Text style={styles.cardTitle}>
-                        {badge.skillBadge.name}
-                      </Text>
-                      {timer ? (
-                        <LinearGradient
-                          colors={['#d3d3d3', '#d3d3d3']}
-                          style={[
-                            styles.gradientBackground,
-                            styles.timerContain,
-                          ]}>
-                          <View
-                            style={{
-                              flex: 1,
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={styles.timerText1}>
-                              Retake test in
-                            </Text>
-                            <Text style={styles.timerText1}>
-                              {timer.days}d {timer.hours}h {timer.minutes}m
-                            </Text>
-                          </View>
-                        </LinearGradient>
-                      ) : (
-                        <View style={styles.cardFooter}>
-                          <TouchableOpacity
-                            style={styles.button}
-                            onPress={() =>
-                              navigation.navigate('TestInstruction', {
-                                skillName: badge.skillBadge.name,
-                                testType: 'SkillBadge',
-                                timer: true,
-                              })
-                            }>
-                            <Text style={styles.buttonText}>Retake Test</Text>
-                            <Icon
-                              name="external-link"
-                              size={20}
-                              color="white"
-                              style={{ marginRight: 15 }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      )}
-                    </View>
-                  );
-                }),
-            ]}
+            {skillsRequired.map((skill:any, index:any) => (
+              <SkillCard
+                key={`skill-${index}`}
+                skillName={skill.skillName}
+                status={null} // Add the status property
+                imageSource={testImage[skill.skillName] || require('@assests/Images/Test/NotFound.png')}
+                onPress={() => navigation.navigate('TestInstruction', { skillName: skill.skillName, testType: 'SkillBadge' })}
+              />
+            ))}
+            {applicantSkillBadges.filter(badge => badge.status === 'PASSED').map(badge => (
+              <SkillCard
+                key={`badge-${badge.id}`}
+                skillName={badge.skillBadge.name}
+                imageSource={testImage[badge.skillBadge.name] || require('@assests/Images/Test/NotFound.png')}
+                status="PASSED"
+                onPress={() => {}}
+              />
+            ))}
+            {applicantSkillBadges.filter(badge => badge.status === 'FAILED').map(badge => {
+              const timer = timerState[badge.skillBadge.id];
+              return (
+                <SkillCard
+                  key={`failed-badge-${badge.id}`}
+                  skillName={badge.skillBadge.name}
+                  imageSource={testImage[badge.skillBadge.name] || require('@assests/Images/Test/NotFound.png')}
+                  status="FAILED"
+                  timer={timer}
+                  onPress={() => navigation.navigate('TestInstruction', { skillName: badge.skillBadge.name, testType: 'SkillBadge', timer: true })}
+                />
+              );
+            })}
           </ScrollView>
         </View>
       </ScrollView>
@@ -657,50 +410,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  card: {
-    flex: 1,
-    width: 190,
-    height: 210,
-    marginRight: 16,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-
-    alignItems: 'center',
-  },
-  cardImage: {
-    width: 100,
-    height: 90,
-    padding: 15,
-    resizeMode: 'contain',
-    borderRadius: 10,
-    marginTop: 30,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: '#000000',
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  button: {
-    position: 'absolute',
-    bottom: 0,
-    width: 190,
-    height: 45,
-    backgroundColor: '#374A70',
-    alignItems: 'center',
-    borderBottomStartRadius: 10,
-    borderBottomEndRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-    marginLeft: 10,
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
   gradientBackground1: {
     width: '95%',
     alignSelf: 'center',
@@ -791,62 +500,10 @@ const styles = StyleSheet.create({
     color: '#666',
     fontFamily: 'PlusJakartaSans-Medium',
   },
-  badgeStatus: {
-    fontSize: 14,
-    padding: 5,
-    borderRadius: 5,
-    textTransform: 'capitalize',
-  },
-  passed: {
-    backgroundColor: '#d4edda',
-    color: 'green',
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 10,
-  },
-  failed: {
-    backgroundColor: '#f8d7da',
-    color: 'red',
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 10,
-  },
   badgeDate: {
     fontSize: 12,
     color: '#555',
     fontFamily: 'PlusJakartaSans-Medium',
-  },
-  statusContainer: {
-    position: 'absolute',
-    top: 3,
-    right: 5,
-    paddingHorizontal: 5,
-    borderRadius: 8,
-  },
-  verifiedButton: {
-    backgroundColor: 'green',
-    justifyContent: 'center',
-  },
-  verifiedText: {
-    color: 'white',
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlignVertical: 'center',
-  },
-  timerContain: {
-    bottom: 5,
-    width: 190,
-    height: 40,
-    alignItems: 'center',
-    borderBottomStartRadius: 10,
-    borderBottomEndRadius: 10,
-    flexDirection: 'row',
-  },
-  timerText1: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12,
-    fontWeight: 400,
-    color: 'black',
-    marginRight: 5, // Adding space between text and timer
-    lineHeight: 20,
-    marginBottom: 1,
   },
   cardFooter: {
     marginTop: 'auto', // Push the footer to the bottom of the card

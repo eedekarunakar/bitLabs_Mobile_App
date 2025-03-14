@@ -3,8 +3,9 @@ import * as CryptoJS from 'crypto-js';
 import * as Keychain from 'react-native-keychain';
 import { showToast } from './ToastService';
 import apiClient from './ApiClient';
-const secretKey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
 import { encryptPassword } from './EncryptionService';
+import { SECRET_KEY } from '@env';
+const secretKey = SECRET_KEY;
 
 export const changePassword = async (
   oldPassword: string,
@@ -31,11 +32,6 @@ export const changePassword = async (
       const response = await apiClient.post(
         `/applicant/authenticateUsers/${userId}`,
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
       );
 
       if (

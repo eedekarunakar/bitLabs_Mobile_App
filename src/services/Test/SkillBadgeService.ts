@@ -8,10 +8,7 @@ export const submitSkillBadge = async (userId: number, testName: string, testSta
         skillBadgeName: testName,
         status: testStatus,
       }, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-          'Content-Type': 'application/json',
-        },
+       
       });
       if (response.status === 200) {
 
