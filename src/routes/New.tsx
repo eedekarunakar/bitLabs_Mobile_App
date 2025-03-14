@@ -4,9 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LandingPage from '../screens/LandingPage/LandingPage'; // Replace with actual path
 import BottomTab from './BottomNavigation';
-import Dummystep1 from '../screens/Steps/dummyStep1'; // Replace with actual path
-import Dummystep2 from '../screens/Steps/dummyStep2';
-import dummyStep3 from '../screens/Steps/dummyStep3'
+import Dummystep1 from '../screens/Steps/personlDetails'; // Replace with actual path
+import Dummystep2 from '../screens/Steps/professionalDetails';
+import dummyStep3 from '../screens/Steps/uploadResume'
 import { useAuth,} from '../context/Authcontext'; // Replace with actual path
 import { fetchProfileId } from '../services/Create/createProfile'; // Replace with actual path
 import TestInstruction from '../screens/TestInstruction'; // Ensure the path is correct
