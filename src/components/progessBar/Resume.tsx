@@ -14,7 +14,7 @@ const PDFExam = () => {
         <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
         
       ) : (
-        <ActivityIndicator size="large" color="#F46F16" />
+        <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}}  />
       )}
     </View>
   );

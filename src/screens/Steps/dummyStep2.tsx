@@ -139,8 +139,7 @@ interface FormData {
 const {height,width} = Dimensions.get('window');
 const Dummystep2: React.FC = ({route, navigation}: any) => {
   const qual = route.params?.formData?.skills ?? '';
-  console.log("R",route.params)
-  console.log("email",qual);
+
   const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState<FormData>({
     qualification: route.params?.formData?.qualification || '',

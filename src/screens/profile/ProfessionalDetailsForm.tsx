@@ -35,6 +35,7 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
+
 const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo((props) => {
   const {
     visible,
@@ -105,6 +106,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
     skillBadges,
     onReload,
   });
+
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>

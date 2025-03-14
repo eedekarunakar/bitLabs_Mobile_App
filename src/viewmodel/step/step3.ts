@@ -10,13 +10,9 @@ import DocumentPicker, {
   } from "react-native-document-picker";
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@models/model';
-
-import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
-
 import ProfileService from '@services/profile/ProfileService';
 
 type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
-
 
 export const useStep3ViewModel = (userId: number |null, userToken: string|null, navigation: any, route: any) => {
   const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);

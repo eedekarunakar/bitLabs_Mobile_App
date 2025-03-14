@@ -1,9 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import * as CryptoJS from 'crypto-js';
 import * as Keychain from 'react-native-keychain';
-import {API_BASE_URL} from '@env';
-import Toast from 'react-native-toast-message';
-
+import { showToast } from './ToastService';
+import apiClient from './ApiClient';
 const secretKey = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
 
 export const encryptPassword = (password: string, secretkey: string) => {
@@ -42,8 +41,8 @@ export const changePassword = async (
     const jwtToken = result ? result.password : null; // Retrieve JWT token from keychain
 
     if (!jwtToken) {
-      const response = await axios.post(
-        `${API_BASE_URL}/applicant/authenticateUsers/${userId}`,
+      const response = await apiClient.post(
+        `/applicant/authenticateUsers/${userId}`,
         formData,
         {
           headers: {
@@ -56,31 +55,14 @@ export const changePassword = async (
         response.status === 200 &&
         response.data === 'Password updated and stored'
       ) {
-        Toast.show({
-          type: 'success',
-          position: 'bottom',
-          text1: '',
-          text2: 'Password changed successfully',
-          visibilityTime: 5000,
-        });
+
+        showToast('success','Password changed successfully');
       } else {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: '',
-          text2: response.data.message || 'Old password is incorrect',
-          visibilityTime: 5000,
-        });
+        showToast('error',response.data.message || 'Old password is incorrect');
       }
 
     } else {
-      Toast.show({
-        type: 'error',
-        position: 'bottom',
-        text1: '',
-        text2: 'Retry after some time',
-        visibilityTime: 5000,
-      });
+      showToast('error','Retry after some time');
     }
 
   } catch (error) {
@@ -88,44 +70,20 @@ export const changePassword = async (
       const errResponse = error as AxiosError;
       if (errResponse.response) {
         if (errResponse.response.status === 400) {
-          Toast.show({
-            type: 'error',
-            position: 'bottom',
-            text1: '',
-            text2: 'Old password is incorrect',
-            visibilityTime: 5000,
-          });
+          showToast('error','Old password is incorrect');
         } else {
-          Toast.show({
-            type: 'error',
-            position: 'bottom',
-            text1: '',
-            text2: 'An unexpected error occurred',
-            visibilityTime: 5000,
-          });
+          showToast('error','An unexpected error occurred');
         }
       }
     } else {
-      Toast.show({
-        type: 'error',
-        position: 'bottom',
-        text1: '',
-        text2: 'An unexpected error occurred',
-        visibilityTime: 5000,
-      });
+      showToast('error', 'An unexpected error occurred');
     }
   }
 };
 
 export const checkPasswordsMatch = (oldPassword: string, newPassword: string) => {
   if (oldPassword === newPassword && oldPassword) {
-    Toast.show({
-      type: 'error',
-      position: 'bottom',
-      text1: '',
-      text2: 'Old password and new password cannot be the same',
-      visibilityTime: 5000,
-    });
+    showToast('error', 'Old password and new password cannot be the same');
     return false;
   }
   return true;

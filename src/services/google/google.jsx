@@ -18,20 +18,20 @@ const useGoogleSignIn = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const user = await GoogleSignin.signIn();
-      console.log('User Info:', user);
+
       setUserInfo(user);
       setIsSignedIn(true); 
       const email = user?.data.user?.email;
-      console.log('Email:', email);
+
       await Glogin(email);
       showToast('success','Login Successful')
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('User cancelled the login');
+
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('Sign-In in progress');
+
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('Play Services are not available');
+
       } else {
         console.error('Google Sign-In Error:', error);
       }
@@ -42,7 +42,7 @@ const useGoogleSignIn = () => {
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      console.log('User signed out');
+
       setIsSignedIn(false);
       setUserInfo(null);
     } catch (error) {

@@ -74,8 +74,7 @@ export const fetchJobDetails = async (jobId: number|null, userToken: string | nu
       }
     );
       const jobData = mapJobData(response.data,jobId,apply);
-      console.log('model',jobData)
-  
+
     return jobData;
     
   } catch (error) {

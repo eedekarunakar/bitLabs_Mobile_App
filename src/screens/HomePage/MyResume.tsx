@@ -9,9 +9,10 @@ import { requestStoragePermission } from './permissions';
 import { RootStackParamList } from '@models/model';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
+import { showToast } from '@services/login/ToastService';
 import RNFS from 'react-native-fs';
 import { usePdf } from '../../context/ResumeContext';
-import PDFExam from './Reusableresume';
+import PDFExam from '../../components/progessBar/Resume';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -22,14 +23,12 @@ const BANNER_SIZE = Math.min(width * 0.2, 100); // Adjust the size dynamically
 const PDFExample = () => {
   const userid = useAuth();
   //const [pdfUri, setPdfUri] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation<NavigationProp>();
-  const { setPdfUri, pdfUri, refreshPdf } = usePdf()
+  //const navigation = useNavigation<NavigationProp>();
+  const {  pdfUri, refreshPdf } = usePdf()
 
 
 
-  console.log('pdfUri', pdfUri)
+
   useEffect(() => {
     if (userid.userId) {
       refreshPdf(); // Fetch PDF when component mounts
@@ -40,30 +39,13 @@ const PDFExample = () => {
   const source = { uri: pdfUri };
   const downloadFile = async () => {
     if (!pdfUri) {
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'No PDF available to download.',
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 3 seconds
-        text2Style: {
-          fontSize: 14
-
-        },
-      });
+      showToast('error','No PDF available to download.');
       return;
     }
 
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Allow storage permission to download.',
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 4 seconds      
-        text2Style: { fontSize: 16 },
-      });
+      showToast('error', 'Allow storage permission to download.');
       return;
     }
 
@@ -73,26 +55,10 @@ const PDFExample = () => {
 
     try {
       await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
-      Toast.show({
-        type: 'success',
-        text1: '',
-        text2: `File saved successfully!`,
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 5 seconds
-        text1Style: { fontSize: 18, fontWeight: 'bold' },
-        text2Style: { fontSize: 16 },
-      });
+     showToast('success',`File saved successfully!`);
     } catch (error) {
       console.error('Download Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to save PDF file.',
-        position: 'bottom',
-        visibilityTime: 4000, // Toast stays for 4 seconds
-        text1Style: { fontSize: 18, fontWeight: 'bold' },
-        text2Style: { fontSize: 16 },
-      });
+      showToast('error','Failed to save PDF file.');
     }
   };
 

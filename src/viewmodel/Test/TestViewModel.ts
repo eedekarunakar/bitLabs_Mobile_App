@@ -28,17 +28,17 @@ export const useTestViewModel = (userId: number | any, jwtToken: string | null, 
       applicant: { id: userId },
     };
 
-    console.log('Data being sent to API:', testDetails);
+    
     try {
       const response = await submitTestResult(userId, testDetails, jwtToken);
-      console.log('Test submission response:', response);
+      
 
       if (response.status) {
         // Handle success
         setIsTestComplete(true);
         
         if (finalScore >= 70) {
-          console.log('Final Score:', finalScore);
+          
 
           if (testName === 'General Aptitude Test' )  {
             navigation.navigate('passContent', { finalScore,testName });

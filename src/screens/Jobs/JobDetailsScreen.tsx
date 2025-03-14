@@ -34,7 +34,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }}>
         {loading ? (
           <View style={styles.loader}>
-            <ActivityIndicator size="large" color="#FF8C00" />
+            <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
           </View>
         ) : (
           <View>
@@ -130,7 +130,7 @@ const JobDetailsScreen: React.FC<JobDetailsScreenProps> = ({ route }) => {
         <TouchableOpacity
           style={[styles.button, styles.viewJobButton]}
           onPress={() => {
-            console.log('Navigating to JobDetails with job:', job);
+
             navigation.navigate('ViewJobDetails', { job });
           }}
         >

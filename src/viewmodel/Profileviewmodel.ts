@@ -65,7 +65,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
                   : [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE];
               for (const permission of permissions) {
                   const status = await PermissionsAndroid.check(permission);
-                  console.log(`Permission ${permission}:`, status ? 'GRANTED' : 'DENIED');
+                  //console.log(`Permission ${permission}:`, status ? 'GRANTED' : 'DENIED');
               }
               const grantedStatuses = await Promise.all(
                   permissions.map((permission) => PermissionsAndroid.check(permission))
@@ -106,11 +106,11 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
         try {
             const result = await ProfileService.uploadProfilePhoto(userToken, userId, photoFile);
             if (result.success) {
-                console.log('Photo uploaded successfully');
+            
                 fetchProfilePhoto(userToken, userId);
                 showToast('success', 'Profile photo uploaded successfully!');
             } else {
-                console.log('Failed to upload photo:', result.message);
+                
                 showToast('error', 'Failed to upload photo.');
             }
         } catch (error) {
@@ -138,7 +138,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
             } else if (response.assets && response.assets.length > 0) {
                 const photoFile = response.assets[0];
                 if (validatePhoto(photoFile)) {
-                    console.log('uploading......');
+
                     uploadProfilePhoto(photoFile);
                 } else {
                     console.log('Invalid file type or size.');
@@ -164,17 +164,14 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
                 fileName: 'default_profile.png',
             };
 
-            console.log('Default Image File:', defaultImageFile);
-
             // Upload the default image
             const result = await ProfileService.uploadProfilePhoto(userToken, userId, defaultImageFile);
 
             if (result.success) {
                 await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
-                console.log('Default photo uploaded successfully');
+
                 showToast('success', 'Default image set successfully!');
             } else {
-                console.log('Failed to set default photo:', result.message);
                 showToast('error', 'Failed to remove photo.');
             }
         } catch (error) {
@@ -202,8 +199,6 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
             } else if (response.assets && response.assets.length > 0) {
                 const photoFile = response.assets[0];
                 if (validatePhoto(photoFile)) {
-                    console.log('uploading......');
-                    console.log(photoFile)
                     uploadProfilePhoto(photoFile);
                 } else {
                     console.log('Invalid file type or size.');
@@ -271,11 +266,11 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
           }, 10); // 0.5 second delay before starting the progress bar
       } catch (err) {
           if (DocumentPicker.isCancel(err)) {
-              console.log('User canceled the picker');
+              
               showToast('error', 'Upload cancelled.');
               setIsUploadComplete(false)
           } else if ((err as { message: string }).message === 'Network Error') {
-              console.log('Network Error:', err);
+
              showToast('error', 'Network error. Please check your internet connection and try again.');
           } else {
               console.error('Unknown error: ', err);
@@ -331,7 +326,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       const success = await updateBasicDetails();
       if (personalDetails.firstName.length <= 19 && personalDetails.lastName.length <= 19 && success) {
           setPersonalName(personalDetails.firstName);
-          console.log('Personal details updated successfully');
+          
           setPersonalDetailsFormVisible(false);
           loadProfile();
           showToast('success', 'Personal details updated successfully')
@@ -352,7 +347,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     setIsLoading(true);
     try {
       const data = await ProfileService.fetchProfile(userToken, userId);
-      console.log(data.applicant.applicantSkillBadges);
+      
 
       // Populate personal details from the profile data
       if (data?.basicDetails) {
@@ -433,7 +428,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       errors.alternatePhoneNumber = 'Mobile number must start with 6, 7, 8, or 9 and be 10 digits long';
     }
     setFormErrors(errors);
-    console.log(errors);
+
     return Object.keys(errors).length === 0;
   };
 
@@ -454,7 +449,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
     } catch (error) {
 
-      console.log('Error updating personal details:', error);
+      
       return false; // Indicate failure
     }
   };
@@ -511,7 +506,7 @@ useEffect(() => {
         try {
             const result = await ProfileService.checkVerified(userToken, userId);
             if (result) {
-                console.log("verified: " + result)
+                
                 setVerified(result);
             }
         } catch (error) {

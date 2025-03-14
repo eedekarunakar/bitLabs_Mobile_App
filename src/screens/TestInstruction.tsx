@@ -44,7 +44,7 @@ import TSData from '@models/data/TS.json';
 import SpringData from '@models/data/Spring.json';
 import SQLData from '@models/data/SQL.json';
 import VueData from '@models/data/Vue.json';
-import API_BASE_URL from '@services/API_Service';
+import {API_BASE_URL} from '@env';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const { width, height } = Dimensions.get('window');
@@ -114,7 +114,7 @@ const Test = ({route, navigation}: any) => {
         }
 
         const data = await response.json();
-        console.log(data);
+ 
 
         if (Array.isArray(data) && data.length > 0) {
           const {testStatus: fetchedStatus, testName: fetchedName} = data[0];
@@ -274,7 +274,7 @@ const Test = ({route, navigation}: any) => {
     }
   }, [step, testType, testName]);
 
-  console.log(testType, skillName);
+
 
   if (loading) {
     return (
@@ -423,7 +423,7 @@ const Test = ({route, navigation}: any) => {
               // Determine the name to send based on testType
 
               const nameToSend = testType === 'SkillBadge' ? skillName : testData.testName;
-              console.log("Navigating with", nameToSend)
+
 
               // Navigate to the TestScreen with the determined name
               navigation.navigate('TestScreen', {testName: nameToSend});

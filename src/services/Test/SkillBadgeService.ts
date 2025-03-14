@@ -14,7 +14,7 @@ export const submitSkillBadge = async (userId: number, testName: string, testSta
         },
       });
       if (response.status === 200) {
-        console.log('Skill badge saved successfully');
+
       }
       return response.data;
     } catch (error) {
