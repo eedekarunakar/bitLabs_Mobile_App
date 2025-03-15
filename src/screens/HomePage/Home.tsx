@@ -1,19 +1,12 @@
 import React, {useState, useEffect,useContext} from 'react';
- 
 import Navbar from '@components/Navigation/Navbar';
 import NetInfo from '@react-native-community/netinfo';
-import ExploreSection from "@components/home/ExploreSection"; // Hook for fetching job counts
-import { useAuth } from '@context/Authcontext';
+import ExploreSection from "@components/home/ExploreSection"; 
 import { RootStackParamList } from '@models/Model';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
- 
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'; 
 import { useMessageContext, } from '../../context/welcome';
-
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'; // Updated imports
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import Icon5 from 'react-native-vector-icons/MaterialIcons'
-
-
- 
 import UserContext from '@context/UserContext';
 import {
   View,
@@ -25,20 +18,12 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
- 
- 
 import LinearGradient from 'react-native-linear-gradient';
-import { Use } from 'react-native-svg';
-import { useProfilePhoto } from '@context/ProfilePhotoContext';
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
- 
-const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
- 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
- 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
- 
 function Dashboard() {
   const {refreshJobCounts , refreshPersonalName , refreshVerifiedStatus} = useContext(UserContext)
   const {isAuthenticated} = useAuth();
@@ -46,57 +31,29 @@ function Dashboard() {
   const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
-  
   const { verifiedStatus, personalName, isLoading , jobCounts } = useContext(UserContext);
-  const route = useRoute<HomeScreenRouteProp>(); // Handle route params
-
-
   useEffect(()=>{
     const unsubscribe = NetInfo.addEventListener((state)=>{
       if(state.isConnected && !isConnected){
-        // Internet is back online, refetch data
-
         refetchData();
       }
-
       setIsConnected(state.isConnected)
     })
     return () => {
       unsubscribe();
     }
-
   },[isConnected])
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      resetPhoto(); // This resets the profile photo state
-    }
-  }, [isAuthenticated]);
-  
 
   const refetchData = async ()=>{
     refreshJobCounts();
     refreshPersonalName();
     refreshVerifiedStatus();
   }
-
- 
- 
- 
- 
-  // Use the useJobCounts hook to fetch job counts
-  // const { jobCounts, loading, error } = useJobCounts(userId, userToken);
   const { setmsg } = useMessageContext();
- 
- 
- 
- 
   const navigation = useNavigation<NavigationProp>();
-
   useEffect(() => {
     setVerified(verifiedStatus);
   }, [verifiedStatus]);
-  // Handle loading state
   if ( loading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -107,16 +64,6 @@ function Dashboard() {
       </View>
     );
   }
- 
-  // Handle error state
-  // if (error) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <Text>{error}</Text>
-  //     </View>
-  //   );
-  // }
- 
   return (
     <View style={styles.container}>
       <Navbar />
@@ -133,8 +80,6 @@ function Dashboard() {
         <Text style={styles.textBelowNavbar1}>
           {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
         </Text>
- 
- 
         <View style={styles.cardContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate('Jobs', { tab: 'recommended' })}
@@ -154,8 +99,6 @@ function Dashboard() {
                     style={styles.cardLogo}
                   />
                 </View>
- 
-                {/* Column container for Texts */}
                 <View style={styles.textContainer}>
                   <Text style={[styles.cardText]}>
                     Recommended Jobs
@@ -165,18 +108,15 @@ function Dashboard() {
               </View>
             </LinearGradient>
           </TouchableOpacity>
- 
- 
           <TouchableOpacity
             onPress={() => navigation.navigate('Jobs', { tab: 'saved' })}
           >
             <LinearGradient
               colors={['#FFF9EE', '#FFECE7']}
               start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
+              end={{ x: 1, y: 0 }} 
               style={[styles.card,{borderColor:'#FECBB6',borderWidth:1}]}
             >
- 
               <View style={styles.rowContainer}>
                 <View style={[styles.cardLogoContainer, { backgroundColor: '#FFF3E0' }]}>
                   <Image
@@ -184,7 +124,6 @@ function Dashboard() {
                     style={styles.cardLogo}
                   />
                 </View>
- 
                 <View style={styles.textContainer}>
                   <Text style={[styles.cardText, { color: '#F08F6E' }]}>Saved Jobs</Text>
                   <Text style={styles.cardNumber}>{jobCounts?.savedJobs ?? '0'}</Text>
@@ -192,8 +131,6 @@ function Dashboard() {
               </View>
             </LinearGradient>
           </TouchableOpacity>
- 
- 
           <TouchableOpacity
             onPress={() => navigation.navigate('Jobs', { tab: 'applied' })}
           >
@@ -218,7 +155,6 @@ function Dashboard() {
               </View>
             </LinearGradient>
           </TouchableOpacity>
- 
         </View>
         <ExploreSection />
       </ScrollView>
@@ -229,7 +165,6 @@ function Dashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: screenHeight * 0.01, // 2% of screen height
     backgroundColor: '#f8f9fa',
   },
   loadingContainer: {
@@ -242,9 +177,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: screenWidth * 0.05, // 5% of screen width
+    padding: screenWidth * 0.05, 
     backgroundColor: '#fff',
-    height: screenHeight * 0.095, // 10% of screen height
+    height: screenHeight * 0.095, 
   },
  
   logo1Image: {
@@ -252,15 +187,15 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.04,
     resizeMode: 'contain',
     top: screenHeight * 0.01,
-    alignSelf: 'flex-start', // Aligns the logo to the left
+    alignSelf: 'flex-start', 
   },
  
   logoContainer: {
     flex: 1,
-    width: screenWidth * 0.1, // 10% of screen width
-    height: screenWidth * 0.1, // 10% of screen width
-    paddingRight: screenWidth * 0.05, // Reduce padding-right to move image more to the left
-    marginLeft: -screenWidth * 0.05, // Adjust left margin to move further left
+    width: screenWidth * 0.1, 
+    height: screenWidth * 0.1, 
+    paddingRight: screenWidth * 0.05, 
+    marginLeft: -screenWidth * 0.05, 
   },
  
   profilePic: {
@@ -284,7 +219,6 @@ const styles = StyleSheet.create({
   textBelowNavbar1: {
     textAlign: 'left',
     fontSize: 14, // Fixed font size of 14px
- 
     color: '#2F2F2F',
     marginBottom: screenHeight * 0.01,
     marginLeft: screenWidth * 0.03,
@@ -313,7 +247,6 @@ const styles = StyleSheet.create({
     marginBottom: 12, // Add spacing between cards
     backgroundColor: '#fff',
   },
- 
   cardLogoContainer: {
     width: screenWidth * 0.15, // Scaled logo container width
     height: screenWidth * 0.15, // Scaled logo container height
@@ -323,13 +256,11 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Align logo in the center of the container
     marginBottom: screenHeight * 0.012, // Space between logo and text/number
   },
- 
   cardLogo: {
     width: '31%', // Logo size within its container
     height: '31%',
     resizeMode: 'contain',
   },
- 
   cardContent: {
     flexDirection: 'column', // Stack text and number vertically
     alignItems: 'flex-start', // Align content to the left
@@ -337,7 +268,6 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.03, // Space between logo and text
     flex: 1, // Ensure the content takes available space
   },
- 
   cardText: {
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
@@ -345,7 +275,6 @@ const styles = StyleSheet.create({
     gap: 10,
     color: '#909090',
   },
- 
   cardNumber: {
     fontSize: 24, // Scales number size with screen width
     fontFamily: 'PlusJakartaSans-Bold',

@@ -1,31 +1,17 @@
-
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Dimensions,
-  Modal,
-  Image,
-  BackHandler
-} from 'react-native';
+import {View,Text,StyleSheet,ScrollView,TouchableOpacity,SafeAreaView,Dimensions,Modal,Image,BackHandler,ActivityIndicator} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import ExitModal from './ExitModal';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAuth} from '@context/Authcontext'; 
 import aptitudeTestData from '@models/data/testData.json';
 import technicalTestData from '@models/data/TechnicalTest.json';
-import {API_BASE_URL} from '@env';
-import Icon from 'react-native-vector-icons/AntDesign';
 import loadTestData from './loadTestData';
-import { TestData } from '@models/Model';
+import Icon from 'react-native-vector-icons/AntDesign';
+import {TestData} from '@models/Model';
+import { fetchTestStatus } from '@services/Home/BadgeService';
+import ExitModal from './ExitModal';
 const { width, height } = Dimensions.get('window');
-
-
 const Test = ({route, navigation}: any) => {
   const {userId, userToken} = useAuth();
   const {
@@ -34,9 +20,7 @@ const Test = ({route, navigation}: any) => {
     testType,
     skillName,
   } = route.params || {};
-  const [testName, setTestName] = useState(
-    routeTestName || 'General Aptitude Test',
-  );
+  const [testName, setTestName] = useState(routeTestName || 'General Aptitude Test');
   const [testStatus, setTestStatus] = useState(routeTestStatus || 'F');
   const [step, setStep] = useState(1); // Default initial step
   const [testData, setTestData] = useState<TestData>({
@@ -46,91 +30,54 @@ const Test = ({route, navigation}: any) => {
     topicsCovered: [],
   });
   const [loading, setLoading] = useState(true);
-
   const [showExitModal, setShowExitModal] = useState(false);
-
-  // Fetch API data to dynamically adjust step and test information
+  
   useEffect(() => {
     if (testType === 'SkillBadge') {
-      // Skip API call for Skill Badge Tests
       setLoading(false);
       return;
     }
-
-
-    const fetchTestStatus = async () => {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/applicant1/tests/${userId}`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
- 
-
-        if (Array.isArray(data) && data.length > 0) {
-          const {testStatus: fetchedStatus, testName: fetchedName} = data[0];
-          setTestName(fetchedName || testName); // Use current state default if undefined
-          setTestStatus(fetchedStatus || testStatus);
-          adjustStep(fetchedName, fetchedStatus);
-        } else {
-          adjustStep(testName, testStatus); // Default adjustments if no data
-        }
-      } catch (error) {
-        setTestName('General Aptitude Test');
+    const getTestStatus = async () => {
+      const data = await fetchTestStatus(userId, userToken);
+      if (data && Array.isArray(data) && data.length > 0) {
+        const { testStatus: fetchedStatus, testName: fetchedName } = data[0];
+        setTestName(fetchedName || testName);
+        setTestStatus(fetchedStatus || testStatus);
+        adjustStep(fetchedName, fetchedStatus);
+      } else {
+        adjustStep(testName, testStatus);
       }
       setLoading(false);
     };
-
-    fetchTestStatus();
+    getTestStatus();
   }, [userId, userToken, testType]);
-
   useFocusEffect(
       React.useCallback(() => {
         const backAction = () => {
           setShowExitModal(true);
           return true;
         };
-  
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
         return () => backHandler.remove();
       }, [])
     );
-
-  // Dynamically adjust step based on fetched data
   const adjustStep = (name: string, status: string) => {
     const lowerStatus = status.toLowerCase();
     if (lowerStatus === 'p' && name === 'General Aptitude Test') {
-      setStep(2); // Proceed to Technical Test
+      setStep(2); 
     } else if (lowerStatus === 'p' && name === 'Technical Test') {
-      setStep(3); // Completed verification
+      setStep(3); 
     } else if (lowerStatus === 'f' && name === 'Technical Test') {
-      setStep(2); // Retry Technical Test
+      setStep(2); 
     } else {
-      setStep(1); // Default to Aptitude Test
+      setStep(1); 
     }
   };
-
-  // Load test data dynamically
   useEffect(() => {
     if (testType === 'SkillBadge') {
-      // Load Skill Badge Test data
       const data = loadTestData(skillName);
       setTestData(data);
-   
-      
     } else {
-      // Load Aptitude/Technical Test data
       if (step === 1) {
         setTestData(aptitudeTestData);
       } else if (step === 2) {
@@ -145,49 +92,37 @@ const Test = ({route, navigation}: any) => {
       }
     }
   }, [step, testType, testName]);
-
-
-
   if (loading) {
     return (
-      <Text style={{fontFamily: 'PlusJakartaSans-Medium', fontSize: 14}}>
-        Loading test data...
-      </Text>
+      <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
+        </View>
     );
   }
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.headerContainer}>
-
         <TouchableOpacity onPress={() => setShowExitModal(true)} style={styles.backButton}>
           <Icon name="arrowleft" size={24} color="#495057" />
         </TouchableOpacity>
-
       </View>
       <ScrollView style={{ flexGrow: 1 }}>
-
         <View style={styles.container}>
           <View style={styles.container1}>
-            <MaskedView
-              style={styles.maskedView}  
+            <MaskedView style={styles.maskedView}
               maskElement={
                 <Text style={styles.head}>
                   {testData.testName || 'Loading...'}
                 </Text>
               }>
               <LinearGradient
-                colors={['#F97316', '#FAA729']} // Gradient colors
+                colors={['#F97316', '#FAA729']} 
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 style={styles.gradientBackground1}
               />
             </MaskedView>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'flex-start',
-                marginLeft: -20,
-              }}>
+            <View style={{flexDirection: 'row',alignItems: 'flex-start',marginLeft: -20}}>
               <View style={styles.box1}>
                 <Text style={styles.text}>Duration</Text>
                 <Text style={styles.text1}>{testData.duration || 'N/A'}</Text>
@@ -199,20 +134,15 @@ const Test = ({route, navigation}: any) => {
                 </Text>
               </View>
             </View>
-
             <Text style={{ color: '#797979', fontFamily: 'PlusJakartaSans-Medium' }}>Topics Covered</Text>
             <Text style={{ lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Bold', }}>
               {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
-
                 ? `${testData.topicsCovered.join(', ')}`
                 : 'No topics available'}
             </Text>
           </View>
-
           <View style={styles.container2}>
             <Text style={styles.heading}>Instructions</Text>
-
-            {/* Individual Points */}
             {[
               'You need to score at least 70% to pass the exam.',
               'Once started, the test cannot be paused or reattempted during the same session.',
@@ -229,7 +159,6 @@ const Test = ({route, navigation}: any) => {
           </View>
         </View>
       </ScrollView>
-
       <ExitModal
         visible={showExitModal}
         onClose={() => setShowExitModal(false)}
@@ -240,7 +169,6 @@ const Test = ({route, navigation}: any) => {
           }, 300);
         }}
       />
-
       <View style={styles.footer}>
         <LinearGradient
           colors={['#F97316', '#FAA729']}
@@ -250,12 +178,8 @@ const Test = ({route, navigation}: any) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              // Determine the name to send based on testType
-
               const nameToSend = testType === 'SkillBadge' ? skillName : testData.testName;
-
-
-              // Navigate to the TestScreen with the determined name
+              console.log("Navigating with", nameToSend)
               navigation.navigate('TestScreen', {testName: nameToSend});
             }}>
             <Text style={styles.start}>Start</Text>
@@ -265,15 +189,12 @@ const Test = ({route, navigation}: any) => {
     </SafeAreaView>
   );
 };
-
 export default Test;
 
 const styles = StyleSheet.create({
   container: {
     width: width * 0.93,
-
     height: 690,
-
     marginTop: 20,
     marginLeft: 13,
     borderRadius: 8,
@@ -305,10 +226,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   container2: {
-
     alignContent: 'center',
     marginLeft: 20,
-
   },
   text: {
     fontSize: 12,
@@ -377,27 +296,27 @@ const styles = StyleSheet.create({
     marginLeft: 22.5,
     justifyContent: 'center',
     alignItems: 'center',
-    
   },
   start: {
     color: '#FFFFFF',
     fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: width * 0.045, // Scales based on screen width
+    fontSize: width * 0.045,
     lineHeight: height * 0.03,
     marginRight:40
-
   },
   headerContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
     height: 50,
-
     backgroundColor: '#FFF'
-
   },
   backButton: {
     position: 'absolute',
     left: 15,
   },
-
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

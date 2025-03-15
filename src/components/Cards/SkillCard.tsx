@@ -6,20 +6,51 @@ import LinearGradient from 'react-native-linear-gradient';
 interface SkillCardProps {
   skillName: string;
   status: 'PASSED' | 'FAILED' | null;
-  imageSource: any;
   onPress: () => void | null;
   disabled?: boolean;
   timer?: { days: number; hours: number; minutes: number } | null;
 }
 
+const testImage: Record<string, any> = {
+  Angular: require('@assests/Images/Test/Angular.png'),
+  Java: require('@assests/Images/Test/Java.png'),
+  C: require('@assests/Images/Test/C.png'),
+  'C++': require('@assests/Images/Test/CPlusPlus.png'),
+  'C Sharp': require('@assests/Images/Test/CSharp.png'),
+  CSS: require('@assests/Images/Test/CSS.png'),
+  Django: require('@assests/Images/Test/Django.png'),
+  '.Net': require('@assests/Images/Test/DotNet.png'),
+  Flask: require('@assests/Images/Test/Flask.png'),
+  Hibernate: require('../../assests/Images/Test/Hibernate.png'),
+  HTML: require('@assests/Images/Test/HTML.png'),
+  JavaScript: require('@assests/Images/Test/JavaScript.png'),
+  JSP: require('@assests/Images/Test/JSP.png'),
+  'Manual Testing': require('@assests/Images/Test/ManualTesting.png'),
+  'Mongo DB': require('@assests/Images/Test/MongoDB.png'),
+  Python: require('@assests/Images/Test/Python.png'),
+  React: require('@assests/Images/Test/React.png'),
+  'Regression Testing': require('@assests/Images/Test/RegressionTesting.png'),
+  Selenium: require('@assests/Images/Test/Selenium.png'),
+  Servlets: require('@assests/Images/Test/Servlets.png'),
+  'Spring Boot': require('@assests/Images/Test/SpringBoot.png'),
+  TypeScript: require('@assests/Images/Test/TypeScript.png'),
+  Spring: require('@assests/Images/Test/Spring.png'),
+  SQL: require('@assests/Images/Test/MySQL.png'),
+  Css: require('@assests/Images/Test/CSS.png'),
+  MySQL: require('@assests/Images/Test/MySQL.png'),
+  Vue: require('@assests/Images/Test/Vue.png'),
+  'SQL-Server': require('@assests/Images/Test/sqlserver.png'),
+};
+
 const SkillCard: React.FC<SkillCardProps> = ({
   skillName,
   status,
-  imageSource,
   onPress,
   disabled = false,
   timer = null,
 }) => {
+  const imageSource = testImage[skillName] || require('@assests/Images/Test/NotFound.png');
+
   return (
     <View style={styles.card}>
       {status && (
@@ -58,12 +89,10 @@ const SkillCard: React.FC<SkillCardProps> = ({
                 <Text style={styles.verifiedText}>Verified</Text>
               </>
             ) : (
-              <>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                  <Text style={styles.buttonText}>{status === 'FAILED' ? 'Retake Test' : 'Take Test'}</Text>
-                  <Icon name="external-link" size={20} color="white" style={{ marginRight: 5 }}/>
-                </View>
-              </>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                <Text style={styles.buttonText}>{status === 'FAILED' ? 'Retake Test' : 'Take Test'}</Text>
+                <Icon name="external-link" size={20} color="white" style={{ marginRight: 5 }}/>
+              </View>
             )}
           </View>
         </TouchableOpacity>
@@ -71,6 +100,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
     </View>
   );
 };
+
 export default SkillCard;
 
 const styles = StyleSheet.create({
@@ -156,9 +186,9 @@ const styles = StyleSheet.create({
   timerText1: {
     fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 12,
-    fontWeight: 400,
+    fontWeight: '400',
     color: 'black',
-    marginRight: 5, // Adding space between text and timer
+    marginRight: 5,
     lineHeight: 20,
     marginBottom: 1,
   },
