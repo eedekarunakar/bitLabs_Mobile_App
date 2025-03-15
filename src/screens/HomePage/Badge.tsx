@@ -38,14 +38,14 @@ const Badge = ({ navigation }: any) => {
         await fetchTestStatus(userId, userToken); // Fetch test status first
         const badges = await fetchSkillBadges(userId, userToken);
         if (isActive) {
-          setSkillBadges(badges.filter((badge: any) => badge.flag === "added")); // Only set "added" skills
+          setSkillBadges(badges.filter((badge: any) => badge.flag === "added")); 
           setIsLoading(false);
         }
       };
       loadSkillBadges();
       fetchData();
       return () => {
-        isActive = false; // Cleanup function to prevent memory leaks
+        isActive = false; 
       };
     }, [userId, userToken])
   );

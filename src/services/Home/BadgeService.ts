@@ -1,20 +1,13 @@
 import {API_BASE_URL} from '@env';
- 
+import apiClient from '@services/login/ApiClient';
+
 export const fetchTestStatus = async (userId: number|null, userToken: string|null) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/applicant1/tests/${userId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
- 
-    if (!response.ok) {
+    const response = await apiClient.get(`${API_BASE_URL}/applicant1/tests/${userId}`);
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
- 
-    const data = await response.json();
+    const data = response.data;
     return data;
   } catch (error) {
     console.error('Error fetching test status:', error);
@@ -24,19 +17,11 @@ export const fetchTestStatus = async (userId: number|null, userToken: string|nul
  
 export const fetchSkillBadges = async (userId: number | null, userToken: string|null) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/skill-badges/${userId}/skill-badges`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
- 
-    if (!response.ok) {
+    const response = await apiClient.get(`${API_BASE_URL}/skill-badges/${userId}/skill-badges`);
+    if (response.status !== 200) {
       throw new Error('Failed to fetch skill badges');
     }
- 
-    const data = await response.json();
+    const data = response.data;
     return data.applicantSkillBadges || [];
   } catch (error) {
     console.error('Error fetching skill badges:', error);
