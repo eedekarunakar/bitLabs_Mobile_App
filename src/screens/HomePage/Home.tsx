@@ -29,6 +29,7 @@ import {
  
 import LinearGradient from 'react-native-linear-gradient';
 import { Use } from 'react-native-svg';
+import { useProfilePhoto } from '@context/ProfilePhotoContext';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
  
 const baseScale = screenWidth < screenHeight ? screenWidth : screenHeight;
@@ -40,6 +41,8 @@ type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
  
 function Dashboard() {
   const {refreshJobCounts , refreshPersonalName , refreshVerifiedStatus} = useContext(UserContext)
+  const {isAuthenticated} = useAuth();
+  const {resetPhoto} = useProfilePhoto();
   const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
@@ -63,6 +66,13 @@ function Dashboard() {
     }
 
   },[isConnected])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      resetPhoto(); // This resets the profile photo state
+    }
+  }, [isAuthenticated]);
+  
 
   const refetchData = async ()=>{
     refreshJobCounts();

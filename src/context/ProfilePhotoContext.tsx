@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import ProfileService from '../services/profile/ProfileService';
- 
+
+
 interface ProfilePhotoContextProps {
     photo: string | null;
     fetchProfilePhoto: (userToken: string | null, userId: number | null) => Promise<void>;
+    resetPhoto: () => void;
 }
  
 interface ProfilePhotoProviderProps {
@@ -16,6 +18,8 @@ const ProfilePhotoContext = createContext<ProfilePhotoContextProps | undefined>(
  
 export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({ children, userToken, userId }) => {
     const [photo, setPhoto] = useState<string | null>(null);
+
+
  
     const fetchProfilePhoto = async (token: string | null, id: number | null) => {
         if (!token || !id) return;
@@ -28,13 +32,20 @@ export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({ chil
             console.error('Error fetching profile photo:', error);
         }
     };
+
+    const resetPhoto = () => {
+        setPhoto(null);
+    };
+
+    //Subscribe to the logout event 
+    
  
     useEffect(() => {
         fetchProfilePhoto(userToken, userId);
     }, [userToken, userId]);
  
     return (
-        <ProfilePhotoContext.Provider value={{ photo, fetchProfilePhoto }}>
+        <ProfilePhotoContext.Provider value={{ photo, fetchProfilePhoto , resetPhoto }}>
             {children}
         </ProfilePhotoContext.Provider>
     );
