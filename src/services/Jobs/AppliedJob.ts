@@ -22,7 +22,7 @@ export const fetchCompanyLogo = async (
 
     const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
 
-
+    console.log("check base64Logo", base64Logo);
     return base64Logo;
   } catch (error) {
     console.error("Error fetching or converting company logo:", error);

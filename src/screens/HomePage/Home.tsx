@@ -26,8 +26,6 @@ type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
 function Dashboard() {
   const {refreshJobCounts , refreshPersonalName , refreshVerifiedStatus} = useContext(UserContext)
-  const {isAuthenticated} = useAuth();
-  const {resetPhoto} = useProfilePhoto();
   const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false)
   const [loading,setIsLoading] = useState(false);
