@@ -3,22 +3,9 @@ import * as CryptoJS from 'crypto-js';
 import * as Keychain from 'react-native-keychain';
 import { showToast } from './ToastService';
 import apiClient from './ApiClient';
+import { encryptPassword } from './EncryptionService';
 import { SECRET_KEY } from '@env';
 const secretKey = SECRET_KEY;
-
-export const encryptPassword = (password: string, secretkey: string) => {
-  const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV (16 bytes for AES)
-  const encryptedPassword = CryptoJS.AES.encrypt(
-    password,
-    CryptoJS.enc.Utf8.parse(secretkey),
-    {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    }
-  ).toString();
-  return { encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64) };
-};
 
 export const changePassword = async (
   oldPassword: string,
