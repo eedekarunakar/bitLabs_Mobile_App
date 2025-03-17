@@ -18,7 +18,7 @@ type JobDetailsProps = {
 };
 
 const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
-  const { job } = route.params;
+  const { job ,JobIndex} = route.params;
 
   // Use the ViewModel
   const {
@@ -76,7 +76,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
             <TouchableOpacity
               style={[styles.button, styles.applyButton]}
               onPress={() => {
-                handleApplyJob();
+                handleApplyJob(index);
               }}
             >
               <LinearGradient

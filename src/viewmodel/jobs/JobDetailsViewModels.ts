@@ -59,7 +59,7 @@ const useJobDetailsViewModel = (jobId: string) => {
     fetchProfileData();
   }, [jobId, userId, userToken]);
 
-  const handleSaveJob = async () => {
+  const handleSaveJob = async (JobIndex:number) => {
     try {
       const result = await saveJob(Number(jobId), userId, userToken);
       if (result) {
@@ -74,13 +74,14 @@ const useJobDetailsViewModel = (jobId: string) => {
     }
   };
 
-  const handleApplyJob = async () => {
+  const handleApplyJob = async (JobIndex:number) => {
     try {
       const result = await applyJob(userId, Number(jobId), userToken);
       if (result) {
         setIsJobApplied(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
+        
         showToast("success", "Job application submitted successfully!");
       }
     } catch (error) {

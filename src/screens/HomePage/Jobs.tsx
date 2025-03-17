@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -29,9 +29,10 @@ const RecommendedJobs = () => {
   const [activeTab, setActiveTab] = useState<"recommended" | "applied" | "saved">("recommended");
   const navigation = useNavigation<RecommendedJobsNavigationProp>();
   const [visibleJobsCount, setVisibleJobsCount] = useState(10); // Number of jobs to display initially
-  const { isJobsLoaded, setIsJobsLoaded } = useContext(UserContext);
+  const [pendingScrollIndex , setPendingScrollIndex] = useState<number | null >(null);
+  const { isJobsLoaded, setIsJobsLoaded ,lastViewedJobIndex,setLastViewedJobIndex} = useContext(UserContext);
   const { userToken } = useAuth();
-
+  const flastListRef = useRef<FlatList>(null);
   const { logos, loading: logosLoading }: { logos: { [key: number]: string }; loading: boolean } =
     useLogos(jobs, userToken ?? "");
   useEffect(() => {
@@ -42,10 +43,17 @@ const RecommendedJobs = () => {
 
   useEffect(() => {
     if (!isJobsLoaded) {
-      reloadJobs(); // Reload jobs only when `isJobsLoaded` is false
+      reloadJobs().then(()=>{
+        if(lastViewedJobIndex!==null){
+        setVisibleJobsCount(lastViewedJobIndex+10)
+        setPendingScrollIndex(lastViewedJobIndex)
+        setLastViewedJobIndex(null);
+
+        }
+      }) // Reload jobs only when `isJobsLoaded` is false
       setIsJobsLoaded(true); // Mark as loaded after fetching
     }
-  }, [isJobsLoaded]);
+  }, [isJobsLoaded,jobs]);
 
   // Handle tab press
   const handleTabPress = (tab: "recommended" | "applied" | "saved") => {
@@ -60,9 +68,9 @@ const RecommendedJobs = () => {
   };
 
   // Render job cards
-  const renderJobs = ({ item }: { item: JobData }) => {
+  const renderJobs = ({ item ,index }: { item: JobData ;index: number}) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("JobDetails", { job: item })}>
+      <TouchableOpacity onPress={() => navigation.navigate("JobDetails", { job: item , JobIndex: index })}>
         <JobCard
           jobTitle={item.jobTitle}
           companyName={item.companyname}
@@ -101,9 +109,18 @@ const RecommendedJobs = () => {
       case "recommended":
         return (
           <FlatList
+            ref ={flastListRef}
             data={visibleJobs} // Filter and display only visible jobs
             renderItem={renderJobs}
             keyExtractor={item => item.id.toString()}
+            getItemLayout={(data, index) => ({ length: 100, offset: 100 * index, index })}
+            onContentSizeChange={() => {
+              if (pendingScrollIndex !== null) {
+                flastListRef.current?.scrollToIndex({ index: pendingScrollIndex, animated: false });
+
+                setPendingScrollIndex(null)
+              }
+            }}
             onEndReached={loadMoreJobs} // Load more jobs when the user scrolls to the bottom
             onEndReachedThreshold={0.5} // Trigger when the user is 50% from the bottom
             ListEmptyComponent={
