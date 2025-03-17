@@ -1,10 +1,10 @@
-import { useState, useEffect,useContext } from 'react';
-import {  saveJob, applyJob, removeSavedJob } from '../../services/Jobs/JobDetails'; // Add removeSavedJob
-import { useAuth } from '@context/Authcontext';
-import { fetchJobDetails } from '@services/Jobs/RecommendedJobs';
-import { fetchCompanyLogo } from '@services/Jobs/AppliedJob';
-import UserContext from '@context/UserContext';
-import { showToast } from '@services/login/ToastService';
+import { useState, useEffect, useContext } from "react";
+import { saveJob, applyJob, removeSavedJob } from "../../services/Jobs/JobDetails"; // Add removeSavedJob
+import { useAuth } from "@context/Authcontext";
+import { fetchJobDetails } from "@services/Jobs/RecommendedJobs";
+import { fetchCompanyLogo } from "@services/Jobs/AppliedJob";
+import UserContext from "@context/UserContext";
+import { showToast } from "@services/login/ToastService";
 const useJobDetailsViewModel = (jobId: string) => {
   const { userToken, userId } = useAuth();
   const [isJobSaved, setIsJobSaved] = useState(false);
@@ -14,8 +14,8 @@ const useJobDetailsViewModel = (jobId: string) => {
   const [skillProgressText, setSkillProgressText] = useState<string | null>(null);
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]);
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
-  const [companyLogo, setCompanyLogo] = useState<string | null>(null); 
-  const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext)
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
+  const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext);
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -39,7 +39,7 @@ const useJobDetailsViewModel = (jobId: string) => {
             if (logoData) {
               // Assuming logoData is an ArrayBuffer, convert it to Base64
               const base64Logo = logoData;
-              
+
               setCompanyLogo(base64Logo); // Set the Base64-encoded company logo
             } else {
               setCompanyLogo(null); // Set to null if no logo data is received
@@ -51,8 +51,8 @@ const useJobDetailsViewModel = (jobId: string) => {
         } else {
           setCompanyLogo(null); // Default if no recruiterId
         }
-      }catch (error) {
-        console.error('Error fetching profile data:', error);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
       }
     };
 
@@ -66,11 +66,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobSaved(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        showToast('success','Job saved successfully!');
+        showToast("success", "Job saved successfully!");
       }
     } catch (error) {
-      console.error('Error saving job:', error);
-      showToast('error','Failed to save job.');
+      console.error("Error saving job:", error);
+      showToast("error", "Failed to save job.");
     }
   };
 
@@ -81,11 +81,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobApplied(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        showToast('success','Job application submitted successfully!');
+        showToast("success", "Job application submitted successfully!");
       }
     } catch (error) {
-      console.error('Error applying for job:', error);
-      showToast('error','Failed to apply for job.');
+      console.error("Error applying for job:", error);
+      showToast("error", "Failed to apply for job.");
     }
   };
 
@@ -93,14 +93,14 @@ const useJobDetailsViewModel = (jobId: string) => {
     try {
       const result = await removeSavedJob(Number(jobId), userId, userToken);
       if (result) {
-        setIsJobSaved(false); 
+        setIsJobSaved(false);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        showToast('success','Job removed successfully!');
+        showToast("success", "Job removed successfully!");
       }
     } catch (error) {
-      console.error('Error removing job:', error);
-      showToast('error','Failed to remove job.');
+      console.error("Error removing job:", error);
+      showToast("error", "Failed to remove job.");
     }
   };
 
@@ -112,7 +112,7 @@ const useJobDetailsViewModel = (jobId: string) => {
     skillProgressText,
     perfectMatchSkills,
     unmatchedSkills,
-    companyLogo, 
+    companyLogo,
     handleSaveJob,
     handleApplyJob,
     handleRemoveJob, // Expose the new function

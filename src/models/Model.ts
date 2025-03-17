@@ -16,13 +16,13 @@ export interface ForgotErrors {
   email?: string;
   response?: string;
   password?: string;
-  message?: string
+  message?: string;
 }
 
 export interface TestDetails {
   testName: string;
   testScore: number;
-  testStatus: 'P' | 'F'; // Pass or Fail
+  testStatus: "P" | "F"; // Pass or Fail
   testDateTime: string; // ISO string format
   applicant: { id: number }; // Assuming applicant is an object with an id
 }
@@ -116,8 +116,6 @@ export interface JobData {
   recruiterId: number;
 }
 
-
-
 export interface JobCounts {
   recommendedJobs: number;
   appliedJobs: number;
@@ -133,7 +131,7 @@ export type RootStackParamList = {
   Step3: { updateShouldShowStep1: React.Dispatch<React.SetStateAction<boolean>> };
   TestInstruction: { testName: string };
   TestScreen: { questions: any[] };
-  Jobs: { tab: 'recommended' | 'applied' | 'saved' };
+  Jobs: { tab: "recommended" | "applied" | "saved" };
   JobDetails: { job: any };
   JobDetailsScreen: { job: any };
   ViewJobDetails: { job: any };
@@ -151,7 +149,7 @@ export type RootStackParamList = {
   ResumeBuilder: undefined;
   Home: { welcome: string } | undefined;
   Drives: undefined;
-  'My Resume': undefined;
+  "My Resume": undefined;
 };
 
 // Define the type for the test data

@@ -1,4 +1,4 @@
-import apiClient from '@services/login/ApiClient';
+import apiClient from "@services/login/ApiClient";
 
 export const fetchJobStatus = async (applyJobId: number, userToken: string) => {
   try {
@@ -8,7 +8,7 @@ export const fetchJobStatus = async (applyJobId: number, userToken: string) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching job status:', error);
+    console.error("Error fetching job status:", error);
     throw error;
   }
 };

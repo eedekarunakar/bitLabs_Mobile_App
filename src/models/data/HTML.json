@@ -29,12 +29,7 @@
     {
       "id": 3,
       "question": "Which HTML attribute is used to define inline styles?",
-      "options": [
-        "style",
-        "class",
-        "id",
-        "font"
-      ],
+      "options": ["style", "class", "id", "font"],
       "answer": "style"
     },
     {
@@ -73,12 +68,7 @@
     {
       "id": 7,
       "question": "Which of the following HTML tags is used to define a table header?",
-      "options": [
-        "&lt;th&gt;",
-        "&lt;td&gt;",
-        "&lt;tr&gt;",
-        "&lt;header&gt;"
-      ],
+      "options": ["&lt;th&gt;", "&lt;td&gt;", "&lt;tr&gt;", "&lt;header&gt;"],
       "answer": "&lt;th&gt;"
     },
     {
@@ -117,23 +107,13 @@
     {
       "id": 11,
       "question": "What is the correct HTML element for inserting a line break?",
-      "options": [
-        "&lt;br&gt;",
-        "&lt;lb&gt;",
-        "&lt;break&gt;",
-        "&lt;line&gt;"
-      ],
+      "options": ["&lt;br&gt;", "&lt;lb&gt;", "&lt;break&gt;", "&lt;line&gt;"],
       "answer": "&lt;br&gt;"
     },
     {
       "id": 12,
       "question": "Which attribute is used to specify a unique identifier for an HTML element?",
-      "options": [
-        "id",
-        "class",
-        "name",
-        "key"
-      ],
+      "options": ["id", "class", "name", "key"],
       "answer": "id"
     },
     {
@@ -150,23 +130,13 @@
     {
       "id": 14,
       "question": "Which HTML element is used to define important text?",
-      "options": [
-        "&lt;strong&gt;",
-        "&lt;i&gt;",
-        "&lt;important&gt;",
-        "&lt;b&gt;"
-      ],
+      "options": ["&lt;strong&gt;", "&lt;i&gt;", "&lt;important&gt;", "&lt;b&gt;"],
       "answer": "&lt;strong&gt;"
     },
     {
       "id": 15,
       "question": "Which HTML attribute is used to define the inline frame?",
-      "options": [
-        "iframe",
-        "src",
-        "frame",
-        "border"
-      ],
+      "options": ["iframe", "src", "frame", "border"],
       "answer": "iframe"
     },
     {
@@ -183,34 +153,19 @@
     {
       "id": 17,
       "question": "Which of the following HTML elements is used to define a navigation bar?",
-      "options": [
-        "&lt;nav&gt;",
-        "&lt;navbar&gt;",
-        "&lt;menu&gt;",
-        "&lt;navigation&gt;"
-      ],
+      "options": ["&lt;nav&gt;", "&lt;navbar&gt;", "&lt;menu&gt;", "&lt;navigation&gt;"],
       "answer": "&lt;nav&gt;"
     },
     {
       "id": 18,
       "question": "Which HTML attribute specifies the URL of an external script file?",
-      "options": [
-        "src",
-        "href",
-        "link",
-        "script"
-      ],
+      "options": ["src", "href", "link", "script"],
       "answer": "src"
     },
     {
       "id": 19,
       "question": "Which of the following is not a valid HTML5 tag?",
-      "options": [
-        "&lt;footer&gt;",
-        "&lt;header&gt;",
-        "&lt;aside&gt;",
-        "&lt;dialog&gt;"
-      ],
+      "options": ["&lt;footer&gt;", "&lt;header&gt;", "&lt;aside&gt;", "&lt;dialog&gt;"],
       "answer": "&lt;dialog&gt;"
     },
     {
@@ -227,23 +182,13 @@
     {
       "id": 21,
       "question": "Which of the following HTML elements is used to define a section in a document?",
-      "options": [
-        "&lt;section&gt;",
-        "&lt;div&gt;",
-        "&lt;article&gt;",
-        "&lt;span&gt;"
-      ],
+      "options": ["&lt;section&gt;", "&lt;div&gt;", "&lt;article&gt;", "&lt;span&gt;"],
       "answer": "&lt;section&gt;"
     },
     {
       "id": 22,
       "question": "Which attribute is used to open a link in a new tab or window?",
-      "options": [
-        "target='_blank'",
-        "target='_new'",
-        "rel='_blank'",
-        "href='_blank'"
-      ],
+      "options": ["target='_blank'", "target='_new'", "rel='_blank'", "href='_blank'"],
       "answer": "target='_blank'"
     },
     {
@@ -260,12 +205,7 @@
     {
       "id": 24,
       "question": "Which HTML tag is used to display a numbered list?",
-      "options": [
-        "&lt;ol&gt;",
-        "&lt;ul&gt;",
-        "&lt;list&gt;",
-        "&lt;numbered&gt;"
-      ],
+      "options": ["&lt;ol&gt;", "&lt;ul&gt;", "&lt;list&gt;", "&lt;numbered&gt;"],
       "answer": "&lt;ol&gt;"
     },
     {
@@ -282,12 +222,7 @@
     {
       "id": 26,
       "question": "Which HTML tag is used to define the largest heading?",
-      "options": [
-        "&lt;h1&gt;",
-        "&lt;h6&gt;",
-        "&lt;heading&gt;",
-        "&lt;title&gt;"
-      ],
+      "options": ["&lt;h1&gt;", "&lt;h6&gt;", "&lt;heading&gt;", "&lt;title&gt;"],
       "answer": "&lt;h1&gt;"
     },
     {
@@ -300,7 +235,7 @@
         "&lt;input type='text'&gt;"
       ],
       "answer": "&lt;textarea&gt;"
-  },
+    },
     {
       "id": 28,
       "question": "What is the purpose of the 'placeholder' attribute in the &lt;input&gt; tag?",
@@ -315,12 +250,7 @@
     {
       "id": 29,
       "question": "Which HTML tag is used to define an unordered list?",
-      "options": [
-        "&lt;ul&gt;",
-        "&lt;ol&gt;",
-        "&lt;list&gt;",
-        "&lt;ulist&gt;"
-      ],
+      "options": ["&lt;ul&gt;", "&lt;ol&gt;", "&lt;list&gt;", "&lt;ulist&gt;"],
       "answer": "&lt;ul&gt;"
     },
     {

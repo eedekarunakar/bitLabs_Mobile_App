@@ -1,7 +1,12 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
-import PropTypes from 'prop-types'; // Import prop-types
-const NewsPaperOutline = ({ width = 24, height = 24, color = 'currentColor', strokeWidth = 1.5 }) => {
+import React from "react";
+import Svg, { Path } from "react-native-svg";
+import PropTypes from "prop-types"; // Import prop-types
+const NewsPaperOutline = ({
+  width = 24,
+  height = 24,
+  color = "currentColor",
+  strokeWidth = 1.5,
+}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +37,7 @@ NewsPaperOutline.propTypes = {
 NewsPaperOutline.defaultProps = {
   width: 24,
   height: 24,
-  color: 'currentColor',
+  color: "currentColor",
   strokeWidth: 1.5,
 };
 export default NewsPaperOutline;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { G, Path } from "react-native-svg";
-const tick = (props) => (
+const tick = props => (
   <Svg
     width={17}
     height={16}

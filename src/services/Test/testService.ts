@@ -1,16 +1,21 @@
 import apiClient from "../login/ApiClient";
 
-export const submitTestResult = async (userId: number, testDetails: object, jwtToken: string | null) => {
+export const submitTestResult = async (
+  userId: number,
+  testDetails: object,
+  jwtToken: string | null,
+) => {
   try {
-    const response = await apiClient.post(`/applicant1/saveTest/${userId}`, JSON.stringify(testDetails));
-    if(response.status===200){
-
-        return {status:true} 
+    const response = await apiClient.post(
+      `/applicant1/saveTest/${userId}`,
+      JSON.stringify(testDetails),
+    );
+    if (response.status === 200) {
+      return { status: true };
     }
-    return response.data; 
+    return response.data;
   } catch (error) {
-    console.error('Error submitting test result:', error);
-    throw error; 
+    console.error("Error submitting test result:", error);
+    throw error;
   }
 };
-

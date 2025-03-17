@@ -1,15 +1,24 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/Model';
-import Navbar from '@components/styles/Head';
-import ActionButtons from '@components/styles/ActionButton';
-import { useForgotPasswordViewModal } from '@viewmodel/ForgotPasswordViewModal';
+import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "@models/Model";
+import Navbar from "@components/styles/Head";
+import ActionButtons from "@components/styles/ActionButton";
+import { useForgotPasswordViewModal } from "@viewmodel/ForgotPasswordViewModal";
 const ForgotPassword = () => {
   const {
     email,
-     setEmail,
+    setEmail,
     errors,
     otp,
     setOtp,
@@ -28,16 +37,20 @@ const ForgotPassword = () => {
     isPasswordVisible,
     setIsPasswordVisible,
     isResetPasswordVisible,
-    setIsResetPasswordVisible
+    setIsResetPasswordVisible,
   } = useForgotPasswordViewModal();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
       <View style={styles.container}>
-        <Navbar title="Forgot Password" onBackPress={() => navigation.navigate('LandingPage')} />
+        <Navbar title="Forgot Password" onBackPress={() => navigation.navigate("LandingPage")} />
         <TextInput
           style={styles.input}
-          placeholder="Email" placeholderTextColor="#B1B1B1"
+          placeholder="Email"
+          placeholderTextColor="#B1B1B1"
           value={email}
           onChangeText={setEmail}
           editable={!isOtpVerified}
@@ -48,10 +61,13 @@ const ForgotPassword = () => {
             <View style={styles.form}>
               <View style={styles.passwordContainer}>
                 <TextInput
-                  placeholder="New Password" placeholderTextColor="#B1B1B1"
+                  placeholder="New Password"
+                  placeholderTextColor="#B1B1B1"
                   style={styles.passwordInput}
                   secureTextEntry={!isPasswordVisible}
-                  onBlur={() => { setIsPasswordVisible(false) }}
+                  onBlur={() => {
+                    setIsPasswordVisible(false);
+                  }}
                   value={newPassword}
                   onChangeText={setNewPassword}
                 />
@@ -59,30 +75,35 @@ const ForgotPassword = () => {
                   <Image
                     source={
                       isPasswordVisible
-                        ? require('../../assests/LandingPage/openeye.png')
-                        : require('../../assests/LandingPage/closedeye.png')
+                        ? require("../../assests/LandingPage/openeye.png")
+                        : require("../../assests/LandingPage/closedeye.png")
                     }
                     style={styles.eyeImage}
                   />
                 </TouchableOpacity>
               </View>
- 
+
               <View style={styles.passwordContainer}>
                 <TextInput
-                  placeholder="Confirm Password" placeholderTextColor="#B1B1B1"
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#B1B1B1"
                   style={styles.passwordInput}
                   secureTextEntry={!isResetPasswordVisible}
                   value={confirmPassword}
-                  onBlur={() => { setIsResetPasswordVisible(false) }}
+                  onBlur={() => {
+                    setIsResetPasswordVisible(false);
+                  }}
                   onChangeText={setConfirmPassword}
                 />
- 
-                <TouchableOpacity onPress={() => setIsResetPasswordVisible(!isResetPasswordVisible)}>
+
+                <TouchableOpacity
+                  onPress={() => setIsResetPasswordVisible(!isResetPasswordVisible)}
+                >
                   <Image
                     source={
                       isResetPasswordVisible
-                        ? require('../../assests/LandingPage/openeye.png')
-                        : require('../../assests/LandingPage/closedeye.png')
+                        ? require("../../assests/LandingPage/openeye.png")
+                        : require("../../assests/LandingPage/closedeye.png")
                     }
                     style={styles.eyeImage}
                   />
@@ -90,12 +111,12 @@ const ForgotPassword = () => {
               </View>
               {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
             </View>
- 
           ) : (
             <View style={styles.form}>
               <TextInput
                 style={styles.input}
-                placeholder="Enter OTP" placeholderTextColor="#B1B1B1"
+                placeholder="Enter OTP"
+                placeholderTextColor="#B1B1B1"
                 value={otp}
                 onChangeText={setOtp}
               />
@@ -104,149 +125,144 @@ const ForgotPassword = () => {
                 {isOtpExpired && (
                   <TouchableOpacity onPress={sendOTP}>
                     <Text style={styles.resendText}>Resend OTP</Text>
-                  </TouchableOpacity>)}
+                  </TouchableOpacity>
+                )}
               </View>
-              {otpReceived && !isOtpExpired &&
+              {otpReceived && !isOtpExpired && (
                 <Text style={styles.timerText}>Please verify OTP within {timer} seconds</Text>
-              }
+              )}
             </View>
           )
         ) : null}
         <ActionButtons
           onPressAction={otpReceived ? (isOtpVerified ? resetUserPassword : verifyOTP) : sendOTP}
-          actionTitle={otpReceived ? (isOtpVerified ? 'Save' : 'Verify OTP') : 'Send OTP'}
+          actionTitle={otpReceived ? (isOtpVerified ? "Save" : "Verify OTP") : "Send OTP"}
         />
- 
       </View>
-    </KeyboardAvoidingView >
+    </KeyboardAvoidingView>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   separator: {
     height: 1,
-    backgroundColor: '#D3D3D3',
-    width: '100%',
+    backgroundColor: "#D3D3D3",
+    width: "100%",
     marginTop: 8,
   },
   logo: {
     width: 120,
     height: 40,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     left: 15,
   },
   navbar: {
     height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     marginBottom: 16,
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   headerContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
     height: 50,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   title: {
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 16,
-    color: '#495057',
+    color: "#495057",
     lineHeight: 25,
     marginLeft: 50,
   },
   input: {
     height: 50,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     marginTop: 20,
     paddingHorizontal: 10,
     borderRadius: 5,
-    width: '95%',
-    alignSelf: 'center',
-    fontFamily: 'PlusJakartaSans-Medium',
+    width: "95%",
+    alignSelf: "center",
+    fontFamily: "PlusJakartaSans-Medium",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
-    textAlign: 'center',
- 
-    fontFamily: 'PlusJakartaSans-Medium',
- 
+    textAlign: "center",
+
+    fontFamily: "PlusJakartaSans-Medium",
+
     fontSize: 12,
- 
   },
   otpContainer: {
     top: -4,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     marginVertical: 10,
-    width: '95%',
+    width: "95%",
   },
   timerText: {
-    color: 'red',
-    alignSelf: 'center',
-    fontFamily: 'PlusJakartaSans-Medium',
+    color: "red",
+    alignSelf: "center",
+    fontFamily: "PlusJakartaSans-Medium",
   },
   resendText: {
-    color: '#74A2FA',
-    fontFamily: 'PlusJakartaSans-Bold',
+    color: "#74A2FA",
+    fontFamily: "PlusJakartaSans-Bold",
   },
- 
+
   button: {
     height: 50,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
     marginHorizontal: 8,
-    width: '50%' // Add consistent spacing
+    width: "50%", // Add consistent spacing
   },
- 
+
   form: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginTop: 16,
   },
   passwordContainer: {
- 
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#ccc',
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "#ccc",
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
-    width: '95%',
-    alignSelf: 'center',
+    width: "95%",
+    alignSelf: "center",
   },
   passwordInput: {
     flex: 1,
     height: 40,
-    color: 'black',
-    fontFamily: 'PlusJakartaSans-Medium',
- 
+    color: "black",
+    fontFamily: "PlusJakartaSans-Medium",
   },
   eyeImage: {
     height: 20,
     width: 20,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
- 
 });
- 
+
 export default ForgotPassword;
- 

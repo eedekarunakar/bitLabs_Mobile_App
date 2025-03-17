@@ -1,8 +1,8 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
-import PropTypes from 'prop-types'; // Import prop-types
+import React from "react";
+import Svg, { Path } from "react-native-svg";
+import PropTypes from "prop-types"; // Import prop-types
 
-const BriefcaseOutline = ({ width = 24, height = 24, color = 'currentColor' }) => {
+const BriefcaseOutline = ({ width = 24, height = 24, color = "currentColor" }) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@ BriefcaseOutline.propTypes = {
 BriefcaseOutline.defaultProps = {
   width: 24,
   height: 24,
-  color: 'currentColor',
+  color: "currentColor",
 };
 
 export default BriefcaseOutline;

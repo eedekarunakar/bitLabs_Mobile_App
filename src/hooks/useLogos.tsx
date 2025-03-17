@@ -9,7 +9,7 @@ export const useLogos = (jobs: JobData[], token: string) => {
   useEffect(() => {
     const fetchLogos = async () => {
       if (jobs.length > 0) {
-        const logoPromises = jobs.map(async (job) => {
+        const logoPromises = jobs.map(async job => {
           if (job.recruiterId) {
             try {
               const logo = await fetchCompanyLogo(Number(job.recruiterId), token);

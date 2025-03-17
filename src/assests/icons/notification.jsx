@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-const Notification = (props) => (
+const Notification = props => (
   <Svg
     width={16}
     height={20}

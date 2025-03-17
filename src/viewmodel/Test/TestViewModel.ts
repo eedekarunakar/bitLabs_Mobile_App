@@ -1,25 +1,27 @@
 // TestViewModel.ts
-import { useState } from 'react';
-import { submitTestResult } from '@services/Test/testService'; // Import the service
-import { TestDetails } from '@models/Model'; // Assuming you have a model for test details
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '@models/model'; // Define your stack param list
+import { useState } from "react";
+import { submitTestResult } from "@services/Test/testService"; // Import the service
+import { TestDetails } from "@models/Model"; // Assuming you have a model for test details
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "@models/model"; // Define your stack param list
 // Type the navigation object with your stack's params
 
-export const useTestViewModel = (userId: number | any, jwtToken: string | null, testName: string) => {
+export const useTestViewModel = (
+  userId: number | any,
+  jwtToken: string | null,
+  testName: string,
+) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isTestComplete, setIsTestComplete] = useState(false);
   const [showEarlySubmissionModal, setShowEarlySubmissionModal] = useState(false);
   const [showTimeUpModal, setShowTimeUpModal] = useState(false);
 
-
-
   const submitTest = async (finalScore: number, isEarlySubmission: boolean) => {
     const testStatus = isEarlySubmission
-      ? 'F' // Early submission fails by default
+      ? "F" // Early submission fails by default
       : finalScore >= 70
-        ? 'P' // Pass if score >= 70
-        : 'F'; // Fail otherwise 
+      ? "P" // Pass if score >= 70
+      : "F"; // Fail otherwise
     const testDetails: TestDetails = {
       testName: testName,
       testScore: isEarlySubmission ? 0 : finalScore,
@@ -28,33 +30,29 @@ export const useTestViewModel = (userId: number | any, jwtToken: string | null, 
       applicant: { id: userId },
     };
 
-    
     try {
       const response = await submitTestResult(userId, testDetails, jwtToken);
-      
 
       if (response.status) {
         // Handle success
         setIsTestComplete(true);
-        
-        if (finalScore >= 70) {
-          
 
-          if (testName === 'General Aptitude Test' )  {
-            navigation.navigate('passContent', { finalScore,testName });
-          } else if (testName === 'Technical Test') {
+        if (finalScore >= 70) {
+          if (testName === "General Aptitude Test") {
+            navigation.navigate("passContent", { finalScore, testName });
+          } else if (testName === "Technical Test") {
             // Assuming the bottom tab is part of the navigation stack
-            navigation.navigate('passContent', { finalScore,testName }); // Adjust the tab name as needed
+            navigation.navigate("passContent", { finalScore, testName }); // Adjust the tab name as needed
           }
         } else {
-          navigation.navigate('FailContent');
+          navigation.navigate("FailContent");
         }
       } else {
         // Handle fail case
-        console.error('Error during test submission:');
+        console.error("Error during test submission:");
       }
     } catch (error) {
-      console.error('Error during test submission:', error);
+      console.error("Error during test submission:", error);
     }
   };
 
@@ -66,6 +64,5 @@ export const useTestViewModel = (userId: number | any, jwtToken: string | null, 
     submitTest,
     showTimeUpModal,
     setShowTimeUpModal,
-
   };
 };

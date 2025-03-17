@@ -1,6 +1,5 @@
-
-import React, { ReactNode, useEffect, useState } from 'react';
-import { Animated, View, Text, StyleSheet, ViewProps } from 'react-native';
+import React, { ReactNode, useEffect, useState } from "react";
+import { Animated, View, Text, StyleSheet, ViewProps } from "react-native";
 
 interface CustomSemiCircleProgressProps {
   children?: ReactNode;
@@ -33,10 +32,10 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
   exteriorCircleStyle = {},
   interiorCircleStyle = {},
 }) => {
-  const rotationAnimation = new Animated.Value(initialPercentage);
-
+  const [rotationAnimation, setRotationAnimation] = useState(new Animated.Value(initialPercentage));
 
   useEffect(() => {
+    //console.log("Current percentage:", percentage);
     animate();
   }, [percentage]);
 
@@ -60,13 +59,12 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
         height: circleRadius,
         borderRadius: circleRadius,
         backgroundColor: progressShadowColor,
-        overflow:'hidden'
+        overflow: "hidden",
       },
       rotatingCircleWrap: {
         width: circleRadius * 2,
         height: circleRadius,
         top: circleRadius,
-
       },
       rotatingCircle: {
         width: circleRadius * 2.2,
@@ -76,8 +74,8 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
           inputRange: [0, 100],
           outputRange: ["#F46F16", progressColor], // Transition of color
         }) as any,
-        position:'absolute',
-        left:-circleRadius*0.2,
+        position: "absolute",
+        left: -circleRadius * 0.2,
         transform: [
           { translateY: -circleRadius / 2 },
           {
@@ -94,57 +92,33 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
         height: interiorCircleRadius,
         borderRadius: interiorCircleRadius,
         backgroundColor: interiorCircleColor,
-        top: progressWidth,  
+        top: progressWidth,
         justifyContent: "center",
         alignItems: "center",
       },
       percentageText: {
-        fontSize:22,
-        fontFamily: 'PlusJakartaSans-Bold',
-        color:"#F46F16",
-        top: '30%',
+        fontSize: 22,
+        fontFamily: "PlusJakartaSans-Bold",
+        color: "#F46F16",
+        top: "30%",
       },
-  
     });
   };
 
   const styles = getStyles();
   return (
-    <View
-      style={[
-        defaultStyles.exteriorCircle,
-        styles.exteriorCircle,
-        exteriorCircleStyle,
-      ]}
-    >
-      <View
-        style={[
-          defaultStyles.rotatingCircleWrap,
-          styles.rotatingCircleWrap,
-        ]}
-      >
-        <Animated.View
-          style={[
-            defaultStyles.rotatingCircle,
-            styles.rotatingCircle,
-          ]}
-        />
+    <View style={[defaultStyles.exteriorCircle, styles.exteriorCircle, exteriorCircleStyle]}>
+      <View style={[defaultStyles.rotatingCircleWrap, styles.rotatingCircleWrap]}>
+        <Animated.View style={[defaultStyles.rotatingCircle, styles.rotatingCircle]} />
       </View>
-      <View
-        style={[
-          defaultStyles.interiorCircle,
-          styles.interiorCircle,
-          interiorCircleStyle,
-        ]}
-      >
-        <View style={{flex:1}}>
-        <Text style={styles.percentageText}>
-          {percentage}
-         <Text style={{fontSize:16,  fontFamily: 'PlusJakartaSans-Medium',}}>%</Text> 
-        </Text>
+      <View style={[defaultStyles.interiorCircle, styles.interiorCircle, interiorCircleStyle]}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.percentageText}>
+            {percentage}
+            <Text style={{ fontSize: 16, fontFamily: "PlusJakartaSans-Medium" }}>%</Text>
+          </Text>
         </View>
         {children}
-        
       </View>
     </View>
   );
@@ -159,7 +133,7 @@ const defaultStyles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
     marginLeft: "30%",
-     paddingBottom: -5, 
+    paddingBottom: -5,
   },
   rotatingCircleWrap: {
     position: "absolute",

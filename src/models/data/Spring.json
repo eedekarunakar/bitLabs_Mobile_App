@@ -19,12 +19,7 @@
     {
       "id": 2,
       "question": "Which of the following is not a core module of the Spring Framework?",
-      "options": [
-        "Spring Core Container",
-        "Spring Data JPA",
-        "Spring AOP",
-        "Spring MVC"
-      ],
+      "options": ["Spring Core Container", "Spring Data JPA", "Spring AOP", "Spring MVC"],
       "answer": "Spring Data JPA",
       "difficulty": "moderate"
     },
@@ -55,12 +50,7 @@
     {
       "id": 5,
       "question": "Which XML tag is used to define a bean in Spring?",
-      "options": [
-        "<bean>",
-        "<component>",
-        "<service>",
-        "<repository>"
-      ],
+      "options": ["<bean>", "<component>", "<service>", "<repository>"],
       "answer": "<bean>",
       "difficulty": "moderate"
     },
