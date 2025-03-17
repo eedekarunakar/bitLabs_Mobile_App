@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
  
 interface NavbarProps {
   title: string;
@@ -9,7 +8,6 @@ interface NavbarProps {
 }
  
 const Navbar: React.FC<NavbarProps> = ({ title, onBackPress }) => {
-  const navigation = useNavigation();
  
   return (
     <View>

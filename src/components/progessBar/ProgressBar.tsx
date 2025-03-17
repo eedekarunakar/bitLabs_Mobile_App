@@ -8,7 +8,7 @@ type ProgressBarProps = {
 };
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ initialStep }) => {
-  const [currentStep, setCurrentStep] = useState(initialStep);
+  const currentStep = initialStep;
 
   const steps = [
     { id: 1, label: '  Personal   Info' },

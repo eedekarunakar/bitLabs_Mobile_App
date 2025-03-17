@@ -25,10 +25,6 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
   animationSpeed = 2,
   initialPercentage = 0,
   percentage = 90,
-  skillProgressText='hi',
-  minValue,
-  maxValue,
-  currentValue,
   circleRadius = 60,
   progressShadowColor = "#F46F1666",
   progressColor = "#F46F16",
@@ -37,9 +33,8 @@ const CustomSemiCircleProgress: React.FC<CustomSemiCircleProgressProps> = ({
   exteriorCircleStyle = {},
   interiorCircleStyle = {},
 }) => {
-  const [rotationAnimation, setRotationAnimation] = useState(
-    new Animated.Value(initialPercentage)
-  );
+  const rotationAnimation = new Animated.Value(initialPercentage);
+
 
   useEffect(() => {
     animate();

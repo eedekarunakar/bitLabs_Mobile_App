@@ -19,7 +19,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authData, setAuthData] = useState<{ token: string; id: number; email: string } | null>(null);
-  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [LogoutModalVisible, setLogoutModalVisible] = useState(false);
   useEffect(()=>{
     setLogoutHandler(handleLogout);
   },[])
@@ -110,7 +110,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     <AuthContext.Provider value={{ isAuthenticated, authData, login,Glogin, logout: showLogoutModal , }}>
       {children}
       <LogoutModal
-        visible={isLogoutModalVisible}
+        visible={LogoutModalVisible}
         onCancel={hideLogoutModal}
         onConfirm={handleLogout}
       />

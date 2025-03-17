@@ -1,9 +1,7 @@
 import React from 'react';
-import { BaseToast, ToastConfig } from 'react-native-toast-message';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Dimensions } from 'react-native';
-import Toast from 'react-native-toast-message';
+import Toast ,{ BaseToast, ToastConfig}from 'react-native-toast-message';
 
 const { width } = Dimensions.get('window');
 
