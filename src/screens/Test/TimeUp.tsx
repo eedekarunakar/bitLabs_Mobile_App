@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, BackHandler } from 'react-native';
+import { View, Text, Image, StyleSheet,  BackHandler } from 'react-native';
 import GradientButton from '@components/styles/GradientButton';
 import { useTestViewModel } from '@viewmodel/Test/TestViewModel';  // Adjust the import path based on your project structure
 import { useAuth } from '@context/Authcontext';  // Adjust the import path for your auth hook

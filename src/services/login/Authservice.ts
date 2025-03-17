@@ -1,5 +1,4 @@
 import axios  from 'axios';
-import * as CryptoJS from 'crypto-js';
 import apiClient from './ApiClient';
 import encryptPassword from './EncryptionService';
 import {SECRET_KEY} from '@env';

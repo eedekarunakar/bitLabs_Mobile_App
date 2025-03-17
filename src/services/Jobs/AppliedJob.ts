@@ -1,7 +1,6 @@
 // /src/Services/JobService.ts
 // import axios from 'axios';
-import { JobData } from '@models/Model';
-import { JobCounts } from '@models/Model';
+import { JobData ,JobCounts} from '@models/Model';
 import apiClient from '../login/ApiClient';
 import { Buffer } from 'buffer';
 

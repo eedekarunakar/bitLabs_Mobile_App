@@ -1,34 +1,24 @@
 import { useState,useContext} from 'react';
 import UserContext from '@context/UserContext';
-
 import { ProfileModel } from '@services/step/stepServices';
-import { ToastAndroid } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { useNavigation } from '@react-navigation/native';
 import DocumentPicker, {
     DocumentPickerResponse,
   } from "react-native-document-picker";
-import { NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '@models/model';
 import ProfileService from '@services/profile/ProfileService';
-
-type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
 
 export const useStep3ViewModel = (userId: number |null, userToken: string|null, navigation: any, route: any) => {
   const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
   const [resumeText, setResumeText] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const errorMessage = '';
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
   const {setPersonalName,refreshJobCounts,refreshVerifiedStatus} = useContext(UserContext)
-const nav = useNavigation<navigation>();
-  const showToast = (message: string) => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
-  };
 
+  
   const toastmsg = (type1: 'success' | 'error', message: string) => {
     Toast.show({
       type: type1,
@@ -95,7 +85,7 @@ const nav = useNavigation<navigation>();
       }
 
       setResumeFile(selectedFile);
-      setResumeText(selectedFile.name || '');
+      setResumeText(selectedFile.name ?? '');
 
       setTimeout(() => {
         setLoading(true);
@@ -146,8 +136,6 @@ const nav = useNavigation<navigation>();
       const response = await ProfileService.uploadResume(userToken, userId, formData);
 
       if (response.success) {
-
-        //setResumeFile(response.fileName);
         toastmsg('success', 'Resume uploaded successfully!');
       } else {
         toastmsg('error', 'Error uploading resume. Please try again later.');

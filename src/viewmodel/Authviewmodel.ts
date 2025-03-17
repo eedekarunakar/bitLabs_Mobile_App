@@ -182,10 +182,7 @@ const useSignupViewModel = () => {
         otpManager.setTimer(60);
         otpManager.setIsOtpExpired(false);
         showToast('success', 'OTP sent successfully');
-        // otpManager.triggerNotification('OTP sent successfully','success');
-        
-        
-        // setTimeout(() => otpManager.setShowNotification(false), 3000);
+
       } else {
         setSignUpErrors({ userRegistered: result.message });
       }
@@ -199,14 +196,10 @@ const useSignupViewModel = () => {
       setRegistration(true);
       otpManager.setTimer(0);
       showToast('success','User Registered Succesfully')
-      // otpManager.triggerNotification('User registered successfully','success');
-      // setNotificationType('success');
-      // setShowNotification(true);
-      // setTimeout(() => setShowNotification(false), 3000);
     } else {
 
-      otpManager.setOtpValid(false);
-      setTimeout(() => otpManager.setOtpValid(true), 3000);
+      otpManager.setIsOtpValid(false);
+      setTimeout(() => otpManager.setIsOtpValid(true), 3000);
     }
   }catch(error){
     console.error('Error occurred:', error);

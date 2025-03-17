@@ -47,7 +47,7 @@ const JobDetails: React.FC = ({ route, navigation }: any) => {
         perfectMatchSkills={perfectMatchSkills}
         unmatchedSkills={unmatchedSkills}
         suggestedCourses={suggestedCourses}
-        companyLogo={companyLogo || undefined}
+        companyLogo={companyLogo ?? undefined}
       />
 
       <View style={{ height: 20 }} />

@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios';
-import * as CryptoJS from 'crypto-js';
 import * as Keychain from 'react-native-keychain';
 import { showToast } from './ToastService';
 import apiClient from './ApiClient';

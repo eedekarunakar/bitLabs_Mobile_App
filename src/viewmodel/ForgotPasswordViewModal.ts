@@ -1,8 +1,6 @@
 import { useState , useEffect } from "react";
-import { ForgotErrors } from "@models/Model";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList
- } from "@models/Model";
+import { RootStackParamList,ForgotErrors} from "@models/Model";
  import { StackNavigationProp } from "@react-navigation/stack";
  import useOtpManager from "../hooks/useOtpManager";
  import { showToast } from "../services/login/ToastService";
@@ -11,8 +9,8 @@ import { RootStackParamList
 export const useForgotPasswordViewModal =()=>{
     const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<ForgotErrors>({});
-  const { otp, setOtp, otpReceived, setOtpReceived, isOtpExpired, setIsOtpExpired, timer, setTimer, isOtpValid, setOtpValid } = useOtpManager();
-  const [isOtpVerified, setOtpVerified] = useState(false);
+  const { otp, setOtp, otpReceived, setOtpReceived, isOtpExpired, setIsOtpExpired, timer, setTimer, isOtpValid, setIsOtpValid } = useOtpManager();
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -69,11 +67,11 @@ export const useForgotPasswordViewModal =()=>{
   const verifyOTP = async () => {
     const result = await verifyOtp(otp, email);
     if (result.success) {
-      setOtpVerified(true);
+      setIsOtpVerified(true);
       showToast('success', 'OTP verified successfully');
     } else {
-      setOtpValid(false);
-      setTimeout(() => setOtpValid(true), 3000);
+      setIsOtpValid(false);
+      setTimeout(() => setIsOtpValid(true), 3000);
       
     }
   };
@@ -127,9 +125,9 @@ export const useForgotPasswordViewModal =()=>{
     timer,
     setTimer,
     isOtpValid,
-    setOtpValid,
+    setIsOtpValid,
     isOtpVerified,
-    setOtpVerified,
+    setIsOtpVerified,
     newPassword,
     setNewPassword,
     confirmPassword,

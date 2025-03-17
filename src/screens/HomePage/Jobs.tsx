@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/Model'; // Import navigation types
+import { RootStackParamList, JobData } from '@models/Model'; // Import navigation types
 import AppliedJobs from '../Jobs/AppliedJobs';
 import SavedJobs from '../Jobs/SavedJobs';
 import useRecommendedJobsViewModel from '@viewmodel/jobs/RecommendedJobs'; // Your ViewModel
-import { JobData } from '@models/Model'; // Your JobData interface
 import UserContext from '@context/UserContext';
 import { useAuth } from '@context/Authcontext';
 import JobCard from '../Jobs/Jobcard';
@@ -31,8 +30,7 @@ const RecommendedJobs = () => {
   const navigation = useNavigation<RecommendedJobsNavigationProp>();
   const [visibleJobsCount, setVisibleJobsCount] = useState(10); // Number of jobs to display initially
   const { isJobsLoaded, setIsJobsLoaded } = useContext(UserContext);
-  const [isInitialLoad, setIsInitialLoad] = useState(isJobsLoaded);
-  const { userId, userToken } = useAuth();
+  const { userToken } = useAuth();
   
 
   const { logos, loading: logosLoading }: { logos: { [key: number]: string }, loading: boolean } = useLogos(jobs, userToken ?? '');

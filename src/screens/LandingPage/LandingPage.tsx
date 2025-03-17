@@ -59,7 +59,7 @@ const LandingPage = () => {
  
     const [activeButton, setActiveButton] = useState('login');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [IsSignupPasswordVisible, SetIsSignupPasswordVisible] = useState(false);
+    const [isSignupPasswordVisible, SetIsSignupPasswordVisible] = useState(false);
  
  
     const handleChange = (field: 'name' | 'email' | 'whatsappnumber' | 'password', text: string) => {
@@ -211,11 +211,11 @@ const LandingPage = () => {
                                 <TextInput placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1" style={styles.input} keyboardType='numeric' maxLength={10} value={signupNumber} onChangeText={(text: string) => { setSignupNumber(text.replace(/\D/g, '')); handleChange('whatsappnumber', text) }} allowFontScaling={false} />
                                 {signUpErrors.whatsappnumber && <Text style={styles.errorText}>{signUpErrors.whatsappnumber}</Text>}
                                 <View style={styles.passwordContainer}>
-                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!IsSignupPasswordVisible} value={signupPassword} onChangeText={(text) => { setSignupPassword; handleChange('password', text) }} onBlur={() => { SetIsSignupPasswordVisible(false) }} allowFontScaling={false} />
+                                    <TextInput placeholder="Password" placeholderTextColor="#B1B1B1" style={styles.input} secureTextEntry={!isSignupPasswordVisible} value={signupPassword} onChangeText={(text) => { setSignupPassword; handleChange('password', text) }} onBlur={() => { SetIsSignupPasswordVisible(false) }} allowFontScaling={false} />
  
-                                    <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!IsSignupPasswordVisible)}>
+                                    <TouchableOpacity onPress={() => SetIsSignupPasswordVisible(!isSignupPasswordVisible)}>
  
-                                        <Image source={IsSignupPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
+                                        <Image source={isSignupPasswordVisible ? require('../../assests/LandingPage/openeye.png') : require('../../assests/LandingPage/closedeye.png')} style={styles.eyeContainer} />
  
                                     </TouchableOpacity>
                                 </View>

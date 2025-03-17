@@ -31,7 +31,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     whatsappNumber: '',
   });
  
-  const [loading, setLoading] = useState(true);
+
  
   useEffect(() => {
     // Fetch mobile number from API
@@ -40,7 +40,6 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       if (mobileNumber) {
         setFormData((prev) => ({ ...prev, whatsappNumber: mobileNumber }));
       }
-      setLoading(false); // Mark API call as complete
     };
  
  

@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { FlatList, ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useCallback, useContext} from 'react';
+import { FlatList, ActivityIndicator, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSavedJobs } from '@services/Jobs/SavedJob';
-import { JobData } from '@models/Model';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@models/Model';
+import { RootStackParamList,JobData } from '@models/Model';
 import UserContext from '@context/UserContext';
 import { useAuth } from '@context/Authcontext';
 import JobCard from './Jobcard';
@@ -16,7 +15,7 @@ const SavedJobs = () => {
   const { jobCounts } = useContext(UserContext);
   
   const count = jobCounts?.savedJobs ?? 300;
-  const { userId, userToken } = useAuth();
+  const { userToken } = useAuth();
 
   useFocusEffect(
     useCallback(() => {

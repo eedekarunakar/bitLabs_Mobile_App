@@ -44,7 +44,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ route, navigation }) => {
         perfectMatchSkills={perfectMatchSkills}
         unmatchedSkills={unmatchedSkills}
         suggestedCourses={suggestedCourses}
-        companyLogo={companyLogo || undefined}
+        companyLogo={companyLogo ?? undefined}
       />
 
 <View style={styles.footerContainer}>

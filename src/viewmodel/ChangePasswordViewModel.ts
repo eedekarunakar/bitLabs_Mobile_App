@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { changePassword, checkPasswordsMatch, encryptPassword } from '@services/login/ChangePasswordService';
-import Toast from 'react-native-toast-message';
+import { changePassword } from '@services/login/ChangePasswordService';
 import { showToast } from '@services/login/ToastService';
 
 export const useChangePasswordViewModel = (userToken: string, userId: string) => {
@@ -87,7 +86,7 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
       return;
     }
 
-    await changePassword(oldPassword, newPassword, userToken, userId, setMessage);
+    await changePassword(oldPassword, newPassword, userToken, userId);
   };
 
   return {

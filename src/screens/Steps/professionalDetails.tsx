@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -136,10 +136,9 @@ interface FormData {
   preferredLocation: string[];
 }
 
-const {height,width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 const Dummystep2: React.FC = ({route, navigation}: any) => {
-  const qual = route.params?.formData?.skills ?? '';
-
+ 
   const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState<FormData>({
     qualification: route.params?.formData?.qualification || '',
@@ -405,7 +404,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
             value={formData.experience}
             keyboardType="numeric" // Ensure only numeric input
             onChangeText={text => {
-              const numericValue = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+              const numericValue = text.replace(/[\D]/g, ''); // Remove non-numeric characters
               setFormData(prev => ({...prev, experience: numericValue}));
               if (numericValue) {
           setErrors(prev => ({...prev, experience: ''})); // Clear the error if input is valid

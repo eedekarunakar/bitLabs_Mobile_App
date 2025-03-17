@@ -61,6 +61,7 @@ const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
     sugesstedCourses: apiResponse.body.sugesstedCourses ?? [],
     matchedSkills :apiResponse.body.matchedSkills ?? [],
     applyJobId: apply ?? 0,
+    recruiterId: apiResponse.body.recruiterId ?? 0,
   };
 };
 

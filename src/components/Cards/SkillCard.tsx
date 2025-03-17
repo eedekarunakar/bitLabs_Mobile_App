@@ -84,7 +84,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
           disabled={disabled}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {status === 'PASSED' ? (
-              <View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon name="check" size={19} color="white" style={{ marginRight: 5 }} />
                 <Text style={styles.verifiedText}>Verified</Text>
                 </View>

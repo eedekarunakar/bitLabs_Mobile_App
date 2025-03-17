@@ -65,7 +65,6 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
                   : [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE];
               for (const permission of permissions) {
                   const status = await PermissionsAndroid.check(permission);
-                  //console.log(`Permission ${permission}:`, status ? 'GRANTED' : 'DENIED');
               }
               const grantedStatuses = await Promise.all(
                   permissions.map((permission) => PermissionsAndroid.check(permission))
@@ -80,7 +79,6 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
               }
               return true;
           }
-          // return true; // For iOS or platforms other than Android
     
       };
       const validatePhoto = (photoFile: any) => {
