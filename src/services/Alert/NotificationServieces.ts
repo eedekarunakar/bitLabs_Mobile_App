@@ -1,5 +1,5 @@
-import { JobData } from '@models/Model';
-import apiClient from '../login/ApiClient';
+import { JobData } from "@models/Model";
+import apiClient from "../login/ApiClient";
 
 export interface JobAlert {
   alertsId: string;
@@ -7,42 +7,39 @@ export interface JobAlert {
   companyName: string;
   jobTitle: string;
   changeDate: number[];
-  applyJob: { applyjobid:number ,job:{id:number|null},jobTitle: string };
+  applyJob: { applyjobid: number; job: { id: number | null }; jobTitle: string };
   seen: boolean;
 }
 
-export const fetchJobAlerts = async (userId: number|null, userToken: string|null): Promise<JobAlert[]> => {
+export const fetchJobAlerts = async (
+  userId: number | null,
+  userToken: string | null,
+): Promise<JobAlert[]> => {
   try {
-    const response = await apiClient.get(`/applyjob/applicant/job-alerts/${userId}`, {
-    });
+    const response = await apiClient.get(`/applyjob/applicant/job-alerts/${userId}`, {});
     return response.data;
   } catch (error) {
-    console.error('Error fetching job alerts:', error);
+    console.error("Error fetching job alerts:", error);
     throw error;
   }
 };
 
-export const markAlertAsSeen = async (alertId: string, userToken: string|null): Promise<void> => {
+export const markAlertAsSeen = async (alertId: string, userToken: string | null): Promise<void> => {
   try {
-    await apiClient.put(
-      `/applyjob/applicant/mark-alert-as-seen/${alertId}`,
-      {},
-      
-    );
+    await apiClient.put(`/applyjob/applicant/mark-alert-as-seen/${alertId}`, {});
   } catch (error) {
-    console.error('Error marking alert as seen:', error);
+    console.error("Error marking alert as seen:", error);
     throw error;
   }
 };
 
-
-const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
+const mapJobData = (apiResponse: any, id: number | null, apply: number): JobData => {
   return {
     id: id ?? 0, // Default to 0 if null
-    companyname: apiResponse.body.companyname ?? '',
-    jobTitle: apiResponse.body.jobTitle ?? '',
-    location: apiResponse.body.location ?? '',
-    employeeType: apiResponse.body.employeeType ?? '',
+    companyname: apiResponse.body.companyname ?? "",
+    jobTitle: apiResponse.body.jobTitle ?? "",
+    location: apiResponse.body.location ?? "",
+    employeeType: apiResponse.body.employeeType ?? "",
     minimumExperience: apiResponse.body.minimumExperience ?? 0,
     maximumExperience: apiResponse.body.maximumExperience ?? 0,
     minSalary: apiResponse.body.minSalary ?? 0,
@@ -50,32 +47,33 @@ const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
     creationDate: apiResponse.body.creationDate ?? [2024, 1, 1], // Default to a valid date if null
     skillsRequired: apiResponse.body.skillsRequired
       ? apiResponse.body.skillsRequired.map((skill: any) => ({
-          skillName: skill ?? '',
+          skillName: skill ?? "",
         }))
       : [], // Default to an empty array if no skills required
-    jobStatus: apiResponse.body.jobStatus ?? '',
+    jobStatus: apiResponse.body.jobStatus ?? "",
     logoFile: apiResponse.body.logoFile ?? null,
-    description: apiResponse.body.description ?? '',
-    matchPercentage: apiResponse.body.matchPercentage ?? '',
-    matchStatus: apiResponse.body.matchStatus ?? '',
+    description: apiResponse.body.description ?? "",
+    matchPercentage: apiResponse.body.matchPercentage ?? "",
+    matchStatus: apiResponse.body.matchStatus ?? "",
     sugesstedCourses: apiResponse.body.sugesstedCourses ?? [],
-    matchedSkills :apiResponse.body.matchedSkills ?? [],
+    matchedSkills: apiResponse.body.matchedSkills ?? [],
     applyJobId: apply ?? 0,
     recruiterId: apiResponse.body.recruiterId ?? 0,
   };
 };
 
-export const fetchJobDetails = async (jobId: number|null, userToken: string | null,apply:number) => {
+export const fetchJobDetails = async (
+  jobId: number | null,
+  userToken: string | null,
+  apply: number,
+) => {
   try {
-    const response = await apiClient.get(
-      `/viewjob/applicant/viewjob/${jobId}`,
-    );
-      const jobData = mapJobData(response.data,jobId,apply);
+    const response = await apiClient.get(`/viewjob/applicant/viewjob/${jobId}`);
+    const jobData = mapJobData(response.data, jobId, apply);
 
     return jobData;
-    
   } catch (error) {
-    console.error('Error fetching job details:', error);
+    console.error("Error fetching job details:", error);
     throw error;
   }
 };

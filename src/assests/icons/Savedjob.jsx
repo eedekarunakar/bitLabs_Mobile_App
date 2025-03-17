@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { G, Path } from "react-native-svg";
-const Savedjob = (props) => (
+const Savedjob = props => (
   <Svg
     width={17}
     height={16}

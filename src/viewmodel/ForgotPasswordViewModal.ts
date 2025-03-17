@@ -1,18 +1,29 @@
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList,ForgotErrors} from "@models/Model";
- import { StackNavigationProp } from "@react-navigation/stack";
- import useOtpManager from "../hooks/useOtpManager";
- import { showToast } from "../services/login/ToastService";
- import { sendOtp,verifyOtp,resetPassword } from "../services/login/ForgotPasswordService";
+import { RootStackParamList, ForgotErrors } from "@models/Model";
+import { StackNavigationProp } from "@react-navigation/stack";
+import useOtpManager from "../hooks/useOtpManager";
+import { showToast } from "../services/login/ToastService";
+import { sendOtp, verifyOtp, resetPassword } from "../services/login/ForgotPasswordService";
 
-export const useForgotPasswordViewModal =()=>{
-    const [email, setEmail] = useState('');
+export const useForgotPasswordViewModal = () => {
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<ForgotErrors>({});
-  const { otp, setOtp, otpReceived, setOtpReceived, isOtpExpired, setIsOtpExpired, timer, setTimer, isOtpValid, setIsOtpValid } = useOtpManager();
+  const {
+    otp,
+    setOtp,
+    otpReceived,
+    setOtpReceived,
+    isOtpExpired,
+    setIsOtpExpired,
+    timer,
+    setTimer,
+    isOtpValid,
+    setIsOtpValid,
+  } = useOtpManager();
   const [isOtpVerified, setIsOtpVerified] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isResetPasswordVisible, setIsResetPasswordVisible] = useState(false);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -31,18 +42,16 @@ export const useForgotPasswordViewModal =()=>{
     }
   }, [otpReceived, timer, isOtpExpired, setTimer, setIsOtpExpired]);
 
-  useEffect(() => {
-
-  }, [errors]);
+  useEffect(() => {}, [errors]);
 
   const isValidEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      setErrors((prevErrors) => ({ ...prevErrors, email: 'E-mail is required' }));
+      setErrors(prevErrors => ({ ...prevErrors, email: "E-mail is required" }));
     } else if (!regex.test(email)) {
-      setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid E-mail' }));
+      setErrors(prevErrors => ({ ...prevErrors, email: "Invalid E-mail" }));
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+      setErrors(prevErrors => ({ ...prevErrors, email: undefined }));
     }
     return regex.test(email);
   };
@@ -54,13 +63,13 @@ export const useForgotPasswordViewModal =()=>{
         setOtpReceived(true);
         setTimer(60);
         setIsOtpExpired(false);
-        showToast('success', 'OTP sent successfully');
+        showToast("success", "OTP sent successfully");
       } else {
-        setErrors((prevErrors) => ({ ...prevErrors, email: result.message }));
-        showToast('error', 'Error sending OTP');
+        setErrors(prevErrors => ({ ...prevErrors, email: result.message }));
+        showToast("error", "Error sending OTP");
       }
     } else {
-     console.log('Invalid ');
+      console.log("Invalid ");
     }
   };
 
@@ -68,11 +77,10 @@ export const useForgotPasswordViewModal =()=>{
     const result = await verifyOtp(otp, email);
     if (result.success) {
       setIsOtpVerified(true);
-      showToast('success', 'OTP verified successfully');
+      showToast("success", "OTP verified successfully");
     } else {
       setIsOtpValid(false);
       setTimeout(() => setIsOtpValid(true), 3000);
-      
     }
   };
 
@@ -80,21 +88,21 @@ export const useForgotPasswordViewModal =()=>{
     const newErrors: ForgotErrors = {}; // Create a new errors object
 
     if (!newPassword) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (newPassword.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
+      newErrors.password = "Password must be at least 6 characters long";
     } else if (!/[A-Z]/.test(newPassword)) {
-      newErrors.password = 'Password must contain at least one uppercase letter';
+      newErrors.password = "Password must contain at least one uppercase letter";
     } else if (!/[!@#$%^&*]/.test(newPassword)) {
-      newErrors.password = 'Password must contain at least one special character';
+      newErrors.password = "Password must contain at least one special character";
     } else if (!/\d/.test(newPassword)) {
-      newErrors.password = 'Password must contain at least one digit';
+      newErrors.password = "Password must contain at least one digit";
     } else if (/\s/.test(newPassword)) {
-      newErrors.password = 'Password cannot contain any spaces';
+      newErrors.password = "Password cannot contain any spaces";
     }
 
     if (newPassword !== confirmPassword) {
-      newErrors.password = 'Passwords do not match';
+      newErrors.password = "Passwords do not match";
     }
 
     setErrors(newErrors); // Update state with the new errors object
@@ -106,15 +114,15 @@ export const useForgotPasswordViewModal =()=>{
     if (validatePassword()) {
       const result = await resetPassword(email, newPassword, confirmPassword);
       if (result.success) {
-        navigation.navigate('LandingPage');
-        showToast('success', 'Password reset Successfully');
+        navigation.navigate("LandingPage");
+        showToast("success", "Password reset Successfully");
       } else {
-        showToast('error', 'Error resetting Password');
+        showToast("error", "Error resetting Password");
       }
     }
   };
 
-  return{
+  return {
     errors,
     otp,
     setOtp,
@@ -136,12 +144,10 @@ export const useForgotPasswordViewModal =()=>{
     verifyOTP,
     resetUserPassword,
     isPasswordVisible,
-     setIsPasswordVisible,
-     email, 
-     setEmail,
-     isResetPasswordVisible,
-     setIsResetPasswordVisible
-
-  }
-
-}
+    setIsPasswordVisible,
+    email,
+    setEmail,
+    isResetPasswordVisible,
+    setIsResetPasswordVisible,
+  };
+};

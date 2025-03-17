@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import SemiCircleProgress from '@components/progessBar/SemiCircularProgressBar'; // Adjust the import path as needed
-import Alertcircle from '@assests/icons/Alertcircle'; // Adjust the import path as needed
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import SemiCircleProgress from "@components/progessBar/SemiCircularProgressBar"; // Adjust the import path as needed
+import Alertcircle from "@assests/icons/Alertcircle"; // Adjust the import path as needed
 
 type SkillMatchProbabilityProps = {
   percent: number;
@@ -37,9 +37,19 @@ const SkillMatchProbability: React.FC<SkillMatchProbabilityProps> = ({
           </Text>
         ))}
         {unmatchedSkills.map((skill, index) => (
-          <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
-            <Alertcircle height={16} width={16} style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
-            <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
+          <View
+            key={`unmatched-${index}`}
+            style={[styles.unmatchedSkillContainer, { flexDirection: "row", alignItems: "center" }]}
+          >
+            <Alertcircle
+              height={16}
+              width={16}
+              style={[styles.unmatchedSkillIcon, { marginRight: 4 }]}
+            />
+            <Text style={[styles.unmatchedSkill]}>
+              {" "}
+              {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
+            </Text>
           </View>
         ))}
       </View>
@@ -49,7 +59,7 @@ const SkillMatchProbability: React.FC<SkillMatchProbabilityProps> = ({
 
 const styles = StyleSheet.create({
   jobCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
     margin: 12,
@@ -57,69 +67,67 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   jobdestitle: {
-    color: '#F46F16',
+    color: "#F46F16",
     fontSize: 16,
     marginBottom: 8,
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: "PlusJakartaSans-Bold",
   },
   message: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginBottom: 8,
-    fontFamily: 'PlusJakartaSans-Medium',
+    fontFamily: "PlusJakartaSans-Medium",
   },
   centeredView: {
-    justifyContent: 'center',
-    alignSelf: 'center',
+    justifyContent: "center",
+    alignSelf: "center",
     marginLeft: -11.5,
     //width:100,
     //alignItems:'center'
-    
   },
   centeredText: {
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 15,
     lineHeight: 35.27,
-    
 
-    color: '#000000',
+    color: "#000000",
   },
   skillsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   skillTag: {
     flex: 0,
-    backgroundColor: '#F46F16',
-    color: 'white',
+    backgroundColor: "#F46F16",
+    color: "white",
     padding: 3,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,
     fontSize: 14,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Medium',
+    textAlign: "center",
+    fontFamily: "PlusJakartaSans-Medium",
   },
   matchedSkills: {
-    color: '#fff',
-    backgroundColor: '#498C07',
+    color: "#fff",
+    backgroundColor: "#498C07",
     fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Medium',
+    fontFamily: "PlusJakartaSans-Medium",
   },
   unmatchedSkillContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#BF2308',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#BF2308",
     padding: 3,
     borderRadius: 10,
     marginRight: 8,
     marginBottom: 4,
   },
   unmatchedSkill: {
-    color: '#fff',
-    fontFamily: 'PlusJakartaSans-Bold',
+    color: "#fff",
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 12,
   },
   unmatchedSkillIcon: {

@@ -1,33 +1,35 @@
-import { useState,useContext} from 'react';
-import UserContext from '@context/UserContext';
-import { ProfileModel } from '@services/step/stepServices';
-import Toast from 'react-native-toast-message';
-import DocumentPicker, {
-    DocumentPickerResponse,
-  } from "react-native-document-picker";
-import ProfileService from '@services/profile/ProfileService';
+import { useState, useContext } from "react";
+import UserContext from "@context/UserContext";
+import { ProfileModel } from "@services/step/stepServices";
+import Toast from "react-native-toast-message";
+import DocumentPicker, { DocumentPickerResponse } from "react-native-document-picker";
+import ProfileService from "@services/profile/ProfileService";
 
-export const useStep3ViewModel = (userId: number |null, userToken: string|null, navigation: any, route: any) => {
+export const useStep3ViewModel = (
+  userId: number | null,
+  userToken: string | null,
+  navigation: any,
+  route: any,
+) => {
   const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
-  const [resumeText, setResumeText] = useState<string>('');
-  const errorMessage = '';
+  const [resumeText, setResumeText] = useState<string>("");
+  const errorMessage = "";
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
-  const {setPersonalName,refreshJobCounts,refreshVerifiedStatus} = useContext(UserContext)
+  const { setPersonalName, refreshJobCounts, refreshVerifiedStatus } = useContext(UserContext);
 
-  
-  const toastmsg = (type1: 'success' | 'error', message: string) => {
+  const toastmsg = (type1: "success" | "error", message: string) => {
     Toast.show({
       type: type1,
-      text1: '',
+      text1: "",
       text2: message,
-      position: 'bottom',
+      position: "bottom",
       visibilityTime: 5000,
       text2Style: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: "PlusJakartaSans-Medium",
         fontSize: 12,
       },
     });
@@ -46,21 +48,23 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
         qualification: route.params.qualification,
         specialization: route.params.specialization,
         preferredJobLocations: route.params.preferredJobLocations,
-        skillsRequired: route.params.skillsRequired.map((skill: any) => ({ skillName: skill.skillName })),
+        skillsRequired: route.params.skillsRequired.map((skill: any) => ({
+          skillName: skill.skillName,
+        })),
       };
- 
+
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
- 
+
       if (response) {
-        if(route ?.params ?.firstName){
-        setPersonalName(route.params.firstName)
+        if (route?.params?.firstName) {
+          setPersonalName(route.params.firstName);
         }
         refreshJobCounts();
         refreshVerifiedStatus();
-       navigation();
+        navigation();
       }
     } catch (error) {
-      console.error('Error creating profile:', error);
+      console.error("Error creating profile:", error);
     }
   };
 
@@ -79,13 +83,13 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
       const maxSize = 1048576;
 
       if (selectedFile.size && selectedFile.size > maxSize) {
-        toastmsg('error', 'File size exceeds the 1MB limit.');
+        toastmsg("error", "File size exceeds the 1MB limit.");
         setIsUploadComplete(false);
         return;
       }
 
       setResumeFile(selectedFile);
-      setResumeText(selectedFile.name ?? '');
+      setResumeText(selectedFile.name ?? "");
 
       setTimeout(() => {
         setLoading(true);
@@ -94,7 +98,7 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
         setbgcolor(false);
 
         const interval = setInterval(() => {
-          setProgress((prevProgress) => {
+          setProgress(prevProgress => {
             const newProgress = prevProgress + 0.5;
             if (newProgress >= 2) {
               clearInterval(interval);
@@ -107,10 +111,10 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
       }, 10);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        toastmsg('error', 'Upload cancelled.');
+        toastmsg("error", "Upload cancelled.");
         setIsUploadComplete(false);
       } else {
-        toastmsg('error', 'Error selecting file. Please try again.');
+        toastmsg("error", "Error selecting file. Please try again.");
       }
     }
   };
@@ -119,7 +123,7 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
     setResumeFile(null);
     setLoading(false);
     setProgress(0);
-    toastmsg('error', 'Upload cancelled.');
+    toastmsg("error", "Upload cancelled.");
     setShowBorder(false);
   };
 
@@ -127,7 +131,7 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
     if (resumeFile) {
       setbgcolor(false);
       const formData = new FormData();
-      formData.append('resume', {
+      formData.append("resume", {
         uri: resumeFile.uri,
         type: resumeFile.type,
         name: resumeFile.name,
@@ -136,9 +140,9 @@ export const useStep3ViewModel = (userId: number |null, userToken: string|null, 
       const response = await ProfileService.uploadResume(userToken, userId, formData);
 
       if (response.success) {
-        toastmsg('success', 'Resume uploaded successfully!');
+        toastmsg("success", "Resume uploaded successfully!");
       } else {
-        toastmsg('error', 'Error uploading resume. Please try again later.');
+        toastmsg("error", "Error uploading resume. Please try again later.");
       }
     } else {
       setbgcolor(true);

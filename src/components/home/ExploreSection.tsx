@@ -2,23 +2,25 @@ import React, { useContext } from "react";
 import { View, Text, Image, ScrollView, StyleSheet, Dimensions, Linking } from "react-native";
 import GradientButton from "../styles/GradientButton";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from '@models/Model';
+import { RootStackParamList } from "@models/Model";
 import UserContext from "../../context/UserContext";
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Badges'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Badges">;
 
 const ExploreSection = () => {
-  const { verifiedStatus } = useContext(UserContext)
+  const { verifiedStatus } = useContext(UserContext);
   const navigation = useNavigation<NavigationProp>();
-
 
   return (
     <View>
       <Text style={styles.textBelowCard}>Explore</Text>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={styles.scrollContainer}
+      >
         {/* Second Section - Larger Cards */}
         {/* <View style={styles.largeCard}>
           <Text style={styles.cardTitle}>
@@ -38,42 +40,52 @@ const ExploreSection = () => {
         </View> */}
         {!verifiedStatus && (
           <View style={styles.largeCard}>
-            <View style={{ borderColor: 'red', borderRadius: 10, borderWidth: 1.5, paddingHorizontal: 5, marginLeft: '80%' }}>
-              <Text style={{ fontFamily: "PlusJakartaSans-Medium", color: 'red', fontSize: 12 }}>New</Text>
+            <View
+              style={{
+                borderColor: "red",
+                borderRadius: 10,
+                borderWidth: 1.5,
+                paddingHorizontal: 5,
+                marginLeft: "80%",
+              }}
+            >
+              <Text style={{ fontFamily: "PlusJakartaSans-Medium", color: "red", fontSize: 12 }}>
+                New
+              </Text>
             </View>
-            <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"}             Badge</Text>
+            <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"} Badge</Text>
             <Image
-              source={require('../../assests/Images/Earn_badge.png')}
+              source={require("../../assests/Images/Earn_badge.png")}
               style={styles.cardImage}
             />
 
             <GradientButton
               title="Take Test"
-              onPress={() => navigation.navigate('Badges')}
+              onPress={() => navigation.navigate("Badges")}
               style={styles.cardButton}
-
             />
           </View>
         )}
 
         <View style={[styles.largeCard, styles.lastCard]}>
-          <Text style={styles.cardTitle}>Get Certified on Advanced{"\n"}{"                 "}Technologies</Text>
+          <Text style={styles.cardTitle}>
+            Get Certified on Advanced{"\n"}
+            {"                 "}Technologies
+          </Text>
           <Image
-              source={require('../../assests/Images/Certificate.png')}
-              style={styles.cardImage}
-            />
+            source={require("../../assests/Images/Certificate.png")}
+            style={styles.cardImage}
+          />
           <GradientButton
             title="Start Learning"
-            onPress={() => Linking.openURL('https://upskill.bitlabs.in/login/index.php')}
+            onPress={() => Linking.openURL("https://upskill.bitlabs.in/login/index.php")}
             style={styles.cardButton}
-
           />
         </View>
       </ScrollView>
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   textBelowCard: {
@@ -84,7 +96,6 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.07,
     fontFamily: "PlusJakartaSans-Bold",
     marginTop: screenHeight * 0.025,
-
   },
   scrollContainer: {
     width: "100%",

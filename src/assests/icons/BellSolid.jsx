@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
-const SVGComponent = (props) => (
+const SVGComponent = props => (
   <Svg
     width={24}
     height={24}

@@ -1,16 +1,15 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import GradientButton from './GradientButton';
- 
+import React from "react";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import GradientButton from "./GradientButton";
+
 interface ActionButtonsProps {
- 
   onPressAction: () => void;
   actionTitle: string;
   isGradient?: boolean; // If true, use GradientButton
   onPressBack?: () => void; // Optional Back Button
 }
- 
+
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   onPressBack,
   onPressAction,
@@ -18,17 +17,14 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   isGradient = true,
 }) => {
   const navigation = useNavigation();
- 
+
   return (
     <View style={styles.buttonContainer}>
       {/* Back Button */}
-      <TouchableOpacity
-        style={styles.backButtonBottom}
-        onPress={() => navigation.goBack()}
-      >
+      <TouchableOpacity style={styles.backButtonBottom} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
- 
+
       {/* Action Button */}
       {isGradient ? (
         <GradientButton
@@ -45,51 +41,48 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    position: 'absolute',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    position: "absolute",
+    width: "100%",
     bottom: 20,
     paddingHorizontal: 10,
- 
   },
   backButtonBottom: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#F46F16',
+    borderColor: "#F46F16",
     height: 40,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
     marginHorizontal: 8,
-    width: '43%',
+    width: "43%",
   },
   applyButtonGradient: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     height: 40,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
     marginHorizontal: 8,
-    width: '100%',
-   
+    width: "100%",
   },
   buttonText: {
-    color: '#fff',
-    fontFamily: 'PlusJakartaSans-Bold',
+    color: "#fff",
+    fontFamily: "PlusJakartaSans-Bold",
   },
   backButtonText: {
-    color: '#F46F16',
+    color: "#F46F16",
     fontSize: 15,
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: "PlusJakartaSans-Bold",
   },
 });
- 
+
 export default ActionButtons;
- 

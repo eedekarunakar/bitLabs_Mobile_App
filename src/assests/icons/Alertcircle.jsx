@@ -1,6 +1,6 @@
 import * as React from "react";
 import Svg, { G, Path, Defs, ClipPath, Rect } from "react-native-svg";
-const Alertcircle = (props) => (
+const Alertcircle = props => (
   <Svg
     width={13}
     height={13}

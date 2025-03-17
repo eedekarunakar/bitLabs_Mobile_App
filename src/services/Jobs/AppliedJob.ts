@@ -1,12 +1,12 @@
 // /src/Services/JobService.ts
 // import axios from 'axios';
-import { JobData ,JobCounts} from '@models/Model';
-import apiClient from '../login/ApiClient';
-import { Buffer } from 'buffer';
+import { JobData, JobCounts } from "@models/Model";
+import apiClient from "../login/ApiClient";
+import { Buffer } from "buffer";
 
 export const fetchCompanyLogo = async (
   recruiterId: number | null,
-  userToken: string | null
+  userToken: string | null,
 ): Promise<string | null> => {
   if (!recruiterId) {
     console.error("Recruiter ID is null");
@@ -15,13 +15,13 @@ export const fetchCompanyLogo = async (
 
   try {
     const response = await apiClient.get(`/recruiters/companylogo/download/${recruiterId}`, {
-      responseType: 'arraybuffer', // Specify binary data response
+      responseType: "arraybuffer", // Specify binary data response
     });
 
+    const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, "binary").toString(
+      "base64",
+    )}`;
 
-    const base64Logo = `data:image/jpeg;base64,${Buffer.from(response.data, 'binary').toString('base64')}`;
-
-    console.log("check base64Logo", base64Logo);
     return base64Logo;
   } catch (error) {
     console.error("Error fetching or converting company logo:", error);
@@ -29,15 +29,20 @@ export const fetchCompanyLogo = async (
   }
 };
 
-
 // API endpoint URL
-export const fetchAppliedJobs = async (userId: number |null, userToken: string|null , jobCounts : JobCounts | null): Promise<JobData[]> => {
+export const fetchAppliedJobs = async (
+  userId: number | null,
+  userToken: string | null,
+  jobCounts: JobCounts | null,
+): Promise<JobData[]> => {
   try {
-    const applyJobsCount = jobCounts ?.appliedJobs ?? 300;
-    const response = await apiClient.get(`/applyjob/getAppliedJobs/${userId}?page=${0}&size=${applyJobsCount}`, {
-    });
+    const applyJobsCount = jobCounts?.appliedJobs ?? 300;
+    const response = await apiClient.get(
+      `/applyjob/getAppliedJobs/${userId}?page=${0}&size=${applyJobsCount}`,
+      {},
+    );
     return response.data;
   } catch (error) {
-    throw new Error('');
+    throw new Error("");
   }
 };

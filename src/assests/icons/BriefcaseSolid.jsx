@@ -1,14 +1,6 @@
 import * as React from "react";
-import Svg, {
-  G,
-  Path,
-  Defs,
-  LinearGradient,
-  Stop,
-  ClipPath,
-  Rect,
-} from "react-native-svg";
-const BriefCaseSolid = (props) => (
+import Svg, { G, Path, Defs, LinearGradient, Stop, ClipPath, Rect } from "react-native-svg";
+const BriefCaseSolid = props => (
   <Svg
     width={24}
     height={24}
