@@ -352,7 +352,7 @@ function ProfileComponent() {
                                 <Text style={[styles.resumeText, {
                                     color: '#74A2FA', // Typical link blue color
                                     textDecorationLine: 'underline',
-                                }]}>{basicDetails.firstName}_{basicDetails.lastName}.pdf</Text>
+                                }]}>{basicDetails ?.firstName}_{basicDetails ?.lastName}.pdf</Text>
                             </TouchableOpacity>
                         </View>
 
