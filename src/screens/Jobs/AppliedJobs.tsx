@@ -7,13 +7,12 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import { useAppliedJobsViewModel } from "../../viewmodel/jobs/AppliedJob";
-import { useAuth } from "../../context/Authcontext";
+import { useAppliedJobsViewModel } from "@viewmodel/jobs/AppliedJob";
+import { useAuth } from "@context/Authcontext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@models/Model";
+import { RootStackParamList,JobData } from "@models/Model";
 import JobCard from "./Jobcard";
-import { JobData } from "@models/Model";
 import { useLogos } from "../../hooks/useLogos";
 import { DefaultLogoUrl } from "@components/constant";
 

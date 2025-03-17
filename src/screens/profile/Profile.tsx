@@ -21,25 +21,17 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import { RootStackParamList } from '@models/Model';
+import { RootStackParamList, ApplicantSkillBadge } from '@models/Model';
 import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
 import { useAuth } from '@context/Authcontext';
-import { ApplicantSkillBadge } from '@models/Model';
 import Icon7 from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 import Fileupload from '@assests/icons/Fileupload';
 import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { usePdf } from '../../context/ResumeContext';
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>
 function ProfileComponent() {
-
-
-    const nav = useNavigation<any>();
-
-
-
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<ProfileScreenRouteProp>()
     const { userId, userToken } = useAuth();
@@ -74,7 +66,7 @@ function ProfileComponent() {
 
     } = useProfileViewModel(userToken, userId);
     const [resumedisplay, setresumedisplay] = useState(false)
-    const { applicant, basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
+    const { basicDetails, skillsRequired = [], qualification, specialization, preferredJobLocations, experience, applicantSkillBadges = [] } = profileData || [];
     const [key, setKey] = useState(0);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -89,15 +81,12 @@ function ProfileComponent() {
     useEffect(() => {
         if (route.params?.retake) {
             handleCamera()
-            // navigation.setOptions({
-            //     headerShown: false // Hide the header button to prevent re-navigation
-            // });
             navigation.setParams({ retake: false });
         }
     }, [route.params]);
- 
+
     if (isLoading) {
-        return <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />;
+        return <ActivityIndicator size="large" color="#F46F16" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
     }
     if (error) {
         return (
@@ -352,7 +341,7 @@ function ProfileComponent() {
                                 <Text style={[styles.resumeText, {
                                     color: '#74A2FA', // Typical link blue color
                                     textDecorationLine: 'underline',
-                                }]}>{basicDetails ?.firstName}_{basicDetails ?.lastName}.pdf</Text>
+                                }]}>{basicDetails?.firstName}_{basicDetails?.lastName}.pdf</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -490,33 +479,8 @@ function ProfileComponent() {
 
                                 </View>
 
-
-                                 {/* <View>
-
-                                     <View style={[styles.orContainer, { marginTop: 20, marginVertical: 20 }]}>
-                                        <View style={styles.line}></View>
-                                        <Text style={{ marginTop: -12, fontWeight: '600', fontFamily: 'PlusJakartaSans-Bold' }}> Or </Text>
-                                        <View style={[styles.line, { marginLeft: 3 }]}></View>
-                                    </View> 
-
-
-
-
-                                </View>  */}
-
-                                {/* <View>
-                                    <TouchableOpacity
-                                        style={styles.uploadButton}
-                                        onPress={() => navigation.navigate('ResumeBuilder')}
-                                    >
-
-                                        <Text style={{ color: '#FFFFFF', fontFamily: 'PlusJakartaSans-Bold' }}>Create Resume</Text>
-
-                                    </TouchableOpacity>
-                                </View> */}
-
                                 <TouchableOpacity
-                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10,marginTop:10 }]}
+                                    style={[styles.buttonContent, { alignItems: 'flex-end', marginBottom: 10, marginTop: 10 }]}
                                     onPress={handleSaveResume}
                                     disabled={isUploadComplete}
                                 >
@@ -538,8 +502,6 @@ function ProfileComponent() {
                     </Modal>
                 )}
 
-
-
             </ScrollView>
         </KeyboardAvoidingView >
     )
@@ -558,8 +520,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     uploadContainer: {
-        //flexDirection: "row",
-        //justifyContent: "space-between",
+
         padding: 5,
 
     },
@@ -830,27 +791,21 @@ const styles = StyleSheet.create({
     },
 
 
-
-    // Style for the static Resume Text (left side)
-
-    // Style for the Edit Logo (right side)
-
-
     editLogo: {
         width: 18,
         height: 18,
     },
 
 
-    // Modal View for the Resume Edit
+
     modalView1: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background opacity for modal
+
     },
 
-    // Modal Card Style
+
     modalCard1: {
         width: 350,
         backgroundColor: 'white',
@@ -878,10 +833,9 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         marginBottom: 15,
-        // paddingHorizontal: 10,
         borderRadius: 5,
         backgroundColor: '#E5E5E5',
-        // textAlignVertical: 'top', // Makes the text align from top in the input box
+
         fontFamily: 'PlusJakartaSans-Medium',
     },
 

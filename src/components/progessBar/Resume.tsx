@@ -4,7 +4,7 @@ import Pdf from 'react-native-pdf';
 import { usePdfViewModel } from '@viewmodel/usePdfViewModel';
 
 const PDFExam = () => {
-  const { pdfUri, error } = usePdfViewModel();
+  const { pdfUri } = usePdfViewModel();
 
   return (
     <View style={styles.container}>

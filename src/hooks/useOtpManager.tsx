@@ -6,7 +6,7 @@ const useOtpManager = () => {
   const [otpReceived, setOtpReceived] = useState(false);
   const [isOtpExpired, setIsOtpExpired] = useState(false);
   const [timer, setTimer] = useState(60);
-  const [isOtpValid, setOtpValid] = useState(true);
+  const [isOtpValid, setIsOtpValid] = useState(true);
   const [lastTimeStamp, setLastTimeStamp] = useState(Date.now());
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const useOtpManager = () => {
     timer,
     setTimer,
     isOtpValid,
-    setOtpValid,
+    setIsOtpValid,
   };
 };
 

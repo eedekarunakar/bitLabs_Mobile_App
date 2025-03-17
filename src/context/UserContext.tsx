@@ -45,7 +45,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [jobCounts, setJobCounts] = useState<JobCounts | null>(null);
   const [verifiedStatus, setVerifiedStatus] = useState(false);
   const [personalName, setPersonalName] = useState('');
-  const [isLoading, setisLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -57,7 +57,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
 
     const fetchUserData = async () => {
-      setisLoading(true); 
+      setIsLoading(true); 
       try {
         const [status, user, jobs] = await Promise.all([
           ProfileService.checkVerified(userToken, userId),
@@ -86,11 +86,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           } else {
             console.error('Failed to fetch job counts');
           }
-          setisLoading(false);
+          setIsLoading(false);
         }
       } catch (error) {
         if (isMounted) {
-          setisLoading(false);
+          setIsLoading(false);
         }
         console.error('Failed to fetch user data:', error);
       }

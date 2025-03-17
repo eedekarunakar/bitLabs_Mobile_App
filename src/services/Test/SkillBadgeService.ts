@@ -10,10 +10,9 @@ export const submitSkillBadge = async (userId: number, testName: string, testSta
       }, {
        
       });
-      if (response.status === 200) {
-
+      if (response.status === 200 || response.status === 201) {
+        return response.data;
       }
-      return response.data;
     } catch (error) {
       console.error('Error submitting the test result:', error);
       throw error;

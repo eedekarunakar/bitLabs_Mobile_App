@@ -1,4 +1,4 @@
-import React, {  useContext, useCallback, useState } from 'react';
+import React, { useContext, useCallback } from 'react';
 import {
   View,
   Text,
@@ -16,16 +16,14 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useProfileViewModel } from '@viewmodel/Profileviewmodel';
 import { useAuth } from '@context/Authcontext';
 import { useBadgeViewModel } from '@viewmodel/BadgeViewModel';
-import {fetchSkillBadges,fetchTestStatus,} from '@services/Home/BadgeService';
+import { fetchTestStatus, } from '@services/Home/BadgeService';
 import UserContext from '@context/UserContext';
 import SkillCard from '@components/Cards/SkillCard';
 
 const { width } = Dimensions.get('window');
 const Badge = ({ navigation }: any) => {
-  const {selectedStep,timer,timerState,isButtonDisabled,testName,testStatus,loading,applicantSkillBadges,loadSkillBadges} = useBadgeViewModel();
+  const { selectedStep, timer, timerState, isButtonDisabled, testName, testStatus, loading, applicantSkillBadges, loadSkillBadges } = useBadgeViewModel();
   const { userId, userToken } = useAuth();
-  const [skillBadges, setSkillBadges] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { profileData } = useProfileViewModel(userToken, userId);
   const { skillsRequired = [] } = profileData || {}; // Default to an empty array if skills are missing
   const { personalName } = useContext(UserContext);
@@ -34,25 +32,19 @@ const Badge = ({ navigation }: any) => {
     useCallback(() => {
       let isActive = true; // Prevent updating state if component unmounts
       const fetchData = async () => {
-        setIsLoading(true);
-        await fetchTestStatus(userId, userToken); // Fetch test status first
-        const badges = await fetchSkillBadges(userId, userToken);
-        if (isActive) {
-          setSkillBadges(badges.filter((badge: any) => badge.flag === "added")); 
-          setIsLoading(false);
-        }
+        await fetchTestStatus(userId, userToken); // Fetch test status firs 
       };
       loadSkillBadges();
       fetchData();
       return () => {
-        isActive = false; 
+        isActive = false;
       };
     }, [userId, userToken])
   );
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#F46F16" style={{flex:1,justifyContent:'center',alignItems:'center'}} />
+        <ActivityIndicator size="large" color="#F46F16" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
       </View>
     );
   }
@@ -70,24 +62,24 @@ const Badge = ({ navigation }: any) => {
             {selectedStep === 3 ? (
               <View style={styles.badge}>
                 <LinearGradient
-                  colors={['#FFEAC4', '#FFF9D6']} 
+                  colors={['#FFEAC4', '#FFF9D6']}
                   style={styles.gradientBackground1}>
                   <Text style={[styles.content, { marginLeft: 10 }]}>
                     Pre-Screened badge
                   </Text>
                   <View>
-                    <Image source={require('@assests/Images/Test/Badge.png')} style={styles.congratulationsImage}/>
+                    <Image source={require('@assests/Images/Test/Badge.png')} style={styles.congratulationsImage} />
                   </View>
                   <Text style={styles.congratulationsMessage}>
                     Congratulations, You are now Verified
                   </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
                     <Text style={styles.name}>
                       {personalName
                         ? personalName.charAt(0).toUpperCase() + personalName.slice(1)
                         : 'Guest'}
                     </Text>
-                    <Image source={require('@assests/Images/Test/verified.png')} style={styles.verified}/>
+                    <Image source={require('@assests/Images/Test/verified.png')} style={styles.verified} />
                   </View>
                 </LinearGradient>
               </View>
@@ -99,49 +91,50 @@ const Badge = ({ navigation }: any) => {
                   and technical skills
                 </Text>
                 <View style={styles.progressContainer}>
-                  <View style={[styles.stepCircle,{backgroundColor: selectedStep >= 1 ? '#219734' : '#BFBFBF',marginLeft: 15,}]}>
-                    {(testName === 'General Aptitude Test' && testStatus === 'P') ||selectedStep > 1 ? 
-                    (
-                      <Icon name="check" size={16} color="white" />
-                    ) : (
-                      <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
-                    )}
+                  <View style={[styles.stepCircle, { backgroundColor: selectedStep >= 1 ? '#219734' : '#BFBFBF', marginLeft: 15, }]}>
+                    {(testName === 'General Aptitude Test' && testStatus === 'P') || selectedStep > 1 ?
+                      (
+                        <Icon name="check" size={16} color="white" />
+                      ) : (
+                        <Text style={[styles.stepText, { color: '#fff' }]}>1</Text>
+                      )}
                   </View>
-                  <View style={[styles.stepLine,{ backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF'}]}/>
-                  <View style={[styles.stepCircle,{backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF'}]}>
+                  <View style={[styles.stepLine, { backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF' }]} />
+                  <View style={[styles.stepCircle, { backgroundColor: selectedStep >= 2 ? '#219734' : '#BFBFBF' }]}>
                     {selectedStep >= 2 ? (
                       <Text style={[styles.stepText, { color: '#fff' }]}>2</Text>
                     ) : (
                       <Text style={styles.stepText}>2</Text>
                     )}
                   </View>
-                  <View style={[styles.stepLine,{ backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF'}]}/>
-                  <View style={[styles.stepCircle,{ backgroundColor:selectedStep >= 3 ? '#219734' : '#BFBFBF',marginRight: 15}]}>
-                    <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : '#6D6969' }}/>
+                  <View style={[styles.stepLine, { backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF' }]} />
+                  <View style={[styles.stepCircle, { backgroundColor: selectedStep >= 3 ? '#219734' : '#BFBFBF', marginRight: 15 }]}>
+                    <Icon name="flag" size={12} style={{ color: selectedStep >= 3 ? 'white' : '#6D6969' }} />
                   </View>
                 </View>
                 <View
-                  style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center'}}>
+                  style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                   <View style={{ alignItems: 'center' }}>
-                    <Text style={{ color: '#434343',fontSize: 13,fontFamily: 'PlusJakartaSans-Medium',textAlign: 'center'}}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center' }}>
                       General{'\n'}Aptitude Test
                     </Text>
                   </View>
                   <View style={{ alignItems: 'center' }}>
-                    <Text style={{color: '#434343',fontSize: 13,fontFamily: 'PlusJakartaSans-Medium',textAlign: 'center'}}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center' }}>
                       Technical{'\n'}Test
                     </Text>
                   </View>
                   <View style={{ alignItems: 'center' }}>
-                    <Text style={{color: '#434343',fontSize: 13,fontFamily: 'PlusJakartaSans-Medium',textAlign: 'center',marginRight: 10,}}>
+                    <Text style={{ color: '#434343', fontSize: 13, fontFamily: 'PlusJakartaSans-Medium', textAlign: 'center', marginRight: 10, }}>
                       Verification{'\n'}Done
                     </Text>
                   </View>
                 </View>
                 <View
-                  style={{ marginVertical: 30,flexDirection: 'column',alignItems: 'flex-start',
+                  style={{
+                    marginVertical: 30, flexDirection: 'column', alignItems: 'flex-start',
                   }}>
-                  <View style={{flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center',width: '100%'}}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                     <View style={{ flex: 1 }}>
                       <Text style={styles.content}>{testName}</Text>
                       <Text style={styles.matter1}>
@@ -170,16 +163,18 @@ const Badge = ({ navigation }: any) => {
                         isButtonDisabled &&
                         testName !== 'Technical Test' &&
                         styles.disabledButton]}>
-                      <TouchableOpacity style={[styles.progressButton,isButtonDisabled &&testName !== 'Technical Test' &&
-                          styles.disabledButton,
-                          testName === 'General Aptitude Test' &&
-                          testStatus === 'F' &&
-                          timer &&
-                          styles.disabledButton,
-                        ]}
-                        onPress={() => {if (!isButtonDisabled && selectedStep < 3) {
+                      <TouchableOpacity style={[styles.progressButton, isButtonDisabled && testName !== 'Technical Test' &&
+                        styles.disabledButton,
+                      testName === 'General Aptitude Test' &&
+                      testStatus === 'F' &&
+                      timer &&
+                      styles.disabledButton,
+                      ]}
+                        onPress={() => {
+                          if (!isButtonDisabled && selectedStep < 3) {
                             navigation.navigate('TestInstruction');
-                          }}}
+                          }
+                        }}
                         disabled={isButtonDisabled}>
                         <Text style={styles.progressButtonText}>
                           {testStatus === 'F' && timer
@@ -240,7 +235,7 @@ const Badge = ({ navigation }: any) => {
             horizontal={true}
             showsHorizontalScrollIndicator={true}
             contentContainerStyle={styles.horizontalScrollContent}>
-            {skillsRequired.map((skill:any, index:any) => (
+            {skillsRequired.map((skill: any, index: any) => (
               <SkillCard
                 key={`skill-${index}`}
                 skillName={skill.skillName}
@@ -253,7 +248,7 @@ const Badge = ({ navigation }: any) => {
                 key={`badge-${badge.id}`}
                 skillName={badge.skillBadge.name}
                 status="PASSED"
-                onPress={() => {}}
+                onPress={() => { }}
               />
             ))}
             {applicantSkillBadges.filter(badge => badge.status === 'FAILED').map(badge => {

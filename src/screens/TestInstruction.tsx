@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View,Text,StyleSheet,ScrollView,TouchableOpacity,SafeAreaView,Dimensions,Modal,Image,BackHandler,ActivityIndicator} from 'react-native';
+import {View,Text,StyleSheet,ScrollView,TouchableOpacity,SafeAreaView,Dimensions,BackHandler,ActivityIndicator} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
