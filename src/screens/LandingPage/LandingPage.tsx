@@ -271,7 +271,7 @@ const LandingPage = () => {
                   style={styles.input}
                   value={signupName}
                   onChangeText={text => {
-                    setSignupName;
+                    setSignupName(text);
                     handleChange("name", text);
                   }}
                   allowFontScaling={false}
@@ -313,7 +313,7 @@ const LandingPage = () => {
                     secureTextEntry={!isSignupPasswordVisible}
                     value={signupPassword}
                     onChangeText={text => {
-                      setSignupPassword;
+                      setSignupPassword(text);
                       handleChange("password", text);
                     }}
                     onBlur={() => {
