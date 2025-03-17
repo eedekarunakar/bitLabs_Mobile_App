@@ -21,7 +21,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ step, selectedStep, testN
         {step === 1 && (isPassed || selectedStep > 1) ? (
           <Icon name="check" size={16} color="white" />
         ) : step === 3 ? (
-          <Icon name="flag" size={12} style={{ color: isCompleted ? 'white' : '#6D6969' }} />
+          <Icon name="flag" size={12} style={{ color: '#6D6969' }} />
         ) : (
           <Text style={[styles.stepText, { color: isCompleted ? '#fff' : '#000' }]}>{step}</Text>
         )}
