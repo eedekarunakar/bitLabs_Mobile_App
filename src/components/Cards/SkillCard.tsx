@@ -84,15 +84,17 @@ const SkillCard: React.FC<SkillCardProps> = ({
           disabled={disabled}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {status === 'PASSED' ? (
-              <>
+              <View>
                 <Icon name="check" size={19} color="white" style={{ marginRight: 5 }} />
                 <Text style={styles.verifiedText}>Verified</Text>
-              </>
+                </View>
             ) : (
+
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <Text style={styles.buttonText}>{status === 'FAILED' ? 'Retake Test' : 'Take Test'}</Text>
                 <Icon name="external-link" size={20} color="white" style={{ marginRight: 5 }}/>
               </View>
+
             )}
           </View>
         </TouchableOpacity>

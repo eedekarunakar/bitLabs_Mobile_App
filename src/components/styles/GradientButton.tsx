@@ -8,7 +8,7 @@ interface GradientButtonProps {
     colors?: string[];
     style?: ViewStyle | ViewStyle[];
     textStyle?: TextStyle | TextStyle[];
-    disabled?: boolean;
+   
 }
  
 const GradientButton: React.FC<GradientButtonProps> = ({
