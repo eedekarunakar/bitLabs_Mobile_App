@@ -23,6 +23,7 @@
     "crypto-js": "3.1.9-1",
     "dotenv": "16.4.7",
     "expo-secure-store": "14.0.1",
+    "hermes-engine": "^0.11.0",
     "html-entities": "2.5.2",
     "i": "0.3.7",
     "progress": "2.0.3",

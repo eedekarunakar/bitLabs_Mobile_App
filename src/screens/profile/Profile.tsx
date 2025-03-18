@@ -233,7 +233,7 @@ function ProfileComponent() {
                       key={index}
                       style={[
                         styles.skillBadge,
-                        { backgroundColor: badge.status === "PASSED" ? "#498C07" : "#498C07" },
+                        { backgroundColor: "#498C07" },
                       ]}
                     >
                       {badge.status === "PASSED" && (
@@ -343,7 +343,7 @@ function ProfileComponent() {
                       value={personalDetails.firstName}
                       onChangeText={text => handleInputChange("firstName", text)}
                     />
-                    {formErrors?.firstName && (
+                    {Boolean(formErrors?.firstName) && (
                       <Text style={styles.errorText}>{formErrors.firstName}</Text>
                     )}
                     <TextInput
@@ -353,7 +353,7 @@ function ProfileComponent() {
                       value={personalDetails.lastName}
                       onChangeText={text => handleInputChange("lastName", text)}
                     />
-                    {formErrors?.lastName && (
+                    {Boolean(formErrors?.lastName) && (
                       <Text style={styles.errorText}>{formErrors.lastName}</Text>
                     )}
                     <TextInput
@@ -369,7 +369,7 @@ function ProfileComponent() {
                       value={personalDetails.alternatePhoneNumber}
                       onChangeText={text => handleInputChange("alternatePhoneNumber", text)}
                     />
-                    {formErrors?.alternatePhoneNumber && (
+                    {Boolean(formErrors?.alternatePhoneNumber) && (
                       <Text style={styles.errorText}>{formErrors.alternatePhoneNumber}</Text>
                     )}
 

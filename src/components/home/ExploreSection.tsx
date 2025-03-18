@@ -55,7 +55,7 @@ const ExploreSection = () => {
             </View>
             <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"} Badge</Text>
             <Image
-              source={require("../../assests/Images/Earn_badge.png")}
+              source={require("../../assests/Images/boyimage.png")}
               style={styles.cardImage}
             />
 
