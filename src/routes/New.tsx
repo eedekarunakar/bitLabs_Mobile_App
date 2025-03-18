@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import LandingPage from "../screens/LandingPage/LandingPage"; // Replace with actual path
-import BottomTab from "./BottomNavigation";
-import Dummystep1 from "../screens/Steps/personlDetails"; // Replace with actual path
-import Dummystep2 from "../screens/Steps/professionalDetails";
-import dummyStep3 from "../screens/Steps/uploadResume";
-import { useAuth } from "../context/Authcontext"; // Replace with actual path
-import { fetchProfileId } from "../services/Create/createProfile"; // Replace with actual path
-import TestInstruction from "../screens/TestInstruction"; // Ensure the path is correct
-import TestScreen from "../screens/TestScreen";
-import ForgotPassword from "../screens/LandingPage/ForgotPassword";
-import AppliedJobs from "../screens/Jobs/AppliedJobs";
-import SavedJobs from "../screens/Jobs/SavedJobs";
-import JobDetailsScreen from "../screens/Jobs/JobDetailsScreen";
-import JobDetails from "../screens/Jobs/JobDetails";
-import ProfileComponent from "../screens/profile/Profile";
-import ImagePreviewScreen from "../screens/profile/ImagePreviewScreen";
-import Pass from "../screens/Test/passContent";
-import Fail from "../screens/Test/FailContent";
-import Timeup from "../screens/Test/TimeUp";
-import Toast from "react-native-toast-message"; // Ensure this import is correct
-import ChangePasswordScreen from "../screens/HomePage/ChangePassword";
-import ViewJobDetails from "../screens/Jobs/ViewJobDetails";
-import Notification from "../screens/alert/Notification";
-import SavedDetails from "../screens/Jobs/SavedDetails";
-import { ProfilePhotoProvider } from "../context/ProfilePhotoContext";
-import Drives from "../screens/HomePage/Drives";
-import { PdfProvider } from "../context/ResumeContext";
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import LandingPage from '../screens/LandingPage/LandingPage'; // Replace with actual path
+import BottomTab from './BottomNavigation';
+import Dummystep1 from '../screens/Steps/personlDetails'; // Replace with actual path
+import Dummystep2 from '../screens/Steps/professionalDetails';
+import dummyStep3 from '../screens/Steps/uploadResume';
+import {useAuth} from '../context/Authcontext'; // Replace with actual path
+import {fetchProfileId} from '../services/Create/createProfile'; // Replace with actual path
+import TestInstruction from '../screens/TestInstruction'; // Ensure the path is correct
+import TestScreen from '../screens/TestScreen';
+import ForgotPassword from '../screens/LandingPage/ForgotPassword';
+import AppliedJobs from '../screens/Jobs/AppliedJobs';
+import SavedJobs from '../screens/Jobs/SavedJobs';
+import JobDetailsScreen from '../screens/Jobs/JobDetailsScreen';
+import JobDetails from '../screens/Jobs/JobDetails';
+import ProfileComponent from '../screens/profile/Profile';
+import ImagePreviewScreen from '../screens/profile/ImagePreviewScreen';
+import Pass from '../screens/Test/passContent';
+import Fail from '../screens/Test/FailContent';
+import Timeup from '../screens/Test/TimeUp';
+import Toast from 'react-native-toast-message'; // Ensure this import is correct
+import ChangePasswordScreen from '../screens/HomePage/ChangePassword';
+import ViewJobDetails from '../screens/Jobs/ViewJobDetails';
+import Notification from '../screens/alert/Notification';
+import SavedDetails from '../screens/Jobs/SavedDetails';
+import {ProfilePhotoProvider} from '../context/ProfilePhotoContext';
+import Drives from '../screens/HomePage/Drives';
+import {PdfProvider} from '../context/ResumeContext';
 
-import { useMessageContext, MessageProvider } from "../context/welcome";
-import { RootStackParamList } from "@models/Model";
+import {useMessageContext, MessageProvider} from '../context/welcome';
+import {RootStackParamList} from '@models/Model';
 
-import { toastConfig } from "@components/Toast/toast_config";
+import {toastConfig} from '@components/Toast/toast_config';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const Appnavigator = () => {
-  const { isAuthenticated, userToken, userId, userEmail } = useAuth();
+  const {isAuthenticated, userToken, userId, userEmail} = useAuth();
   const [profileChecked, setProfileChecked] = useState(isAuthenticated);
   const [loading, setLoading] = useState(true);
   const [shouldShowStep1, setShouldShowStep1] = useState(false);
-  const { setSetmsg } = useMessageContext();
+  const {setSetmsg} = useMessageContext();
 
   useEffect(() => {
     const checkProfileId = async () => {
@@ -53,10 +53,10 @@ const Appnavigator = () => {
             setShouldShowStep1(result.profileid === 0);
             result.profileid == 0 ? setSetmsg(true) : setSetmsg(false);
           } else {
-            console.error("Failed to fetch profile details");
+            console.error('Failed to fetch profile details');
           }
         } catch (error) {
-          console.error("Error fetching profile ID:", error);
+          console.error('Error fetching profile ID:', error);
         }
       }
       setLoading(false);
@@ -68,11 +68,11 @@ const Appnavigator = () => {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator
           size="large"
           color="#F46F16"
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
         />
       </View>
     );
@@ -81,11 +81,11 @@ const Appnavigator = () => {
   if (!isAuthenticated) {
     return (
       <Stack.Navigator>
-        <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
+        <Stack.Screen name="LandingPage" component={LandingPage} options={{headerShown: false}} />
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPassword}
-          options={{ headerShown: false }}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     );
@@ -98,43 +98,43 @@ const Appnavigator = () => {
           <Stack.Screen
             name="Step1"
             component={Dummystep1}
-            initialParams={{ email: userEmail }}
-            options={{ headerShown: false }}
+            initialParams={{email: userEmail}}
+            options={{headerShown: false}}
           />
-          <Stack.Screen name="Step2" component={Dummystep2} options={{ headerShown: false }} />
+          <Stack.Screen name="Step2" component={Dummystep2} options={{headerShown: false}} />
           <Stack.Screen
             name="Step3"
             component={dummyStep3}
-            options={{ headerShown: false }}
-            initialParams={{ updateShouldShowStep1: setShouldShowStep1 }}
+            options={{headerShown: false}}
+            initialParams={{updateShouldShowStep1: setShouldShowStep1}}
           />
         </>
       ) : (
         <>
-          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
+          <Stack.Screen name="BottomTab" component={BottomTab} options={{headerShown: false}} />
 
           {/* Test Instruction Screen */}
           <Stack.Screen
             name="TestInstruction"
             component={TestInstruction}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
 
           {/* Test Instruction Screen */}
-          <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="TestScreen" component={TestScreen} options={{headerShown: false}} />
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
 
           <Stack.Screen
             name="JobDetails"
             component={JobDetails}
             options={{
-              title: "Job Details",
+              title: 'Job Details',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -143,9 +143,9 @@ const Appnavigator = () => {
             name="AppliedJobs"
             component={AppliedJobs}
             options={{
-              title: "Applied Jobs",
+              title: 'Applied Jobs',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -154,9 +154,9 @@ const Appnavigator = () => {
             name="JobDetailsScreen"
             component={JobDetailsScreen}
             options={{
-              title: "Job Details",
+              title: 'Job Details',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -165,9 +165,9 @@ const Appnavigator = () => {
             name="ViewJobDetails"
             component={ViewJobDetails}
             options={{
-              title: "View Job Details",
+              title: 'View Job Details',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -176,9 +176,9 @@ const Appnavigator = () => {
             name="SavedDetails"
             component={SavedDetails}
             options={{
-              title: "Job Details",
+              title: 'Job Details',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -187,9 +187,9 @@ const Appnavigator = () => {
             name="SavedJobs"
             component={SavedJobs}
             options={{
-              title: "Saved Jobs",
+              title: 'Saved Jobs',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -198,9 +198,9 @@ const Appnavigator = () => {
             name="Profile"
             component={ProfileComponent}
             options={{
-              title: "Profile",
+              title: 'Profile',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -209,23 +209,23 @@ const Appnavigator = () => {
             name="ImagePreview"
             component={ImagePreviewScreen}
             options={{
-              title: "Image Preview",
+              title: 'Image Preview',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
           />
-          <Stack.Screen name="passContent" component={Pass} options={{ headerShown: false }} />
-          <Stack.Screen name="FailContent" component={Fail} options={{ headerShown: false }} />
-          <Stack.Screen name="TimeUp" component={Timeup} options={{ headerShown: false }} />
+          <Stack.Screen name="passContent" component={Pass} options={{headerShown: false}} />
+          <Stack.Screen name="FailContent" component={Fail} options={{headerShown: false}} />
+          <Stack.Screen name="TimeUp" component={Timeup} options={{headerShown: false}} />
           <Stack.Screen
             name="Notification"
             component={Notification}
             options={{
-              title: "Notification",
+              title: 'Notification',
               headerTitleStyle: {
-                fontFamily: "PlusJakartaSans-Bold",
+                fontFamily: 'PlusJakartaSans-Bold',
                 fontSize: 16, // Customize the font size
               },
             }}
@@ -249,7 +249,7 @@ const Appnavigator = () => {
 };
 
 const AppWithProfileProvider = () => {
-  const { userToken, userId } = useAuth();
+  const {userToken, userId} = useAuth();
 
   return (
     <PdfProvider>

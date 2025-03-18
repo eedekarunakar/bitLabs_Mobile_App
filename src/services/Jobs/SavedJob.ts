@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback, useContext } from "react";
-import { JobData } from "@models/Model";
-import { useAuth } from "@context/Authcontext";
-import apiClient from "../login/ApiClient";
-import UserContext from "@context/UserContext";
+import {useState, useEffect, useCallback, useContext} from 'react';
+import {JobData} from '@models/Model';
+import {useAuth} from '@context/Authcontext';
+import apiClient from '../login/ApiClient';
+import UserContext from '@context/UserContext';
 
 export const useSavedJobs = () => {
-  const { userId, userToken } = useAuth();
-  const { jobCounts } = useContext(UserContext);
+  const {userId, userToken} = useAuth();
+  const {jobCounts} = useContext(UserContext);
   const [savedJobs, setSavedJobs] = useState<JobData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export const useSavedJobs = () => {
         setSavedJobs(response.data);
       } catch (err) {
         setError(true);
-        console.error("Error fetching saved jobs:", err);
+        console.error('Error fetching saved jobs:', err);
       } finally {
         setLoading(false);
       }
@@ -36,5 +36,5 @@ export const useSavedJobs = () => {
     fetchSavedJobs(savedJobsCount);
   }, [fetchSavedJobs]);
 
-  return { savedJobs, loading, error, fetchSavedJobs };
+  return {savedJobs, loading, error, fetchSavedJobs};
 };

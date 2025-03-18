@@ -1,16 +1,16 @@
 // /src/ViewModels/RecommendedJobsViewModel.ts
-import { useState, useEffect, useContext } from "react";
-import { Alert } from "react-native";
-import { JobData } from "@models/Model";
-import { fetchRecommendedJobs, fetchJobDetails } from "@services/Jobs/RecommendedJobs";
-import { useAuth } from "@context/Authcontext";
-import UserContext from "@context/UserContext";
+import {useState, useEffect, useContext} from 'react';
+import {Alert} from 'react-native';
+import {JobData} from '@models/Model';
+import {fetchRecommendedJobs, fetchJobDetails} from '@services/Jobs/RecommendedJobs';
+import {useAuth} from '@context/Authcontext';
+import UserContext from '@context/UserContext';
 
 const useRecommendedJobsViewModel = () => {
-  const { userId, userToken } = useAuth();
+  const {userId, userToken} = useAuth();
   const [jobs, setJobs] = useState<JobData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { jobCounts } = useContext(UserContext);
+  const {jobCounts} = useContext(UserContext);
   // Function to load jobs from the API
   const loadJobs = async () => {
     setLoading(true); // Start loading
@@ -18,7 +18,7 @@ const useRecommendedJobsViewModel = () => {
       const data = await fetchRecommendedJobs(userId, userToken, jobCounts);
       setJobs(data);
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch job data");
+      Alert.alert('Error', 'Failed to fetch job data');
     } finally {
       setLoading(false); // End loading
     }
@@ -33,7 +33,7 @@ const useRecommendedJobsViewModel = () => {
     try {
       return await fetchJobDetails(jobId, userId, userToken);
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch job details");
+      Alert.alert('Error', 'Failed to fetch job details');
       return null;
     }
   };
@@ -41,7 +41,7 @@ const useRecommendedJobsViewModel = () => {
     loadJobs();
   };
 
-  return { jobs, loading, getJobDetails, reloadJobs };
+  return {jobs, loading, getJobDetails, reloadJobs};
 };
 
 export default useRecommendedJobsViewModel;

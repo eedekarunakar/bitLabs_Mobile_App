@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { fetchJobCounts } from "@services/Home/apiService";
-import { JobCounts } from "@models/model";
-import { useIsFocused } from "@react-navigation/native";
+import {useState, useEffect} from 'react';
+import {fetchJobCounts} from '@services/Home/apiService';
+import {JobCounts} from '@models/model';
+import {useIsFocused} from '@react-navigation/native';
 
 export const useJobCounts = (applicantId: number | null, jwtToken: string | null) => {
   const [jobCounts, setJobCounts] = useState<JobCounts | null>(null);
@@ -29,7 +29,7 @@ export const useJobCounts = (applicantId: number | null, jwtToken: string | null
         }
       } catch (err) {
         if (isActive) {
-          setError("Failed to load job data");
+          setError('Failed to load job data');
           setJobCounts(null);
         }
       } finally {
@@ -48,5 +48,5 @@ export const useJobCounts = (applicantId: number | null, jwtToken: string | null
     };
   }, [applicantId, jwtToken, isFocused]); // Add isFocused as a dependency to trigger when screen is focused
 
-  return { jobCounts, loading, error };
+  return {jobCounts, loading, error};
 };

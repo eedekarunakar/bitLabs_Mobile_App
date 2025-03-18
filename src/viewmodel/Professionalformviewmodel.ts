@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { Keyboard } from "react-native";
-import { useAuth } from "@context/Authcontext";
-import { ProfileViewModel } from "@viewmodel/Profileviewmodel";
-import { showToast } from "@services/login/ToastService";
-import { ApplicantSkillBadge } from "@models/Model";
+import {useState, useEffect} from 'react';
+import {Keyboard} from 'react-native';
+import {useAuth} from '@context/Authcontext';
+import {ProfileViewModel} from '@viewmodel/Profileviewmodel';
+import {showToast} from '@services/login/ToastService';
+import {ApplicantSkillBadge} from '@models/Model';
 
 interface Skill {
   id: number;
@@ -26,10 +26,10 @@ interface ProfessionalDetailsFormProps {
 export const useProfessionalDetailsFormViewModel = ({
   visible,
   onClose,
-  qualification: initialQualification = "",
-  specialization: initialSpecialization = "",
+  qualification: initialQualification = '',
+  specialization: initialSpecialization = '',
   skillsRequired: initialSkills = [],
-  experience: initialExperience = "",
+  experience: initialExperience = '',
   preferredJobLocations: initialLocations = [],
   skillBadges: applicantSkillBadges,
   onReload,
@@ -43,8 +43,8 @@ export const useProfessionalDetailsFormViewModel = ({
   const [qualificationQuery, setQualificationQuery] = useState(initialQualification);
   const [specializationQuery, setSpecializationQuery] = useState(initialSpecialization);
   const [experienceQuery, setExperienceQuery] = useState(initialExperience);
-  const [skillQuery, setSkillQuery] = useState("");
-  const [locationQuery, setLocationQuery] = useState("");
+  const [skillQuery, setSkillQuery] = useState('');
+  const [locationQuery, setLocationQuery] = useState('');
 
   const [showQualificationList, setShowQualificationList] = useState(false);
   const [showSpecializationList, setShowSpecializationList] = useState(false);
@@ -52,9 +52,9 @@ export const useProfessionalDetailsFormViewModel = ({
   const [showSkillsList, setShowSkillsList] = useState(false);
   const [showLocationList, setShowLocationList] = useState(false);
 
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
 
-  const { userToken, userId } = useAuth();
+  const {userToken, userId} = useAuth();
 
   useEffect(() => {
     if (visible) {
@@ -73,115 +73,115 @@ export const useProfessionalDetailsFormViewModel = ({
     initialLocations,
   ]);
 
-  const qualificationsOptions = ["B.Tech", "MCA", "Degree", "Intermediate", "Diploma"];
+  const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
   const specializationsByQualification: Record<string, string[]> = {
-    "B.Tech": [
-      "Computer Science and Engineering (CSE)",
-      "Electronics and Communication Engineering (ECE)",
-      "Electrical and Electronics Engineering (EEE)",
-      "Mechanical Engineering (ME)",
-      "Civil Engineering (CE)",
-      "Aerospace Engineering",
-      "Information Technology(IT)",
-      "Chemical Engineering",
-      "Biotechnology Engineering",
+    'B.Tech': [
+      'Computer Science and Engineering (CSE)',
+      'Electronics and Communication Engineering (ECE)',
+      'Electrical and Electronics Engineering (EEE)',
+      'Mechanical Engineering (ME)',
+      'Civil Engineering (CE)',
+      'Aerospace Engineering',
+      'Information Technology(IT)',
+      'Chemical Engineering',
+      'Biotechnology Engineering',
     ],
     MCA: [
-      "Software Engineering",
-      "Data Science",
-      "Artificial Intelligence",
-      "Machine Learning",
-      "Information Security",
-      "Cloud Computing",
-      "Mobile Application Development",
-      "Web Development",
-      "Database Management",
-      "Network Administration",
-      "Cyber Security",
-      "IT Project Management",
+      'Software Engineering',
+      'Data Science',
+      'Artificial Intelligence',
+      'Machine Learning',
+      'Information Security',
+      'Cloud Computing',
+      'Mobile Application Development',
+      'Web Development',
+      'Database Management',
+      'Network Administration',
+      'Cyber Security',
+      'IT Project Management',
     ],
     Degree: [
-      "Bachelor of Science (B.Sc) Physics",
-      "Bachelor of Science (B.Sc) Mathematics",
-      "Bachelor of Science (B.Sc) Statistics",
-      "Bachelor of Science (B.Sc) Computer Science",
-      "Bachelor of Science (B.Sc) Electronics",
-      "Bachelor of Science (B.Sc) Chemistry",
-      "Bachelor of Commerce (B.Com)",
+      'Bachelor of Science (B.Sc) Physics',
+      'Bachelor of Science (B.Sc) Mathematics',
+      'Bachelor of Science (B.Sc) Statistics',
+      'Bachelor of Science (B.Sc) Computer Science',
+      'Bachelor of Science (B.Sc) Electronics',
+      'Bachelor of Science (B.Sc) Chemistry',
+      'Bachelor of Commerce (B.Com)',
     ],
-    Intermediate: ["MPC", "BiPC", "CEC", "HEC"],
+    Intermediate: ['MPC', 'BiPC', 'CEC', 'HEC'],
     Diploma: [
-      "Mechanical Engineering",
-      "Civil Engineering",
-      "Electrical Engineering",
-      "Electronics and Communication Engineering",
-      "Computer Engineering",
-      "Automobile Engineering",
-      "Chemical Engineering",
-      "Information Technology",
-      "Instrumentation Engineering",
-      "Mining Engineering",
-      "Metallurgical Engineering",
-      "Agricultural Engineering",
-      "Textile Technology",
-      "Architecture",
-      "Interior Designing",
-      "Fashion Designing",
-      "Hotel Management and Catering Technology",
-      "Pharmacy",
-      "Medical Laboratory Technology",
-      "Radiology and Imaging Technology",
+      'Mechanical Engineering',
+      'Civil Engineering',
+      'Electrical Engineering',
+      'Electronics and Communication Engineering',
+      'Computer Engineering',
+      'Automobile Engineering',
+      'Chemical Engineering',
+      'Information Technology',
+      'Instrumentation Engineering',
+      'Mining Engineering',
+      'Metallurgical Engineering',
+      'Agricultural Engineering',
+      'Textile Technology',
+      'Architecture',
+      'Interior Designing',
+      'Fashion Designing',
+      'Hotel Management and Catering Technology',
+      'Pharmacy',
+      'Medical Laboratory Technology',
+      'Radiology and Imaging Technology',
     ],
   };
 
   const skillsOptions = [
-    "Java",
-    "C",
-    "C++",
-    "C Sharp",
-    "Python",
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "TypeScript",
-    "Angular",
-    "React",
-    "Vue",
-    "JSP",
-    "Servlets",
-    "Spring",
-    "Spring Boot",
-    "Hibernate",
-    ".Net",
-    "Django",
-    "Flask",
-    "SQL",
-    "MySQL",
-    "SQL-Server",
-    "Mongo DB",
-    "Selenium",
-    "Regression Testing",
-    "Manual Testing",
+    'Java',
+    'C',
+    'C++',
+    'C Sharp',
+    'Python',
+    'HTML',
+    'CSS',
+    'JavaScript',
+    'TypeScript',
+    'Angular',
+    'React',
+    'Vue',
+    'JSP',
+    'Servlets',
+    'Spring',
+    'Spring Boot',
+    'Hibernate',
+    '.Net',
+    'Django',
+    'Flask',
+    'SQL',
+    'MySQL',
+    'SQL-Server',
+    'Mongo DB',
+    'Selenium',
+    'Regression Testing',
+    'Manual Testing',
   ];
   const cities = [
-    "Chennai",
-    "Thiruvananthapuram",
-    "Bangalore",
-    "Hyderabad",
-    "Coimbatore",
-    "Kochi",
-    "Madurai",
-    "Mysore",
-    "Thanjavur",
-    "Pondicherry",
-    "Vijayawada",
-    "Pune",
-    "Gurgaon",
+    'Chennai',
+    'Thiruvananthapuram',
+    'Bangalore',
+    'Hyderabad',
+    'Coimbatore',
+    'Kochi',
+    'Madurai',
+    'Mysore',
+    'Thanjavur',
+    'Pondicherry',
+    'Vijayawada',
+    'Pune',
+    'Gurgaon',
   ];
-  const experienceOptions = Array.from({ length: 16 }, (_, i) => i.toString());
+  const experienceOptions = Array.from({length: 16}, (_, i) => i.toString());
 
   const [skillBadgesState, setSkillBadgesState] = useState<ApplicantSkillBadge[]>(
-    applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === "added"),
+    applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added'),
   );
 
   const toggleQualificationDropdown = () => {
@@ -235,7 +235,7 @@ export const useProfessionalDetailsFormViewModel = ({
 
   const addSkill = (skillName: string) => {
     if (!skillsOptions.includes(skillName)) {
-      showToast("error", `${skillName} is not a valid skill.`);
+      showToast('error', `${skillName} is not a valid skill.`);
       return;
     }
 
@@ -244,22 +244,22 @@ export const useProfessionalDetailsFormViewModel = ({
 
     if (badgeSkillExists) {
       const updatedSkillBadges = skillBadgesState.map(badge =>
-        badge.skillBadge.name === skillName ? { ...badge, flag: "added" } : badge,
+        badge.skillBadge.name === skillName ? {...badge, flag: 'added'} : badge,
       );
       setSkillBadgesState(updatedSkillBadges);
     } else if (!skillExists) {
-      const newSkill: Skill = { id: skills.length + 1, skillName, experience: 0 };
+      const newSkill: Skill = {id: skills.length + 1, skillName, experience: 0};
       setSkills([...skills, newSkill]);
     }
 
-    setSkillQuery("");
+    setSkillQuery('');
     setShowSkillsList(false);
   };
 
   const removeSkill = (id: number, fromBadge: boolean, skillName: string) => {
     if (fromBadge) {
       const updatedSkillBadges = skillBadgesState.map(badge =>
-        badge.skillBadge.name === skillName ? { ...badge, flag: "removed" } : badge,
+        badge.skillBadge.name === skillName ? {...badge, flag: 'removed'} : badge,
       );
       setSkillBadgesState(updatedSkillBadges);
     } else {
@@ -267,18 +267,18 @@ export const useProfessionalDetailsFormViewModel = ({
       setSkills(updatedSkills);
     }
 
-    setSkillQuery("");
+    setSkillQuery('');
   };
 
   const addLocation = (location: string) => {
     if (!cities.includes(location)) {
-      showToast("error", `${location} is not a valid location.`);
+      showToast('error', `${location} is not a valid location.`);
       return;
     }
     if (!locations.includes(location)) {
       setLocations([...locations, location]);
     }
-    setLocationQuery("");
+    setLocationQuery('');
     setShowLocationList(false);
   };
 
@@ -287,31 +287,31 @@ export const useProfessionalDetailsFormViewModel = ({
   };
 
   const handleSaveChanges = async () => {
-    let errors: { [key: string]: string } = {};
+    let errors: {[key: string]: string} = {};
 
     if (!qualification || !qualificationsOptions.includes(qualification)) {
-      errors.qualification = "Qualification is required";
+      errors.qualification = 'Qualification is required';
     }
 
     const specializationOptions =
       specializationsByQualification[qualification as keyof typeof specializationsByQualification];
 
     if (!specialization || !specializationOptions?.includes(specialization)) {
-      errors.specialization = "Specialization is required";
+      errors.specialization = 'Specialization is required';
     }
     const totalValidSkills =
-      skills.length + skillBadgesState.filter(badge => badge.flag === "added").length;
+      skills.length + skillBadgesState.filter(badge => badge.flag === 'added').length;
 
     if (totalValidSkills === 0) {
-      errors.skills = "At least one valid skill is required";
+      errors.skills = 'At least one valid skill is required';
     }
 
     if (locations.length === 0) {
-      errors.locations = "At least one location is required";
+      errors.locations = 'At least one location is required';
     }
 
     if (!experience || !experienceOptions.includes(experience)) {
-      errors.experience = "Experience is required";
+      errors.experience = 'Experience is required';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -322,7 +322,7 @@ export const useProfessionalDetailsFormViewModel = ({
     const skillsRequired = [
       ...skills,
       ...skillBadgesState
-        .filter(badge => badge.flag === "added")
+        .filter(badge => badge.flag === 'added')
         .map(badge => ({
           id: badge.skillBadge.id,
           skillName: badge.skillBadge.name,
@@ -338,7 +338,7 @@ export const useProfessionalDetailsFormViewModel = ({
       skillsRequired,
     };
 
-    console.log("Request Body:", requestBody);
+    console.log('Request Body:', requestBody);
 
     try {
       const response = await ProfileViewModel.saveProfessionalDetails(
@@ -350,17 +350,17 @@ export const useProfessionalDetailsFormViewModel = ({
       if (response.formErrors) {
         setValidationErrors(response.formErrors);
       } else if (response.success) {
-        showToast("success", "Professional details updated successfully");
+        showToast('success', 'Professional details updated successfully');
         onClose();
         onReload();
       } else {
-        showToast("error", "Error updating professional details");
+        showToast('error', 'Error updating professional details');
         onClose();
         onReload();
       }
     } catch (error) {
-      console.error("Internal error:", error);
-      showToast("error", "Error occurred while updating professional details");
+      console.error('Internal error:', error);
+      showToast('error', 'Error occurred while updating professional details');
     }
   };
 

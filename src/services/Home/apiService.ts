@@ -1,4 +1,4 @@
-import apiClient from "../login/ApiClient";
+import apiClient from '../login/ApiClient';
 export const fetchJobCounts = async (applicantId: number | null, jwtToken: string | null) => {
   try {
     const [recommendedResponse, appliedResponse, savedResponse] = await Promise.all([
@@ -13,7 +13,7 @@ export const fetchJobCounts = async (applicantId: number | null, jwtToken: strin
       savedJobs: savedResponse.data,
     };
   } catch (error) {
-    console.error("Error fetching job counts:", error);
+    console.error('Error fetching job counts:', error);
     throw error;
   }
 };

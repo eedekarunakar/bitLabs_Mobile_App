@@ -1,10 +1,10 @@
-import React from "react";
-import { View } from "react-native";
-import PropTypes from "prop-types"; // Import prop-types
+import React from 'react';
+import {View} from 'react-native';
+import PropTypes from 'prop-types'; // Import prop-types
 
-const TabIcon = ({ focused, IconOutline, IconSolid, color }) => {
+const TabIcon = ({focused, IconOutline, IconSolid, color}) => {
   return (
-    <View style={{ alignItems: "center", marginBottom: 18 }}>
+    <View style={{alignItems: 'center', marginBottom: 18}}>
       {focused ? (
         <IconSolid width={24} height={24} color={color} />
       ) : (

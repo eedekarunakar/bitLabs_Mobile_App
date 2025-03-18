@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { AppState, AppStateStatus } from "react-native";
+import {useState, useEffect} from 'react';
+import {AppState, AppStateStatus} from 'react-native';
 
 const useOtpManager = () => {
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [otpReceived, setOtpReceived] = useState(false);
   const [isOtpExpired, setIsOtpExpired] = useState(false);
   const [timer, setTimer] = useState(60);
@@ -13,7 +13,7 @@ const useOtpManager = () => {
     let countdown: NodeJS.Timeout;
 
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
-      if (nextAppState === "active" && otpReceived && !isOtpExpired) {
+      if (nextAppState === 'active' && otpReceived && !isOtpExpired) {
         const timeElapsed = Math.floor((Date.now() - lastTimeStamp) / 1000);
         setTimer(prevTimer => Math.max(prevTimer - timeElapsed, 0));
       } else {
@@ -21,7 +21,7 @@ const useOtpManager = () => {
       }
     };
 
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
 
     if (otpReceived && !isOtpExpired) {
       countdown = setInterval(() => {

@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { G, Path, Defs, ClipPath, Rect } from "react-native-svg";
+import * as React from 'react';
+import Svg, {G, Path, Defs, ClipPath, Rect} from 'react-native-svg';
 const Alertcircle = props => (
   <Svg
     width={13}
@@ -7,8 +7,7 @@ const Alertcircle = props => (
     viewBox="0 0 13 13"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <G id="alert-circle 1" clipPath="url(#clip0_4240_11837)">
       <Path
         id="Vector"

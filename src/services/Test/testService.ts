@@ -1,4 +1,4 @@
-import apiClient from "../login/ApiClient";
+import apiClient from '../login/ApiClient';
 
 export const submitTestResult = async (
   userId: number,
@@ -11,11 +11,11 @@ export const submitTestResult = async (
       JSON.stringify(testDetails),
     );
     if (response.status === 200) {
-      return { status: true };
+      return {status: true};
     }
     return response.data;
   } catch (error) {
-    console.error("Error submitting test result:", error);
+    console.error('Error submitting test result:', error);
     throw error;
   }
 };

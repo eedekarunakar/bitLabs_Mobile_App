@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
-import { View, Text, Image, ScrollView, StyleSheet, Dimensions, Linking } from "react-native";
-import GradientButton from "../styles/GradientButton";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "@models/Model";
-import UserContext from "../../context/UserContext";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, {useContext} from 'react';
+import {View, Text, Image, ScrollView, StyleSheet, Dimensions, Linking} from 'react-native';
+import GradientButton from '../styles/GradientButton';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@models/Model';
+import UserContext from '../../context/UserContext';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Badges">;
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Badges'>;
 
 const ExploreSection = () => {
-  const { verifiedStatus } = useContext(UserContext);
+  const {verifiedStatus} = useContext(UserContext);
   const navigation = useNavigation<NavigationProp>();
 
   return (
@@ -19,8 +19,7 @@ const ExploreSection = () => {
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        style={styles.scrollContainer}
-      >
+        style={styles.scrollContainer}>
         {/* Second Section - Larger Cards */}
         {/* <View style={styles.largeCard}>
           <Text style={styles.cardTitle}>
@@ -42,26 +41,25 @@ const ExploreSection = () => {
           <View style={styles.largeCard}>
             <View
               style={{
-                borderColor: "red",
+                borderColor: 'red',
                 borderRadius: 10,
                 borderWidth: 1.5,
                 paddingHorizontal: 5,
-                marginLeft: "80%",
-              }}
-            >
-              <Text style={{ fontFamily: "PlusJakartaSans-Medium", color: "red", fontSize: 12 }}>
+                marginLeft: '80%',
+              }}>
+              <Text style={{fontFamily: 'PlusJakartaSans-Medium', color: 'red', fontSize: 12}}>
                 New
               </Text>
             </View>
-            <Text style={styles.cardTitle}>Earn Pre-Screened{"\n"} Badge</Text>
+            <Text style={styles.cardTitle}>Earn Pre-Screened{'\n'} Badge</Text>
             <Image
-              source={require("../../assests/Images/Earn_badge.png")}
+              source={require('../../assests/Images/Earn_badge.png')}
               style={styles.cardImage}
             />
 
             <GradientButton
               title="Take Test"
-              onPress={() => navigation.navigate("Badges")}
+              onPress={() => navigation.navigate('Badges')}
               style={styles.cardButton}
             />
           </View>
@@ -69,16 +67,16 @@ const ExploreSection = () => {
 
         <View style={[styles.largeCard, styles.lastCard]}>
           <Text style={styles.cardTitle}>
-            Get Certified on Advanced{"\n"}
-            {"                 "}Technologies
+            Get Certified on Advanced{'\n'}
+            {'                 '}Technologies
           </Text>
           <Image
-            source={require("../../assests/Images/Certificate.png")}
+            source={require('../../assests/Images/Certificate.png')}
             style={styles.cardImage}
           />
           <GradientButton
             title="Start Learning"
-            onPress={() => Linking.openURL("https://upskill.bitlabs.in/login/index.php")}
+            onPress={() => Linking.openURL('https://upskill.bitlabs.in/login/index.php')}
             style={styles.cardButton}
           />
         </View>
@@ -89,57 +87,57 @@ const ExploreSection = () => {
 
 const styles = StyleSheet.create({
   textBelowCard: {
-    textAlign: "left",
+    textAlign: 'left',
     fontSize: screenWidth * 0.04,
-    color: "#000000",
+    color: '#000000',
     marginBottom: screenHeight * 0.02,
     marginLeft: screenWidth * 0.07,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
     marginTop: screenHeight * 0.025,
   },
   scrollContainer: {
-    width: "100%",
+    width: '100%',
     paddingHorizontal: screenWidth * 0.05,
   },
   largeCard: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     padding: screenWidth * 0.05,
     marginRight: screenWidth * 0.03,
     borderRadius: screenWidth * 0.04,
 
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
     width: screenWidth * 0.7,
-    alignItems: "center",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     height: screenHeight * 0.37,
   },
   cardImage: {
-    width: "85%",
+    width: '85%',
     height: screenHeight * 0.15,
     borderRadius: screenWidth * 0.02,
     marginBottom: screenHeight * 0.08,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   cardTitle: {
     fontSize: screenWidth * 0.042,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: "#000000",
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: '#000000',
     marginBottom: screenHeight * 0.01,
   },
   cardButton: {
     marginTop: screenHeight * 0.02,
     paddingVertical: screenHeight * 0.015,
-    backgroundColor: "#fa9020",
+    backgroundColor: '#fa9020',
     width: screenWidth * 0.7,
-    alignSelf: "center",
-    position: "absolute",
+    alignSelf: 'center',
+    position: 'absolute',
     bottom: 0,
     borderBottomLeftRadius: screenWidth * 0.03,
     borderBottomRightRadius: screenWidth * 0.025,
     height: screenHeight * 0.06,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
@@ -147,7 +145,7 @@ const styles = StyleSheet.create({
     marginRight: screenWidth * 0.09,
   },
   touchableContainer: {
-    position: "absolute", // Ensure the TouchableOpacity is positioned absolutely within the card
+    position: 'absolute', // Ensure the TouchableOpacity is positioned absolutely within the card
     bottom: 0, // Position it at the bottom of the card
     left: 0, // Align it to the left edge
     right: 0, // Align it to the right edge

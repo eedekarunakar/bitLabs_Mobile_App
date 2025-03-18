@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {createContext, useContext, useState, ReactNode} from 'react';
 
 // Define the context type
 type PdfContextType = {
@@ -19,7 +19,7 @@ type PdfProviderProps = {
   children: ReactNode; // Explicitly type `children`
 };
 
-export const PdfProvider: React.FC<PdfProviderProps> = ({ children }) => {
+export const PdfProvider: React.FC<PdfProviderProps> = ({children}) => {
   const [pdfUri, setPdfUri] = useState<string | null>(null);
 
   const refreshPdf = () => {
@@ -27,7 +27,7 @@ export const PdfProvider: React.FC<PdfProviderProps> = ({ children }) => {
   };
 
   return (
-    <PdfContext.Provider value={{ pdfUri, setPdfUri, refreshPdf }}>{children}</PdfContext.Provider>
+    <PdfContext.Provider value={{pdfUri, setPdfUri, refreshPdf}}>{children}</PdfContext.Provider>
   );
 };
 

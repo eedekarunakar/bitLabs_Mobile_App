@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { G, Path, Defs, LinearGradient, Stop, ClipPath, Rect } from "react-native-svg";
+import * as React from 'react';
+import Svg, {G, Path, Defs, LinearGradient, Stop, ClipPath, Rect} from 'react-native-svg';
 const NewPaperSolid = props => (
   <Svg
     width={24}
@@ -7,8 +7,7 @@ const NewPaperSolid = props => (
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <G clipPath="url(#clip0_4224_12768)">
       <Path
         fillRule="evenodd"
@@ -28,8 +27,7 @@ const NewPaperSolid = props => (
         y1={21}
         x2={20.25}
         y2={21}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>
@@ -39,8 +37,7 @@ const NewPaperSolid = props => (
         y1={19.5}
         x2={21.75}
         y2={19.5}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>

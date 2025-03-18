@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,33 +9,33 @@ import {
   Dimensions,
   BackHandler,
   ActivityIndicator,
-} from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import MaskedView from "@react-native-masked-view/masked-view";
-import LinearGradient from "react-native-linear-gradient";
-import { useAuth } from "@context/Authcontext";
-import aptitudeTestData from "@models/data/testData.json";
-import technicalTestData from "@models/data/TechnicalTest.json";
-import loadTestData from "./loadTestData";
-import Icon from "react-native-vector-icons/AntDesign";
-import { TestData } from "@models/Model";
-import { fetchTestStatus } from "@services/Home/BadgeService";
-import ExitModal from "./ExitModal";
-const { width, height } = Dimensions.get("window");
-const Test = ({ route, navigation }: any) => {
-  const { userId, userToken } = useAuth();
+} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import MaskedView from '@react-native-masked-view/masked-view';
+import LinearGradient from 'react-native-linear-gradient';
+import {useAuth} from '@context/Authcontext';
+import aptitudeTestData from '@models/data/testData.json';
+import technicalTestData from '@models/data/TechnicalTest.json';
+import loadTestData from './loadTestData';
+import Icon from 'react-native-vector-icons/AntDesign';
+import {TestData} from '@models/Model';
+import {fetchTestStatus} from '@services/Home/BadgeService';
+import ExitModal from './ExitModal';
+const {width, height} = Dimensions.get('window');
+const Test = ({route, navigation}: any) => {
+  const {userId, userToken} = useAuth();
   const {
     testName: routeTestName,
     testStatus: routeTestStatus,
     testType,
     skillName,
   } = route.params || {};
-  const [testName, setTestName] = useState(routeTestName || "General Aptitude Test");
-  const [testStatus, setTestStatus] = useState(routeTestStatus || "F");
+  const [testName, setTestName] = useState(routeTestName || 'General Aptitude Test');
+  const [testStatus, setTestStatus] = useState(routeTestStatus || 'F');
   const [step, setStep] = useState(1); // Default initial step
   const [testData, setTestData] = useState<TestData>({
-    testName: "",
-    duration: "",
+    testName: '',
+    duration: '',
     numberOfQuestions: 0,
     topicsCovered: [],
   });
@@ -43,14 +43,14 @@ const Test = ({ route, navigation }: any) => {
   const [showExitModal, setShowExitModal] = useState(false);
 
   useEffect(() => {
-    if (testType === "SkillBadge") {
+    if (testType === 'SkillBadge') {
       setLoading(false);
       return;
     }
     const getTestStatus = async () => {
       const data = await fetchTestStatus(userId, userToken);
       if (data && Array.isArray(data) && data.length > 0) {
-        const { testStatus: fetchedStatus, testName: fetchedName } = data[0];
+        const {testStatus: fetchedStatus, testName: fetchedName} = data[0];
         setTestName(fetchedName || testName);
         setTestStatus(fetchedStatus || testStatus);
         adjustStep(fetchedName, fetchedStatus);
@@ -67,24 +67,24 @@ const Test = ({ route, navigation }: any) => {
         setShowExitModal(true);
         return true;
       };
-      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, []),
   );
   const adjustStep = (name: string, status: string) => {
     const lowerStatus = status.toLowerCase();
-    if (lowerStatus === "p" && name === "General Aptitude Test") {
+    if (lowerStatus === 'p' && name === 'General Aptitude Test') {
       setStep(2);
-    } else if (lowerStatus === "p" && name === "Technical Test") {
+    } else if (lowerStatus === 'p' && name === 'Technical Test') {
       setStep(3);
-    } else if (lowerStatus === "f" && name === "Technical Test") {
+    } else if (lowerStatus === 'f' && name === 'Technical Test') {
       setStep(2);
     } else {
       setStep(1);
     }
   };
   useEffect(() => {
-    if (testType === "SkillBadge") {
+    if (testType === 'SkillBadge') {
       const data = loadTestData(skillName);
       setTestData(data);
     } else {
@@ -94,8 +94,8 @@ const Test = ({ route, navigation }: any) => {
         setTestData(technicalTestData);
       } else {
         setTestData({
-          testName: "",
-          duration: "",
+          testName: '',
+          duration: '',
           numberOfQuestions: 0,
           topicsCovered: [],
         });
@@ -108,63 +108,62 @@ const Test = ({ route, navigation }: any) => {
         <ActivityIndicator
           size="large"
           color="#F46F16"
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
         />
       </View>
     );
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => setShowExitModal(true)} style={styles.backButton}>
           <Icon name="arrowleft" size={24} color="#495057" />
         </TouchableOpacity>
       </View>
-      <ScrollView style={{ flexGrow: 1 }}>
+      <ScrollView style={{flexGrow: 1}}>
         <View style={styles.container}>
           <View style={styles.container1}>
             <MaskedView
               style={styles.maskedView}
-              maskElement={<Text style={styles.head}>{testData.testName || "Loading..."}</Text>}
-            >
+              maskElement={<Text style={styles.head}>{testData.testName || 'Loading...'}</Text>}>
               <LinearGradient
-                colors={["#F97316", "#FAA729"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                colors={['#F97316', '#FAA729']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
                 style={styles.gradientBackground1}
               />
             </MaskedView>
-            <View style={{ flexDirection: "row", alignItems: "flex-start", marginLeft: -20 }}>
+            <View style={{flexDirection: 'row', alignItems: 'flex-start', marginLeft: -20}}>
               <View style={styles.box1}>
                 <Text style={styles.text}>Duration</Text>
-                <Text style={styles.text1}>{testData.duration || "N/A"}</Text>
+                <Text style={styles.text1}>{testData.duration || 'N/A'}</Text>
               </View>
               <View style={styles.box1}>
                 <Text style={styles.text}>Questions</Text>
                 <Text style={styles.text1}>{testData.numberOfQuestions || 0}</Text>
               </View>
             </View>
-            <Text style={{ color: "#797979", fontFamily: "PlusJakartaSans-Medium" }}>
+            <Text style={{color: '#797979', fontFamily: 'PlusJakartaSans-Medium'}}>
               Topics Covered
             </Text>
-            <Text style={{ lineHeight: 27, color: "black", fontFamily: "PlusJakartaSans-Bold" }}>
+            <Text style={{lineHeight: 27, color: 'black', fontFamily: 'PlusJakartaSans-Bold'}}>
               {Array.isArray(testData.topicsCovered) && testData.topicsCovered.length > 0
-                ? `${testData.topicsCovered.join(", ")}`
-                : "No topics available"}
+                ? `${testData.topicsCovered.join(', ')}`
+                : 'No topics available'}
             </Text>
           </View>
           <View style={styles.container2}>
             <Text style={styles.heading}>Instructions</Text>
             {[
-              "You need to score at least 70% to pass the exam.",
-              "Once started, the test cannot be paused or reattempted during the same session.",
-              "If you score below 70%, you can retake the exam after 7 days.",
-              "Ensure all questions are answered before submitting, as your first submission will be final.",
-              "Please complete the test independently. External help is prohibited.",
-              "Make sure your device is fully charged and has a stable internet connection before starting the test.",
+              'You need to score at least 70% to pass the exam.',
+              'Once started, the test cannot be paused or reattempted during the same session.',
+              'If you score below 70%, you can retake the exam after 7 days.',
+              'Ensure all questions are answered before submitting, as your first submission will be final.',
+              'Please complete the test independently. External help is prohibited.',
+              'Make sure your device is fully charged and has a stable internet connection before starting the test.',
             ].map((instruction, index) => (
               <View key={index} style={styles.point}>
-                <Text style={styles.bullet}>{"\u2022"}</Text>
+                <Text style={styles.bullet}>{'\u2022'}</Text>
                 <Text style={styles.instruction}>{instruction}</Text>
               </View>
             ))}
@@ -183,19 +182,17 @@ const Test = ({ route, navigation }: any) => {
       />
       <View style={styles.footer}>
         <LinearGradient
-          colors={["#F97316", "#FAA729"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradientBackground}
-        >
+          colors={['#F97316', '#FAA729']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientBackground}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              const nameToSend = testType === "SkillBadge" ? skillName : testData.testName;
-              console.log("Navigating with", nameToSend);
-              navigation.navigate("TestScreen", { testName: nameToSend });
-            }}
-          >
+              const nameToSend = testType === 'SkillBadge' ? skillName : testData.testName;
+              console.log('Navigating with', nameToSend);
+              navigation.navigate('TestScreen', {testName: nameToSend});
+            }}>
             <Text style={styles.start}>Start</Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -212,46 +209,46 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 13,
     borderRadius: 8,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     marginBottom: 10,
   },
   container1: {
-    width: "90%",
+    width: '90%',
     height: 220,
     marginTop: 15,
     marginLeft: 20,
     borderRadius: 8,
-    backgroundColor: "#F8F8F8",
+    backgroundColor: '#F8F8F8',
     padding: 15,
-    justifyContent: "space-around",
+    justifyContent: 'space-around',
   },
   head: {
-    color: "orange",
+    color: 'orange',
     fontSize: 20,
     lineHeight: 20,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   box1: {
     width: 98,
     height: 62,
     marginLeft: 20,
     borderRadius: 16,
-    backgroundColor: "#F0F0F0",
-    justifyContent: "space-evenly",
+    backgroundColor: '#F0F0F0',
+    justifyContent: 'space-evenly',
   },
   container2: {
-    alignContent: "center",
+    alignContent: 'center',
     marginLeft: 20,
   },
   text: {
     fontSize: 12,
     lineHeight: 20,
-    color: "#9E9E9E",
+    color: '#9E9E9E',
     marginLeft: 10,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   maskedView: {
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 40,
   },
   gradientBackground1: {
@@ -261,76 +258,76 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     marginLeft: 10,
-    color: "#484848",
-    fontFamily: "PlusJakartaSans-Bold",
+    color: '#484848',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   heading: {
     fontSize: 18,
     marginBottom: 16,
-    color: "#000",
-    fontFamily: "PlusJakartaSans-Bold",
+    color: '#000',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   point: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     marginBottom: 12,
   },
   bullet: {
     fontSize: 18,
-    color: "grey",
+    color: 'grey',
     marginRight: 8,
     lineHeight: 22,
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   instruction: {
     flex: 1,
     fontSize: 14,
-    fontWeight: "400",
-    color: "#756E6E",
+    fontWeight: '400',
+    color: '#756E6E',
     lineHeight: 23,
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   footer: {
     height: height * 0.075,
     gap: height * 0.015, // Responsive gap
-    backgroundColor: "#FFF",
-    justifyContent: "center",
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
   },
   gradientBackground: {
     borderRadius: 10,
     width: width * 0.9,
     height: 40,
     marginLeft: 22.5,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   button: {
-    width: "100%",
+    width: '100%',
     height: height * 0.06,
     borderRadius: width * 0.02,
     marginLeft: 22.5,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   start: {
-    color: "#FFFFFF",
-    fontFamily: "PlusJakartaSans-Bold",
+    color: '#FFFFFF',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: width * 0.045,
     lineHeight: height * 0.03,
     marginRight: 40,
   },
   headerContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
     height: 50,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   backButton: {
-    position: "absolute",
+    position: 'absolute',
     left: 15,
   },
   loaderContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

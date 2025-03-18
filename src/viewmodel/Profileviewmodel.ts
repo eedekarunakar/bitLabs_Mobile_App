@@ -1,36 +1,36 @@
-import { useState, useEffect, useCallback, useContext } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { ProfileService } from "@services/profile/ProfileService";
-import DocumentPicker, { DocumentPickerResponse } from "react-native-document-picker";
-import { showToast } from "@services/login/ToastService";
-import { useProfilePhoto } from "@context/ProfilePhotoContext";
-import { base64Image } from "@services/base64Image";
-import axios from "axios";
-import UserContext from "@context/UserContext";
-import resumeCall from "@services/profile/Resume";
-import { useAuth } from "@context/Authcontext";
-import { usePdf } from "../context/ResumeContext";
-import { Platform, PermissionsAndroid } from "react-native";
+import {useState, useEffect, useCallback, useContext} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {ProfileService} from '@services/profile/ProfileService';
+import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
+import {showToast} from '@services/login/ToastService';
+import {useProfilePhoto} from '@context/ProfilePhotoContext';
+import {base64Image} from '@services/base64Image';
+import axios from 'axios';
+import UserContext from '@context/UserContext';
+import resumeCall from '@services/profile/Resume';
+import {useAuth} from '@context/Authcontext';
+import {usePdf} from '../context/ResumeContext';
+import {Platform, PermissionsAndroid} from 'react-native';
 import {
   launchCamera,
   launchImageLibrary,
   CameraOptions,
   ImagePickerResponse,
   ImageLibraryOptions,
-} from "react-native-image-picker";
+} from 'react-native-image-picker';
 
 export const useProfileViewModel = (userToken: string | null, userId: number | null) => {
   const [profileData, setProfileData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const userid = useAuth();
-  const { refreshPdf } = usePdf();
+  const {refreshPdf} = usePdf();
   const [error, setError] = useState<string | null>(null);
   const [isProfessionalFormVisible, setProfessionalFormVisible] = useState(false);
   const [isCameraOptionsVisible, setCameraOptionsVisible] = useState(false);
   const [isPersonalDetailsFormVisible, setPersonalDetailsFormVisible] = useState(false);
   const [isResumeModalVisible, setResumeModalVisible] = useState(false);
   const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
-  const [resumeText, setResumeText] = useState<string>("");
+  const [resumeText, setResumeText] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
@@ -40,26 +40,26 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   const [hasResume, setHadResume] = useState(false);
   const [originalHasResume, setOriginalHasResume] = useState(false); // Track initial state
   const [isResumeRemoved, setIsResumeRemoved] = useState(false);
-  const { fetchProfilePhoto, photo } = useProfilePhoto();
-  const { setPersonalName } = useContext(UserContext);
+  const {fetchProfilePhoto, photo} = useProfilePhoto();
+  const {setPersonalName} = useContext(UserContext);
 
-  const DEFAULT_PROFILE_IMAGE = require("../assests/profile/profile.png");
+  const DEFAULT_PROFILE_IMAGE = require('../assests/profile/profile.png');
 
   // Personal Details State
   const [personalDetails, setPersonalDetails] = useState({
-    firstName: "",
-    lastName: "",
-    alternatePhoneNumber: "",
-    email: "", // Non-editable, if needed
+    firstName: '',
+    lastName: '',
+    alternatePhoneNumber: '',
+    email: '', // Non-editable, if needed
   });
   const [personalData, setPersonalData] = useState({
-    firstName: "",
-    lastName: "",
-    alternatePhoneNumber: "",
-    email: "", // Non-editable, if needed
+    firstName: '',
+    lastName: '',
+    alternatePhoneNumber: '',
+    email: '', // Non-editable, if needed
   });
   const handlePermission = async () => {
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       const permissions =
         Platform.Version >= 33
           ? [
@@ -89,16 +89,16 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     }
   };
   const validatePhoto = (photoFile: any) => {
-    const allowedTypes = ["image/jpeg", "image/png"];
+    const allowedTypes = ['image/jpeg', 'image/png'];
     const maxSize = 1048576; // 1 MB in bytes
 
     if (!allowedTypes.includes(photoFile.type)) {
-      showToast("error", "only JPEG and PNG files are allowed.");
+      showToast('error', 'only JPEG and PNG files are allowed.');
       return false;
     }
 
     if (photoFile.fileSize > maxSize) {
-      showToast("error", "File size must be less than 1 MB.");
+      showToast('error', 'File size must be less than 1 MB.');
       return false;
     }
 
@@ -111,12 +111,12 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       const result = await ProfileService.uploadProfilePhoto(userToken, userId, photoFile);
       if (result.success) {
         fetchProfilePhoto(userToken, userId);
-        showToast("success", "Profile photo uploaded successfully!");
+        showToast('success', 'Profile photo uploaded successfully!');
       } else {
-        showToast("error", "Failed to upload photo.");
+        showToast('error', 'Failed to upload photo.');
       }
     } catch (error) {
-      console.error("Error uploading photo:", error);
+      console.error('Error uploading photo:', error);
     } finally {
       setIsLoading(false);
     }
@@ -125,34 +125,34 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   const handleCamera = async () => {
     const isPermissionGranted = await handlePermission();
     if (!isPermissionGranted) {
-      console.log("Permission denied");
+      console.log('Permission denied');
       return;
     }
     const options: CameraOptions = {
-      mediaType: "photo",
+      mediaType: 'photo',
       saveToPhotos: true,
     };
     launchCamera(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
-        console.log("User cancelled");
+        console.log('User cancelled');
       } else if (response.errorCode) {
-        console.log("Image picker error");
+        console.log('Image picker error');
       } else if (response.assets && response.assets.length > 0) {
         const photoFile = response.assets[0];
         if (validatePhoto(photoFile)) {
           uploadProfilePhoto(photoFile);
         } else {
-          console.log("Invalid file type or size.");
+          console.log('Invalid file type or size.');
         }
       } else {
-        console.log("Error storing image");
+        console.log('Error storing image');
       }
       setCameraOptionsVisible(false);
     });
   };
   const removePhoto = async () => {
     if (photo === DEFAULT_PROFILE_IMAGE) {
-      showToast("error", "No photo to remove.");
+      showToast('error', 'No photo to remove.');
       return;
     }
     setIsLoading(true);
@@ -160,8 +160,8 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       // Prepare the default image file object
       const defaultImageFile = {
         uri: base64Image,
-        type: "image/png", // Correct MIME type
-        fileName: "default_profile.png",
+        type: 'image/png', // Correct MIME type
+        fileName: 'default_profile.png',
       };
 
       // Upload the default image
@@ -170,15 +170,15 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       if (result.success) {
         await fetchProfilePhoto(userToken, userId); // Refresh profile photo after successful upload
 
-        showToast("success", "Default image set successfully!");
+        showToast('success', 'Default image set successfully!');
       } else {
-        showToast("error", "Failed to remove photo.");
+        showToast('error', 'Failed to remove photo.');
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Error setting default photo:", error.message);
+        console.error('Error setting default photo:', error.message);
       }
-      showToast("error", "Error removing photo. Please try again.");
+      showToast('error', 'Error removing photo. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -186,11 +186,11 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
   const handleLibrary = () => {
     const options: ImageLibraryOptions = {
-      mediaType: "photo",
+      mediaType: 'photo',
     };
     launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
-        console.log("User cancelled");
+        console.log('User cancelled');
       } else if (response.errorCode) {
         console.log(response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
@@ -198,7 +198,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
         if (validatePhoto(photoFile)) {
           uploadProfilePhoto(photoFile);
         } else {
-          console.log("Invalid file type or size.");
+          console.log('Invalid file type or size.');
         }
       }
       setCameraOptionsVisible(false);
@@ -206,11 +206,11 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   };
   const handleCancelUpload = () => {
     setResumeFile(null); // Temporarily remove the file from the UI
-    setResumeText("");
+    setResumeText('');
     setLoading(false);
     setProgress(0);
     setIsResumeRemoved(true); // Mark that the resume was removed temporarily
-    showToast("error", "Upload cancelled");
+    showToast('error', 'Upload cancelled');
     setShowBorder(false);
   };
 
@@ -222,7 +222,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       });
 
       if (!result || result.length === 0) {
-        showToast("error", "No file selected.");
+        showToast('error', 'No file selected.');
         return;
       }
 
@@ -231,14 +231,14 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
       // Validate file size
       if (selectedFile.size && selectedFile.size > maxSize) {
-        showToast("error", "File size exceeds the 1MB limit.");
+        showToast('error', 'File size exceeds the 1MB limit.');
         setIsUploadComplete(false);
         return;
       }
 
       // Set selected file but do not upload yet
       setResumeFile(selectedFile);
-      setResumeText(selectedFile.name || "");
+      setResumeText(selectedFile.name || '');
       //showToast('Resume selected. Uploading...');
       setTimeout(() => {
         // Start the upload process
@@ -262,40 +262,40 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       }, 10); // 0.5 second delay before starting the progress bar
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        showToast("error", "Upload cancelled.");
+        showToast('error', 'Upload cancelled.');
         setIsUploadComplete(false);
-      } else if ((err as { message: string }).message === "Network Error") {
-        showToast("error", "Network error. Please check your internet connection and try again.");
+      } else if ((err as {message: string}).message === 'Network Error') {
+        showToast('error', 'Network error. Please check your internet connection and try again.');
       } else {
-        console.error("Unknown error: ", err);
-        showToast("error", "Error selecting file. Please try again.");
+        console.error('Unknown error: ', err);
+        showToast('error', 'Error selecting file. Please try again.');
       }
     }
   };
 
   const handleSaveResume = async () => {
     // Case 1: A new file was manually selected (its URI will not be empty)
-    if (resumeFile && resumeFile.uri !== "") {
+    if (resumeFile && resumeFile.uri !== '') {
       setbgcolor(false);
       const formData = new FormData();
-      formData.append("resume", {
+      formData.append('resume', {
         uri: resumeFile.uri,
         type: resumeFile.type,
         name: resumeFile.name,
       } as any);
       const response = await ProfileService.uploadResume(userToken, userId, formData);
       if (response.success) {
-        showToast("success", "Resume uploaded successfully!");
+        showToast('success', 'Resume uploaded successfully!');
         setResumeModalVisible(false);
         setShowBorder(false);
         if (userid.userId !== null) {
           refreshPdf();
         } else {
-          console.error("User ID is null");
+          console.error('User ID is null');
         }
       } else {
         console.error(response.message);
-        showToast("error", "Error uploading resume. Please try again later.");
+        showToast('error', 'Error uploading resume. Please try again later.');
         setResumeModalVisible(false);
       }
     }
@@ -309,7 +309,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
     // or the user has removed the file (isResumeRemoved === true)
     else {
       setbgcolor(true); // This will trigger the "No file selected" validation error.
-      showToast("error", "Please upload a resume before saving");
+      showToast('error', 'Please upload a resume before saving');
     }
   };
 
@@ -324,13 +324,13 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
       setPersonalDetailsFormVisible(false);
       loadProfile();
-      showToast("success", "Personal details updated successfully");
+      showToast('success', 'Personal details updated successfully');
     } else {
-      showToast("error", "Error updating, please try again later");
+      showToast('error', 'Error updating, please try again later');
     }
   };
 
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
   // this function is passed to child component professionalform, use usecallback
   //to memoize and  maintain reference
 
@@ -343,10 +343,10 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       // Populate personal details from the profile data
       if (data?.basicDetails) {
         const newPersonalDetails = {
-          firstName: data.basicDetails.firstName || "",
-          lastName: data.basicDetails.lastName || "",
-          alternatePhoneNumber: data.basicDetails.alternatePhoneNumber || "",
-          email: data.basicDetails.email || "", // Non-editable
+          firstName: data.basicDetails.firstName || '',
+          lastName: data.basicDetails.lastName || '',
+          alternatePhoneNumber: data.basicDetails.alternatePhoneNumber || '',
+          email: data.basicDetails.email || '', // Non-editable
         };
         setPersonalDetails(newPersonalDetails);
         setPersonalData(newPersonalDetails);
@@ -354,7 +354,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
       setProfileData(data);
     } catch (err) {
-      setError("Poor Network Connection.");
+      setError('Poor Network Connection.');
     } finally {
       setIsLoading(false);
     }
@@ -367,7 +367,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   useFocusEffect(
     useCallback(() => {
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Reload timeout exceeded")), 4000),
+        setTimeout(() => reject(new Error('Reload timeout exceeded')), 4000),
       );
 
       const reloadWithTimeout = async () => {
@@ -394,25 +394,25 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
   // Validate Form
   const validateForm = () => {
-    const errors: { [key: string]: string } = {};
+    const errors: {[key: string]: string} = {};
     const nameRegex = /^[A-Za-z\s]+$/;
-    if (!personalDetails.firstName) errors.firstName = "First name is required";
+    if (!personalDetails.firstName) errors.firstName = 'First name is required';
     else if (personalDetails.firstName.length < 3) {
-      errors.firstName = "First name must be at least 3 characters long";
+      errors.firstName = 'First name must be at least 3 characters long';
     } else if (!nameRegex.test(personalDetails.firstName)) {
-      errors.firstName = "First name must only contain letters and spaces";
+      errors.firstName = 'First name must only contain letters and spaces';
     }
 
-    if (!personalDetails.lastName) errors.lastName = "Last name is required";
+    if (!personalDetails.lastName) errors.lastName = 'Last name is required';
     else if (personalDetails.lastName.length < 3) {
-      errors.lastName = "Last name must be at least 3 characters long";
+      errors.lastName = 'Last name must be at least 3 characters long';
     } else if (!nameRegex.test(personalDetails.lastName)) {
-      errors.lastName = "Last name must only contain letters and spaces";
+      errors.lastName = 'Last name must only contain letters and spaces';
     }
 
     if (!validatePhoneNumber(personalDetails.alternatePhoneNumber)) {
       errors.alternatePhoneNumber =
-        "Mobile number must start with 6, 7, 8, or 9 and be 10 digits long";
+        'Mobile number must start with 6, 7, 8, or 9 and be 10 digits long';
     }
     setFormErrors(errors);
 
@@ -439,7 +439,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
   // Handle Input Changes
   const handleInputChange = (field: string, value: string) => {
-    setPersonalDetails(prevState => ({ ...prevState, [field]: value }));
+    setPersonalDetails(prevState => ({...prevState, [field]: value}));
   };
 
   useEffect(() => {
@@ -463,10 +463,10 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       // If the API confirmed a resume exists and the user had removed it temporarily, restore it.
       if (hasResume && isResumeRemoved) {
         setResumeFile({
-          uri: "",
-          name: `${personalDetails?.firstName || "user"}.pdf`,
+          uri: '',
+          name: `${personalDetails?.firstName || 'user'}.pdf`,
           fileCopyUri: null,
-          type: "application/pdf",
+          type: 'application/pdf',
           size: null,
         });
         setIsResumeRemoved(false); // Reset the removal flag
@@ -487,7 +487,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
           setVerified(result);
         }
       } catch (error) {
-        console.error("Error checking verification:", error);
+        console.error('Error checking verification:', error);
       }
     };
 
@@ -548,9 +548,9 @@ export const ProfileViewModel = {
     const response = await ProfileService.updateProfessionalDetails(userToken, userId, updatedData);
 
     if (response.success) {
-      return { success: true, profileData: response.profileData };
+      return {success: true, profileData: response.profileData};
     } else {
-      return { success: false, formErrors: response.formErrors };
+      return {success: false, formErrors: response.formErrors};
     }
   },
 };

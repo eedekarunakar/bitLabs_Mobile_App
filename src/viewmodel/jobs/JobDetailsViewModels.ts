@@ -1,12 +1,12 @@
-import { useState, useEffect, useContext } from "react";
-import { saveJob, applyJob, removeSavedJob } from "../../services/Jobs/JobDetails"; // Add removeSavedJob
-import { useAuth } from "@context/Authcontext";
-import { fetchJobDetails } from "@services/Jobs/RecommendedJobs";
-import { fetchCompanyLogo } from "@services/Jobs/AppliedJob";
-import UserContext from "@context/UserContext";
-import { showToast } from "@services/login/ToastService";
+import {useState, useEffect, useContext} from 'react';
+import {saveJob, applyJob, removeSavedJob} from '../../services/Jobs/JobDetails'; // Add removeSavedJob
+import {useAuth} from '@context/Authcontext';
+import {fetchJobDetails} from '@services/Jobs/RecommendedJobs';
+import {fetchCompanyLogo} from '@services/Jobs/AppliedJob';
+import UserContext from '@context/UserContext';
+import {showToast} from '@services/login/ToastService';
 const useJobDetailsViewModel = (jobId: string) => {
-  const { userToken, userId } = useAuth();
+  const {userToken, userId} = useAuth();
   const [isJobSaved, setIsJobSaved] = useState(false);
   const [isJobApplied, setIsJobApplied] = useState(false);
   const [suggestedCourses, setSuggestedCourses] = useState<string[]>([]);
@@ -15,7 +15,7 @@ const useJobDetailsViewModel = (jobId: string) => {
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]);
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
   const [companyLogo, setCompanyLogo] = useState<string | null>(null);
-  const { refreshJobCounts, setIsJobsLoaded ,setLastViewedJobIndex} = useContext(UserContext);
+  const {refreshJobCounts, setIsJobsLoaded, setLastViewedJobIndex} = useContext(UserContext);
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -52,30 +52,30 @@ const useJobDetailsViewModel = (jobId: string) => {
           setCompanyLogo(null); // Default if no recruiterId
         }
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        console.error('Error fetching profile data:', error);
       }
     };
 
     fetchProfileData();
   }, [jobId, userId, userToken]);
 
-  const handleSaveJob = async (JobIndex:number) => {
+  const handleSaveJob = async (JobIndex: number) => {
     try {
       const result = await saveJob(Number(jobId), userId, userToken);
       if (result) {
         setIsJobSaved(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        setLastViewedJobIndex(JobIndex)
-        showToast("success", "Job saved successfully!");
+        setLastViewedJobIndex(JobIndex);
+        showToast('success', 'Job saved successfully!');
       }
     } catch (error) {
-      console.error("Error saving job:", error);
-      showToast("error", "Failed to save job.");
+      console.error('Error saving job:', error);
+      showToast('error', 'Failed to save job.');
     }
   };
 
-  const handleApplyJob = async (JobIndex:number) => {
+  const handleApplyJob = async (JobIndex: number) => {
     try {
       const result = await applyJob(userId, Number(jobId), userToken);
       if (result) {
@@ -83,11 +83,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobsLoaded(false);
         refreshJobCounts();
         setLastViewedJobIndex(JobIndex);
-        showToast("success", "Job application submitted successfully!");
+        showToast('success', 'Job application submitted successfully!');
       }
     } catch (error) {
-      console.error("Error applying for job:", error);
-      showToast("error", "Failed to apply for job.");
+      console.error('Error applying for job:', error);
+      showToast('error', 'Failed to apply for job.');
     }
   };
 
@@ -98,11 +98,11 @@ const useJobDetailsViewModel = (jobId: string) => {
         setIsJobSaved(false);
         setIsJobsLoaded(false);
         refreshJobCounts();
-        showToast("success", "Job removed successfully!");
+        showToast('success', 'Job removed successfully!');
       }
     } catch (error) {
-      console.error("Error removing job:", error);
-      showToast("error", "Failed to remove job.");
+      console.error('Error removing job:', error);
+      showToast('error', 'Failed to remove job.');
     }
   };
 

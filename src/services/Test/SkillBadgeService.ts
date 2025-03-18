@@ -1,4 +1,4 @@
-import apiClient from "../login/ApiClient";
+import apiClient from '../login/ApiClient';
 // Create Axios instance with base URL
 
 export const submitSkillBadge = async (
@@ -9,7 +9,7 @@ export const submitSkillBadge = async (
 ): Promise<any> => {
   try {
     const response = await apiClient.post(
-      "/skill-badges/save",
+      '/skill-badges/save',
       {
         applicantId: userId,
         skillBadgeName: testName,
@@ -21,7 +21,7 @@ export const submitSkillBadge = async (
       return response.data;
     }
   } catch (error) {
-    console.error("Error submitting the test result:", error);
+    console.error('Error submitting the test result:', error);
     throw error;
   }
 };

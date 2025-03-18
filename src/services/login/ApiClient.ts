@@ -1,8 +1,8 @@
-import axios from "axios";
-import { Alert } from "react-native";
-import { API_BASE_URL } from "@env";
-import * as Keychain from "react-native-keychain";
-import { getCachedToken, setCachedToken } from "@services/TokenManager";
+import axios from 'axios';
+import {Alert} from 'react-native';
+import {API_BASE_URL} from '@env';
+import * as Keychain from 'react-native-keychain';
+import {getCachedToken, setCachedToken} from '@services/TokenManager';
 
 let logoutHandler: (() => void) | null = null;
 let sessionExpiredAlertActive = false;
@@ -18,7 +18,7 @@ export const setLogoutHandler = (logoutFn: () => void) => {
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -27,7 +27,7 @@ apiClient.interceptors.request.use(
   async config => {
     let token = getCachedToken(); // Get token from memory
     if (!token) {
-      const tokenData = await Keychain.getGenericPassword({ service: "authToken" });
+      const tokenData = await Keychain.getGenericPassword({service: 'authToken'});
       if (tokenData) {
         token = tokenData.password; // Update the outer token variable
         setCachedToken(token); // Cache it for future requests
@@ -50,9 +50,9 @@ const responseInterceptor = async (error: any) => {
     if (now - lastNoInternetAlertTime > 1 * 60 * 1000) {
       lastNoInternetAlertTime = now;
       Alert.alert(
-        "No Internet Connection",
-        "Please check your internet connection and try again.",
-        [{ text: "OK" }],
+        'No Internet Connection',
+        'Please check your internet connection and try again.',
+        [{text: 'OK'}],
       );
     }
     return Promise.reject(error);
@@ -66,9 +66,9 @@ const responseInterceptor = async (error: any) => {
         logoutHandler(); // Log out user
       }
 
-      Alert.alert("Session Expired", "Your session has expired. Please log in again.", [
+      Alert.alert('Session Expired', 'Your session has expired. Please log in again.', [
         {
-          text: "OK",
+          text: 'OK',
           onPress: () => {
             sessionExpiredAlertActive = false; // Reset flag after user acknowledges alert
           },

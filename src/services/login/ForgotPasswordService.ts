@@ -1,6 +1,6 @@
-import axios from "axios";
-import { AuthResponse } from "./Authservice";
-import apiClient from "./ApiClient";
+import axios from 'axios';
+import {AuthResponse} from './Authservice';
+import apiClient from './ApiClient';
 
 const convertToLowerCase = (email: string) => {
   return email.toLowerCase();
@@ -13,12 +13,12 @@ const sendOtp = async (forgotemail: string): Promise<AuthResponse> => {
     });
 
     if (response.status === 200) {
-      return { success: true, message: "OTP sent to your email!" };
+      return {success: true, message: 'OTP sent to your email!'};
     } else {
-      return { success: false, message: response.data };
+      return {success: false, message: response.data};
     }
   } catch (error) {
-    return { success: false, message: "Error sending OTP. Please try again." };
+    return {success: false, message: 'Error sending OTP. Please try again.'};
   }
 };
 
@@ -30,12 +30,12 @@ const verifyOtp = async (otp: string, signupEmail: string): Promise<AuthResponse
       email: lowercaseEmail,
     });
 
-    return { success: true, data: response.data };
+    return {success: true, data: response.data};
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return { success: false, data: error.response?.data };
+      return {success: false, data: error.response?.data};
     }
-    return { success: false };
+    return {success: false};
   }
 };
 
@@ -51,14 +51,14 @@ const resetPassword = async (
       confirmedPassword,
     });
 
-    return { success: true, data: response.data };
+    return {success: true, data: response.data};
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return { success: false, data: error.response?.data };
+      return {success: false, data: error.response?.data};
     }
 
-    return { success: false, message: "error" };
+    return {success: false, message: 'error'};
   }
 };
 
-export { sendOtp, verifyOtp, resetPassword };
+export {sendOtp, verifyOtp, resetPassword};

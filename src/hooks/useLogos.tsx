@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { fetchCompanyLogo } from "@services/Jobs/AppliedJob";
-import { JobData } from "@models/Model";
+import {useState, useEffect} from 'react';
+import {fetchCompanyLogo} from '@services/Jobs/AppliedJob';
+import {JobData} from '@models/Model';
 
 export const useLogos = (jobs: JobData[], token: string) => {
   const [logos, setLogos] = useState({});
@@ -13,17 +13,17 @@ export const useLogos = (jobs: JobData[], token: string) => {
           if (job.recruiterId) {
             try {
               const logo = await fetchCompanyLogo(Number(job.recruiterId), token);
-              return { [job.id]: logo };
+              return {[job.id]: logo};
             } catch (error) {
               console.error(`Error fetching logo for recruiterId ${job.recruiterId}:`, error);
-              return { [job.id]: null };
+              return {[job.id]: null};
             }
           }
-          return { [job.id]: null };
+          return {[job.id]: null};
         });
 
         const logoDataArray = await Promise.all(logoPromises);
-        const logoData = logoDataArray.reduce((acc, logo) => ({ ...acc, ...logo }), {});
+        const logoData = logoDataArray.reduce((acc, logo) => ({...acc, ...logo}), {});
         setLogos(logoData);
       }
       setLoading(false);
@@ -32,5 +32,5 @@ export const useLogos = (jobs: JobData[], token: string) => {
     fetchLogos();
   }, [jobs, token]);
 
-  return { logos, loading };
+  return {logos, loading};
 };

@@ -1,18 +1,18 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Dimensions, View, Text, TouchableOpacity } from "react-native";
-import { useAuth } from "@context/Authcontext";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { requestStoragePermission } from "./permissions";
-import { showToast } from "@services/login/ToastService";
-import RNFS from "react-native-fs";
-import { usePdf } from "../../context/ResumeContext";
-import PDFExam from "../../components/progessBar/Resume";
-import AntDesign from "react-native-vector-icons/AntDesign";
+import React, {useEffect} from 'react';
+import {StyleSheet, Dimensions, View, Text, TouchableOpacity} from 'react-native';
+import {useAuth} from '@context/Authcontext';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {requestStoragePermission} from './permissions';
+import {showToast} from '@services/login/ToastService';
+import RNFS from 'react-native-fs';
+import {usePdf} from '../../context/ResumeContext';
+import PDFExam from '../../components/progessBar/Resume';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const { height } = Dimensions.get("window");
+const {height} = Dimensions.get('window');
 const PDFExample = () => {
   const userid = useAuth();
-  const { pdfUri, refreshPdf } = usePdf();
+  const {pdfUri, refreshPdf} = usePdf();
   useEffect(() => {
     if (userid.userId) {
       refreshPdf(); // Fetch PDF when component mounts
@@ -21,13 +21,13 @@ const PDFExample = () => {
 
   const downloadFile = async () => {
     if (!pdfUri) {
-      showToast("error", "No PDF available to download.");
+      showToast('error', 'No PDF available to download.');
       return;
     }
 
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
-      showToast("error", "Allow storage permission to download.");
+      showToast('error', 'Allow storage permission to download.');
       return;
     }
 
@@ -37,18 +37,18 @@ const PDFExample = () => {
     try {
       await RNFS.writeFile(
         downloadPath,
-        pdfUri.replace("data:application/pdf;base64,", ""),
-        "base64",
+        pdfUri.replace('data:application/pdf;base64,', ''),
+        'base64',
       );
-      showToast("success", `File saved successfully!`);
+      showToast('success', `File saved successfully!`);
     } catch (error) {
-      console.error("Download Error:", error);
-      showToast("error", "Failed to save PDF file.");
+      console.error('Download Error:', error);
+      showToast('error', 'Failed to save PDF file.');
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.headerContainer}>
         <Text style={styles.title}>My Resume</Text>
       </View>
@@ -77,16 +77,16 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   banner: {
-    position: "relative",
+    position: 'relative',
   },
   header: {
     marginBottom: 10,
   },
   headerText: {
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 20,
-    color: "grey",
-    textAlign: "left",
+    color: 'grey',
+    textAlign: 'left',
   },
   pdfContainer: {
     flex: 1,
@@ -94,47 +94,47 @@ const styles = StyleSheet.create({
   pdf: {
     marginTop: 10,
     flex: 1,
-    width: "100%",
-    height: Dimensions.get("window").height,
+    width: '100%',
+    height: Dimensions.get('window').height,
   },
   gradientContainer: {
-    width: "98%",
+    width: '98%',
     height: height * 0.21,
     borderRadius: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   textContainer: {
-    flexDirection: "column",
+    flexDirection: 'column',
     width: 200,
-    justifyContent: "center",
+    justifyContent: 'center',
     marginLeft: 20,
   },
   resumeText: {
     fontSize: 16,
-    color: "#fff",
+    color: '#fff',
     marginBottom: 10,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   button: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     width: 93,
     height: 28,
     flexShrink: 0,
-    justifyContent: "center",
+    justifyContent: 'center',
     borderRadius: 4,
   },
   buttonText: {
     fontSize: 12,
-    color: "#F97517",
-    textAlign: "center",
-    fontFamily: "PlusJakartaSans-Bold",
+    color: '#F97517',
+    textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   headerContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
     height: 58,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   headerImage: {
     width: 20, // Adjust size as needed
@@ -142,16 +142,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: "#495057",
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: '#495057',
     lineHeight: 25,
     marginLeft: 15,
   },
   downloadButton: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 10, // Adjust as needed
     right: 10, // Adjust as needed
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     padding: 10,
     borderRadius: 50,
     marginRight: 1,

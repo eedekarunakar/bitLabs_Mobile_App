@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { submitSkillBadge } from "@services/Test/SkillBadgeService";
-import { RootStackParamList } from "@models/model";
+import {useState} from 'react';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {submitSkillBadge} from '@services/Test/SkillBadgeService';
+import {RootStackParamList} from '@models/model';
 
 export const useSkillTestViewModel = (
   userId: number | any,
@@ -15,10 +15,10 @@ export const useSkillTestViewModel = (
   // Skill Test Submission Logic
   const submitSkillTest = async (finalScore: number, isEarlySubmission: boolean) => {
     const testStatus = isEarlySubmission
-      ? "FAILED" // Early submission fails by default
+      ? 'FAILED' // Early submission fails by default
       : finalScore >= 70
-      ? "PASSED" // Pass if score >= 70
-      : "FAILED"; // Fail otherwise
+      ? 'PASSED' // Pass if score >= 70
+      : 'FAILED'; // Fail otherwise
 
     try {
       const data = {
@@ -35,20 +35,20 @@ export const useSkillTestViewModel = (
         jwtToken,
       );
 
-      if (response === "ApplicantSkillBadge saved successfully") {
+      if (response === 'ApplicantSkillBadge saved successfully') {
         setIsTestComplete(true);
 
         // Navigate based on skill test result
         if (finalScore >= 70) {
-          navigation.navigate("passContent", { finalScore, testName });
+          navigation.navigate('passContent', {finalScore, testName});
         } else {
-          navigation.navigate("FailContent");
+          navigation.navigate('FailContent');
         }
       } else {
-        console.error("Error during skill test submission");
+        console.error('Error during skill test submission');
       }
     } catch (error) {
-      console.error("Error during submission:", error);
+      console.error('Error during submission:', error);
     }
   };
 
