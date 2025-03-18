@@ -37,7 +37,7 @@ const useRecommendedJobsViewModel = () => {
       return null;
     }
   };
-  const reloadJobs = () => {
+  const reloadJobs = async () => {
     loadJobs();
   };
 

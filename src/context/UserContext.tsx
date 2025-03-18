@@ -18,6 +18,10 @@ interface UserContextProps {
   refreshPersonalName: () => Promise<void>;
   jobCounts: JobCounts | null;
   reset: () => Promise<void>;
+  lastViewedJobIndex :number|null;
+  setLastViewedJobIndex :(value : React.SetStateAction<number | null>) => void
+
+
 }
 
 const UserContext = createContext<UserContextProps>({
@@ -32,6 +36,8 @@ const UserContext = createContext<UserContextProps>({
   isLoading: true,
   reset: async () => {},
   refreshPersonalName: async () => {},
+  lastViewedJobIndex: null,
+  setLastViewedJobIndex:()=>{ }
 });
 
 interface UserProviderProps {
@@ -40,6 +46,7 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isJobsLoaded, setIsJobsLoaded] = useState(false);
+  const [lastViewedJobIndex,setLastViewedJobIndex] = useState<number|null>(null);
   const { userId, userToken } = useAuth();
   const [jobCounts, setJobCounts] = useState<JobCounts | null>(null);
   const [verifiedStatus, setVerifiedStatus] = useState(false);
@@ -165,6 +172,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         isJobsLoaded,
         setIsJobsLoaded,
         refreshPersonalName,
+        lastViewedJobIndex,
+        setLastViewedJobIndex,
       }}
     >
       {children}

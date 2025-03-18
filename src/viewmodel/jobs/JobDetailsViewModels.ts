@@ -15,7 +15,7 @@ const useJobDetailsViewModel = (jobId: string) => {
   const [perfectMatchSkills, setPerfectMatchSkills] = useState<string[]>([]);
   const [unmatchedSkills, setUnmatchedSkills] = useState<string[]>([]);
   const [companyLogo, setCompanyLogo] = useState<string | null>(null);
-  const { refreshJobCounts, setIsJobsLoaded } = useContext(UserContext);
+  const { refreshJobCounts, setIsJobsLoaded ,setLastViewedJobIndex} = useContext(UserContext);
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -59,13 +59,14 @@ const useJobDetailsViewModel = (jobId: string) => {
     fetchProfileData();
   }, [jobId, userId, userToken]);
 
-  const handleSaveJob = async () => {
+  const handleSaveJob = async (JobIndex:number) => {
     try {
       const result = await saveJob(Number(jobId), userId, userToken);
       if (result) {
         setIsJobSaved(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
+        setLastViewedJobIndex(JobIndex)
         showToast("success", "Job saved successfully!");
       }
     } catch (error) {
@@ -74,13 +75,14 @@ const useJobDetailsViewModel = (jobId: string) => {
     }
   };
 
-  const handleApplyJob = async () => {
+  const handleApplyJob = async (JobIndex:number) => {
     try {
       const result = await applyJob(userId, Number(jobId), userToken);
       if (result) {
         setIsJobApplied(true);
         setIsJobsLoaded(false);
         refreshJobCounts();
+        setLastViewedJobIndex(JobIndex);
         showToast("success", "Job application submitted successfully!");
       }
     } catch (error) {

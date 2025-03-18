@@ -132,7 +132,7 @@ export type RootStackParamList = {
   TestInstruction: { testName: string };
   TestScreen: { questions: any[] };
   Jobs: { tab: "recommended" | "applied" | "saved" };
-  JobDetails: { job: any };
+  JobDetails: { job: any ,JobIndex:number};
   JobDetailsScreen: { job: any };
   ViewJobDetails: { job: any };
   AppliedJobs: { job: any };
