@@ -1,25 +1,21 @@
-import apiClient from "../login/ApiClient";
-// Create Axios instance with base URL
+import apiClient from '../login/ApiClient';
 
-// Function to submit test results
-export const submitTestResult = async (userId: number, testDetails: object, jwtToken: string | null) => {
+export const submitTestResult = async (
+  userId: number,
+  testDetails: object,
+  jwtToken: string | null,
+) => {
   try {
-    const response = await apiClient.post(`/applicant1/saveTest/${userId}`, JSON.stringify(testDetails), {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`, // Add the JWT token for authorization
-        'Content-Type': 'application/json', // Set the content type
-      },
-   
-    });
-    if(response.status===200){
-        console.log('Test Submitted Successfully')
-        return {status:true} 
+    const response = await apiClient.post(
+      `/applicant1/saveTest/${userId}`,
+      JSON.stringify(testDetails),
+    );
+    if (response.status === 200) {
+      return {status: true};
     }
-    return response.data; // Return the response data (success/failure message)
+    return response.data;
   } catch (error) {
     console.error('Error submitting test result:', error);
-    throw error; // Throw error if the request fails
+    throw error;
   }
 };
-
-// Additional functions can be added for other API calls related to tests

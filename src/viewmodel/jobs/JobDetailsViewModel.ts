@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { fetchJobStatus } from '@services/Jobs/JobDetailsService';
-import { JobDetails } from '@models/Model';
+import {useEffect, useState} from 'react';
+import {fetchJobStatus} from '@services/Jobs/JobDetailsService';
+import {JobDetails} from '@models/Model';
 
 type JobStatus = {
   id: number;
@@ -20,7 +20,7 @@ export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
 
         if (Array.isArray(body) && body.length > 0) {
           const filteredStatuses = body.filter(
-            status => !['screening', 'interview', 'selected', 'rejected'].includes(status.status)
+            status => !['screening', 'interview', 'selected', 'rejected'].includes(status.status),
           );
           const reversedStatuses = filteredStatuses.reverse();
           setJobStatus(reversedStatuses);
@@ -34,8 +34,18 @@ export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
   }, [job, userToken]);
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const formatDate = (dateArray: [number, number, number]): string => {
@@ -46,7 +56,11 @@ export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
   const formatDates = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
     const date = new Date(year, month - 1, day);
-    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(date);
   };
 
   return {
@@ -55,4 +69,4 @@ export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
     formatDate,
     formatDates,
   };
-};   
+};

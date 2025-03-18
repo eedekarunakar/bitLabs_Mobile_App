@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'; // Make sure to install react-native-vector-icons
 
-const CustomHeader = ({ onBackPress, title }:any) => {
-   
+const CustomHeader = ({onBackPress, title}: any) => {
   return (
     <View style={styles.headerContainer}>
       {/* Back Arrow */}
+
       <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
         <Icon name="left" size={24} color="#495057" />
       </TouchableOpacity>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     height: 50,
-    backgroundColor:'#FFF'
+    backgroundColor: '#FFF',
   },
   backButton: {
     position: 'absolute',
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#495057',
-    lineHeight:25,
-    marginLeft:50
+    lineHeight: 25,
+    marginLeft: 50,
   },
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import Svg, {Path} from 'react-native-svg';
 import PropTypes from 'prop-types'; // Import prop-types
-const HomeOutline = ({ width = 24, height = 24, color = 'currentColor' }) => {
+const HomeOutline = ({width = 24, height = 24, color = 'currentColor'}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,8 +10,7 @@ const HomeOutline = ({ width = 24, height = 24, color = 'currentColor' }) => {
       viewBox="0 0 24 24"
       fill="none"
       strokeWidth={1.5}
-      stroke={color}
-    >
+      stroke={color}>
       <Path
         strokeLinecap="round"
         strokeLinejoin="round"

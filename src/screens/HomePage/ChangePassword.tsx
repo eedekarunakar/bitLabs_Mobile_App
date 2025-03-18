@@ -1,13 +1,22 @@
 import React from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { useAuth } from '@context/Authcontext';
-import { useNavigation } from '@react-navigation/native';
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {useAuth} from '@context/Authcontext';
+import {useNavigation} from '@react-navigation/native';
 import Navbar from '@components/styles/Head';
 import ActionButtons from '@components/styles/ActionButton';
-import { useChangePasswordViewModel } from '@viewmodel/ChangePasswordViewModel';
+import {useChangePasswordViewModel} from '@viewmodel/ChangePasswordViewModel';
 
 const ChangePasswordScreen = () => {
-  const { userToken, userId } = useAuth();
+  const {userToken, userId} = useAuth();
   const navigation = useNavigation();
   const {
     oldPassword,
@@ -55,7 +64,7 @@ const ChangePasswordScreen = () => {
         style={styles.input}
         secureTextEntry={!showPassword}
         value={value}
-        onChangeText={(text) => {
+        onChangeText={text => {
           setValue(text);
           validatePassword(text, field); // Add validation here
         }}
@@ -80,19 +89,25 @@ const ChangePasswordScreen = () => {
     <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
       <View style={styles.container}>
         <Navbar title="Change Password" onBackPress={() => navigation.goBack()} />
- 
+
         {renderPasswordField(
           oldPassword,
           setOldPassword,
           'old',
- 
+
           'Old Password',
- 
+
           showOldPassword,
           setShowOldPassword,
         )}
         {oldMessage ? (
-          <Text style={[styles.message, oldMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
+          <Text
+            style={[
+              styles.message,
+              oldMessage === 'Password changed successfully'
+                ? styles.successMessage
+                : styles.errorMessage,
+            ]}>
             {oldMessage}
           </Text>
         ) : null}
@@ -100,40 +115,58 @@ const ChangePasswordScreen = () => {
           newPassword,
           setNewPassword,
           'new',
- 
+
           'New Password',
- 
+
           showNewPassword,
           setShowNewPassword,
         )}
         {newMessage ? (
-          <Text style={[styles.message, newMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
+          <Text
+            style={[
+              styles.message,
+              newMessage === 'Password changed successfully'
+                ? styles.successMessage
+                : styles.errorMessage,
+            ]}>
             {newMessage}
           </Text>
         ) : null}
- 
+
         {renderPasswordField(
           reEnterPassword,
           setReEnterPassword,
           'reEnter',
- 
+
           'Confirm Password',
- 
+
           showReEnterPassword,
-          setShowReEnterPassword
+          setShowReEnterPassword,
         )}
         {reEnterMessage ? (
-          <Text style={[styles.message, reEnterMessage === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
+          <Text
+            style={[
+              styles.message,
+              reEnterMessage === 'Password changed successfully'
+                ? styles.successMessage
+                : styles.errorMessage,
+            ]}>
             {reEnterMessage}
           </Text>
         ) : null}
- 
+
         {message ? (
-          <Text style={[styles.message, message === 'Password changed successfully' ? styles.successMessage : styles.errorMessage]}>
+          <Text
+            style={[
+              styles.message,
+              message === 'Password changed successfully'
+                ? styles.successMessage
+                : styles.errorMessage,
+            ]}>
             {message}
           </Text>
         ) : null}
- 
+
         <ActionButtons
           onPressAction={handleChangePassword}
           actionTitle="Save"
@@ -143,8 +176,7 @@ const ChangePasswordScreen = () => {
     </TouchableWithoutFeedback>
   );
 };
- 
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -197,12 +229,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 8,
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12
+    fontSize: 12,
   },
   successMessage: {
     color: 'green',
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12
+    fontSize: 12,
   },
   errorMessage: {
     color: 'red',
@@ -211,18 +243,18 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     textAlign: 'justify',
     marginTop: -6,
-    fontSize: 12
+    fontSize: 12,
   },
- 
+
   button: {
     flex: 1,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    borderColor: '#F97316'
+    borderColor: '#F97316',
   },
- 
+
   headerImage: {
     width: 20, // Adjust size as needed
     height: 20,
@@ -232,10 +264,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#000',
   },
- 
- 
- 
- 
 });
- 
+
 export default ChangePasswordScreen;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import JobCard from './Jobcard'; // Import the JobCard component
 import SkillMatchProbability from './Skillmatch'; // Import the SkillMatchProbability component
 import SuggestedCourses from './Suggestedcourses'; // Import the SuggestedCourses component
@@ -17,6 +17,7 @@ type JobDetailsContentProps = {
     creationDate: [number, number, number];
     description: string;
   };
+  companyLogo: string | undefined;
   percent: number;
   skillProgressText: string | null;
   perfectMatchSkills: string[];
@@ -26,6 +27,7 @@ type JobDetailsContentProps = {
 
 const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
   job,
+  companyLogo,
   percent,
   skillProgressText,
   perfectMatchSkills,
@@ -44,8 +46,8 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
         maxSalary={job.maxSalary}
         employeeType={job.employeeType}
         creationDate={job.creationDate}
+        logoUrl={companyLogo}
       />
-
       <SkillMatchProbability
         percent={percent}
         skillProgressText={skillProgressText}
@@ -55,14 +57,10 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
 
       <View style={styles.jobCard}>
         <Text style={styles.jobdestitle}>Full Job Description</Text>
-        <Text style={styles.description}>
-          {job.description.replace(/<[^>]+>/g, '')}
-        </Text>
+        <Text style={styles.description}>{job.description.replace(/<[^>]+>/g, '')}</Text>
       </View>
 
-      {suggestedCourses.length > 0 && (
-        <SuggestedCourses suggestedCourses={suggestedCourses} />
-      )}
+      {suggestedCourses.length > 0 && <SuggestedCourses suggestedCourses={suggestedCourses} />}
     </ScrollView>
   );
 };

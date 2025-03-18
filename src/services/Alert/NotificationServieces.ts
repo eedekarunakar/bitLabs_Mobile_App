@@ -1,6 +1,5 @@
-import { JobData } from '@models/Model';
+import {JobData} from '@models/Model';
 import apiClient from '../login/ApiClient';
-
 
 export interface JobAlert {
   alertsId: string;
@@ -8,16 +7,16 @@ export interface JobAlert {
   companyName: string;
   jobTitle: string;
   changeDate: number[];
-  applyJob: { applyjobid:number ,job:{id:number|null},jobTitle: string };
+  applyJob: {applyjobid: number; job: {id: number | null}; jobTitle: string};
   seen: boolean;
-  
 }
 
-export const fetchJobAlerts = async (userId: number|null, userToken: string|null): Promise<JobAlert[]> => {
+export const fetchJobAlerts = async (
+  userId: number | null,
+  userToken: string | null,
+): Promise<JobAlert[]> => {
   try {
-    const response = await apiClient.get(`/applyjob/applicant/job-alerts/${userId}`, {
-      headers: { Authorization: `Bearer ${userToken}` },
-    });
+    const response = await apiClient.get(`/applyjob/applicant/job-alerts/${userId}`, {});
     return response.data;
   } catch (error) {
     console.error('Error fetching job alerts:', error);
@@ -25,21 +24,16 @@ export const fetchJobAlerts = async (userId: number|null, userToken: string|null
   }
 };
 
-export const markAlertAsSeen = async (alertId: string, userToken: string|null): Promise<void> => {
+export const markAlertAsSeen = async (alertId: string, userToken: string | null): Promise<void> => {
   try {
-    await apiClient.put(
-      `/applyjob/applicant/mark-alert-as-seen/${alertId}`,
-      {},
-      { headers: { Authorization: `Bearer ${userToken}` } }
-    );
+    await apiClient.put(`/applyjob/applicant/mark-alert-as-seen/${alertId}`, {});
   } catch (error) {
     console.error('Error marking alert as seen:', error);
     throw error;
   }
 };
 
-
-const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
+const mapJobData = (apiResponse: any, id: number | null, apply: number): JobData => {
   return {
     id: id ?? 0, // Default to 0 if null
     companyname: apiResponse.body.companyname ?? '',
@@ -62,24 +56,22 @@ const mapJobData = (apiResponse: any,id:number|null,apply:number): JobData => {
     matchPercentage: apiResponse.body.matchPercentage ?? '',
     matchStatus: apiResponse.body.matchStatus ?? '',
     sugesstedCourses: apiResponse.body.sugesstedCourses ?? [],
-    matchedSkills :apiResponse.body.matchedSkills ?? [],
+    matchedSkills: apiResponse.body.matchedSkills ?? [],
     applyJobId: apply ?? 0,
+    recruiterId: apiResponse.body.recruiterId ?? 0,
   };
 };
 
-export const fetchJobDetails = async (jobId: number|null, userToken: string | null,apply:number) => {
+export const fetchJobDetails = async (
+  jobId: number | null,
+  userToken: string | null,
+  apply: number,
+) => {
   try {
-    const response = await apiClient.get(
-      `/viewjob/applicant/viewjob/${jobId}`,
-      {
-        headers: { Authorization: `Bearer ${userToken}` },
-      }
-    );
-      const jobData = mapJobData(response.data,jobId,apply);
-      console.log('model',jobData)
-  
+    const response = await apiClient.get(`/viewjob/applicant/viewjob/${jobId}`);
+    const jobData = mapJobData(response.data, jobId, apply);
+
     return jobData;
-    
   } catch (error) {
     console.error('Error fetching job details:', error);
     throw error;

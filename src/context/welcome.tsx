@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from 'react';
+import {createContext, useState, useContext, ReactNode} from 'react';
 
 interface MessageContextType {
   setmsg: boolean;
@@ -7,14 +7,10 @@ interface MessageContextType {
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
-export const MessageProvider = ({ children }: { children: ReactNode }) => {
+export const MessageProvider = ({children}: {children: ReactNode}) => {
   const [setmsg, setSetmsg] = useState(false);
 
-  return (
-    <MessageContext.Provider value={{ setmsg, setSetmsg }}>
-      {children}
-    </MessageContext.Provider>
-  );
+  return <MessageContext.Provider value={{setmsg, setSetmsg}}>{children}</MessageContext.Provider>;
 };
 
 export const useMessageContext = (): MessageContextType => {

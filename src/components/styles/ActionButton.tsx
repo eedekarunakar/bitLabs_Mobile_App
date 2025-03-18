@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import GradientButton from './GradientButton';
- 
+
 interface ActionButtonsProps {
- 
   onPressAction: () => void;
   actionTitle: string;
   isGradient?: boolean; // If true, use GradientButton
   onPressBack?: () => void; // Optional Back Button
 }
- 
+
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   onPressBack,
   onPressAction,
@@ -18,17 +17,14 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   isGradient = true,
 }) => {
   const navigation = useNavigation();
- 
+
   return (
     <View style={styles.buttonContainer}>
       {/* Back Button */}
-      <TouchableOpacity
-        style={styles.backButtonBottom}
-        onPress={() => navigation.goBack()}
-      >
+      <TouchableOpacity style={styles.backButtonBottom} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
- 
+
       {/* Action Button */}
       {isGradient ? (
         <GradientButton
@@ -45,7 +41,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
@@ -55,7 +51,6 @@ const styles = StyleSheet.create({
     width: '100%',
     bottom: 20,
     paddingHorizontal: 10,
- 
   },
   backButtonBottom: {
     backgroundColor: '#fff',
@@ -78,7 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 8,
     width: '100%',
-   
   },
   buttonText: {
     color: '#fff',
@@ -90,6 +84,5 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
 });
- 
+
 export default ActionButtons;
- 

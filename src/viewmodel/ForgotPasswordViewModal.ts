@@ -1,18 +1,27 @@
-import { useState , useEffect } from "react";
-import { ForgotErrors } from "@models/Model";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList
- } from "@models/Model";
- import { StackNavigationProp } from "@react-navigation/stack";
- import useOtpManager from "../hooks/useOtpManager";
- import { showToast } from "../services/login/ToastService";
- import { sendOtp,verifyOtp,resetPassword } from "../services/login/ForgotPasswordService";
+import {useState, useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList, ForgotErrors} from '@models/Model';
+import {StackNavigationProp} from '@react-navigation/stack';
+import useOtpManager from '../hooks/useOtpManager';
+import {showToast} from '../services/login/ToastService';
+import {sendOtp, verifyOtp, resetPassword} from '../services/login/ForgotPasswordService';
 
-export const useForgotPasswordViewModal =()=>{
-    const [email, setEmail] = useState('');
+export const useForgotPasswordViewModal = () => {
+  const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<ForgotErrors>({});
-  const { otp, setOtp, otpReceived, setOtpReceived, isOtpExpired, setIsOtpExpired, timer, setTimer, isOtpValid, setOtpValid } = useOtpManager();
-  const [isOtpVerified, setOtpVerified] = useState(false);
+  const {
+    otp,
+    setOtp,
+    otpReceived,
+    setOtpReceived,
+    isOtpExpired,
+    setIsOtpExpired,
+    timer,
+    setTimer,
+    isOtpValid,
+    setIsOtpValid,
+  } = useOtpManager();
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -33,18 +42,16 @@ export const useForgotPasswordViewModal =()=>{
     }
   }, [otpReceived, timer, isOtpExpired, setTimer, setIsOtpExpired]);
 
-  useEffect(() => {
-
-  }, [errors]);
+  useEffect(() => {}, [errors]);
 
   const isValidEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      setErrors((prevErrors) => ({ ...prevErrors, email: 'E-mail is required' }));
+      setErrors(prevErrors => ({...prevErrors, email: 'E-mail is required'}));
     } else if (!regex.test(email)) {
-      setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid E-mail' }));
+      setErrors(prevErrors => ({...prevErrors, email: 'Invalid E-mail'}));
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+      setErrors(prevErrors => ({...prevErrors, email: undefined}));
     }
     return regex.test(email);
   };
@@ -58,23 +65,22 @@ export const useForgotPasswordViewModal =()=>{
         setIsOtpExpired(false);
         showToast('success', 'OTP sent successfully');
       } else {
-        setErrors((prevErrors) => ({ ...prevErrors, email: result.message }));
+        setErrors(prevErrors => ({...prevErrors, email: result.message}));
         showToast('error', 'Error sending OTP');
       }
     } else {
-     console.log('Invalid ');
+      console.log('Invalid ');
     }
   };
 
   const verifyOTP = async () => {
     const result = await verifyOtp(otp, email);
     if (result.success) {
-      setOtpVerified(true);
+      setIsOtpVerified(true);
       showToast('success', 'OTP verified successfully');
     } else {
-      setOtpValid(false);
-      setTimeout(() => setOtpValid(true), 3000);
-      
+      setIsOtpValid(false);
+      setTimeout(() => setIsOtpValid(true), 3000);
     }
   };
 
@@ -111,14 +117,12 @@ export const useForgotPasswordViewModal =()=>{
         navigation.navigate('LandingPage');
         showToast('success', 'Password reset Successfully');
       } else {
-        console.log(newPassword, confirmPassword);
-        console.log('Error resetting password');
         showToast('error', 'Error resetting Password');
       }
     }
   };
 
-  return{
+  return {
     errors,
     otp,
     setOtp,
@@ -129,9 +133,9 @@ export const useForgotPasswordViewModal =()=>{
     timer,
     setTimer,
     isOtpValid,
-    setOtpValid,
+    setIsOtpValid,
     isOtpVerified,
-    setOtpVerified,
+    setIsOtpVerified,
     newPassword,
     setNewPassword,
     confirmPassword,
@@ -140,12 +144,10 @@ export const useForgotPasswordViewModal =()=>{
     verifyOTP,
     resetUserPassword,
     isPasswordVisible,
-     setIsPasswordVisible,
-     email, 
-     setEmail,
-     isResetPasswordVisible,
-     setIsResetPasswordVisible
-
-  }
-
-}
+    setIsPasswordVisible,
+    email,
+    setEmail,
+    isResetPasswordVisible,
+    setIsResetPasswordVisible,
+  };
+};

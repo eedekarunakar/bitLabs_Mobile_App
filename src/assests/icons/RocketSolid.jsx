@@ -1,22 +1,13 @@
-import * as React from "react";
-import Svg, {
-  G,
-  Path,
-  Defs,
-  LinearGradient,
-  Stop,
-  ClipPath,
-  Rect,
-} from "react-native-svg";
-const RocketSolid = (props) => (
+import * as React from 'react';
+import Svg, {G, Path, Defs, LinearGradient, Stop, ClipPath, Rect} from 'react-native-svg';
+const RocketSolid = props => (
   <Svg
     width={24}
     height={24}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <G clipPath="url(#clip0_4224_12671)">
       <Path
         fillRule="evenodd"
@@ -36,8 +27,7 @@ const RocketSolid = (props) => (
         y1={22.5}
         x2={22.5}
         y2={22.5}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>
@@ -47,8 +37,7 @@ const RocketSolid = (props) => (
         y1={21.7516}
         x2={8.11628}
         y2={21.7516}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>

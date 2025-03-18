@@ -1,12 +1,10 @@
-
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient'; // Ensure this is imported
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@models/Model';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@models/Model';
 
 import Icon from 'react-native-vector-icons/Feather';
 import useJobDetailsViewModels from '@viewmodel/jobs/JobDetailsViewModels';
@@ -19,9 +17,8 @@ type JobDetailsProps = {
   navigation: JobDetailsScreenNavigationProp;
 };
 
-const JobDetails: React.FC = ({ route, navigation }: any) => {
-
-  const { job } = route.params; // job data passed from the previous screen
+const JobDetails: React.FC = ({route, navigation}: any) => {
+  const {job} = route.params; // job data passed from the previous screen
 
   const {
     isJobSaved,
@@ -31,13 +28,12 @@ const JobDetails: React.FC = ({ route, navigation }: any) => {
     skillProgressText,
     perfectMatchSkills,
     unmatchedSkills,
+    companyLogo,
     handleRemoveJob,
     handleApplyJob,
   } = useJobDetailsViewModels(job.id);
 
-
   return (
-
     <View style={styles.container}>
       <JobDetailsContent
         job={job}
@@ -46,49 +42,49 @@ const JobDetails: React.FC = ({ route, navigation }: any) => {
         perfectMatchSkills={perfectMatchSkills}
         unmatchedSkills={unmatchedSkills}
         suggestedCourses={suggestedCourses}
+        companyLogo={companyLogo ?? undefined}
       />
 
-      <View style={{ height: 20 }} />
+      <View style={{height: 20}} />
       <View style={styles.footerContainer}>
-        {/* Save Job Button */}
-        {isJobSaved ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <Text style={styles.appliedButtonText}>Removed</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.saveButton]}
-            onPress={() => { handleRemoveJob(); navigation.goBack(); }}
-          >
-            <Text style={styles.buttonText}>Remove</Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Apply Now Button */}
         {isJobApplied ? (
-          <TouchableOpacity style={[styles.button, styles.appliedButton]} disabled>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          // Full-width Applied Button
+          <TouchableOpacity style={[styles.button, styles.fullWidthAppliedButton]} disabled>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Icon name="check" size={18} color="white" />
               <Text style={styles.appliedButtonText}>Applied</Text>
             </View>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            style={[styles.button, styles.applyButton]}
-            onPress={handleApplyJob}
-          >
-            <LinearGradient
-              colors={['#F97316', '#FAA729']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.button, styles.applyButtonGradient]}
-            >
-              <Text style={styles.applybuttonText}>Apply Now</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          // Render both Save and Apply buttons if job is not applied
+          <>
+            {isJobSaved ? (
+              <TouchableOpacity style={[styles.button, styles.savedButton]} disabled>
+                <Text style={styles.savedButtonText}>Removed</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.button, styles.saveButton]}
+                onPress={() => {
+                  handleRemoveJob();
+                  navigation.goBack();
+                }}>
+                <Text style={styles.buttonText}>Remove</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={handleApplyJob}>
+              <LinearGradient
+                colors={['#F97316', '#FAA729']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={[styles.button, styles.applyButtonGradient]}>
+                <Text style={styles.applybuttonText}>Apply Now</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </>
         )}
       </View>
-    </View >
+    </View>
   );
 };
 
@@ -118,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     borderColor: '#F97316',
-    marginLeft:7
+    marginLeft: 7,
   },
   savedButton: {
     backgroundColor: 'white',
@@ -170,7 +166,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'PlusJakartaSans-Bold',
   },
-
+  fullWidthAppliedButton: {
+    flex: 1,
+    backgroundColor: '#08921E',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#08921E',
+  },
 });
 
 export default JobDetails;

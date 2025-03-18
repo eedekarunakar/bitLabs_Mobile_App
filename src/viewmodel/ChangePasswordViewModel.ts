@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { changePassword, checkPasswordsMatch, encryptPassword } from '@services/login/ChangePasswordService';
-import Toast from 'react-native-toast-message';
+import {useState, useEffect} from 'react';
+import {changePassword} from '@services/login/ChangePasswordService';
+import {showToast} from '@services/login/ToastService';
 
 export const useChangePasswordViewModel = (userToken: string, userId: string) => {
   const [oldPassword, setOldPassword] = useState<string>('');
@@ -35,7 +35,8 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
   };
 
   const validatePassword = (password: string, type: 'old' | 'new' | 'reEnter') => {
-    const passwordValidationRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordValidationRegex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (!password) {
       if (type === 'old' && isSaveClicked) setOldMessage('Old password is required.');
@@ -44,7 +45,7 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
     } else {
       if (type === 'new' && !passwordValidationRegex.test(password)) {
         setNewMessage(
-          'New password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, one special character, and no spaces.'
+          'New password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, one special character, and no spaces.',
         );
       } else {
         if (type === 'old') setOldMessage(null);
@@ -76,13 +77,7 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
 
     // Check if old and new passwords are the same
     if (oldPassword === newPassword && oldPassword) {
-      Toast.show({
-        type: 'error',
-        position: 'bottom',
-        text1: '',
-        text2: 'Old password and new password cannot be the same',
-        visibilityTime: 5000,
-      });
+      showToast('error', 'Old password and new password cannot be the same');
       return;
     }
 
@@ -92,7 +87,7 @@ export const useChangePasswordViewModel = (userToken: string, userId: string) =>
       return;
     }
 
-    await changePassword(oldPassword, newPassword, userToken, userId, setMessage);
+    await changePassword(oldPassword, newPassword, userToken, userId);
   };
 
   return {

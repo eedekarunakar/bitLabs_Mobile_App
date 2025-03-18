@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 const screenWidth = Dimensions.get('window').width;
 
@@ -7,13 +7,13 @@ type ProgressBarProps = {
   initialStep: number;
 };
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ initialStep }) => {
-  const [currentStep, setCurrentStep] = useState(initialStep);
+const ProgressBar: React.FC<ProgressBarProps> = ({initialStep}) => {
+  const currentStep = initialStep;
 
   const steps = [
-    { id: 1, label: '  Personal   Info' },
-    { id: 2, label: 'Professional Details' },
-    { id: 3, label: 'Upload Resume' },
+    {id: 1, label: '  Personal   Info'},
+    {id: 2, label: 'Professional Details'},
+    {id: 3, label: 'Upload Resume'},
   ];
 
   // Calculate dynamic line width based on screen size and number of steps
@@ -35,18 +35,15 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ initialStep }) => {
                   styles.stepCircle,
                   isActive && styles.activeStepCircle,
                   isCompleted && styles.completedStepCircle,
-                  isActive || isCompleted ? { borderColor: 'transparent' } : {},
-                ]}
-              >
+                  isActive || isCompleted ? {borderColor: 'transparent'} : {},
+                ]}>
                 <Text
                   style={[
                     styles.stepText,
                     isActive && styles.activeStepText,
                     isCompleted && styles.completedStepText,
-                  ]}
-                >
+                  ]}>
                   {isCompleted ? <Icon name="check" size={20} color="white" /> : step.id}
-
                 </Text>
               </View>
 
@@ -55,7 +52,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ initialStep }) => {
                 <View
                   style={[
                     styles.line,
-                    { width: dynamicLineWidth }, // Dynamic width
+                    {width: dynamicLineWidth}, // Dynamic width
                     isCompleted && styles.completedLine,
                     isActive && styles.activeLine,
                   ]}

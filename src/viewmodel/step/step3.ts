@@ -1,33 +1,25 @@
-import { useState,useContext} from 'react';
+import {useState, useContext} from 'react';
 import UserContext from '@context/UserContext';
-
-import { ProfileModel } from '@services/step/stepServices';
-import { ToastAndroid } from 'react-native';
+import {ProfileModel} from '@services/step/stepServices';
 import Toast from 'react-native-toast-message';
-import { useNavigation } from '@react-navigation/native';
-import DocumentPicker, {
-    DocumentPickerResponse,
-  } from "react-native-document-picker";
-import { NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '@models/model';
+import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
+import ProfileService from '@services/profile/ProfileService';
 
-type navigation = NavigationProp<RootStackParamList, 'BottomTab'>;
-
-
-export const useStep3ViewModel = (userId: number |null, userToken: string|null, navigation: any, route: any) => {
+export const useStep3ViewModel = (
+  userId: number | null,
+  userToken: string | null,
+  navigation: any,
+  route: any,
+) => {
   const [resumeFile, setResumeFile] = useState<DocumentPickerResponse | null>(null);
   const [resumeText, setResumeText] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const errorMessage = '';
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
-  const {setPersonalName,refreshJobCounts,refreshVerifiedStatus} = useContext(UserContext)
-const nav = useNavigation<navigation>();
-  const showToast = (message: string) => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
-  };
+  const {setPersonalName, refreshJobCounts, refreshVerifiedStatus} = useContext(UserContext);
 
   const toastmsg = (type1: 'success' | 'error', message: string) => {
     Toast.show({
@@ -56,18 +48,20 @@ const nav = useNavigation<navigation>();
         qualification: route.params.qualification,
         specialization: route.params.specialization,
         preferredJobLocations: route.params.preferredJobLocations,
-        skillsRequired: route.params.skillsRequired.map((skill: any) => ({ skillName: skill.skillName })),
+        skillsRequired: route.params.skillsRequired.map((skill: any) => ({
+          skillName: skill.skillName,
+        })),
       };
- 
+
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
- 
+
       if (response) {
-        if(route ?.params ?.firstName){
-        setPersonalName(route.params.firstName)
+        if (route?.params?.firstName) {
+          setPersonalName(route.params.firstName);
         }
         refreshJobCounts();
         refreshVerifiedStatus();
-       navigation();
+        navigation();
       }
     } catch (error) {
       console.error('Error creating profile:', error);
@@ -95,7 +89,7 @@ const nav = useNavigation<navigation>();
       }
 
       setResumeFile(selectedFile);
-      setResumeText(selectedFile.name || '');
+      setResumeText(selectedFile.name ?? '');
 
       setTimeout(() => {
         setLoading(true);
@@ -104,7 +98,7 @@ const nav = useNavigation<navigation>();
         setbgcolor(false);
 
         const interval = setInterval(() => {
-          setProgress((prevProgress) => {
+          setProgress(prevProgress => {
             const newProgress = prevProgress + 0.5;
             if (newProgress >= 2) {
               clearInterval(interval);
@@ -143,9 +137,9 @@ const nav = useNavigation<navigation>();
         name: resumeFile.name,
       } as any);
 
-      const response = await ProfileModel.uploadResume(userToken, userId, formData);
-      if (response) {
-        setResumeFile(response.fileName);
+      const response = await ProfileService.uploadResume(userToken, userId, formData);
+
+      if (response.success) {
         toastmsg('success', 'Resume uploaded successfully!');
       } else {
         toastmsg('error', 'Error uploading resume. Please try again later.');

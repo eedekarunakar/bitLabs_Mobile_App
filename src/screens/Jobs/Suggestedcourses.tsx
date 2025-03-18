@@ -1,31 +1,31 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet,Linking } from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet, Linking} from 'react-native';
 
 type SuggestedCoursesProps = {
   suggestedCourses: string[];
 };
 
 const courseImages: Record<string, any> = {
-  "HTML&CSS": require('@assests/Images/Html&Css.png'),
-  "JAVA": require('@assests/Images/Java1.png'),
-  "JAVASCRIPT": require('@assests/Images/JavaScript.png'),
-  "MYSQL": require('@assests/Images/Mysql.png'),
-  "REACT": require('@assests/Images/React.png'),
-  "SPRING BOOT": require('@assests/Images/SpringBoot.png'),
-  "PYTHON": require('@assests/Images/python.png'),
+  'HTML&CSS': require('@assests/Images/Html&Css.png'),
+  JAVA: require('@assests/Images/Java1.png'),
+  JAVASCRIPT: require('@assests/Images/JavaScript.png'),
+  MYSQL: require('@assests/Images/Mysql.png'),
+  REACT: require('@assests/Images/React.png'),
+  'SPRING BOOT': require('@assests/Images/SpringBoot.png'),
+  PYTHON: require('@assests/Images/python.png'),
 };
 
 const courseUrlMap: Record<string, any> = {
-  "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
-  "JAVA": "https://upskill.bitlabs.in/course/view.php?id=22",
-  "PYTHON": "https://upskill.bitlabs.in/course/view.php?id=7",
-  "MYSQL": "https://upskill.bitlabs.in/course/view.php?id=8",
-  "JAVASCRIPT": "https://upskill.bitlabs.in/course/view.php?id=47",
-  "REACT": "https://upskill.bitlabs.in/course/view.php?id=21",
-  "SPRING BOOT": "https://upskill.bitlabs.in/course/view.php?id=23"
+  'HTML&CSS': 'https://upskill.bitlabs.in/course/view.php?id=9',
+  JAVA: 'https://upskill.bitlabs.in/course/view.php?id=22',
+  PYTHON: 'https://upskill.bitlabs.in/course/view.php?id=7',
+  MYSQL: 'https://upskill.bitlabs.in/course/view.php?id=8',
+  JAVASCRIPT: 'https://upskill.bitlabs.in/course/view.php?id=47',
+  REACT: 'https://upskill.bitlabs.in/course/view.php?id=21',
+  'SPRING BOOT': 'https://upskill.bitlabs.in/course/view.php?id=23',
 };
 
-const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({ suggestedCourses }) => {
+const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({suggestedCourses}) => {
   return (
     <View style={styles.jobCard}>
       <Text style={styles.jobdestitle}>Suggested Courses</Text>
@@ -35,13 +35,12 @@ const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({ suggestedCourses })
             {courseImages[course] ? (
               <TouchableOpacity
                 style={styles.imageRow}
-                onPress={() => Linking.openURL(courseUrlMap[course])}
-              >
+                onPress={() => Linking.openURL(courseUrlMap[course])}>
+                <Image source={courseImages[course]} style={styles.courseImage} />
                 <Image
-                  source={courseImages[course]}
-                  style={styles.courseImage}
+                  source={require('@assests/Images/external-link2.png')}
+                  style={styles.externalLinkIcon}
                 />
-                <Image source={require('@assests/Images/external-link2.png')} style={styles.externalLinkIcon} />
               </TouchableOpacity>
             ) : (
               <Text style={styles.fallbackText}>Image not found</Text>

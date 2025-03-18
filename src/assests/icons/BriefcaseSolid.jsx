@@ -1,22 +1,13 @@
-import * as React from "react";
-import Svg, {
-  G,
-  Path,
-  Defs,
-  LinearGradient,
-  Stop,
-  ClipPath,
-  Rect,
-} from "react-native-svg";
-const BriefCaseSolid = (props) => (
+import * as React from 'react';
+import Svg, {G, Path, Defs, LinearGradient, Stop, ClipPath, Rect} from 'react-native-svg';
+const BriefCaseSolid = props => (
   <Svg
     width={24}
     height={24}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <G clipPath="url(#clip0_4412_93)">
       <Path
         fillRule="evenodd"
@@ -36,8 +27,7 @@ const BriefCaseSolid = (props) => (
         y1={15.75}
         x2={21.75}
         y2={15.75}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>
@@ -47,8 +37,7 @@ const BriefCaseSolid = (props) => (
         y1={21.75}
         x2={21}
         y2={21.75}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>

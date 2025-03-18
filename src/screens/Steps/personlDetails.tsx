@@ -1,52 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  StyleSheet,
-  ScrollView
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, TextInput, Image, StyleSheet, ScrollView} from 'react-native';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import GradientButton from '@components/styles/GradientButton';
-import { getMobileNumber } from '@services/mobile';
-import { useAuth } from '@context/Authcontext';
- 
- 
-const Dummystep1: React.FC = ({ route, navigation }: any) => {
- 
-  const { email } = route.params;
+import {getMobileNumber} from '@services/mobile';
+import {useAuth} from '@context/Authcontext';
+
+const Dummystep1: React.FC = ({route, navigation}: any) => {
+  const {email} = route.params;
   const [currentStep, setCurrentStep] = useState(1);
-  const { userId } = useAuth();
- 
+  const {userId} = useAuth();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     whatsappNumber: '',
   });
- 
+
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
     whatsappNumber: '',
   });
- 
-  const [loading, setLoading] = useState(true);
- 
+
   useEffect(() => {
     // Fetch mobile number from API
     const fetchMobileNumber = async () => {
       const mobileNumber = await getMobileNumber(userId);
       if (mobileNumber) {
-        setFormData((prev) => ({ ...prev, whatsappNumber: mobileNumber }));
+        setFormData(prev => ({...prev, whatsappNumber: mobileNumber}));
       }
-      setLoading(false); // Mark API call as complete
     };
- 
- 
+
     fetchMobileNumber();
   }, []);
- 
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
@@ -54,43 +41,35 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       lastName: '',
       whatsappNumber: '',
     };
- 
+
     // Validate first name
-    if (!formData.firstName) {
-      newErrors.firstName = 'First name is required.';
-      isValid = false;
-    } else if (formData.firstName.length < 3) {
-      newErrors.firstName = 'First name should be at least 3 characters long.';
-      isValid = false;
-    }
- 
-    // Validate last name
-    if (!formData.lastName) {
-      newErrors.lastName = 'Last name is required.';
-      isValid = false;
-    } else if (formData.lastName.length < 3) {
-      newErrors.lastName = 'Last name should be at least 3 characters long.';
-      isValid = false;
-    }
- 
+    (['firstName', 'lastName'] as Array<keyof typeof formData>).forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = `${field === 'firstName' ? 'First' : 'Last'} name is required.`;
+        isValid = false;
+      } else if (formData[field].length < 3) {
+        newErrors[field] = `${
+          field === 'firstName' ? 'First' : 'Last'
+        } name should be at least 3 characters long.`;
+        isValid = false;
+      }
+    });
+
     // Validate WhatsApp number
     const whatsappRegex = /^[6-9]\d{9}$/;
     if (!whatsappRegex.test(formData.whatsappNumber)) {
-      newErrors.whatsappNumber =
-        'Should be 10 digits and start with 6, 7, 8, or 9.';
+      newErrors.whatsappNumber = 'Should be 10 digits and start with 6, 7, 8, or 9.';
       isValid = false;
     }
- 
+
     setErrors(newErrors);
     return isValid;
   };
- 
+
   const handleNext = () => {
-    console.log('Route Params:', route.params);
     if (validateForm()) {
-      console.log('Form Data:', { ...formData, email });
       const totalSteps = 3;
-      setCurrentStep((prevStep) => Math.min(prevStep + 1, totalSteps));
+      setCurrentStep(prevStep => Math.min(prevStep + 1, totalSteps));
       navigation.navigate('Step2', {
         ...route.params,
         firstName: formData.firstName,
@@ -100,87 +79,77 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
       }); // Proceed to next step
     }
   };
- 
+
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollView}>
- 
         <Image
           style={styles.logo}
           source={require('../../assests/LandingPage/logo.png')} // Replace with your actual logo path
         />
- 
+
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
-            <Text style={styles.subHeader}>
-              Fill the form fields to go to the next step
-            </Text>
+            <Text style={styles.subHeader}>Fill the form fields to go to the next step</Text>
           </View>
- 
+
           {/* ProgressBar with currentStep */}
-          <ProgressBar
-            initialStep={currentStep}
-          />
- 
+          <ProgressBar initialStep={currentStep} />
+
           <TextInput
-            placeholder="*First Name" placeholderTextColor="#B1B1B1"
+            placeholder="*First Name"
+            placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.firstName}
-            onChangeText={(text) => {
-              setFormData((prev) => ({ ...prev, firstName: text }))
+            onChangeText={text => {
+              setFormData(prev => ({...prev, firstName: text}));
               if (text.length >= 3) {
-                setErrors((prev) => ({ ...prev, firstName: '' }))
+                setErrors(prev => ({...prev, firstName: ''}));
               }
-            }
-            }
+            }}
           />
-          {errors.firstName ? (
-            <Text style={styles.errorText}>{errors.firstName}</Text>
-          ) : null}
- 
+          {errors.firstName ? <Text style={styles.errorText}>{errors.firstName}</Text> : null}
+
           <TextInput
-            placeholder="*Last Name" placeholderTextColor="#B1B1B1"
+            placeholder="*Last Name"
+            placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.lastName}
-            onChangeText={(text) => {
-              setFormData((prev) => ({ ...prev, lastName: text }))
+            onChangeText={text => {
+              setFormData(prev => ({...prev, lastName: text}));
               if (text.length >= 3) {
-                setErrors((prev) => ({ ...prev, lastName: '' }))
+                setErrors(prev => ({...prev, lastName: ''}));
               }
-            }
-            }
+            }}
           />
-          {errors.lastName ? (
-            <Text style={styles.errorText}>{errors.lastName}</Text>
-          ) : null}
- 
+          {errors.lastName ? <Text style={styles.errorText}>{errors.lastName}</Text> : null}
+
           {/* Prefilled, non-editable Email field */}
           <TextInput
             value={email}
-            style={[styles.input, { backgroundColor: '#E5E4E2', color: 'gray' }]}
+            style={[styles.input, {backgroundColor: '#E5E4E2', color: 'gray'}]}
             editable={false}
           />
           <TextInput
-            placeholder="WhatsApp Number" placeholderTextColor="#B1B1B1"
+            placeholder="WhatsApp Number"
+            placeholderTextColor="#B1B1B1"
             style={styles.input}
             value={formData.whatsappNumber}
-            onChangeText={(text) => {
-              setFormData((prev) => ({ ...prev, whatsappNumber: text }))
+            onChangeText={text => {
+              setFormData(prev => ({...prev, whatsappNumber: text}));
               const whatsappRegex = /^[6-9]\d{9}$/;
               if (whatsappRegex.test(text)) {
-                setErrors((prev) => ({ ...prev, whatsappNumber: '' }));
+                setErrors(prev => ({...prev, whatsappNumber: ''}));
               }
-            }
-            }
+            }}
           />
           {errors.whatsappNumber ? (
             <Text style={styles.errorText}>{errors.whatsappNumber}</Text>
           ) : null}
         </View>
- 
       </ScrollView>
- 
+
       {/* Footer with Back and Next Buttons */}
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
@@ -194,7 +163,7 @@ const Dummystep1: React.FC = ({ route, navigation }: any) => {
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -235,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 25,
   },
- 
+
   header: {
     marginBottom: 20,
   },
@@ -244,7 +213,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: 'black',
     marginBottom: 8,
- 
   },
   subHeader: {
     fontSize: 11,
@@ -273,8 +241,8 @@ const styles = StyleSheet.create({
   },
   gradientTouchable: {
     flex: 1,
-    width: '50%'
+    width: '50%',
   },
 });
- 
+
 export default Dummystep1;

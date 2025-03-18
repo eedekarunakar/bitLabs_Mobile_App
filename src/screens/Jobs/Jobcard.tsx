@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
+import {DefaultLogoUrl} from '@components/constant';
 
 type JobCardProps = {
   jobTitle: string;
@@ -11,6 +12,8 @@ type JobCardProps = {
   maxSalary: number;
   employeeType: string;
   creationDate: [number, number, number];
+  logoUrl?: string;
+  truncateTitle?: boolean;
 };
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -23,10 +26,22 @@ const JobCard: React.FC<JobCardProps> = ({
   maxSalary,
   employeeType,
   creationDate,
+  logoUrl,
+  truncateTitle = false,
 }) => {
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const formatDate = (dateArray: [number, number, number]): string => {
@@ -38,43 +53,60 @@ const JobCard: React.FC<JobCardProps> = ({
     <View style={styles.jobCard}>
       <View style={styles.row}>
         <Image
-          source={require('../../assests/Images/company.png')}
+          source={
+            logoUrl && logoUrl.includes(DefaultLogoUrl) // Check for invalid Base64 error
+              ? require('../../assests/Images/company.png') // Display default fallback image
+              : logoUrl && logoUrl.startsWith('data:image/') // Valid Base64 format
+              ? {uri: logoUrl} // Display Base64 logo
+              : logoUrl // Assume it's a normal image URL
+              ? {uri: logoUrl} // Display image URL
+              : require('../../assests/Images/company.png') // Fallback to default image
+          }
           style={styles.companyLogo}
         />
+
         <View style={styles.jobDetails}>
-          <Text style={styles.jobTitle}>{jobTitle}</Text>
+          <Text
+            style={styles.jobTitle}
+            numberOfLines={truncateTitle ? 1 : undefined}
+            ellipsizeMode={truncateTitle ? 'tail' : undefined}>
+            {jobTitle}
+          </Text>
           <Text style={styles.companyName}>{companyName}</Text>
         </View>
       </View>
       <View style={[styles.tag, styles.locationContainer]}>
-        <Image
-          source={require('../../assests/Images/rat/loc.png')}
-          style={styles.locationIcon}
-        />
+        <Image source={require('../../assests/Images/rat/loc.png')} style={styles.locationIcon} />
         <Text style={styles.locationText}>{location}</Text>
       </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'nowrap', alignItems: 'center', marginLeft: 10 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
-          <Image
-            source={require('../../assests/Images/rat/exp.png')}
-            style={styles.brieficon}
-          />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          flexWrap: 'nowrap',
+          alignItems: 'center',
+          marginLeft: 10,
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
+          <Image source={require('../../assests/Images/rat/exp.png')} style={styles.brieficon} />
           <Text style={styles.ovalText}>
             Exp: {minExperience} - {maxExperience} years
           </Text>
-          <Text style={{ color: '#E2E2E2' }}>  |</Text>
+          <Text style={{color: '#E2E2E2'}}> |</Text>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 13 }}>{"\u20B9"}</Text>
-            <Text style={styles.ovalText}>{minSalary.toFixed(2)} - {maxSalary.toFixed(2)} LPA  </Text>
-            <Text style={{ color: '#E2E2E2' }}>  |</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 10, marginTop: 1}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{fontSize: 13}}>{'\u20B9'}</Text>
+            <Text style={styles.ovalText}>
+              {minSalary.toFixed(2)} - {maxSalary.toFixed(2)} LPA{' '}
+            </Text>
+            <Text style={{color: '#E2E2E2'}}> |</Text>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans-Medium' }}>{employeeType}</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={{fontSize: 11, fontFamily: 'PlusJakartaSans-Medium'}}>{employeeType}</Text>
         </View>
       </View>
       <View>
@@ -101,7 +133,7 @@ const styles = StyleSheet.create({
   companyLogo: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 15,
     marginRight: 16,
   },
   jobDetails: {
@@ -155,7 +187,7 @@ const styles = StyleSheet.create({
     lineHeight: 23.76,
     marginTop: 10,
     display: 'flex',
-    marginLeft: '55%',
+    marginLeft: '58%',
   },
   locationIcon: {
     width: 11,

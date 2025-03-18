@@ -1,14 +1,13 @@
-import * as React from "react";
-import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
-const SVGComponent = (props) => (
+import * as React from 'react';
+import Svg, {Path, Defs, LinearGradient, Stop} from 'react-native-svg';
+const SVGComponent = props => (
   <Svg
     width={24}
     height={24}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -22,8 +21,7 @@ const SVGComponent = (props) => (
         y1={21.75}
         x2={21.75}
         y2={21.75}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>

@@ -1,16 +1,8 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Dimensions,
-} from 'react-native';
+import React from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, Image, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import {useAuth} from '@context/Authcontext';
-import GradientButton from '@components/styles/GradientButton';
 import * as Progress from 'react-native-progress';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon7 from 'react-native-vector-icons/AntDesign';
@@ -53,18 +45,13 @@ const Step3: React.FC = ({route, navigation}: any) => {
     <View style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={require('@assests/LandingPage/logo.png')}
-          />
+          <Image style={styles.logo} source={require('@assests/LandingPage/logo.png')} />
         </View>
 
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
-            <Text style={styles.subHeader}>
-              Fill the form fields to go to the next step
-            </Text>
+            <Text style={styles.subHeader}>Fill the form fields to go to the next step</Text>
           </View>
 
           <ProgressBar initialStep={3} />
@@ -141,8 +128,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                 )}
               </View>
 
-              <View
-                style={[styles.fileContainer, showBorder && styles.showborder]}>
+              <View style={[styles.fileContainer, showBorder && styles.showborder]}>
                 {resumeFile && (
                   <View style={{flexDirection: 'row'}}>
                     <FontAwesome name="file-text-o" size={20} color="#000" />
@@ -153,9 +139,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                           : resumeFile.name
                         : 'No file selected'}
                     </Text>
-                    <TouchableOpacity
-                      style={styles.closeIcon}
-                      onPress={handleCancelUpload}>
+                    <TouchableOpacity style={styles.closeIcon} onPress={handleCancelUpload}>
                       <View style={{position: 'absolute', right: 5, top: 1.5}}>
                         <Icon7 name="close" size={15} color={'0D0D0D'} />
                       </View>
@@ -181,7 +165,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                   <View
                     style={[
                       styles.orContainer,
-                      {marginTop: 15, marginVertical: 10},
+                      { marginTop: 15, marginVertical: 10 },
                     ]}>
                     <View style={styles.line}></View>
                     <Text
@@ -193,13 +177,13 @@ const Step3: React.FC = ({route, navigation}: any) => {
                       {' '}
                       Or{' '}
                     </Text>
-                    <View style={[styles.line, {marginLeft: 3}]}></View>
+                    <View style={[styles.line, { marginLeft: 3 }]}></View>
                   </View>
                 ) : (
                   <View
                     style={[
                       styles.orContainer,
-                      {marginTop: -26, marginVertical: 20},
+                      { marginTop: -26, marginVertical: 20 },
                     ]}>
                     <View style={styles.line}></View>
                     <Text
@@ -211,7 +195,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
                       {' '}
                       Or{' '}
                     </Text>
-                    <View style={[styles.line, {marginLeft: 3}]}></View>
+                    <View style={[styles.line, { marginLeft: 3 }]}></View>
                   </View>
                 )}
               </View> */}
@@ -235,26 +219,45 @@ const Step3: React.FC = ({route, navigation}: any) => {
       </ScrollView>
 
       <View style={styles.footer}>
-      <TouchableOpacity style={[styles.saveButton, { borderWidth: 0 }]} disabled={isUploadComplete } onPress={() => { handleSaveResume(); if (resumeFile){ handleAPI(); handleSave()}; }}>
-          {
-            isUploadComplete   ? (
-              <View style={[styles.saveButton, { backgroundColor: "#D7D6D6", alignItems: "center", justifyContent: "center", borderRadius: 5 }]}>
-                <Text style={[styles.nextButtonText, { color: "#A0A0A0", fontFamily: 'PlusJakartaSans-Medium' }]}>Save</Text>
-              </View>
-            ) : (
- 
-              <LinearGradient
- 
-                colors={['#F97316', '#FAA729']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={[styles.saveButton]} // Combine backButton styling with gradient-specific overrides
-              >
-                <Text style={styles.nextButtonText}>Save</Text>
-              </LinearGradient>
-            )
-          }
- 
+        <TouchableOpacity
+          style={[styles.saveButton, {borderWidth: 0}]}
+          disabled={isUploadComplete}
+          onPress={() => {
+            handleSaveResume();
+            if (resumeFile) {
+              handleAPI();
+              handleSave();
+            }
+          }}>
+          {isUploadComplete ? (
+            <View
+              style={[
+                styles.saveButton,
+                {
+                  backgroundColor: '#D7D6D6',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 5,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.nextButtonText,
+                  {color: '#A0A0A0', fontFamily: 'PlusJakartaSans-Medium'},
+                ]}>
+                Save
+              </Text>
+            </View>
+          ) : (
+            <LinearGradient
+              colors={['#F97316', '#FAA729']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={[styles.saveButton]} // Combine backButton styling with gradient-specific overrides
+            >
+              <Text style={styles.nextButtonText}>Save</Text>
+            </LinearGradient>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -262,7 +265,6 @@ const Step3: React.FC = ({route, navigation}: any) => {
 };
 
 const styles = StyleSheet.create({
-
   fileContainer: {
     padding: 10,
     marginBottom: 10,

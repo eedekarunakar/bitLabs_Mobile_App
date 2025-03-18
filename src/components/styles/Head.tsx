@@ -1,25 +1,22 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
- 
+
 interface NavbarProps {
   title: string;
   onBackPress?: () => void;
 }
- 
-const Navbar: React.FC<NavbarProps> = ({ title, onBackPress }) => {
-  const navigation = useNavigation();
- 
+
+const Navbar: React.FC<NavbarProps> = ({title, onBackPress}) => {
   return (
     <View>
       {/* Logo Section */}
       <View style={styles.navbar}>
         <Image source={require('../../assests/Images/logo.png')} style={styles.logo} />
       </View>
-     
+
       <View style={styles.separator} />
- 
+
       {/* Header Section */}
       <View style={styles.headerContainer}>
         {/* Back Button */}
@@ -28,16 +25,16 @@ const Navbar: React.FC<NavbarProps> = ({ title, onBackPress }) => {
             <Icon name="left" size={24} color="#495057" />
           </TouchableOpacity>
         )}
- 
+
         {/* Screen Title */}
         <Text style={styles.title}>{title}</Text>
       </View>
- 
+
       <View style={styles.separator} />
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   navbar: {
     height: 25,
@@ -45,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     marginBottom: 16,
-    marginTop:10
+    marginTop: 10,
   },
   logo: {
     width: 120,
@@ -76,6 +73,5 @@ const styles = StyleSheet.create({
     marginLeft: 50,
   },
 });
- 
+
 export default Navbar;
- 

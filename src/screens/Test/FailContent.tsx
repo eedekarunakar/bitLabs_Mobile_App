@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, BackHandler } from 'react-native';
+import {View, Text, Image, StyleSheet, BackHandler} from 'react-native';
 import GradientButton from '@components/styles/GradientButton';
-import { useFocusEffect } from "@react-navigation/native";
-const FailureScreen = ({ navigation }: any) => {
+import {useFocusEffect} from '@react-navigation/native';
+const FailureScreen = ({navigation}: any) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => true; // Returning true disables back action
- 
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
   );
   return (
     <View style={styles.container}>
@@ -21,37 +21,36 @@ const FailureScreen = ({ navigation }: any) => {
           style={styles.image}
           resizeMode="contain"
         />
- 
+
         {/* Failure Message */}
         <Text style={styles.message}>
           Unfortunately, you scored less than 70%, and have not passed the exam.
         </Text>
- 
+
         {/* Retake Info */}
-        <Text style={styles.retakeText}>
-          You Can Retake The Test{'\n'}After 7 Days
-        </Text>
- 
+        <Text style={styles.retakeText}>You Can Retake The Test{'\n'}After 7 Days</Text>
+
         {/* Exit Button with Gradient */}
         <GradientButton
           title="Exit"
-          onPress={() => navigation.navigate('BottomTab', { screen: 'Badges', isTestComplete: false })}
-         
+          onPress={() =>
+            navigation.navigate('BottomTab', {screen: 'Badges', isTestComplete: false})
+          }
         />
       </View>
     </View>
   );
 };
- 
+
 export default FailureScreen;
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
- 
+
     width: '100%', // Increased the width of the container
   },
   card: {
@@ -99,5 +98,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 7.68,
   },
- 
 });

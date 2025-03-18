@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,12 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import ProgressBar from '@components/progessBar/ProgressBar';
 import DropDownPicker from 'react-native-dropdown-picker';
 import LinearGradient from 'react-native-linear-gradient';
- 
+
 const getSpecializationOptions = (qualification: string | any): string[] => {
   switch (qualification) {
     case 'B.Tech':
@@ -81,7 +81,7 @@ const getSpecializationOptions = (qualification: string | any): string[] => {
       return [];
   }
 };
- 
+
 const skillOptions = [
   'Java',
   'C',
@@ -134,20 +134,17 @@ interface FormData {
   preferredLocation: string[];
 }
 
-const {height,width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 const Dummystep2: React.FC = ({route, navigation}: any) => {
-  const qual = route.params?.formData?.skills ?? '';
-  console.log("R",route.params)
-  console.log("email",qual);
   const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState<FormData>({
     qualification: route.params?.formData?.qualification || '',
     specialization: route.params?.formData?.specialization || '',
-    skills: route.params?.formData?.skills || [] ,
+    skills: route.params?.formData?.skills || [],
     experience: route.params?.formData?.experience || '',
-    preferredLocation: route.params?.formData?.preferredLocation || [] ,
+    preferredLocation: route.params?.formData?.preferredLocation || [],
   });
- 
+
   const [errors, setErrors] = useState({
     qualification: '',
     specialization: '',
@@ -155,21 +152,19 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
     experience: '',
     preferredLocation: '',
   });
- 
+
   const [specialization, setSpecialization] = useState<string>(formData.specialization);
   const [qualification, setQualification] = useState<string>(formData.qualification);
- 
-  const [openQualificationDropdown, setOpenQualificationDropdown] =
-    useState(false);
-  const [openSpecializationDropdown, setOpenSpecializationDropdown] =
-    useState(false);
- 
+
+  const [openQualificationDropdown, setOpenQualificationDropdown] = useState(false);
+  const [openSpecializationDropdown, setOpenSpecializationDropdown] = useState(false);
+
   const [openSkillsDropdown, setOpenSkillsDropdown] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState<string[]>(formData.skills);
- 
+
   const [openLocationDropdown, setOpenLocationDropdown] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string[]>(formData.preferredLocation);
- 
+
   const handleOpenQualification = () => {
     setOpenLocationDropdown(false);
     setOpenSkillsDropdown(false);
@@ -190,7 +185,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
     setOpenSkillsDropdown(false);
     setOpenSpecializationDropdown(false);
   };
- 
+
   useEffect(() => {
     setFormData(prev => ({
       ...prev,
@@ -200,7 +195,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
       preferredLocation: selectedLocations,
     }));
   }, [qualification, specialization, selectedSkills, selectedLocations]);
- 
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
@@ -210,7 +205,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
       experience: '',
       preferredLocation: '',
     };
- 
+
     if (!formData.qualification) {
       newErrors.qualification = 'Qualification is required.';
       isValid = false;
@@ -231,11 +226,11 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
       newErrors.preferredLocation = 'Preferred location is required.';
       isValid = false;
     }
- 
+
     setErrors(newErrors);
     return isValid;
   };
- 
+
   const handleNext = () => {
     if (validateForm()) {
       setCurrentStep(prevStep => Math.min(prevStep + 1, 3));
@@ -252,7 +247,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
       });
     }
   };
- 
+
   const handleBack = () => {
     navigation.goBack();
     navigation.navigate('Step1', {
@@ -264,40 +259,35 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
     openSpecializationDropdown ||
     openSkillsDropdown ||
     openLocationDropdown;
- 
- 
+
   return (
     <View style={styles.screen}>
-      <Image
-        style={styles.logo}
-        source={require('../../assests/LandingPage/logo.png')}
-      />
-      <ScrollView scrollEnabled={!isAnyDropdownOpen}>
+      <ScrollView scrollEnabled={!isAnyDropdownOpen} style={styles.scrollView}>
+        <Image style={styles.logo} source={require('../../assests/LandingPage/logo.png')} />
+
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.completeProfile}>Complete Your Profile</Text>
-            <Text style={styles.subHeader}>
-              Fill the form fields to go next step
-            </Text>
+            <Text style={styles.subHeader}>Fill the form fields to go next step</Text>
           </View>
- 
+
           <ProgressBar initialStep={currentStep} />
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             <DropDownPicker
               open={openQualificationDropdown}
               value={qualification}
               items={[
-          {label: 'B.Tech', value: 'B.Tech'},
-          {label: 'MCA', value: 'MCA'},
-          {label: 'Degree', value: 'Degree'},
-          {label: 'Intermediate', value: 'Intermediate'},
-          {label: 'Diploma', value: 'Diploma'},
+                {label: 'B.Tech', value: 'B.Tech'},
+                {label: 'MCA', value: 'MCA'},
+                {label: 'Degree', value: 'Degree'},
+                {label: 'Intermediate', value: 'Intermediate'},
+                {label: 'Diploma', value: 'Diploma'},
               ]}
               setOpen={setOpenQualificationDropdown}
               onOpen={handleOpenQualification}
               setValue={value => {
-          setQualification(value);
-          setErrors(prev => ({...prev, qualification: ''})); // Clear the error if input is valid
+                setQualification(value);
+                setErrors(prev => ({...prev, qualification: ''})); // Clear the error if input is valid
               }}
               placeholder="*Qualification"
               style={styles.dropdown}
@@ -306,22 +296,20 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               textStyle={styles.dropdownText}
               zIndex={1000}
             />
-            {errors.qualification && (
-              <Text style={styles.errorText}>{errors.qualification}</Text>
-            )}
- 
+            {errors.qualification && <Text style={styles.errorText}>{errors.qualification}</Text>}
+
             <DropDownPicker
               open={openSpecializationDropdown}
               items={getSpecializationOptions(qualification).map(spec => ({
-          label: spec,
-          value: spec,
+                label: spec,
+                value: spec,
               }))}
               value={specialization}
               setOpen={setOpenSpecializationDropdown}
               onOpen={handleOpenSpecialization}
               setValue={value => {
-          setSpecialization(value);
-          setErrors(prev => ({...prev, specialization: ''})); // Clear error dynamically
+                setSpecialization(value);
+                setErrors(prev => ({...prev, specialization: ''})); // Clear error dynamically
               }}
               placeholder="*Specialization"
               disabled={!qualification} // Disable dropdown if qualification is not selected
@@ -329,14 +317,11 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               dropDownContainerStyle={styles.dropdownContainer}
               placeholderStyle={styles.placeholderText}
               textStyle={styles.dropdownText}
-              dropDownDirection="BOTTOM" 
-             
+              dropDownDirection="BOTTOM"
               zIndex={990}
             />
-            {errors.specialization && (
-              <Text style={styles.errorText}>{errors.specialization}</Text>
-            )}
- 
+            {errors.specialization && <Text style={styles.errorText}>{errors.specialization}</Text>}
+
             <DropDownPicker
               multiple={true}
               open={openSkillsDropdown}
@@ -345,11 +330,11 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               setOpen={setOpenSkillsDropdown}
               onOpen={handleOpenSkills}
               setValue={value => {
-          setSelectedSkills(value);
-          setErrors(prev => ({
-            ...prev,
-            skills: value.length > 0 ? '' : 'Skills are required.',
-          })); // Clear error dynamically
+                setSelectedSkills(value);
+                setErrors(prev => ({
+                  ...prev,
+                  skills: value.length > 0 ? '' : 'Skills are required.',
+                })); // Clear error dynamically
               }}
               placeholder="*Skills"
               style={styles.dropdown}
@@ -360,28 +345,24 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               mode="BADGE"
               showBadgeDot={false}
             />
-            {errors.skills && (
-              <Text style={styles.errorText}>{errors.skills}</Text>
-            )}
- 
+            {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
+
             <DropDownPicker
               multiple={true} // Allow multiple selection
               open={openLocationDropdown}
               value={selectedLocations} // Array of selected locations
-              items={locationOptions
-          .map(location => ({
-          label: location,
-          value: location,
+              items={locationOptions.map(location => ({
+                label: location,
+                value: location,
               }))}
               setOpen={setOpenLocationDropdown}
               onOpen={handleOpenLocation}
               setValue={value => {
-          setSelectedLocations(value);
-          setErrors(prev => ({
-            ...prev,
-            preferredLocation:
-              value.length > 0 ? '' : 'Preferred location is required.',
-          })); // Clear error dynamically
+                setSelectedLocations(value);
+                setErrors(prev => ({
+                  ...prev,
+                  preferredLocation: value.length > 0 ? '' : 'Preferred location is required.',
+                })); // Clear error dynamically
               }}
               placeholder="*Preferred Job Locations"
               style={styles.dropdown}
@@ -403,28 +384,24 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
             value={formData.experience}
             keyboardType="numeric" // Ensure only numeric input
             onChangeText={text => {
-              const numericValue = text.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+              const numericValue = text.replace(/[\D]/g, ''); // Remove non-numeric characters
               setFormData(prev => ({...prev, experience: numericValue}));
               if (numericValue) {
-          setErrors(prev => ({...prev, experience: ''})); // Clear the error if input is valid
+                setErrors(prev => ({...prev, experience: ''})); // Clear the error if input is valid
               }
             }}
           />
-          {errors.experience && (
-            <Text style={styles.errorText}>{errors.experience}</Text>
-          )}
+          {errors.experience && <Text style={styles.errorText}>{errors.experience}</Text>}
         </View>
       </ScrollView>
- 
+
       <View style={styles.footer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
- 
-          <TouchableOpacity
-            style={[styles.backButton, {borderWidth: 0}]}
-            onPress={handleNext}>
+
+          <TouchableOpacity style={[styles.backButton, {borderWidth: 0}]} onPress={handleNext}>
             <LinearGradient
               colors={['#F97316', '#FAA729']}
               start={{x: 0, y: 0}}
@@ -452,10 +429,11 @@ const styles = StyleSheet.create({
     width: 150, // Decreased width
     height: 45,
     marginBottom: 20,
+    alignSelf: 'center',
   },
   container: {
     width: '100%',
-    height: height*1.05,
+    height: height * 1.05,
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -542,7 +520,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: '#F5F5F5',
     fontFamily: 'PlusJakartaSans-Bold',
-    marginTop: 0 ,
+    marginTop: 0,
   },
   dropdownContainer: {
     borderWidth: 1,
@@ -557,8 +535,9 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 14,
   },
+  scrollView: {
+    flexGrow: 1,
+    paddingBottom: 100,
+  },
 });
- 
 export default Dummystep2;
- 
- 

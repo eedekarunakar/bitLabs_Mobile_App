@@ -1,138 +1,68 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, Dimensions, View, ActivityIndicator, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
-import { useAuth } from '@context/Authcontext';
-import LinearGradient from 'react-native-linear-gradient';
-import Resumebanner from '@assests/icons/Resumebanner';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { requestStoragePermission } from './permissions';
-import { RootStackParamList } from '@models/model';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Toast from 'react-native-toast-message';
+import React, {useEffect} from 'react';
+import {StyleSheet, Dimensions, View, Text, TouchableOpacity} from 'react-native';
+import {useAuth} from '@context/Authcontext';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {requestStoragePermission} from './permissions';
+import {showToast} from '@services/login/ToastService';
 import RNFS from 'react-native-fs';
-import { usePdf } from './resumestate';
-import PDFExam from './Reusableresume';
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResumeBuilder'>;
+import {usePdf} from '../../context/ResumeContext';
+import PDFExam from '../../components/progessBar/Resume';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-
-const { width, height } = Dimensions.get('window');
-const BANNER_SIZE = Math.min(width * 0.2, 100); // Adjust the size dynamically
+const {height} = Dimensions.get('window');
 const PDFExample = () => {
   const userid = useAuth();
-  //const [pdfUri, setPdfUri] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation<NavigationProp>();
-  const { setPdfUri, pdfUri, refreshPdf } = usePdf()
-
-
-
-  console.log('pdfUri', pdfUri)
+  const {pdfUri, refreshPdf} = usePdf();
   useEffect(() => {
     if (userid.userId) {
       refreshPdf(); // Fetch PDF when component mounts
     }
   }, [userid.userId]);
 
-
-  const source = { uri: pdfUri };
   const downloadFile = async () => {
     if (!pdfUri) {
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'No PDF available to download.',
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 3 seconds
-        text2Style: {
-          fontSize: 14
-
-        },
-      });
+      showToast('error', 'No PDF available to download.');
       return;
     }
 
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Allow storage permission to download.',
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 4 seconds      
-        text2Style: { fontSize: 16 },
-      });
+      showToast('error', 'Allow storage permission to download.');
       return;
     }
-
 
     const fileName = `Resume_${new Date().getTime()}.pdf`;
     const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
 
     try {
-      await RNFS.writeFile(downloadPath, pdfUri.replace('data:application/pdf;base64,', ''), 'base64');
-      Toast.show({
-        type: 'success',
-        text1: '',
-        text2: `File saved successfully!`,
-        position: 'bottom',
-        visibilityTime: 5000, // Toast stays for 5 seconds
-        text1Style: { fontSize: 18, fontWeight: 'bold' },
-        text2Style: { fontSize: 16 },
-      });
+      await RNFS.writeFile(
+        downloadPath,
+        pdfUri.replace('data:application/pdf;base64,', ''),
+        'base64',
+      );
+      showToast('success', `File saved successfully!`);
     } catch (error) {
       console.error('Download Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: '',
-        text2: 'Failed to save PDF file.',
-        position: 'bottom',
-        visibilityTime: 4000, // Toast stays for 4 seconds
-        text1Style: { fontSize: 18, fontWeight: 'bold' },
-        text2Style: { fontSize: 16 },
-      });
+      showToast('error', 'Failed to save PDF file.');
     }
   };
 
-
-
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-
-
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.headerContainer}>
         <Text style={styles.title}>My Resume</Text>
       </View>
       <View style={styles.container}>
-        {/* <LinearGradient
-          colors={['#FAA428', '#F97316']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }} // 90-degree (horizontal) gradient
-          style={styles.gradientContainer}>
-          <View style={styles.textContainer}>
-            <Text style={styles.resumeText}>Build your professional
-              resume for free.</Text>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ResumeBuilder')}>
-              <Text style={styles.buttonText}>Create Now</Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Resumebanner width={width * 0.35} height={height * 0.2} right={10} />
-          </View>
-
-        </LinearGradient> */}
         <View style={styles.pdf}>
-
           <PDFExam />
 
           <View>
-            {pdfUri &&
+            {pdfUri && (
               <TouchableOpacity onPress={downloadFile} style={styles.downloadButton}>
                 {/* <Image source={require('../../assests/Images/download.png')} style={styles.downloadIcon} /> */}
                 <AntDesign name="download" size={20} color="gray" />
               </TouchableOpacity>
-            }
+            )}
           </View>
         </View>
       </View>
@@ -141,22 +71,16 @@ const PDFExample = () => {
 };
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     marginTop: 10,
     padding: 10,
-    paddingRight: 1.5
-
   },
   banner: {
     position: 'relative',
-    padding: 5
-
   },
   header: {
     marginBottom: 10,
-    // The default flexDirection is 'column', so items align to the left by default.
   },
   headerText: {
     fontFamily: 'PlusJakartaSans-Bold',
@@ -166,10 +90,9 @@ const styles = StyleSheet.create({
   },
   pdfContainer: {
     flex: 1,
-
   },
   pdf: {
-    marginTop: 20,
+    marginTop: 10,
     flex: 1,
     width: '100%',
     height: Dimensions.get('window').height,
@@ -205,13 +128,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#F97517',
     textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   headerContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
     height: 58,
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   headerImage: {
     width: 20, // Adjust size as needed
@@ -222,7 +145,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#495057',
     lineHeight: 25,
-    marginLeft: 15
+    marginLeft: 15,
   },
   downloadButton: {
     position: 'absolute',
@@ -236,8 +159,7 @@ const styles = StyleSheet.create({
   downloadIcon: {
     width: 30,
     height: 30,
-  }
-
+  },
 });
 
 export default PDFExample;

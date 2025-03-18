@@ -1,17 +1,11 @@
-import apiClient from "../login/ApiClient";
+import apiClient from '../login/ApiClient';
 
 export const ProfileModel = {
-  createProfile: async (userId: number |null, userToken: string|null, requestData: any) => {
+  createProfile: async (userId: number | null, userToken: string | null, requestData: any) => {
     try {
       const response = await apiClient.post(
         `/applicantprofile/createprofile/${userId}`,
         requestData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
       );
 
       return response.data;
@@ -20,18 +14,13 @@ export const ProfileModel = {
     }
   },
 
-  uploadResume: async (userToken: string|null, userId: number | null, formData: FormData) => {
+  uploadResume: async (userToken: string | null, userId: number | null, formData: FormData) => {
     try {
-      const response = await apiClient.post(
-        `/applicantprofile/uploadresume/${userId}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      const response = await apiClient.post(`/applicantprofile/uploadresume/${userId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
       return response.data;
     } catch (error) {

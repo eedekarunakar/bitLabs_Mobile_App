@@ -1,40 +1,41 @@
 // LogoutModal.tsx
-import React, { useContext } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useContext} from 'react';
+import {Modal, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import UserContext from '@context/UserContext';
-
+import {usePdf} from '../../context/ResumeContext';
 interface LogoutModalProps {
   visible: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onCancel, onConfirm }) => {
+const LogoutModal: React.FC<LogoutModalProps> = ({visible, onCancel, onConfirm}) => {
+  const {reset} = useContext(UserContext);
+  const {setPdfUri} = usePdf(); // Get setPdfUri to clear the PDF
 
-  //reset the total data while logout to ensure no credentilas left in authcontext
-  const {reset} = useContext(UserContext)
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="slide"
-    >
+    <Modal visible={visible} transparent={true} animationType="slide">
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>
-            Are you sure you want to{"\n"}logout?
-          </Text>
+          <Text style={styles.modalTitle}>Are you sure you want to{'\n'}logout?</Text>
           <View style={styles.modalButtons}>
-            <TouchableOpacity onPress={()=>{onCancel();reset();}} style={[styles.modalButton, styles.cancelButton]}>
-              <Text style={[styles.buttonText, { color: '#F46F16' }]}>Cancel</Text>
+            <TouchableOpacity
+              onPress={() => {
+                onCancel();
+                reset();
+              }}
+              style={[styles.modalButton, styles.cancelButton]}>
+              <Text style={[styles.buttonText, {color: '#F46F16'}]}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{onConfirm()}} style={[styles.modalButton]}>
-              <LinearGradient
-                colors={['#F46F16', '#F8A44C']}
-                style={styles.gradientButton}
-              >
-                <Text style={[styles.buttonText, { color: '#FFF' }]}>Logout</Text>
+            <TouchableOpacity
+              onPress={() => {
+                onConfirm();
+                setPdfUri(null);
+              }}
+              style={[styles.modalButton]}>
+              <LinearGradient colors={['#F46F16', '#F8A44C']} style={styles.gradientButton}>
+                <Text style={[styles.buttonText, {color: '#FFF'}]}>Logout</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-    width: "90%",
+    width: '90%',
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -61,12 +62,11 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
-    marginTop:10,
+    marginTop: 10,
     marginBottom: 20,
     lineHeight: 26,
     textAlign: 'center',
-    color: '#0D0D0D'
-
+    color: '#0D0D0D',
   },
   modalButtons: {
     flexDirection: 'row',

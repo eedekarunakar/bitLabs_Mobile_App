@@ -1,26 +1,25 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, BackHandler } from 'react-native';
+import {View, Text, Image, StyleSheet, BackHandler} from 'react-native';
 import GradientButton from '@components/styles/GradientButton';
-import { useTestViewModel } from '@viewmodel/Test/TestViewModel';  // Adjust the import path based on your project structure
-import { useAuth } from '@context/Authcontext';  // Adjust the import path for your auth hook
-import { useSkillTestViewModel } from '@viewmodel/Test/skillViewModel';
-import { useFocusEffect } from "@react-navigation/native";
-const { width } = Dimensions.get('window');
- 
-const TimeUp = ({ route }: any) => {
-  const { testName } = route.params;
-  const { finalScore } = route.params;
-  console.log('fS', finalScore) // Get the final score from route params
-  const { userId, userToken } = useAuth(); // Assuming you have a hook to get auth data
-  const { submitTest } = useTestViewModel(userId, userToken, testName); // Call the useTestViewModel hook
-  const { submitSkillTest } = useSkillTestViewModel(userId, userToken, testName)
+import {useTestViewModel} from '@viewmodel/Test/TestViewModel'; // Adjust the import path based on your project structure
+import {useAuth} from '@context/Authcontext'; // Adjust the import path for your auth hook
+import {useSkillTestViewModel} from '@viewmodel/Test/skillViewModel';
+import {useFocusEffect} from '@react-navigation/native';
+
+const TimeUp = ({route}: any) => {
+  const {testName} = route.params;
+  const {finalScore} = route.params;
+
+  const {userId, userToken} = useAuth(); // Assuming you have a hook to get auth data
+  const {submitTest} = useTestViewModel(userId, userToken, testName); // Call the useTestViewModel hook
+  const {submitSkillTest} = useSkillTestViewModel(userId, userToken, testName);
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => true; // Returning true disables back action
- 
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
   );
   const handleTimeUpSubmission = async () => {
     // Pass the final score and mark the test as complete
@@ -30,26 +29,23 @@ const TimeUp = ({ route }: any) => {
       await submitSkillTest(finalScore, false);
     }
   };
- 
+
   return (
     <View style={styles.modalContainer}>
       <View style={styles.modalContent}>
         <Image source={require('../../assests/Images/Test/Alarm.png')} style={styles.Alarm} />
         <Text style={styles.modalText}>Time's Up</Text>
-        <Text style={[styles.modalText1, { color: '#8F8F8F', lineHeight: 35 }]}>
+        <Text style={[styles.modalText1, {color: '#8F8F8F', lineHeight: 35}]}>
           Your test has been submitted.Please check your score
         </Text>
-        <GradientButton
-          title="View Results"
-          onPress={handleTimeUpSubmission}
-        />
+        <GradientButton title="View Results" onPress={handleTimeUpSubmission} />
       </View>
     </View>
   );
 };
- 
+
 export default TimeUp;
- 
+
 const styles = StyleSheet.create({
   modalContainer: {
     marginTop: 10,
@@ -87,8 +83,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
- 
- 
 });
- 
- 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import {
   View,
@@ -8,19 +8,13 @@ import {
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
-  FlatList
+  FlatList,
 } from 'react-native';
+import {useProfessionalDetailsFormViewModel} from '@viewmodel/Professionalformviewmodel';
 import GradientButton from '@components/styles/GradientButton';
-import { useAuth } from '@context/Authcontext';
-import { ProfileViewModel } from '@viewmodel/Profileviewmodel';
-
-import { ApplicantSkillBadge } from '@models/Model';
 import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
-import { showToast } from '@services/login/ToastService';
 
 interface Skill {
   id: number;
@@ -40,262 +34,95 @@ interface ProfessionalDetailsFormProps {
   onReload: () => void;
 }
 
-const { width, height } = Dimensions.get('window');
-const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(({
-  visible,
-  onClose,
-  qualification: initialQualification = '',
-  specialization: initialSpecialization = '',
-  skillsRequired: initialSkills = [],
-  experience: initialExperience = '',
-  preferredJobLocations: initialLocations = [],
-  skillBadges: applicantSkillBadges,
-  onReload,
-}) => {
-  const [qualification, setQualification] = useState<string>(initialQualification);
-  const [specialization, setSpecialization] = useState<string>(initialSpecialization);
-  const [skills, setSkills] = useState<Skill[]>(initialSkills);
-  const [locations, setLocations] = useState<string[]>(initialLocations);
-  const [experience, setExperience] = useState<string>(initialExperience);
-
-  const [qualificationQuery, setQualificationQuery] = useState(initialQualification);
-  const [specializationQuery, setSpecializationQuery] = useState(initialSpecialization);
-  const [experienceQuery, setExperienceQuery] = useState(initialExperience);
-  const [skillQuery, setSkillQuery] = useState('');
-  const [locationQuery, setLocationQuery] = useState('');
-
-  const [showQualificationList, setShowQualificationList] = useState(false);
-  const [showSpecializationList, setShowSpecializationList] = useState(false);
-  const [showExperienceList, setShowExperienceList] = useState(false);
-  const [showSkillsList, setShowSkillsList] = useState(false);
-  const [showLocationList, setShowLocationList] = useState(false);
-
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
-
-  const { userToken, userId } = useAuth();
-  useEffect(() => {
-    if (visible) {
-      setQualification(initialQualification);
-      setSpecialization(initialSpecialization);
-      setLocations(initialLocations);
-      setSkills(initialSkills);
-      setExperience(initialExperience);
-    }
-  }, [
+const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.memo(props => {
+  const {
     visible,
-    initialQualification,
-    initialSpecialization,
-    initialSkills,
-    initialExperience,
-    initialLocations,
-  ])
+    onClose,
+    qualification: initialQualification,
+    specialization: initialSpecialization,
+    skillsRequired,
+    experience: initialExperience,
+    preferredJobLocations,
+    skillBadges,
+    onReload,
+  } = props;
 
-  const qualificationsOptions = ['B.Tech', 'MCA', 'Degree', 'Intermediate', 'Diploma'];
-  const specializationsByQualification: Record<string, string[]> = {
-    'B.Tech': ['Computer Science and Engineering (CSE)', 'Electronics and Communication Engineering (ECE)', 'Electrical and Electronics Engineering (EEE)', 'Mechanical Engineering (ME)', 'Civil Engineering (CE)', 'Aerospace Engineering', 'Information Technology(IT)', 'Chemical Engineering', 'Biotechnology Engineering'],
-    'MCA': ['Software Engineering', 'Data Science', 'Artificial Intelligence', 'Machine Learning', 'Information Security', 'Cloud Computing', 'Mobile Application Development', 'Web Development', 'Database Management', 'Network Administration', 'Cyber Security', 'IT Project Management'],
-    'Degree': ['Bachelor of Science (B.Sc) Physics', 'Bachelor of Science (B.Sc) Mathematics', 'Bachelor of Science (B.Sc) Statistics', 'Bachelor of Science (B.Sc) Computer Science', 'Bachelor of Science (B.Sc) Electronics', 'Bachelor of Science (B.Sc) Chemistry', 'Bachelor of Commerce (B.Com)'],
-    'Intermediate': ['MPC', 'BiPC', 'CEC', 'HEC'],
-    'Diploma': ['Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering', 'Electronics and Communication Engineering', 'Computer Engineering', 'Automobile Engineering', 'Chemical Engineering', 'Information Technology', 'Instrumentation Engineering', 'Mining Engineering', 'Metallurgical Engineering', 'Agricultural Engineering', 'Textile Technology', 'Architecture', 'Interior Designing', 'Fashion Designing', 'Hotel Management and Catering Technology', 'Pharmacy', 'Medical Laboratory Technology', 'Radiology and Imaging Technology']
-  };
-
-  const skillsOptions = ['Java', 'C', 'C++', 'C Sharp', 'Python', 'HTML', 'CSS', 'JavaScript', 'TypeScript', 'Angular', 'React', 'Vue', 'JSP', 'Servlets', 'Spring', 'Spring Boot', 'Hibernate', '.Net', 'Django', 'Flask', 'SQL', 'MySQL', 'SQL-Server', 'Mongo DB', 'Selenium', 'Regression Testing', 'Manual Testing'];
-  const cities = ['Chennai', 'Thiruvananthapuram', 'Bangalore', 'Hyderabad', 'Coimbatore', 'Kochi', 'Madurai', 'Mysore', 'Thanjavur', 'Pondicherry', 'Vijayawada', 'Pune', 'Gurgaon'];
-  const experienceOptions = Array.from({ length: 16 }, (_, i) => i.toString());
-
-  const [skillBadgesState, setSkillBadgesState] = useState<ApplicantSkillBadge[]>(
-    applicantSkillBadges.filter((badge: ApplicantSkillBadge) => badge.flag === 'added')
-  );
-
-
-
-  const toggleQualificationDropdown = () => {
-    setShowQualificationList(!showQualificationList);
-    setShowSpecializationList(false);
-    setShowExperienceList(false);
-    setShowSkillsList(false);
-    setShowLocationList(false);
-  };
-
-  const toggleSpecializationDropdown = () => {
-    setShowSpecializationList(!showSpecializationList);
-    setShowQualificationList(false);
-    setShowExperienceList(false);
-    setShowSkillsList(false);
-    setShowLocationList(false);
-  };
-
-  const toggleExperienceDropdown = () => {
-    setShowExperienceList(!showExperienceList);
-    setShowQualificationList(false);
-    setShowSpecializationList(false);
-    setShowSkillsList(false);
-    setShowLocationList(false);
-  };
-
-  const toggleSkillsDropdown = () => {
-    setShowSkillsList(!showSkillsList);
-    setShowQualificationList(false);
-    setShowSpecializationList(false);
-    setShowExperienceList(false);
-    setShowLocationList(false);
-  };
-
-  const toggleLocationDropdown = () => {
-    setShowLocationList(!showLocationList);
-    setShowQualificationList(false);
-    setShowSpecializationList(false);
-    setShowExperienceList(false);
-    setShowSkillsList(false);
-  };
-  const closeAllDropdowns = () => {
-    setShowQualificationList(false);
-    setShowSpecializationList(false);
-    setShowExperienceList(false);
-    setShowSkillsList(false);
-    setShowLocationList(false);
-    Keyboard.dismiss(); // Dismiss the keyboard if it's open
-  };
-  const addSkill = (skillName: string) => {
-    if (!skillsOptions.includes(skillName)) {
-      showToast('error', `${skillName} is not a valid skill.`);
-      return;
-    }
-
-    const skillExists = skills.find((s) => s.skillName === skillName);
-    const badgeSkillExists = skillBadgesState.find((badge) => badge.skillBadge.name === skillName);
-
-    if (badgeSkillExists) {
-      const updatedSkillBadges = skillBadgesState.map((badge) =>
-        badge.skillBadge.name === skillName ? { ...badge, flag: 'added' } : badge
-      );
-      setSkillBadgesState(updatedSkillBadges);
-    } else if (!skillExists) {
-      const newSkill: Skill = { id: skills.length + 1, skillName, experience: 0 };
-      setSkills([...skills, newSkill]);
-    }
-
-    setSkillQuery('');
-    setShowSkillsList(false);
-  };
-
-  const removeSkill = (id: number, fromBadge: boolean, skillName: string) => {
-    if (fromBadge) {
-      const updatedSkillBadges = skillBadgesState.map((badge) =>
-        badge.skillBadge.name === skillName ? { ...badge, flag: 'removed' } : badge
-      );
-      setSkillBadgesState(updatedSkillBadges);
-    } else {
-      const updatedSkills = skills.filter((s) => s.id !== id);
-      setSkills(updatedSkills);
-    }
-
-    setSkillQuery('');
-    // setShowSkillsList(true);  // Optionally show the list after removing a skill
-  };
-
-
-  const toggleDropdown = (type: string) => {
-    if (type === 'skills') {
-      setShowSkillsList((prev) => !prev); // Toggle dropdown visibility
-    }
-  };
-
-  const addLocation = (location: string) => {
-    if (!cities.includes(location)) {
-      showToast('error', `${location} is not a valid location.`);
-      return;
-    }
-    if (!locations.includes(location)) {
-      setLocations([...locations, location]);
-    }
-    setLocationQuery('');
-    setShowLocationList(false);
-  };
-
-  const removeLocation = (location: string) => {
-    setLocations(locations.filter((loc) => loc !== location));
-  };
-
-  const handleSaveChanges = async () => {
-    let errors: { [key: string]: string } = {};
-
-    if (!qualification || !qualificationsOptions.includes(qualification)) {
-      errors.qualification = 'Qualification is required';
-    }
-
-    const specializationOptions = specializationsByQualification[qualification as keyof typeof specializationsByQualification];
-
-    if (!specialization || !specializationOptions?.includes(specialization)) {
-      errors.specialization = 'Specialization is required';
-    }
-
-    if (skills.length === 0) {
-      errors.skills = 'At least one valid skill is required';
-    }
-
-    if (locations.length === 0) {
-      errors.locations = 'At least one location is required';
-    }
-
-    if (!experience || !experienceOptions.includes(experience)) {
-      errors.experience = 'Experience is required';
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
-      return;
-    }
-
-    const skillsRequired = [
-      ...skills,
-      ...skillBadgesState.filter(badge => badge.flag === 'added')
-        .map(badge => ({ id: badge.skillBadge.id, skillName: badge.skillBadge.name, experience: 0 }))
-    ];
-
-    const requestBody = {
-      experience,
-      preferredJobLocations: locations,
-      qualification,
-      specialization,
-      skillsRequired,
-    };
-
-    console.log('Request Body:', requestBody);
-
-    try {
-      const response = await ProfileViewModel.saveProfessionalDetails(userToken, userId, requestBody);
-
-      if (response.formErrors) {
-        setValidationErrors(response.formErrors);
-      } else if (response.success) {
-        showToast('success', 'Professional details updated successfully');
-        onClose();
-        onReload();
-      } else {
-        showToast('error', 'Error updating professional details');
-        onClose();
-        onReload();
-      }
-    } catch (error) {
-      console.error('Internal error:', error);
-      showToast('error', 'Internal error occurred while updating professional details');
-    }
-  };
+  const {
+    qualification,
+    setQualification,
+    setSpecialization,
+    skills,
+    locations,
+    setExperience,
+    qualificationQuery,
+    setQualificationQuery,
+    specializationQuery,
+    setSpecializationQuery,
+    experienceQuery,
+    setExperienceQuery,
+    skillQuery,
+    setSkillQuery,
+    locationQuery,
+    setLocationQuery,
+    showQualificationList,
+    setShowQualificationList,
+    showSpecializationList,
+    setShowSpecializationList,
+    showExperienceList,
+    setShowExperienceList,
+    showSkillsList,
+    setShowSkillsList,
+    showLocationList,
+    setShowLocationList,
+    validationErrors,
+    setValidationErrors,
+    qualificationsOptions,
+    specializationsByQualification,
+    skillsOptions,
+    cities,
+    experienceOptions,
+    skillBadgesState,
+    toggleQualificationDropdown,
+    toggleSpecializationDropdown,
+    toggleExperienceDropdown,
+    toggleSkillsDropdown,
+    toggleLocationDropdown,
+    closeAllDropdowns,
+    addSkill,
+    removeSkill,
+    addLocation,
+    removeLocation,
+    handleSaveChanges,
+  } = useProfessionalDetailsFormViewModel({
+    visible,
+    onClose,
+    qualification: initialQualification,
+    specialization: initialSpecialization,
+    skillsRequired,
+    experience: initialExperience,
+    preferredJobLocations,
+    skillBadges,
+    onReload,
+  });
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{flex: 1}}>
       <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
         <TouchableWithoutFeedback onPress={closeAllDropdowns}>
           <View style={styles.modalView}>
             <View style={styles.modalCard}>
-              <View style={{ alignItems: 'flex-end' }}>
+              <View style={{alignItems: 'flex-end'}}>
                 <TouchableOpacity onPress={onClose}>
                   <Icon name="close" size={20} color={'0D0D0D'} />
                 </TouchableOpacity>
               </View>
               {/* <ScrollView contentContainerStyle={{ padding: 10 }}> */}
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
                 <Text style={styles.modalTitle}>Professional Details</Text>
               </View>
 
@@ -303,10 +130,11 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.qualification ? styles.errorInput : {}]}
-                  placeholder="Qualification" placeholderTextColor="#B1B1B1"
+                  placeholder="Qualification"
+                  placeholderTextColor="#B1B1B1"
                   value={qualificationQuery}
                   onFocus={toggleQualificationDropdown}
-                  onChangeText={(text) => {
+                  onChangeText={text => {
                     setQualificationQuery(text);
                     setQualification(text);
                     setShowQualificationList(true);
@@ -316,24 +144,26 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <Text style={styles.errorText}>{validationErrors.qualification}</Text>
                 )}
                 {showQualificationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
-
+                  <View style={[styles.dropdown, {zIndex: 1000}]}>
                     <FlatList
-                      data={qualificationsOptions.filter((qual) => qual.toLowerCase().includes(qualificationQuery.toLowerCase()))}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                          setQualification(item);
-                          setQualificationQuery(item);
-                          setShowQualificationList(false);
-                        }}>
+                      data={qualificationsOptions.filter(qual =>
+                        qual.toLowerCase().includes(qualificationQuery.toLowerCase()),
+                      )}
+                      keyExtractor={item => item}
+                      renderItem={({item}) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setQualification(item);
+                            setQualificationQuery(item);
+                            setShowQualificationList(false);
+                            setValidationErrors(({qualification, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
                       ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
                       nestedScrollEnabled={true}
                     />
-
                   </View>
                 )}
               </View>
@@ -342,10 +172,11 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.specialization ? styles.errorInput : {}]}
-                  placeholder="Specialization" placeholderTextColor="#B1B1B1"
+                  placeholder="Specialization"
+                  placeholderTextColor="#B1B1B1"
                   value={specializationQuery}
                   onFocus={toggleSpecializationDropdown}
-                  onChangeText={(text) => {
+                  onChangeText={text => {
                     setSpecializationQuery(text);
                     setSpecialization(text);
                     setShowSpecializationList(true);
@@ -355,25 +186,30 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <Text style={styles.errorText}>{validationErrors.specialization}</Text>
                 )}
                 {showSpecializationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
-
+                  <View style={[styles.dropdown, {zIndex: 1000}]}>
                     <FlatList
-                      data={(specializationsByQualification[qualification as keyof typeof specializationsByQualification] || [])
-                        .filter((spec: string) => spec.toLowerCase().includes(specializationQuery.toLowerCase()))}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                          setSpecialization(item);
-                          setSpecializationQuery(item);
-                          setShowSpecializationList(false);
-                        }}>
+                      data={(
+                        specializationsByQualification[
+                          qualification as keyof typeof specializationsByQualification
+                        ] || []
+                      ).filter((spec: string) =>
+                        spec.toLowerCase().includes(specializationQuery.toLowerCase()),
+                      )}
+                      keyExtractor={item => item}
+                      renderItem={({item}) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setSpecialization(item);
+                            setSpecializationQuery(item);
+                            setShowSpecializationList(false);
+                            setValidationErrors(({specialization, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
                       ListEmptyComponent={<Text style={styles.noMatchText}>No matches found</Text>}
                       nestedScrollEnabled={true}
                     />
-
                   </View>
                 )}
               </View>
@@ -385,38 +221,58 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   placeholder="Search Skills"
                   placeholderTextColor="#0D0D0D"
                   value={skillQuery}
-                  onFocus={() => setShowSkillsList(true)}
-                  onChangeText={(text) => {
+                  onFocus={toggleSkillsDropdown}
+                  onChangeText={text => {
                     setSkillQuery(text);
                     setShowSkillsList(true); // Ensure dropdown remains open
                   }}
                 />
-                {validationErrors.skills && <Text style={styles.errorText}>{validationErrors.skills}</Text>}
+                {validationErrors.skills && (
+                  <Text style={styles.errorText}>{validationErrors.skills}</Text>
+                )}
 
                 {/* Dropdown Section */}
                 {showSkillsList && (
-                  <View style={[styles.dropdown, { position: 'absolute', top: 50, left: 0, right: 0, maxHeight: 200, zIndex: 1000 }]}>
+                  <View
+                    style={[
+                      styles.dropdown,
+                      {
+                        position: 'absolute',
+                        top: 50,
+                        left: 0,
+                        right: 0,
+                        maxHeight: 200,
+                        zIndex: 1000,
+                      },
+                    ]}>
                     <FlatList
-                      data={skillQuery.length > 0
-                        ? skillsOptions.filter((s) =>
-                          s.toLowerCase().includes(skillQuery.toLowerCase()) &&
-                          !skills.some((skill) => skill.skillName === s) &&
-                          !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
-                        )
-                        : skillsOptions.filter((s) =>
-                          !skills.some((skill) => skill.skillName === s) &&
-                          !skillBadgesState.some((badge) => badge.skillBadge.name === s && badge.flag === 'added')
-                        )
+                      data={
+                        skillQuery.length > 0
+                          ? skillsOptions.filter(
+                              s =>
+                                s.toLowerCase().includes(skillQuery.toLowerCase()) &&
+                                !skills.some(skill => skill.skillName === s) &&
+                                !skillBadgesState.some(
+                                  badge => badge.skillBadge.name === s && badge.flag === 'added',
+                                ),
+                            )
+                          : skillsOptions.filter(
+                              s =>
+                                !skills.some(skill => skill.skillName === s) &&
+                                !skillBadgesState.some(
+                                  badge => badge.skillBadge.name === s && badge.flag === 'added',
+                                ),
+                            )
                       }
                       keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             addSkill(item);
                             setSkillQuery(''); // Clear input after selection
                             // setShowSkillsList(true); // Keep dropdown open
-                          }}
-                        >
+                            setValidationErrors(({skills, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -430,29 +286,29 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                 {/* Selected Skills Section */}
                 <View style={styles.selectedItems}>
                   {skillBadgesState
-                    .filter((badge) => badge.flag === 'added')
-                    .map((badge) => (
-                      <View key={badge.skillBadge.id} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
+                    .filter(badge => badge.flag === 'added')
+                    .map(badge => (
+                      <View
+                        key={badge.skillBadge.id}
+                        style={[styles.selectedItem, {backgroundColor: '#334584'}]}>
                         <Text style={styles.selectedItemText}>{badge.skillBadge.name}</Text>
                         <TouchableOpacity
                           onPress={() => {
                             removeSkill(badge.skillBadge.id, true, badge.skillBadge.name);
-                            
-                          }}
-                        >
+                          }}>
                           <Text style={styles.removeText}>x</Text>
                         </TouchableOpacity>
                       </View>
                     ))}
-                  {skills.map((skill) => (
-                    <View key={skill.id} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
+                  {skills.map(skill => (
+                    <View
+                      key={skill.id}
+                      style={[styles.selectedItem, {backgroundColor: '#334584'}]}>
                       <Text style={styles.selectedItemText}>{skill.skillName}</Text>
                       <TouchableOpacity
                         onPress={() => {
                           removeSkill(skill.id, false, skill.skillName);
-                         
-                        }}
-                      >
+                        }}>
                         <Text style={styles.removeText}>x</Text>
                       </TouchableOpacity>
                     </View>
@@ -466,33 +322,48 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   placeholder="Search Locations"
                   placeholderTextColor="#0D0D0D"
                   value={locationQuery}
-                  onFocus={() => setShowLocationList(true)}
-                  onChangeText={(text) => {
+                  onFocus={toggleLocationDropdown}
+                  onChangeText={text => {
                     setLocationQuery(text);
                     setShowLocationList(true); // Ensure dropdown opens when typing
                   }}
                 />
-                {validationErrors.locations && <Text style={styles.errorText}>{validationErrors.locations}</Text>}
+                {validationErrors.locations && (
+                  <Text style={styles.errorText}>{validationErrors.locations}</Text>
+                )}
 
                 {showLocationList && (
-                  <View style={[styles.dropdown, { position: 'absolute', top: 50, left: 0, right: 0, maxHeight: 200, zIndex: 1000 }]}>
+                  <View
+                    style={[
+                      styles.dropdown,
+                      {
+                        position: 'absolute',
+                        top: 50,
+                        left: 0,
+                        right: 0,
+                        maxHeight: 200,
+                        zIndex: 1000,
+                      },
+                    ]}>
                     <FlatList
-                      data={locationQuery.length > 0
-                        ? cities.filter((loc) =>
-                          loc.toLowerCase().includes(locationQuery.toLowerCase()) &&
-                          !locations.includes(loc)
-                        )
-                        : cities.filter((loc) => !locations.includes(loc))
+                      data={
+                        locationQuery.length > 0
+                          ? cities.filter(
+                              loc =>
+                                loc.toLowerCase().includes(locationQuery.toLowerCase()) &&
+                                !locations.includes(loc),
+                            )
+                          : cities.filter(loc => !locations.includes(loc))
                       }
                       keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             addLocation(item);
                             setLocationQuery(''); // Clear input after selection
                             // setShowLocationList(true); // Keep dropdown open
-                          }}
-                        >
+                            setValidationErrors(({locations, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -504,8 +375,10 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                 )}
 
                 <View style={styles.selectedItems}>
-                  {locations.map((location) => (
-                    <View key={location} style={[styles.selectedItem, { backgroundColor: '#334584' }]}>
+                  {locations.map(location => (
+                    <View
+                      key={location}
+                      style={[styles.selectedItem, {backgroundColor: '#334584'}]}>
                       <Text style={styles.selectedItemText}>{location}</Text>
                       <TouchableOpacity onPress={() => removeLocation(location)}>
                         <Text style={styles.removeText}>x</Text>
@@ -515,15 +388,15 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                 </View>
               </View>
 
-
               {/* Experience */}
               <View style={styles.inputContainer}>
                 <TextInput
                   style={[styles.input, validationErrors.experience ? styles.errorInput : {}]}
-                  placeholder="Experience" placeholderTextColor="#B1B1B1"
+                  placeholder="Experience"
+                  placeholderTextColor="#B1B1B1"
                   value={experienceQuery}
                   onFocus={toggleExperienceDropdown}
-                  onChangeText={(text) => {
+                  onChangeText={text => {
                     setExperienceQuery(text);
                     setExperience(text);
                     setShowExperienceList(true);
@@ -533,16 +406,24 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <Text style={styles.errorText}>{validationErrors.experience}</Text>
                 )}
                 {showExperienceList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                  <View style={[styles.dropdown, {zIndex: 1000}]}>
                     <FlatList
-                      data={experienceQuery.length > 0 ? experienceOptions.filter((exp) => exp.toLowerCase().includes(experienceQuery.toLowerCase())) : experienceOptions}
-                      keyExtractor={(item) => item}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                          setExperience(item);
-                          setExperienceQuery(item);
-                          setShowExperienceList(false);
-                        }}>
+                      data={
+                        experienceQuery.length > 0
+                          ? experienceOptions.filter(exp =>
+                              exp.toLowerCase().includes(experienceQuery.toLowerCase()),
+                            )
+                          : experienceOptions
+                      }
+                      keyExtractor={item => item}
+                      renderItem={({item}) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setExperience(item);
+                            setExperienceQuery(item);
+                            setShowExperienceList(false);
+                            setValidationErrors(({experience, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -564,9 +445,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
       </Modal>
     </KeyboardAvoidingView>
   );
-}
-)
-
+});
 
 const styles = StyleSheet.create({
   modalView: {
@@ -574,7 +453,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
   },
   modalCard: {
     width: '90%',
@@ -585,15 +463,13 @@ const styles = StyleSheet.create({
   inputContainer: {
     position: 'relative',
     marginBottom: 10,
-
-
   },
   modalTitle: {
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
     color: '#666666',
-    fontFamily: 'PlusJakartaSans-Bold'
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   input: {
     backgroundColor: '#E5E5E5',
@@ -603,7 +479,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     color: '#0D0D0D',
-    fontFamily: 'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   errorInput: {
     borderColor: 'red',
@@ -627,7 +503,6 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     overflow: 'hidden',
     elevation: 5, // Added elevation for better visibility
-
   },
   suggestionItem: {
     padding: 10,
@@ -636,7 +511,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     color: '#0D0D0D',
-    fontFamily: 'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   autocompleteItem: {
     padding: 10,
@@ -645,22 +520,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     color: '#0D0D0D',
-    fontFamily: 'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   noMatchText: {
     padding: 10,
     fontSize: 16,
     color: '#bbb',
-    fontFamily: 'PlusJakartaSans-Medium'
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   selectedItems: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 10,
-    marginTop: 8
+    marginTop: 8,
   },
   selectedItem: {
-
     backgroundColor: '#334584',
     padding: 5,
     marginRight: 10,
@@ -686,7 +560,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
     borderRadius: 5,
-    marginTop: 8
+    marginTop: 8,
   },
   scrollContainer: {
     maxHeight: 150,

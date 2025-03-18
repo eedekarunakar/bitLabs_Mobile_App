@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import SemiCircleProgress from '@components/progessBar/SemiCircularProgressBar'; // Adjust the import path as needed
 import Alertcircle from '@assests/icons/Alertcircle'; // Adjust the import path as needed
 
@@ -18,7 +18,7 @@ const SkillMatchProbability: React.FC<SkillMatchProbabilityProps> = ({
 }) => {
   return (
     <View style={styles.jobCard}>
-      <Text style={[styles.jobdestitle, { marginBottom: 16 }]}>Skill Match Probability</Text>
+      <Text style={[styles.jobdestitle, {marginBottom: 16}]}>Skill Match Probability</Text>
       <Text style={styles.message}>
         The more the probability, the more are the chances to get hired.
       </Text>
@@ -37,9 +37,18 @@ const SkillMatchProbability: React.FC<SkillMatchProbabilityProps> = ({
           </Text>
         ))}
         {unmatchedSkills.map((skill, index) => (
-          <View key={`unmatched-${index}`} style={[styles.unmatchedSkillContainer, { flexDirection: 'row', alignItems: 'center' }]}>
-            <Alertcircle height={16} width={16} style={[styles.unmatchedSkillIcon, { marginRight: 4 }]} />
-            <Text style={[styles.unmatchedSkill]}> {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}</Text>
+          <View
+            key={`unmatched-${index}`}
+            style={[styles.unmatchedSkillContainer, {flexDirection: 'row', alignItems: 'center'}]}>
+            <Alertcircle
+              height={16}
+              width={16}
+              style={[styles.unmatchedSkillIcon, {marginRight: 4}]}
+            />
+            <Text style={[styles.unmatchedSkill]}>
+              {' '}
+              {skill.charAt(0).toUpperCase() + skill.slice(1).toLowerCase()}
+            </Text>
           </View>
         ))}
       </View>
@@ -74,13 +83,11 @@ const styles = StyleSheet.create({
     marginLeft: -11.5,
     //width:100,
     //alignItems:'center'
-    
   },
   centeredText: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 15,
     lineHeight: 35.27,
-    
 
     color: '#000000',
   },

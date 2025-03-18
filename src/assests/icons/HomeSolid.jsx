@@ -1,22 +1,13 @@
-import * as React from "react";
-import Svg, {
-  G,
-  Path,
-  Defs,
-  LinearGradient,
-  Stop,
-  ClipPath,
-  Rect,
-} from "react-native-svg";
-const HomeSolid = (props) => (
+import * as React from 'react';
+import Svg, {G, Path, Defs, LinearGradient, Stop, ClipPath, Rect} from 'react-native-svg';
+const HomeSolid = props => (
   <Svg
     width={24}
     height={24}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <G clipPath="url(#clip0_4224_12536)">
       <Path
         d="M11.4699 3.84099C11.6106 3.70054 11.8012 3.62165 11.9999 3.62165C12.1987 3.62165 12.3893 3.70054 12.5299 3.84099L21.2199 12.531C21.2892 12.6026 21.3719 12.6597 21.4635 12.699C21.555 12.7382 21.6534 12.7589 21.753 12.7597C21.8526 12.7605 21.9513 12.7415 22.0435 12.7037C22.1356 12.666 22.2194 12.6102 22.2897 12.5398C22.3601 12.4693 22.4158 12.3856 22.4534 12.2934C22.4911 12.2012 22.51 12.1024 22.5091 12.0028C22.5082 11.9032 22.4875 11.8048 22.4481 11.7134C22.4088 11.6219 22.3516 11.5391 22.2799 11.47L13.5909 2.77999C13.382 2.57106 13.134 2.40532 12.861 2.29225C12.588 2.17917 12.2954 2.12097 11.9999 2.12097C11.7045 2.12097 11.4119 2.17917 11.1389 2.29225C10.8659 2.40532 10.6179 2.57106 10.4089 2.77999L1.71894 11.47C1.64734 11.5392 1.59025 11.622 1.55098 11.7135C1.51172 11.805 1.49108 11.9035 1.49026 12.003C1.48944 12.1026 1.50846 12.2014 1.54622 12.2935C1.58397 12.3857 1.6397 12.4694 1.71015 12.5398C1.78061 12.6102 1.86437 12.6658 1.95656 12.7035C2.04875 12.7412 2.14752 12.7601 2.2471 12.7592C2.34669 12.7583 2.44509 12.7375 2.53658 12.6982C2.62806 12.6588 2.71079 12.6017 2.77994 12.53L11.4699 3.84099Z"
@@ -34,8 +25,7 @@ const HomeSolid = (props) => (
         y1={12.7597}
         x2={22.5092}
         y2={12.7597}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>
@@ -45,8 +35,7 @@ const HomeSolid = (props) => (
         y1={21.75}
         x2={20.25}
         y2={21.75}
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <Stop offset={0.253333} stopColor="#F97316" />
         <Stop offset={1} stopColor="#FAA729" />
       </LinearGradient>

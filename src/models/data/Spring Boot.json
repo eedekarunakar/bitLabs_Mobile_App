@@ -1,18 +1,13 @@
 {
   "testName": "Spring Boot MCQ Test",
-  "duration": "1 mins",
+  "duration": "30 mins",
   "numberOfQuestions": 30,
   "topicsCovered": ["Spring Boot"],
   "questions": [
     {
       "id": 1,
       "question": "What is the default embedded server used in Spring Boot applications?",
-      "options": [
-        "Tomcat",
-        "Jetty",
-        "Undertow",
-        "GlassFish"
-      ],
+      "options": ["Tomcat", "Jetty", "Undertow", "GlassFish"],
       "answer": "Tomcat"
     },
     {
@@ -106,12 +101,7 @@
     {
       "id": 10,
       "question": "Which annotation is used to indicate that a method parameter should be bound to a URI template variable?",
-      "options": [
-        "@PathVariable",
-        "@RequestParam",
-        "@RequestBody",
-        "@ModelAttribute"
-      ],
+      "options": ["@PathVariable", "@RequestParam", "@RequestBody", "@ModelAttribute"],
       "answer": "@PathVariable"
     },
     {
@@ -172,12 +162,7 @@
     {
       "id": 16,
       "question": "Which annotation is used to map HTTP POST requests onto specific handler methods in Spring Boot?",
-      "options": [
-        "@PostMapping",
-        "@RequestMapping",
-        "@GetMapping",
-        "@PutMapping"
-      ],
+      "options": ["@PostMapping", "@RequestMapping", "@GetMapping", "@PutMapping"],
       "answer": "@PostMapping"
     },
     {
@@ -227,45 +212,25 @@
     {
       "id": 21,
       "question": "Which annotation can be used to create a global exception handler in a Spring Boot application?",
-      "options": [
-        "@ControllerAdvice",
-        "@ExceptionHandler",
-        "@RestController",
-        "@ErrorHandler"
-      ],
+      "options": ["@ControllerAdvice", "@ExceptionHandler", "@RestController", "@ErrorHandler"],
       "answer": "@ControllerAdvice"
     },
     {
       "id": 22,
       "question": "What is the default logging framework used by Spring Boot?",
-      "options": [
-        "Logback",
-        "Log4j",
-        "SLF4J",
-        "Commons Logging"
-      ],
+      "options": ["Logback", "Log4j", "SLF4J", "Commons Logging"],
       "answer": "Logback"
     },
     {
       "id": 23,
       "question": "Which annotation is used to cache the result of a method in Spring Boot?",
-      "options": [
-        "@Cacheable",
-        "@Cachable",
-        "@EnableCaching",
-        "@CacheResult"
-      ],
+      "options": ["@Cacheable", "@Cachable", "@EnableCaching", "@CacheResult"],
       "answer": "@Cacheable"
     },
     {
       "id": 24,
       "question": "Which annotation in Spring Boot is used to define a scheduled task?",
-      "options": [
-        "@Scheduled",
-        "@EnableScheduling",
-        "@Task",
-        "@ScheduledTask"
-      ],
+      "options": ["@Scheduled", "@EnableScheduling", "@Task", "@ScheduledTask"],
       "answer": "@Scheduled"
     },
     {
@@ -282,23 +247,13 @@
     {
       "id": 26,
       "question": "Which of the following is used to monitor the health of a Spring Boot application?",
-      "options": [
-        "Spring Boot Actuator",
-        "Spring Boot CLI",
-        "Spring Data JPA",
-        "Spring Cloud"
-      ],
+      "options": ["Spring Boot Actuator", "Spring Boot CLI", "Spring Data JPA", "Spring Cloud"],
       "answer": "Spring Boot Actuator"
     },
     {
       "id": 27,
       "question": "Which annotation is used to map HTTP GET requests in Spring Boot?",
-      "options": [
-        "@GetMapping",
-        "@RequestMapping",
-        "@PostMapping",
-        "@PathVariable"
-      ],
+      "options": ["@GetMapping", "@RequestMapping", "@PostMapping", "@PathVariable"],
       "answer": "@GetMapping"
     },
     {
