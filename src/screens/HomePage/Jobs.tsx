@@ -45,15 +45,16 @@ const RecommendedJobs = () => {
     if (!isJobsLoaded) {
       reloadJobs().then(()=>{
         if(lastViewedJobIndex!==null){
-        setVisibleJobsCount(lastViewedJobIndex+10)
-        setPendingScrollIndex(lastViewedJobIndex)
+        const  safeIndex =  Math.min(lastViewedJobIndex+2 , visibleJobs.length-1)
+        setVisibleJobsCount(lastViewedJobIndex+2)
+        setPendingScrollIndex(safeIndex)
         setLastViewedJobIndex(null);
 
         }
       }) // Reload jobs only when `isJobsLoaded` is false
       setIsJobsLoaded(true); // Mark as loaded after fetching
     }
-  }, [isJobsLoaded,jobs]);
+  }, [isJobsLoaded]);
 
   // Handle tab press
   const handleTabPress = (tab: "recommended" | "applied" | "saved") => {
@@ -113,14 +114,18 @@ const RecommendedJobs = () => {
             data={visibleJobs} // Filter and display only visible jobs
             renderItem={renderJobs}
             keyExtractor={item => item.id.toString()}
-            getItemLayout={(data, index) => ({ length: 100, offset: 100 * index, index })}
+            getItemLayout={(_, index) => ({ length: 177, offset: 177 * index, index })}
             onContentSizeChange={() => {
               if (pendingScrollIndex !== null) {
-                flastListRef.current?.scrollToIndex({ index: pendingScrollIndex, animated: false });
-
-                setPendingScrollIndex(null)
+                const indexToScroll = pendingScrollIndex < visibleJobs.length 
+                  ? pendingScrollIndex 
+                  : visibleJobs.length - 1;
+                flastListRef.current?.scrollToIndex({ index: indexToScroll, animated: false });
+                setPendingScrollIndex(null);
               }
+              
             }}
+            
             onEndReached={loadMoreJobs} // Load more jobs when the user scrolls to the bottom
             onEndReachedThreshold={0.5} // Trigger when the user is 50% from the bottom
             ListEmptyComponent={
