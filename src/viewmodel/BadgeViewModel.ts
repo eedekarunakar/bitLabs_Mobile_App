@@ -59,63 +59,57 @@ export const useBadgeViewModel = () => {
   const loadTestStatus = useCallback(async () => {
     try {
       const data = await fetchTestStatus(userId, userToken);
-
-      if (Array.isArray(data) && data.length > 0) {
-        data.forEach(test => {
-          if (!test.testName || test.testName.trim() === "") {
-            test.testName = "General Aptitude Test";
-          }
-        });
-
-        const aptitudeTest = data.find(test => test.testName.toLowerCase().includes("aptitude"));
-        const technicalTest = data.find(test => test.testName.toLowerCase().includes("technical"));
-
-        if (aptitudeTest) {
-          if (aptitudeTest.testStatus.toUpperCase() === "P") {
-            if (technicalTest) {
-              if (technicalTest.testStatus.toUpperCase() === "P") {
-                setSelectedStep(3);
-                setTestName("");
-                setTestStatus("");
-              } else {
-                setSelectedStep(2);
-                setTestName("Technical Test");
-                setTestStatus(technicalTest.testStatus);
-
-                const retakeDate = calculateRetakeDate(technicalTest.testDateTime);
-                const timerInterval = startTimer(retakeDate);
-
-                return () => clearInterval(timerInterval);
-              }
-            } else {
-              setSelectedStep(2);
-              setTestName("Technical Test");
-              setTestStatus("");
-            }
-          } else {
-            setSelectedStep(1);
-            setTestName("General Aptitude Test");
-            setTestStatus(aptitudeTest.testStatus);
-
-            const retakeDate = calculateRetakeDate(aptitudeTest.testDateTime);
-            const timerInterval = startTimer(retakeDate);
-
-            return () => clearInterval(timerInterval);
-          }
-        } else {
-          setSelectedStep(1);
-          setTestName("General Aptitude Test");
-          setTestStatus("");
+  
+      if (!Array.isArray(data) || data.length === 0) {
+        setSelectedStep(1);
+        setTestName("General Aptitude Test");
+        setTestStatus("");
+        return;
+      }
+  
+      const aptitudeTest = data.find(test => test.testName?.toLowerCase().includes("aptitude"));
+      const technicalTest = data.find(test => test.testName?.toLowerCase().includes("technical"));
+  
+      if (!aptitudeTest?.testStatus || aptitudeTest.testStatus.toUpperCase() !== "P") {
+        setSelectedStep(1);
+        setTestName("General Aptitude Test");
+        setTestStatus(aptitudeTest?.testStatus || "");
+  
+        if (aptitudeTest?.testDateTime) {
+          const retakeDate = calculateRetakeDate(aptitudeTest.testDateTime);
+          const timerInterval = startTimer(retakeDate);
+          return () => clearInterval(timerInterval);
         }
+  
+        return;
+      }
+  
+      if (technicalTest?.testStatus?.toUpperCase() === "P") {
+        setSelectedStep(3);
+        setTestName("");
+        setTestStatus("");
+        return;
+      }
+  
+      setSelectedStep(2);
+      setTestName("Technical Test");
+      setTestStatus(technicalTest?.testStatus || "");
+  
+      if (technicalTest?.testDateTime) {
+        const retakeDate = calculateRetakeDate(technicalTest.testDateTime);
+        const timerInterval = startTimer(retakeDate);
+        return () => clearInterval(timerInterval);
       }
     } catch (error) {
+      console.error("Error fetching test status:", error);
       setSelectedStep(1);
       setTestName("General Aptitude Test");
-      console.error("Error fetching test status:", error);
+      setTestStatus("");
     } finally {
       setLoading(false);
     }
   }, [userId, userToken, startTimer]);
+  
 
   const loadSkillBadges = useCallback(async () => {
     if (!userId || !userToken) {

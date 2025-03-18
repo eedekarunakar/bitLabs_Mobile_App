@@ -55,10 +55,12 @@ function Dashboard() {
   if (loading || isLoading) {
     return (
       <View style={styles.loadingContainer}>
+        <View>
         <ActivityIndicator size="large" color="#F46F16" />
         <Text style={{ color: "#0D0D0D", fontFamily: "PlusJakartaSans-Bold" }}>
           Loading job data...
         </Text>
+        </View>
       </View>
     );
   }
