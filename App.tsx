@@ -2,16 +2,17 @@ import React from 'react';
 import {AuthProvider} from '@context/Authcontext';
 import {UserProvider} from '@context/UserContext';
 import AppWithProfileProvider from '@routes/New';
-import { FirebaseMessagingProvider } from '@context/FirebaseMessagingProvider.tsx';
+//import { FirebaseMessagingProvider } from '@context/FirebaseMessagingProvider.tsx';
 const App = () => {
+  
   return (
-    <AuthProvider>
-      <UserProvider>
-        <FirebaseMessagingProvider>
-          <AppWithProfileProvider />
-        </FirebaseMessagingProvider>
-      </UserProvider>
-    </AuthProvider>
+  
+      <AuthProvider>
+        <UserProvider>
+            <AppWithProfileProvider />
+        </UserProvider>
+      </AuthProvider>
+   
   );
 };
 

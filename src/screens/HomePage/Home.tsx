@@ -8,6 +8,7 @@ import {useMessageContext} from '../../context/welcome';
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import Icon5 from 'react-native-vector-icons/MaterialIcons';
 import UserContext from '@context/UserContext';
+import { useFirebaseMessaging } from '@context/FirebaseMessagingProvider.tsx';
 import {
   View,
   Image,
@@ -25,6 +26,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Jobs'>;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 
 function Dashboard() {
+  const { fcmToken } = useFirebaseMessaging();
   const {refreshJobCounts, refreshPersonalName, refreshVerifiedStatus} = useContext(UserContext);
   const [isConnected, setIsConnected] = useState<boolean | null>(true);
   const [verified, setVerified] = useState(false);
@@ -41,6 +43,12 @@ function Dashboard() {
       unsubscribe();
     };
   }, [isConnected]);
+
+  useEffect(() => {
+    if (fcmToken) {
+      console.log('FCM Token from Dashboard:', fcmToken);
+    }
+  }, [fcmToken]);
 
   const refetchData = async () => {
     refreshJobCounts();

@@ -1,11 +1,9 @@
-import React, { createContext, useEffect, useState, ReactNode, useMemo } from 'react';
-import { Alert } from 'react-native';
+import { useEffect, useState } from 'react';
 import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+import { PermissionsAndroid, Platform } from 'react-native';
 
-export const FirebaseMessagingContext = createContext<{ fcmToken: string | null }>({ fcmToken: null });
-
-
-export const FirebaseMessagingProvider = ({ children }: { children: ReactNode }) => {
+export const useFirebaseMessaging = () => {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   const requestUserPermission = async () => {
@@ -16,47 +14,90 @@ export const FirebaseMessagingProvider = ({ children }: { children: ReactNode })
 
     if (enabled) {
       console.log('Permission granted');
-      getFcmToken();
     } else {
       console.log('Permission denied');
     }
   };
 
+  const requestAndroidNotificationPermission = async () => {
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        {
+          title: 'Notification Permission',
+          message: 'This app needs access to send notifications',
+          buttonPositive: 'OK',
+        }
+      );
+      console.log('Android Notification permission granted:', granted === PermissionsAndroid.RESULTS.GRANTED);
+    }
+  };
+
   const getFcmToken = async () => {
     const token = await messaging().getToken();
-    console.log('FCM Token:', token);
+    //console.log('FCM Token:', token);
     setFcmToken(token);
   };
 
   useEffect(() => {
-    requestUserPermission();
-    //foreground message handler
+    const initialize = async () => {
+      await requestUserPermission();
+      await requestAndroidNotificationPermission();
+      await getFcmToken();
+    };
+
+    initialize();
+
+    // Create notification channel once
+    PushNotification.createChannel(
+      {
+        channelId: 'default-channel-id',
+        channelName: 'Default Channel',
+        playSound: true,
+        soundName: 'default',
+        vibrate: true,
+      },
+      (created) => console.log(`Channel created: ${created}`)
+    );
+
+    // Foreground message handler
     const unsubscribeForeground = messaging().onMessage(async (remoteMessage) => {
       console.log('Foreground Message Received:', remoteMessage);
+      const title = remoteMessage.notification?.title;
+      const message = remoteMessage.notification?.body;
 
-      // Alert.alert(
-      //   remoteMessage.notification?.title || 'New Notification',
-      //   remoteMessage.notification?.body || 'You have a new notification'
-      // );
+      if (title && message) {
+        PushNotification.localNotification({
+          channelId: 'default-channel-id',
+          title,
+          message,
+        });
+      } else {
+        console.log('Notification skipped: title or body is missing.');
+      }
     });
 
-    const unsubscribeBackground = messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    // Background message handler
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      const title = remoteMessage.notification?.title;
+      const message = remoteMessage.notification?.body;
+
+      if (title && message) {
+        PushNotification.localNotification({
+          channelId: 'default-channel-id',
+          title,
+          message,
+        });
+      } else {
+        console.log('Notification skipped: title or body is missing.');
+      }
       console.log('Background Message Received:', remoteMessage);
     });
 
     return () => {
       unsubscribeForeground();
-      // Background handler doesn't require unsubscribe
     };
   }, []);
 
-  const contextValue = useMemo(() => ({ fcmToken }), [fcmToken]);
-
-  return (
-    <FirebaseMessagingContext.Provider value={contextValue}>
-      {children}
-    </FirebaseMessagingContext.Provider>
-  );
+  return { fcmToken };
 };
-
-
