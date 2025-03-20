@@ -1,9 +1,29 @@
 {
-  "installed": {
-    "client_id": "1012652072709-k03d2mseacq1k983cips7de8egn8urop.apps.googleusercontent.com",
-    "project_id": "continue-447308",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs"
-  }
+  "project_info": {
+    "project_number": "102812616275",
+    "project_id": "push-notifications-e83b0",
+    "storage_bucket": "push-notifications-e83b0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102812616275:android:a837952f274652d68c28a6",
+        "android_client_info": {
+          "package_name": "com.bigtimes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiV0W25BgG7eu4besDIriZhG9_4ay5uVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }
