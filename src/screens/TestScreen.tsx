@@ -23,12 +23,15 @@ const { width, height } = Dimensions.get("window");
 const TestScreen = ({ route, navigation }: any) => {
   const { userId, userToken } = useAuth(); // Get user ID and JWT token from context
   const testName = route.params?.testName || "defaultTestName"; // Ensure testName is a string
+  const testData = route.params?.testData
+
+
   const {
     currentQuestionIndex,
     answers,
+    testDataAPI,
     timeLeft,
     errorMessage,
-    testData,
     isNetworkAvailable,
     showEarlySubmissionModal,
     formatTime,
@@ -37,10 +40,10 @@ const TestScreen = ({ route, navigation }: any) => {
     goToNextQuestion,
     handleModalConfirm,
     setShowEarlySubmissionModal,
-  } = useSubmissionModel(userId, userToken, testName, navigation);
+  } = useSubmissionModel(userId, userToken, testName, navigation , testData);
   const { setIsTestComplete } = useTestViewModel(userId, userToken, testName);
 
-  const currentQuestion = testData.questions[currentQuestionIndex];
+  const currentQuestion = testDataAPI.questions[currentQuestionIndex];
   if (!isNetworkAvailable) {
     return (
       <SafeAreaView style={styles.container1}>
@@ -71,7 +74,7 @@ const TestScreen = ({ route, navigation }: any) => {
       {/* Other components and UI elements */}
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>
-          Question {currentQuestionIndex + 1} / {testData?.questions?.length || 0}
+          Question {currentQuestionIndex + 1} / {testDataAPI?.questions?.length || 0}
         </Text>
         <View style={styles.timerContainer}>
           <Icon name="clockcircleo" size={20} color="orange" style={{ marginLeft: 15 }} />
@@ -140,7 +143,7 @@ const TestScreen = ({ route, navigation }: any) => {
             style={styles.gradientBackground}
           >
             <Text style={styles.navigationButtonText}>
-              {currentQuestionIndex === testData.questions.length - 1 ? "Submit Test" : "Next"}
+              {currentQuestionIndex === testDataAPI.questions.length - 1 ? "Submit Test" : "Next"}
             </Text>
           </LinearGradient>
         </TouchableOpacity>

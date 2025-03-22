@@ -10,13 +10,13 @@ import {
   BackHandler,
   ActivityIndicator,
 } from "react-native";
+import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import LinearGradient from "react-native-linear-gradient";
 import { useAuth } from "@context/Authcontext";
 import aptitudeTestData from "@models/data/testData.json";
 import technicalTestData from "@models/data/TechnicalTest.json";
-import loadTestData from "./loadTestData";
 import Icon from "react-native-vector-icons/AntDesign";
 import { TestData } from "@models/Model";
 import { fetchTestStatus } from "@services/Home/BadgeService";
@@ -84,9 +84,29 @@ const Test = ({ route, navigation }: any) => {
     }
   };
   useEffect(() => {
+
+    const fetchApiData = async ()=>{
+      setLoading(true)
+      const response = await axios.get(`https://bitlabs-web-application.onrender.com/test/getTestByName/${skillName}`,{
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcmFzYWRjaG93ZGFyeTk4M0BnbWFpbC5jb20iLCJleHAiOjE3NDI2NTc2MTIsImlhdCI6MTc0MjYyMTYxMn0.etRAWjyDsbttRnnqYr-G3t8Af90iQHxn8UHD-9w_Ogw`
+      }
+      })
+      console.log("Test name :  ",skillName)
+      const data:TestData = response.data;
+      setLoading(false)
+      return data
+      
+    }
+   
     if (testType === "SkillBadge") {
-      const data = loadTestData(skillName);
-      setTestData(data);
+     fetchApiData().then((data)=>{
+      console.log("data fetched from api: " , data )
+      setTestData(data)
+     }).catch((error)=>{
+      console.log("error: " , error)
+     })
     } else {
       if (step === 1) {
         setTestData(aptitudeTestData);
@@ -101,6 +121,7 @@ const Test = ({ route, navigation }: any) => {
         });
       }
     }
+    
   }, [step, testType, testName]);
   if (loading) {
     return (
@@ -193,7 +214,7 @@ const Test = ({ route, navigation }: any) => {
             onPress={() => {
               const nameToSend = testType === "SkillBadge" ? skillName : testData.testName;
               console.log("Navigating with", nameToSend);
-              navigation.navigate("TestScreen", { testName: nameToSend });
+              navigation.navigate("TestScreen", { testName: nameToSend , testData :testData });
             }}
           >
             <Text style={styles.start}>Start</Text>
