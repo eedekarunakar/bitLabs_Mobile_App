@@ -4,7 +4,8 @@ import { ProfileModel } from "@services/step/stepServices";
 import Toast from "react-native-toast-message";
 import DocumentPicker, { DocumentPickerResponse } from "react-native-document-picker";
 import ProfileService from "@services/profile/ProfileService";
-
+import { updateLead } from "@services/ZohoCrm";
+import { useAuth } from "@context/Authcontext";
 export const useStep3ViewModel = (
   userId: number | null,
   userToken: string | null,
@@ -20,7 +21,7 @@ export const useStep3ViewModel = (
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
   const { setPersonalName, refreshJobCounts, refreshVerifiedStatus } = useContext(UserContext);
-
+  const { leadId } = useAuth();
   const toastmsg = (type1: "success" | "error", message: string) => {
     Toast.show({
       type: type1,
@@ -53,6 +54,33 @@ export const useStep3ViewModel = (
         })),
       };
 
+      const leadData = {
+        data: [
+          {
+            Owner: { id: "4569859000019865042" },
+            Last_Name: requestData.basicDetails.lastName,
+            First_Name: requestData.basicDetails.firstName,
+            Email: requestData.basicDetails.email,
+            Phone: requestData.basicDetails.alternatePhoneNumber,
+            Lead_Status: "completed profile",
+            Status_TS: "Completed Profile",
+            Industry: "Software",
+            Technical_Skills: requestData.skillsRequired.map((skill: any) => ({
+              skillName: skill.skillName,
+            })),
+            Specialization: requestData.specialization,
+            Education_Qualifications: requestData.qualification,
+            Degree_level: requestData.qualification,
+            Total_work_experience_in_years: requestData.experience,
+            Preferred_Job_Locations: requestData.preferredJobLocations.join(", "),
+          },
+        ],
+      };
+
+      const res= await updateLead(leadId, leadData);
+    if(res?.status){
+      console.log("Lead updated status", res?.status);
+    }      
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
 
       if (response) {

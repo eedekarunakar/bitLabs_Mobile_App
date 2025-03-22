@@ -5,10 +5,12 @@ import { showToast } from "@services/login/ToastService";
 import LogoutModal from "../screens/LandingPage/LogoutModel"; // Import the modal component
 import { setLogoutHandler, removeInterceptors } from "@services/login/ApiClient";
 import { setCachedToken } from "@services/TokenManager";
-
+import { searchLead, createLead } from "@services/ZohoCrm";
 interface AuthContextProps {
   isAuthenticated: boolean;
   authData: { token: string; id: number; email: string } | null;
+  leadId: string | null;
+  setLeadId: (id: string | null) => void;
   login: (loginemail: string, loginpassword: string) => Promise<AuthResponse>;
   Glogin: (loginemail: string) => Promise<AuthResponse>;
   logout: () => void;
@@ -21,6 +23,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [authData, setAuthData] = useState<{ token: string; id: number; email: string } | null>(
     null,
   );
+  const [leadId, setLeadId] = useState<string | null>(null);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   useEffect(() => {
     setLogoutHandler(handleLogout);
@@ -40,6 +43,12 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setAuthData({ token, id, email: loginemail });
       setIsAuthenticated(true);
       setCachedToken(token);
+
+      const fetchedLeadId = await searchLead(loginemail);
+      if(fetchedLeadId){
+        setLeadId(fetchedLeadId);
+        console.log("Lead exists with ID during login: ", fetchedLeadId);
+      }
     }
     return response;
   };
@@ -59,6 +68,37 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setAuthData({ token, id, email: loginemail }); // Update state with user info
       setIsAuthenticated(true); // Mark the user as signed in
       setCachedToken(token);
+
+      let fetchedLeadId = await searchLead(loginemail);
+
+      if (fetchedLeadId) {
+        console.log(`Lead exists with gooogle: ${fetchedLeadId}`);
+      } else {
+        console.log("Lead does not exist with google. Creating a new lead...");
+  
+        // If lead does not exist, create one
+        const leadData = {
+          data: [
+            {
+              Last_Name: loginemail.split("@")[0].replace(/\d+/g, ""),// Extracting name from email
+              Email: loginemail,
+              Phone: '',
+              Status_TS: "Signed-Up",
+              Lead_Source: '',
+              Industry: "Software",
+              Mobile: '',
+              Utm_Source_TS: '',
+              Utm_Medium_TS: '',
+              Utm_Campaign_TS: '',
+              Utm_Content_TS: '',
+              Utm_Term_TS: '',
+            },
+          ],
+        };
+        fetchedLeadId = await createLead(leadData);
+        console.log("success", "New lead created in CRM.");
+      }
+      setLeadId(fetchedLeadId);
     }
     return response;
   };
@@ -112,7 +152,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, authData, login, Glogin, logout: showLogoutModal }}
+      value={{ isAuthenticated, authData, login, Glogin, logout: showLogoutModal ,leadId,setLeadId}}
     >
       {children}
       <LogoutModal
@@ -128,12 +168,12 @@ const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
 
-  const { authData, ...rest } = context;
+  const { authData,setLeadId, ...rest } = context;
 
   const userId = authData?.id ?? null; // Extract userId from authData
   const userToken = authData?.token ?? null; // Extract userToken from authData
   const userEmail = authData?.email ?? null;
-  return { ...rest, userId, userToken, userEmail };
+  return { ...rest, userId, userToken, userEmail, setLeadId};
 };
 
 export { AuthProvider, useAuth, AuthContext };
