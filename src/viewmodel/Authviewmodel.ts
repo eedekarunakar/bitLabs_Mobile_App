@@ -70,7 +70,7 @@ const useLoginViewModel = () => {
           const leadData = {
             data: [
               {
-                Last_Name: loginUserName.split("@")[0], // Extracting name from email
+                Last_Name: loginUserName.split("@")[0].replace(/\d+/g, ""), // Extracting name from email
                 Email: loginUserName,
                 Phone: '',
                 Status_TS: "Signed-Up",

@@ -50,8 +50,10 @@ export const searchLead = async(email) => {
 };
 
 export const updateLead = async (leadId, leadData) => {
-    try {
+    try {     
         const response = await apiClient.put( `/zoho/update/${leadId}`, leadData);
+        console.log("leadid while updating",leadId);
+        console.log("leadData while updating",leadData);
    
         if (response.status === 200 || response.status === 201) {
           console.log("✅ Lead successfully updated in Zoho CRM.");
