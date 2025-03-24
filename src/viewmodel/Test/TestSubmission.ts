@@ -101,112 +101,22 @@ export const useSubmissionModel = (
 
   // Load test data based on testName
   useEffect(() => {
-    if (!testName) return;
+    if (!testName || !testData)
+     return;
 
-    // let fetchedTestData;
-
-    // switch (testName) {
-    //   case "General Aptitude Test":
-    //     fetchedTestData = require("../../models/data/testData.json");
-    //     break;
-    //   case "Technical Test":
-    //     fetchedTestData = require("../../models/data/TechnicalTest.json");
-    //     break;
-    //   case "Angular":
-    //     fetchedTestData = require("../../models/data/Angular.json");
-    //     break;
-    //   case "Java":
-    //     fetchedTestData = require("../../models/data/Java.json");
-    //     break;
-    //   case "C":
-    //     fetchedTestData = require("../../models/data/C.json");
-    //     break;
-    //   case "C++":
-    //     fetchedTestData = require("../../models/data/Cpp.json");
-    //     break;
-    //   case "C Sharp":
-    //     fetchedTestData = require("../../models/data/CSharp.json");
-    //     break;
-    //   case "CSS":
-    //     fetchedTestData = require("../../models/data/CSS.json");
-    //     break;
-    //   case "Django":
-    //     fetchedTestData = require("../../models/data/Django.json");
-    //     break;
-    //   case ".Net":
-    //     fetchedTestData = require("../../models/data/DotNet.json");
-    //     break;
-    //   case "Flask":
-    //     fetchedTestData = require("../../models/data/Flask.json");
-    //     break;
-    //   case "Hibernate":
-    //     fetchedTestData = require("../../models/data/Hibernate.json");
-    //     break;
-    //   case "HTML":
-    //     fetchedTestData = require("../../models/data/HTML.json");
-    //     break;
-    //   case "JavaScript":
-    //     fetchedTestData = require("../../models/data/Javascript.json");
-    //     break;
-    //   case "JSP":
-    //     fetchedTestData = require("../../models/data/Jsp.json");
-    //     break;
-    //   case "Manual Testing":
-    //     fetchedTestData = require("../../models/data/ManualTesting.json");
-    //     break;
-    //   case "Mongo DB":
-    //     fetchedTestData = require("../../models/data/MongoDB.json");
-    //     break;
-    //   case "Python":
-    //     fetchedTestData = require("../../models/data/Paython.json");
-    //     break;
-    //   case "React":
-    //     fetchedTestData = require("../../models/data/React.json");
-    //     break;
-    //   case "Regression Testing":
-    //     fetchedTestData = require("../../models/data/Regression Testing.json");
-    //     break;
-    //   case "Selenium":
-    //     fetchedTestData = require("../../models/data/Selenium.json");
-    //     break;
-    //   case "Servlets":
-    //     fetchedTestData = require("../../models/data/Servlets.json");
-    //     break;
-    //   case "Spring Boot":
-    //     fetchedTestData = require("../../models/data/Spring Boot.json");
-    //     break;
-    //   case "TypeScript":
-    //     fetchedTestData = require("../../models/data/TS.json");
-    //     break;
-    //   case "Spring":
-    //     fetchedTestData = require("../../models/data/Spring.json");
-    //     break;
-    //   case "SQL":
-    //     fetchedTestData = require("../../models/data/SQL.json");
-    //     break;
-    //   case "Css":
-    //     fetchedTestData = require("../../models/data/CSS.json");
-    //     break;
-    //   case "MySQL":
-    //     fetchedTestData = require("../../models/data/SQL.json");
-    //     break;
-    //   case "Vue":
-    //     fetchedTestData = require("../../models/data/Vue.json");
-    //     break;
-    //   case "SQL-Server":
-    //     fetchedTestData = require("../../models/data/SQL.json");
-    //     break;
-    //   default:
-    //     console.error(`No data found for test: ${testName}`);
-    //     return;
-    // }
+  // Prevent re-setting if questions already exist
+  if (testDataAPI.questions.length > 0) 
+    return;
+  
+    setTestDataAPI({questions:[]})
+    console.log('cleared previous questions :')
     if (testData) {
       console.log("questions: " , testData.questions)
       const shuffledQuestions = shuffleArray([...(testData?.questions ?? [])]);
       console.log("ViewModel testData.questions length:", testData.questions?.length);
       setTestDataAPI({ questions: shuffledQuestions });
-      console.log("shuffled questions: ", testDataAPI)
-      console.log("duration : ", testData.duration)
+      console.log("shuffled questions (immediately after set): ", { questions: shuffledQuestions });
+      console.log("duration: ", testData.duration);
       const durationString = testData ?.duration || "30 mins";
       const durationInSeconds = parseDuration(durationString);
       setTimeLeft(durationInSeconds);
@@ -240,11 +150,14 @@ export const useSubmissionModel = (
     return 1800; // Default to 30 mins
   };
 
-  const calculateScore = () => {
+  const calculateScore = (currentAnswers: { [key: number]: string }, shuffledQuestions: any[]) => {
     let score = 0;
-    for (let i = 0; i < testDataAPI.questions.length; i++) {
-      const currentQuestion = testDataAPI.questions[i];
-      if (answers[i] && currentQuestion?.answer && answers[i] === currentQuestion.answer) {
+    for (let i = 0; i < shuffledQuestions.length; i++) {
+      const currentQuestion = shuffledQuestions[i];
+
+      if (currentAnswers[i] && currentQuestion?.answer && currentAnswers[i] === currentQuestion.answer) {
+        console.log("answer: " ,currentAnswers[i]);
+        console.log("Current Question answer: " , currentQuestion.answer)
         score += 1;
       }
     }
@@ -264,7 +177,7 @@ export const useSubmissionModel = (
 
   const goToTimeUpScreen = async () => {
     clearInterval(timerInterval);
-    const finalScore = calculateScore();
+    const finalScore = calculateScore(answers, testDataAPI.questions);
     const percentageScore = parseFloat(((finalScore / testDataAPI.questions.length) * 100).toFixed(2));
     navigation.navigate("TimeUp", { finalScore: percentageScore, testName });
   };
@@ -289,20 +202,21 @@ export const useSubmissionModel = (
       setErrorMessage("Please provide your answer before moving to the next question.");
       return;
     }
-
-    setAnswers(prevAnswers => ({
-      ...prevAnswers,
-      [currentQuestionIndex]: selectedAnswer,
-    }));
+    const updatedAnswers = {
+      ...answers,
+      [currentQuestionIndex] : selectedAnswer
+    }
+    setAnswers(updatedAnswers);
 
     if (currentQuestionIndex < testDataAPI.questions.length - 1) {
-      const nextAnswer = answers[currentQuestionIndex + 1] || null;
+
+      const nextAnswer = updatedAnswers[currentQuestionIndex + 1] || null;
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(nextAnswer);
       setErrorMessage("");
     } else {
       setIsTestSubmitted(true);
-      const finalScore = calculateScore();
+      const finalScore = calculateScore(updatedAnswers , testDataAPI.questions);
       console.log('Final score: ' , finalScore)
       const percentageScore = parseFloat(
         ((finalScore / testDataAPI.questions.length) * 100).toFixed(2),

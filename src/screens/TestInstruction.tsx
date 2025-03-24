@@ -15,12 +15,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import LinearGradient from "react-native-linear-gradient";
 import { useAuth } from "@context/Authcontext";
-import aptitudeTestData from "@models/data/testData.json";
-import technicalTestData from "@models/data/TechnicalTest.json";
 import Icon from "react-native-vector-icons/AntDesign";
 import { TestData } from "@models/Model";
 import { fetchTestStatus } from "@services/Home/BadgeService";
 import ExitModal from "./ExitModal";
+import apiClient from "@services/login/ApiClient";
 const { width, height } = Dimensions.get("window");
 const Test = ({ route, navigation }: any) => {
   const { userId, userToken } = useAuth();
@@ -51,6 +50,7 @@ const Test = ({ route, navigation }: any) => {
       const data = await fetchTestStatus(userId, userToken);
       if (data && Array.isArray(data) && data.length > 0) {
         const { testStatus: fetchedStatus, testName: fetchedName } = data[0];
+        console.log("Test name : " , data[0])
         setTestName(fetchedName || testName);
         setTestStatus(fetchedStatus || testStatus);
         adjustStep(fetchedName, fetchedStatus);
@@ -75,55 +75,55 @@ const Test = ({ route, navigation }: any) => {
     const lowerStatus = status.toLowerCase();
     if (lowerStatus === "p" && name === "General Aptitude Test") {
       setStep(2);
+      setTestName('Technical Test');
     } else if (lowerStatus === "p" && name === "Technical Test") {
       setStep(3);
     } else if (lowerStatus === "f" && name === "Technical Test") {
       setStep(2);
+      setTestName('Technical Test');
     } else {
       setStep(1);
     }
   };
+
   useEffect(() => {
 
-    const fetchApiData = async ()=>{
+    const fetchApiData = async (testName : string)=>{
       setLoading(true)
-      const response = await axios.get(`https://bitlabs-web-application.onrender.com/test/getTestByName/${skillName}`,{
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwcmFzYWRjaG93ZGFyeTk4M0BnbWFpbC5jb20iLCJleHAiOjE3NDI2NTc2MTIsImlhdCI6MTc0MjYyMTYxMn0.etRAWjyDsbttRnnqYr-G3t8Af90iQHxn8UHD-9w_Ogw`
-      }
-      })
+      const response = await apiClient.get(`/test/getTestByName/${testName}`)
       console.log("Test name :  ",skillName)
       const data:TestData = response.data;
-      setLoading(false)
       return data
       
     }
-   
-    if (testType === "SkillBadge") {
-     fetchApiData().then((data)=>{
+
+    if (testType !== "SkillBadge" && step > 2) {
+      setTestData({
+        testName: "",
+        duration: "",
+        numberOfQuestions: 0,
+        topicsCovered: [],
+      });
+      setLoading(false); 
+      return;
+    }
+  
+    const identifier = testType==='SkillBadge'? skillName:testName
+
+    console.log("Test name : " , identifier)
+    
+     fetchApiData(identifier).then((data)=>{
       console.log("data fetched from api: " , data )
-      setTestData(data)
+      setTestData(data);
      }).catch((error)=>{
       console.log("error: " , error)
+     }).finally(()=>{
+      setLoading(false);
      })
-    } else {
-      if (step === 1) {
-        setTestData(aptitudeTestData);
-      } else if (step === 2) {
-        setTestData(technicalTestData);
-      } else {
-        setTestData({
-          testName: "",
-          duration: "",
-          numberOfQuestions: 0,
-          topicsCovered: [],
-        });
-      }
-    }
-    
+  
   }, [step, testType, testName]);
-  if (loading) {
+
+  if (loading || !testData.testName) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator
