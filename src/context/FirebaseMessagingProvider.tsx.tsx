@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 import { PermissionsAndroid, Platform } from 'react-native';
+import axios from 'axios';
 
 export const useFirebaseMessaging = () => {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
@@ -13,9 +14,9 @@ export const useFirebaseMessaging = () => {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Permission granted');
+      console.log('✅ Notification permission granted');
     } else {
-      console.log('Permission denied');
+      console.log('❌ Notification permission denied');
     }
   };
 
@@ -29,14 +30,27 @@ export const useFirebaseMessaging = () => {
           buttonPositive: 'OK',
         }
       );
-      console.log('Android Notification permission granted:', granted === PermissionsAndroid.RESULTS.GRANTED);
+      console.log('✅ Android Notification permission granted:', granted === PermissionsAndroid.RESULTS.GRANTED);
     }
   };
 
   const getFcmToken = async () => {
     const token = await messaging().getToken();
-    //console.log('FCM Token:', token);
     setFcmToken(token);
+
+    console.log('✅ FCM Token generated:', token);
+
+    // Send token to backend
+    try {
+      await axios.post('http://10.0.2.2:8080/api/fcm/token', { fcmToken: token });
+      console.log('✅ Token sent to backend');
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log('❌ Error sending token to backend:', err.message);
+      } else {
+        console.log('❌ Error sending token to backend:', err);
+      }
+    }
   };
 
   useEffect(() => {
@@ -48,7 +62,7 @@ export const useFirebaseMessaging = () => {
 
     initialize();
 
-    // Create notification channel once
+    // Create notification channel
     PushNotification.createChannel(
       {
         channelId: 'default-channel-id',
@@ -57,45 +71,45 @@ export const useFirebaseMessaging = () => {
         soundName: 'default',
         vibrate: true,
       },
-      (created) => console.log(`Channel created: ${created}`)
+      (created) => console.log(`🔔 Channel created: ${created}`)
     );
 
-    // Foreground message handler
+    // Handle foreground messages
     const unsubscribeForeground = messaging().onMessage(async (remoteMessage) => {
-      console.log('Foreground Message Received:', remoteMessage);
-      const title = remoteMessage.notification?.title;
-      const message = remoteMessage.notification?.body;
+      console.log('📩 Foreground Message Received:', remoteMessage);
 
-      if (title && message) {
-        PushNotification.localNotification({
-          channelId: 'default-channel-id',
-          title,
-          message,
-        });
-      } else {
-        console.log('Notification skipped: title or body is missing.');
-      }
+      const title = remoteMessage.notification?.title || 'Notification';
+      const message = remoteMessage.notification?.body || 'You have a new message!';
+
+      PushNotification.localNotification({
+        channelId: 'default-channel-id',
+        title,
+        message,
+        playSound: true,
+        soundName: 'default',
+        vibrate: true,
+      });
     });
 
-    // Background message handler
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      const title = remoteMessage.notification?.title;
-      const message = remoteMessage.notification?.body;
+    // Handle background + quit state notifications
+    // messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    //   console.log('📩 Background Message Received:', remoteMessage);
 
-      if (title && message) {
-        PushNotification.localNotification({
-          channelId: 'default-channel-id',
-          title,
-          message,
-        });
-      } else {
-        console.log('Notification skipped: title or body is missing.');
-      }
-      console.log('Background Message Received:', remoteMessage);
-    });
+    //   const title = remoteMessage.notification?.title || 'Notification';
+    //   const message = remoteMessage.notification?.body || 'You have a new message!';
+
+    //   PushNotification.localNotification({
+    //     channelId: 'default-channel-id',
+    //     title,
+    //     message,
+    //     playSound: true,
+    //     soundName: 'default',
+    //     vibrate: true,
+    //   });
+    // });
 
     return () => {
-      unsubscribeForeground();
+      // unsubscribeForeground();
     };
   }, []);
 
