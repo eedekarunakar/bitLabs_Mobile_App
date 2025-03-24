@@ -49,6 +49,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setLeadId(fetchedLeadId);
         console.log("Lead exists with ID during login: ", fetchedLeadId);
       }
+      else {
+        setLeadId(null);
+      }
     }
     return response;
   };
