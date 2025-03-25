@@ -7,6 +7,7 @@ import { useJobAlerts } from "@viewmodel/Alert/Notificationmodel";
 import { useProfilePhoto } from "@context/ProfilePhotoContext";
 import useGoogleSignIn from "@services/google/google";
 import Notification from "@assests/icons/notification";
+import ApiLogo from "@components/Logo/ApiLogo";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -30,7 +31,8 @@ const Navbar = () => {
   return (
     <View style={styles.navbar}>
       <View style={styles.logoContainer}>
-        <Image source={require("../../assests/LandingPage/logo.png")} style={styles.logo1Image} />
+        {/* <Image source={require("../../assests/LandingPage/logo.png")} style={styles.logo1Image} /> */}
+        <ApiLogo style={styles.logo1Image} />
       </View>
       <View style={styles.rightContainer}>
         {/* Notification Bell */}
