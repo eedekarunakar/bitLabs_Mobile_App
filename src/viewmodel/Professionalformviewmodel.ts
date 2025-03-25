@@ -4,6 +4,7 @@ import { useAuth } from "@context/Authcontext";
 import { ProfileViewModel } from "@viewmodel/Profileviewmodel";
 import { showToast } from "@services/login/ToastService";
 import { ApplicantSkillBadge } from "@models/Model";
+import { updateLead } from "@services/ZohoCrm";
 
 interface Skill {
   id: number;
@@ -54,7 +55,7 @@ export const useProfessionalDetailsFormViewModel = ({
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
-  const { userToken, userId } = useAuth();
+  const { userToken, userId, leadId } = useAuth();
 
   useEffect(() => {
     if (visible) {
@@ -353,6 +354,33 @@ export const useProfessionalDetailsFormViewModel = ({
         showToast("success", "Professional details updated successfully");
         onClose();
         onReload();
+        try {
+          const leadData = {
+            data: [
+              {
+                Owner: { id: "4569859000019865042" },
+
+                Technical_Skills: requestBody.skillsRequired.map((skill: any) => ({
+                  skillName: skill.skillName,
+                })),
+                Specialization: requestBody.specialization,
+                Education_Qualifications: requestBody.qualification,
+                Degree_level: requestBody.qualification,
+                Total_work_experience_in_years: requestBody.experience,
+                Preferred_Job_Locations: requestBody.preferredJobLocations.join(", "),
+              },
+            ],
+          };
+          console.log("Lead Data:", leadData);
+          console.log("Lead Id:", leadId);
+          const res = await updateLead(leadId, leadData);
+          if (res?.status) {
+            console.log("Lead updated status", res?.status);
+          }
+
+        } catch {
+          console.log("Error updating lead");
+        }
       } else {
         showToast("error", "Error updating professional details");
         onClose();

@@ -18,7 +18,7 @@ import {
   ImagePickerResponse,
   ImageLibraryOptions,
 } from "react-native-image-picker";
-
+import { updateLead } from "@services/ZohoCrm";
 export const useProfileViewModel = (userToken: string | null, userId: number | null) => {
   const [profileData, setProfileData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,7 +42,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   const [isResumeRemoved, setIsResumeRemoved] = useState(false);
   const { fetchProfilePhoto, photo } = useProfilePhoto();
   const { setPersonalName } = useContext(UserContext);
-
+  const leadId = useAuth();
   const DEFAULT_PROFILE_IMAGE = require("../assests/profile/profile.png");
 
   // Personal Details State
@@ -63,13 +63,13 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       const permissions =
         Platform.Version >= 33
           ? [
-              PermissionsAndroid.PERMISSIONS.CAMERA,
-              PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-            ]
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+          ]
           : [
-              PermissionsAndroid.PERMISSIONS.CAMERA,
-              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            ];
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          ];
       for (const permission of permissions) {
         const status = await PermissionsAndroid.check(permission);
       }
@@ -430,6 +430,33 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
 
     try {
       const result = await ProfileService.updateBasicDetails(userToken, userId, personalDetails);
+      if (result.success) {
+        console.log("Basic details updated successfully:", result);
+        try {
+          const leadData = {
+            data: [
+              {
+                Owner: { id: "4569859000019865042" },
+                Last_Name: personalDetails.lastName,
+                First_Name: personalDetails.firstName,
+                Email: personalDetails.email,
+                Phone: personalDetails.alternatePhoneNumber,
+              },
+            ],
+          };
+          console.log("Lead Data:", leadData);
+          console.log("Lead Id:", leadId.leadId);
+          const res = await updateLead(leadId.leadId, leadData);
+          if (res?.status) {
+            console.log("Lead updated status", res?.status);
+          }
+
+        } catch {
+          console.log("Error updating lead");
+        }
+      } else {
+        console.error("Error updating basic details:", result);
+      }
 
       return result; // Indicate success
     } catch (error) {
