@@ -6,6 +6,7 @@ import LogoutModal from "../screens/LandingPage/LogoutModel"; // Import the moda
 import { setLogoutHandler, removeInterceptors } from "@services/login/ApiClient";
 import { setCachedToken } from "@services/TokenManager";
 import { searchLead, createLead } from "@services/ZohoCrm";
+import { Platform } from "react-native";
 interface AuthContextProps {
   isAuthenticated: boolean;
   authData: { token: string; id: number; email: string } | null;
@@ -73,6 +74,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setCachedToken(token);
 
       let fetchedLeadId = await searchLead(loginemail);
+      let googleLeadId: string | null = null; // Declare googleLeadId
 
       if (fetchedLeadId) {
         console.log(`Lead exists with gooogle: ${fetchedLeadId}`);
@@ -95,13 +97,16 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
               Utm_Campaign_TS: '',
               Utm_Content_TS: '',
               Utm_Term_TS: '',
+              Platform:"mobile app",
             },
           ],
         };
         fetchedLeadId = await createLead(leadData);
         console.log("success", "New lead created in CRM.");
+        googleLeadId = await searchLead(loginemail);
+        console.log("Lead ID from google", googleLeadId);
       }
-      setLeadId(fetchedLeadId);
+      setLeadId(googleLeadId);
     }
     return response;
   };
