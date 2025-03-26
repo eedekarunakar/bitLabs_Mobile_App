@@ -84,8 +84,9 @@ export const useStep3ViewModel = (
     }      
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
 
-      if (response) {
+      if (response.status===200) {
         if (route?.params?.firstName) {
+          console.log(route.params.firstName)
           setPersonalName(route.params.firstName);
         }
         refreshJobCounts();

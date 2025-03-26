@@ -16,7 +16,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
 
   const { userId, userToken } = useAuth();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!resumeFile) {
       return; // Prevent calling saveProfile or navigating further
     }
@@ -228,11 +228,10 @@ const Step3: React.FC = ({ route, navigation }: any) => {
         <TouchableOpacity
           style={[styles.saveButton, { borderWidth: 0 }]}
           disabled={isUploadComplete}
-          onPress={() => {
-            handleSaveResume();
+          onPress={async () => {
+            await handleSaveResume();
             if (resumeFile) {
-              handleAPI();
-              handleSave();
+              await handleAPI().then(async ()=>await handleSave());
             }
           }}
         >

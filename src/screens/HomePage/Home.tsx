@@ -47,12 +47,17 @@ function Dashboard() {
     refreshPersonalName();
     refreshVerifiedStatus();
   };
+  useEffect(()=>{
+    refetchData();
+
+  },[loading])
   const { setmsg } = useMessageContext();
   const navigation = useNavigation<NavigationProp>();
   useEffect(() => {
     setVerified(verifiedStatus);
   }, [verifiedStatus]);
-  if (loading || isLoading) {
+  
+  if (loading || isLoading || !personalName) {
     return (
       <View style={styles.loadingContainer}>
         <View>

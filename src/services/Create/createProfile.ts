@@ -6,7 +6,7 @@ export const fetchProfileId = async (
 ): Promise<{ success: boolean; profileid?: number }> => {
   try {
     const response = await apiClient.get(`/applicantprofile/${id}/profileid`);
-
+    
     if (response.status === 200) {
       return { success: true, profileid: response.data };
     } else {
