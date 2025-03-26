@@ -37,10 +37,13 @@ const Test = ({ route, navigation }: any) => {
     topicsCovered: [],
   });
   const [loading, setLoading] = useState(true);
+  const [isTestStatusFetched , setTestStatusFetched] = useState(false);
+  const [isTestDataFetched, setTestDataFetched] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
 
   useEffect(() => {
     if (testType === "SkillBadge") {
+      setTestStatusFetched(true)
       setLoading(false);
       return;
     }
@@ -52,6 +55,7 @@ const Test = ({ route, navigation }: any) => {
         const { testStatus: fetchedStatus, testName: fetchedName } = data[0];
         setTestName(fetchedName || testName);
         setTestStatus(fetchedStatus || testStatus);
+        setTestStatusFetched(true);
         adjustStep(fetchedName, fetchedStatus);
       } else {
         adjustStep(testName, testStatus);
@@ -59,6 +63,11 @@ const Test = ({ route, navigation }: any) => {
       setLoading(false)
     };
     getTestStatus();
+
+    return ()=>{
+      setTestStatusFetched(false)
+    }
+
   }, [userId, userToken, testType]);
 
   useFocusEffect(
@@ -96,6 +105,7 @@ const Test = ({ route, navigation }: any) => {
         topicsCovered: [],
       });
       setLoading(false); 
+      setTestDataFetched(true);
       return;
     }
   
@@ -106,8 +116,7 @@ const Test = ({ route, navigation }: any) => {
       return;
     }
     const fetchApiData = async (testName : string)=>{
-      setLoading(true)
-     
+      console.log("test name : " , testName)
       const response = await fetchTestData(testName);
       const data:TestData = response.data;
       return data
@@ -115,12 +124,20 @@ const Test = ({ route, navigation }: any) => {
     
      fetchApiData(identifier).then((data)=>{
       setTestData(data);
+      console.log("data set : " , data)
+      setTestDataFetched(true)
       setLoading(false);
      }).catch((error)=>{
       console.log("error: " , error)
      })
+
+     return ()=>{
+      setTestDataFetched(false);
+     }
   
-  }, [step, testType, testName]);
+  }, [step, testName ]);
+
+  const combinedLoading = loading || !isTestStatusFetched || !isTestDataFetched;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -129,7 +146,7 @@ const Test = ({ route, navigation }: any) => {
           <Icon name="arrowleft" size={24} color="#495057" />
         </TouchableOpacity>
       </View>
-      {loading && !testName ?(
+      {combinedLoading ?(
       <View style={styles.loaderContainer}>
       <ActivityIndicator
         size="large"
@@ -203,7 +220,7 @@ const Test = ({ route, navigation }: any) => {
           }, 300);
         }}
       />
-      { !loading &&
+      { !combinedLoading&&
       <View style={styles.footer}>
         <LinearGradient
           colors={["#F97316", "#FAA729"]}
