@@ -73,6 +73,7 @@ export const useStep3ViewModel = (
             Degree_level: requestData.qualification,
             Total_work_experience_in_years: requestData.experience,
             Preferred_Job_Locations: requestData.preferredJobLocations.join(", "),
+            Platform:"mobile app",
           },
         ],
       };

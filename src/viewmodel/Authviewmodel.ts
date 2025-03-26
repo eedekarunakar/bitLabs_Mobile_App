@@ -6,6 +6,7 @@ import useOtpManager from "../hooks/useOtpManager";
 import Toast from "react-native-toast-message";
 import { createLead, searchLead } from "@services/ZohoCrm";
 
+
 const useLoginViewModel = () => {
   const { login } = useAuth();
   const [loginUserName, setLoginUserName] = useState("");
@@ -82,6 +83,7 @@ const useLoginViewModel = () => {
                 Utm_Campaign_TS: '',
                 Utm_Content_TS: '',
                 Utm_Term_TS: '',
+                Platform:"mobile app"
               },
             ],
           };
@@ -254,6 +256,7 @@ const useSignupViewModel = () => {
             Utm_Campaign_TS: '',
             Utm_Content_TS: '',
             Utm_Term_TS: '',
+            Platform:"mobile app"
           }
         ]
       };
