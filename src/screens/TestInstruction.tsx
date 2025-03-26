@@ -10,7 +10,6 @@ import {
   BackHandler,
   ActivityIndicator,
 } from "react-native";
-import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import LinearGradient from "react-native-linear-gradient";
@@ -19,17 +18,16 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { TestData } from "@models/Model";
 import { fetchTestStatus } from "@services/Home/BadgeService";
 import ExitModal from "./ExitModal";
-import apiClient from "@services/login/ApiClient";
+import { fetchTestData } from "@services/Test/testService";
 const { width, height } = Dimensions.get("window");
 const Test = ({ route, navigation }: any) => {
   const { userId, userToken } = useAuth();
   const {
-    testName: routeTestName,
     testStatus: routeTestStatus,
     testType,
     skillName,
   } = route.params || {};
-  const [testName, setTestName] = useState(routeTestName || "General Aptitude Test");
+  const [testName, setTestName] = useState('');
   const [testStatus, setTestStatus] = useState(routeTestStatus || "F");
   const [step, setStep] = useState(1); // Default initial step
   const [testData, setTestData] = useState<TestData>({
@@ -46,21 +44,23 @@ const Test = ({ route, navigation }: any) => {
       setLoading(false);
       return;
     }
+    
     const getTestStatus = async () => {
+      setLoading(true);
       const data = await fetchTestStatus(userId, userToken);
       if (data && Array.isArray(data) && data.length > 0) {
         const { testStatus: fetchedStatus, testName: fetchedName } = data[0];
-        console.log("Test name : " , data[0])
         setTestName(fetchedName || testName);
         setTestStatus(fetchedStatus || testStatus);
         adjustStep(fetchedName, fetchedStatus);
       } else {
         adjustStep(testName, testStatus);
       }
-      setLoading(false);
+      setLoading(false)
     };
     getTestStatus();
   }, [userId, userToken, testType]);
+
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -83,20 +83,11 @@ const Test = ({ route, navigation }: any) => {
       setTestName('Technical Test');
     } else {
       setStep(1);
+      setTestName('General Aptitude Test');
     }
   };
 
   useEffect(() => {
-
-    const fetchApiData = async (testName : string)=>{
-      setLoading(true)
-      const response = await apiClient.get(`/test/getTestByName/${testName}`)
-      console.log("Test name :  ",skillName)
-      const data:TestData = response.data;
-      return data
-      
-    }
-
     if (testType !== "SkillBadge" && step > 2) {
       setTestData({
         testName: "",
@@ -109,31 +100,28 @@ const Test = ({ route, navigation }: any) => {
     }
   
     const identifier = testType==='SkillBadge'? skillName:testName
-
-    console.log("Test name : " , identifier)
+    
+    if(!identifier){
+      setLoading(false);
+      return;
+    }
+    const fetchApiData = async (testName : string)=>{
+      setLoading(true)
+     
+      const response = await fetchTestData(testName);
+      const data:TestData = response.data;
+      return data
+    }
     
      fetchApiData(identifier).then((data)=>{
-      console.log("data fetched from api: " , data )
       setTestData(data);
+      setLoading(false);
      }).catch((error)=>{
       console.log("error: " , error)
-     }).finally(()=>{
-      setLoading(false);
      })
   
   }, [step, testType, testName]);
 
-  if (loading || !testData.testName) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator
-          size="large"
-          color="#F46F16"
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        />
-      </View>
-    );
-  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.headerContainer}>
@@ -141,12 +129,20 @@ const Test = ({ route, navigation }: any) => {
           <Icon name="arrowleft" size={24} color="#495057" />
         </TouchableOpacity>
       </View>
+      {loading && !testName ?(
+      <View style={styles.loaderContainer}>
+      <ActivityIndicator
+        size="large"
+        color="#F46F16"
+        style={styles.loaderContainer}
+      />
+    </View>) : (
       <ScrollView style={{ flexGrow: 1 }}>
         <View style={styles.container}>
           <View style={styles.container1}>
             <MaskedView
               style={styles.maskedView}
-              maskElement={<Text style={styles.head}>{testData.testName || "Loading..."}</Text>}
+              maskElement={<Text style={styles.head}>{loading ? "Loading..." : testData.testName }</Text>}
             >
               <LinearGradient
                 colors={["#F97316", "#FAA729"]}
@@ -188,10 +184,15 @@ const Test = ({ route, navigation }: any) => {
                 <Text style={styles.bullet}>{"\u2022"}</Text>
                 <Text style={styles.instruction}>{instruction}</Text>
               </View>
-            ))}
+            )
+            
+            )}
           </View>
         </View>
+        
       </ScrollView>
+      
+    )}
       <ExitModal
         visible={showExitModal}
         onClose={() => setShowExitModal(false)}
@@ -202,6 +203,7 @@ const Test = ({ route, navigation }: any) => {
           }, 300);
         }}
       />
+      { !loading &&
       <View style={styles.footer}>
         <LinearGradient
           colors={["#F97316", "#FAA729"]}
@@ -221,6 +223,10 @@ const Test = ({ route, navigation }: any) => {
           </TouchableOpacity>
         </LinearGradient>
       </View>
+      }
+      
+    
+
     </SafeAreaView>
   );
 };
@@ -350,7 +356,7 @@ const styles = StyleSheet.create({
     left: 15,
   },
   loaderContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
   },

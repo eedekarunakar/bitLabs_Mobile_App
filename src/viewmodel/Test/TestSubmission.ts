@@ -109,14 +109,9 @@ export const useSubmissionModel = (
     return;
   
     setTestDataAPI({questions:[]})
-    console.log('cleared previous questions :')
     if (testData) {
-      console.log("questions: " , testData.questions)
       const shuffledQuestions = shuffleArray([...(testData?.questions ?? [])]);
-      console.log("ViewModel testData.questions length:", testData.questions?.length);
       setTestDataAPI({ questions: shuffledQuestions });
-      console.log("shuffled questions (immediately after set): ", { questions: shuffledQuestions });
-      console.log("duration: ", testData.duration);
       const durationString = testData ?.duration || "30 mins";
       const durationInSeconds = parseDuration(durationString);
       setTimeLeft(durationInSeconds);
@@ -154,10 +149,8 @@ export const useSubmissionModel = (
     let score = 0;
     for (let i = 0; i < shuffledQuestions.length; i++) {
       const currentQuestion = shuffledQuestions[i];
-
+      
       if (currentAnswers[i] && currentQuestion?.answer && currentAnswers[i] === currentQuestion.answer) {
-        console.log("answer: " ,currentAnswers[i]);
-        console.log("Current Question answer: " , currentQuestion.answer)
         score += 1;
       }
     }
@@ -217,11 +210,9 @@ export const useSubmissionModel = (
     } else {
       setIsTestSubmitted(true);
       const finalScore = calculateScore(updatedAnswers , testDataAPI.questions);
-      console.log('Final score: ' , finalScore)
       const percentageScore = parseFloat(
         ((finalScore / testDataAPI.questions.length) * 100).toFixed(2),
       );
-      console.log("Final score : ", percentageScore)
       if (testName === "Technical Test" || testName === "General Aptitude Test") {
         await submitTest(percentageScore, false);
       } else {
