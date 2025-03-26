@@ -19,3 +19,9 @@ export const submitTestResult = async (
     throw error;
   }
 };
+
+export const fetchTestData = async(testName : string)=>{
+  const testData = apiClient.get(`/test/getTestByName/${testName}`);
+
+  return testData;
+}
