@@ -263,7 +263,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
   return (
     <View style={styles.screen}>
       <ScrollView scrollEnabled={!isAnyDropdownOpen} style={styles.scrollView}>
-        <Image style={styles.logo} source={require("../../assests/LandingPage/logo.png")} />
+        <Image style={styles.logo} source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} />
 
         <View style={styles.container}>
           <View style={styles.header}>
