@@ -45,7 +45,7 @@ const Step3: React.FC = ({ route, navigation }: any) => {
     <View style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.logoContainer}>
-          <Image style={styles.logo} source={require("@assests/LandingPage/logo.png")} />
+          <Image style={styles.logo} source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} />
         </View>
 
         <View style={styles.container}>

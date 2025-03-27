@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <View style={styles.navbar}>
       <View style={styles.logoContainer}>
-        <Image source={require("../../assests/LandingPage/logo.png")} style={styles.logo1Image} />
+        <Image source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} style={styles.logo1Image} />
       </View>
       <View style={styles.rightContainer}>
         {/* Notification Bell */}

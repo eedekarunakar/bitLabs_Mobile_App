@@ -136,7 +136,7 @@ const LandingPage = () => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.innercontainer}>
             <View style={styles.header}>
-              <Image source={require("../../assests/LandingPage/logo.png")} style={styles.logo} />
+              <Image source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} style={styles.logo} />
             </View>
 
             <View style={styles.welcome}>
