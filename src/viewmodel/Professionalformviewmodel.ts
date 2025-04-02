@@ -4,7 +4,7 @@ import { useAuth } from "@context/Authcontext";
 import { ProfileViewModel } from "@viewmodel/Profileviewmodel";
 import { showToast } from "@services/login/ToastService";
 import { ApplicantSkillBadge } from "@models/Model";
-import { updateLead } from "@services/ZohoCrm";
+import { searchLead, updateLead } from "@services/ZohoCrm";
 
 interface Skill {
   id: number;
@@ -55,7 +55,7 @@ export const useProfessionalDetailsFormViewModel = ({
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
-  const { userToken, userId, leadId } = useAuth();
+  const { userToken, userId, leadId, setLeadId,userEmail } = useAuth();
 
   useEffect(() => {
     if (visible) {
@@ -339,7 +339,7 @@ export const useProfessionalDetailsFormViewModel = ({
       skillsRequired,
     };
 
-    console.log("Request Body:", requestBody);
+  
 
     try {
       const response = await ProfileViewModel.saveProfessionalDetails(
@@ -371,13 +371,19 @@ export const useProfessionalDetailsFormViewModel = ({
               },
             ],
           };
-          console.log("Lead Data:", leadData);
-          console.log("Lead Id:", leadId);
+
+          const lead = await searchLead(userEmail);
+           if (lead) {
+            setLeadId(lead);
+           // console.log("Lead found with ID:", lead);
           const res = await updateLead(leadId, leadData);
           if (res?.status) {
             console.log("Lead updated status", res?.status);
           }
-
+        }
+        else{
+          console.log("No lead found for email:", userEmail);
+        }
         } catch {
           console.log("Error updating lead");
         }
