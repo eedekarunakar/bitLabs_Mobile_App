@@ -50,6 +50,7 @@ export const searchLead = async(email) => {
 };
 
 export const updateLead = async (leadId, leadData) => {
+  console.log("leadId while ",leadId);
     try {     
         const response = await apiClient.put( `/zoho/update/${leadId}`, leadData);
         console.log("leadid while updating",leadId);
