@@ -263,6 +263,7 @@ const useSignupViewModel = () => {
       const newLeadId =  await createLead(leadData);
       console.log("New lead created with ID:", newLeadId);
       setLeadId(newLeadId);
+      console.log("Lead ID set in AuthContext:", newLeadId);
       } else {
         otpManager.setIsOtpValid(false);
         setTimeout(() => otpManager.setIsOtpValid(true), 3000);
