@@ -59,6 +59,7 @@ const Test = ({ route, navigation }: any) => {
         adjustStep(fetchedName, fetchedStatus);
       } else {
         adjustStep(testName, testStatus);
+        setTestStatusFetched(true);
       }
       setLoading(false)
     };
