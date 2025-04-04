@@ -4,7 +4,7 @@ import { ProfileModel } from "@services/step/stepServices";
 import Toast from "react-native-toast-message";
 import DocumentPicker, { DocumentPickerResponse } from "react-native-document-picker";
 import ProfileService from "@services/profile/ProfileService";
-import { updateLead } from "@services/ZohoCrm";
+import { updateLead,searchLead } from "@services/ZohoCrm";
 import { useAuth } from "@context/Authcontext";
 export const useStep3ViewModel = (
   userId: number | null,
@@ -53,6 +53,21 @@ export const useStep3ViewModel = (
           skillName: skill.skillName,
         })),
       };
+      
+    // Step 1: Search for the Lead by Email
+    const searchResponse = await searchLead(requestData.basicDetails.email);
+    console.log("Search Response:", searchResponse);
+    let leadIdToUpdate = leadId; // Default leadId from Auth Context
+    console.log("Lead ID from Auth Context:", leadId);
+
+    if (searchResponse) {
+      leadIdToUpdate = searchResponse; // Extract the lead ID
+      console.log("Lead ID from search response:", leadIdToUpdate);
+      
+    } else {
+      console.log("Lead not found with the provided email.");
+      return; // Stop execution if no lead is found
+    }
 
       const leadData = {
         data: [
@@ -77,8 +92,9 @@ export const useStep3ViewModel = (
           },
         ],
       };
-
-      const res= await updateLead(leadId, leadData);
+      console.log("Lead ID:", leadIdToUpdate);
+      const res= await updateLead(leadIdToUpdate, leadData);
+      
     if(res?.status){
       console.log("Lead updated status", res?.status);
     }      
