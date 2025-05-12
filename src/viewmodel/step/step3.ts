@@ -126,10 +126,10 @@ export const useStep3ViewModel = (
       }
 
       const selectedFile: DocumentPickerResponse = result[0];
-      const maxSize = 1048576;
+      const maxSize = 5 * 1024 * 1024;
 
       if (selectedFile.size && selectedFile.size > maxSize) {
-        toastmsg("error", "File size exceeds the 1MB limit.");
+        toastmsg("error", "File size exceeds the 5MB limit.");
         setIsUploadComplete(false);
         return;
       }

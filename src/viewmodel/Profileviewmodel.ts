@@ -90,7 +90,7 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
   };
   const validatePhoto = (photoFile: any) => {
     const allowedTypes = ["image/jpeg", "image/png"];
-    const maxSize = 1048576; // 1 MB in bytes
+    const maxSize = 5242880; // 1 MB in bytes
 
     if (!allowedTypes.includes(photoFile.type)) {
       showToast("error", "only JPEG and PNG files are allowed.");
@@ -227,11 +227,11 @@ export const useProfileViewModel = (userToken: string | null, userId: number | n
       }
 
       const selectedFile: DocumentPickerResponse = result[0];
-      const maxSize = 1048576; // 1MB size limit
+      const maxSize = 5242880; // 1MB size limit
 
       // Validate file size
       if (selectedFile.size && selectedFile.size > maxSize) {
-        showToast("error", "File size exceeds the 1MB limit.");
+        showToast("error", "File size exceeds the 5MB limit.");
         setIsUploadComplete(false);
         return;
       }
