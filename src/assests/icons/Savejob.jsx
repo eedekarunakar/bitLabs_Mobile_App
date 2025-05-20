@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { G, Path } from "react-native-svg";
+import * as React from 'react';
+import Svg, {G, Path} from 'react-native-svg';
 const Savejob = props => (
   <Svg
     width={16}
@@ -7,8 +7,7 @@ const Savejob = props => (
     viewBox="0 0 16 16"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+    {...props}>
     <G id="bookmark (2) 1">
       <Path
         id="Vector"

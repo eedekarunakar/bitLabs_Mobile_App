@@ -1,7 +1,7 @@
-import React from "react";
-import Svg, { Path } from "react-native-svg";
-import PropTypes from "prop-types"; // Import prop-types
-const RocketOutline = ({ width = 24, height = 24, strokeWidth = 1.5, color = "currentColor" }) => {
+import React from 'react';
+import Svg, {Path} from 'react-native-svg';
+import PropTypes from 'prop-types'; // Import prop-types
+const RocketOutline = ({width = 24, height = 24, strokeWidth = 1.5, color = 'currentColor'}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ RocketOutline.propTypes = {
 RocketOutline.defaultProps = {
   width: 24,
   height: 24,
-  color: "currentColor",
+  color: 'currentColor',
   strokeWidth: 1.5,
 };
 

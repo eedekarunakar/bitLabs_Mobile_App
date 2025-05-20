@@ -1,4 +1,4 @@
-import apiClient from "../login/ApiClient";
+import apiClient from '../login/ApiClient';
 
 const getAuthHeader = (userToken: string | null) => {
   return {
@@ -18,7 +18,7 @@ export const saveJob = async (
     );
     return response.data;
   } catch (error: any) {
-    console.error("Failed to save job:", error.response?.data || error.message);
+    console.error('Failed to save job:', error.response?.data || error.message);
     throw error; // Re-throw the error to let the caller handle it
   }
 };
@@ -35,7 +35,7 @@ export const applyJob = async (
     );
     return response.data;
   } catch (error: any) {
-    console.error("Failed to apply for job:", error.response?.data || error.message);
+    console.error('Failed to apply for job:', error.response?.data || error.message);
     throw error; // Re-throw the error to let the caller handle it
   }
 };
@@ -51,7 +51,7 @@ export const removeSavedJob = async (
     );
     return response.data;
   } catch (error: any) {
-    console.error("Failed to remove job:", error.response?.data || error.message);
+    console.error('Failed to remove job:', error.response?.data || error.message);
     throw error; // Re-throw the error to let the caller handle it
   }
 };

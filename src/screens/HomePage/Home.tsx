@@ -99,7 +99,7 @@ function Dashboard() {
     <View style={styles.container}>
       <Navbar />
       <ScrollView
-        contentContainerStyle={{ paddingBottom: screenHeight * 0.04 }} // Add bottom padding
+        contentContainerStyle={{paddingBottom: screenHeight * 0.04}} // Add bottom padding
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.textBelowNavbar}>Hello, {personalName
@@ -109,6 +109,7 @@ function Dashboard() {
           {verified && <Icon5 name="verified" size={25} color="#F46F16" style={{ marginLeft: 4, marginTop: screenHeight * 0.025, }} />}
         </View>
         <Text style={styles.textBelowNavbar1}>
+          {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
           {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
         </Text>
  
@@ -128,6 +129,7 @@ function Dashboard() {
                 {/* Image */}
                 <View style={[styles.cardLogoContainer, { backgroundColor: '#D3EDFE' }]}>
                   <Image
+                    source={require('../../assests/Images/Recommendedjobs.png')}
                     source={require('../../assests/Images/Recommendedjobs.png')}
                     style={styles.cardLogo}
                   />
@@ -159,6 +161,7 @@ function Dashboard() {
                 <View style={[styles.cardLogoContainer, { backgroundColor: '#FFF3E0' }]}>
                   <Image
                     source={require('../../assests/Images/Savedjobs.png')}
+                    source={require('../../assests/Images/Savedjobs.png')}
                     style={styles.cardLogo}
                   />
                 </View>
@@ -184,6 +187,7 @@ function Dashboard() {
               <View style={[styles.rowContainer,]}>
                 <View style={[styles.cardLogoContainer, { backgroundColor: '#EEF9D5' }]}>
                   <Image
+                    source={require('../../assests/Images/Apply.png')}
                     source={require('../../assests/Images/Apply.png')}
                     style={styles.cardLogo}
                   />
@@ -215,6 +219,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     color: '#0D0D0D',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#0D0D0D',
   },
   navbar: {
     flexDirection: 'row',
@@ -228,6 +235,7 @@ const styles = StyleSheet.create({
   logo1Image: {
     width: screenWidth * 0.4,
     height: screenHeight * 0.04,
+    resizeMode: 'contain',
     resizeMode: 'contain',
     top: screenHeight * 0.01,
     alignSelf: 'flex-start', // Aligns the logo to the left
@@ -246,20 +254,26 @@ const styles = StyleSheet.create({
     height: screenWidth * 0.08, // Match height to width for a square shape
     borderRadius: (screenWidth * 0.08) / 2, // Make it circular
     position: 'absolute',
+    position: 'absolute',
     right: screenWidth * 0.05, // Adjust to 5% from the right
     top: screenHeight * 0.04, // Adjust to 3% from the top
+    backgroundColor: '#ccc', // Optional: placeholder background for testing
     backgroundColor: '#ccc', // Optional: placeholder background for testing
   },
  
   textBelowNavbar: {
     textAlign: 'left',
+    textAlign: 'left',
     fontSize: 24, // Fixed font size of 24px
     color: '#2F2F2F',
+    color: '#2F2F2F',
     marginLeft: screenWidth * 0.03,
+    fontFamily: 'PlusJakartaSans-Bold',
     fontFamily: 'PlusJakartaSans-Bold',
     marginTop: screenHeight * 0.025,
   },
   textBelowNavbar1: {
+    textAlign: 'left',
     textAlign: 'left',
     fontSize: 14, // Fixed font size of 14px
  
@@ -267,15 +281,19 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.01,
     marginLeft: screenWidth * 0.03,
     fontFamily: 'PlusJakartaSans-Regular',
+    fontFamily: 'PlusJakartaSans-Regular',
   },
  
   cardContainer: {
     flex: 1,
     paddingHorizontal: 16,
     alignItems: 'center', // Center align items in the column
+    alignItems: 'center', // Center align items in the column
   },
  
   row: {
+    flexDirection: 'row', // Align cards horizontally
+    justifyContent: 'space-between', // Space between cards in a row
     flexDirection: 'row', // Align cards horizontally
     justifyContent: 'space-between', // Space between cards in a row
     marginBottom: screenHeight * 0.02, // Dynamic spacing between rows
@@ -286,9 +304,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%', // Full width to make them appear in a column
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 16,
     borderRadius: 10,
     marginBottom: 12, // Add spacing between cards
+    backgroundColor: '#fff',
     backgroundColor: '#fff',
   },
  
@@ -299,6 +322,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     justifyContent: 'center', // Center the logo inside its container
     alignItems: 'center', // Align logo in the center of the container
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center', // Center the logo inside its container
+    alignItems: 'center', // Align logo in the center of the container
     marginBottom: screenHeight * 0.012, // Space between logo and text/number
   },
  
@@ -306,9 +332,15 @@ const styles = StyleSheet.create({
     width: '31%', // Logo size within its container
     height: '31%',
     resizeMode: 'contain',
+    width: '31%', // Logo size within its container
+    height: '31%',
+    resizeMode: 'contain',
   },
  
   cardContent: {
+    flexDirection: 'column', // Stack text and number vertically
+    alignItems: 'flex-start', // Align content to the left
+    justifyContent: 'flex-start', // Align text and number to the top
     flexDirection: 'column', // Stack text and number vertically
     alignItems: 'flex-start', // Align content to the left
     justifyContent: 'flex-start', // Align text and number to the top
@@ -320,7 +352,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'left',
+    fontFamily: 'PlusJakartaSans-Bold',
+    textAlign: 'left',
     gap: 10,
+    color: '#909090',
     color: '#909090',
   },
  
@@ -329,13 +364,19 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     color: '#000',
     textAlign: 'left', // Align number to the left
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: '#000',
+    textAlign: 'left', // Align number to the left
   },
   rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1, // Allows content to expand properly
   },
   textContainer: {
+    alignItems: 'flex-start',
     alignItems: 'flex-start',
     marginLeft: 20, // Space between image and text
   },

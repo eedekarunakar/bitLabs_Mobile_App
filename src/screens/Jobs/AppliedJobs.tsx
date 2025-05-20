@@ -1,30 +1,23 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
-import { useAppliedJobsViewModel } from "@viewmodel/jobs/AppliedJob";
-import { useAuth } from "@context/Authcontext";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList, JobData } from "@models/Model";
-import JobCard from "./Jobcard";
-import { useLogos } from "../../hooks/useLogos";
-import { DefaultLogoUrl } from "@components/constant";
+import React from 'react';
+import {StyleSheet, Text, View, FlatList, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {useAppliedJobsViewModel} from '@viewmodel/jobs/AppliedJob';
+import {useAuth} from '@context/Authcontext';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList, JobData} from '@models/Model';
+import JobCard from './Jobcard';
+import {useLogos} from '../../hooks/useLogos';
+import {DefaultLogoUrl} from '@components/constant';
 
 const AppliedJobs = () => {
-  const { userId, userToken } = useAuth();
-  const { appliedJobs, loading, error } = useAppliedJobsViewModel(userId, userToken);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, "AppliedJobs">>();
-  const { logos, loading: logosLoading }: { logos: { [key: number]: string }; loading: boolean } =
-    useLogos(appliedJobs, userToken ?? "");
+  const {userId, userToken} = useAuth();
+  const {appliedJobs, loading, error} = useAppliedJobsViewModel(userId, userToken);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'AppliedJobs'>>();
+  const {logos, loading: logosLoading}: {logos: {[key: number]: string}; loading: boolean} =
+    useLogos(appliedJobs, userToken ?? '');
 
-  const renderJobItem = ({ item }: { item: JobData }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("JobDetailsScreen", { job: item })}>
+  const renderJobItem = ({item}: {item: JobData}) => (
+    <TouchableOpacity onPress={() => navigation.navigate('JobDetailsScreen', {job: item})}>
       <JobCard
         jobTitle={item.jobTitle}
         companyName={item.companyname}
@@ -77,21 +70,21 @@ const AppliedJobs = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f6f6f6",
+    backgroundColor: '#f6f6f6',
     top: 0,
     // marginBottom: 112,
   },
   placeholderText: {
     fontSize: 16,
-    color: "#888",
-    textAlign: "center",
+    color: '#888',
+    textAlign: 'center',
     marginTop: 50,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   loader: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

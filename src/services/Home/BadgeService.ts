@@ -1,5 +1,5 @@
-import { API_BASE_URL } from "@env";
-import apiClient from "@services/login/ApiClient";
+import {API_BASE_URL} from '@env';
+import apiClient from '@services/login/ApiClient';
 
 export const fetchTestStatus = async (userId: number | null, userToken: string | null) => {
   try {
@@ -19,12 +19,12 @@ export const fetchSkillBadges = async (userId: number | null, userToken: string 
   try {
     const response = await apiClient.get(`${API_BASE_URL}/skill-badges/${userId}/skill-badges`);
     if (response.status !== 200) {
-      throw new Error("Failed to fetch skill badges");
+      throw new Error('Failed to fetch skill badges');
     }
     const data = response.data;
     return data.applicantSkillBadges || [];
   } catch (error) {
-    console.error("Error fetching skill badges:", error);
+    console.error('Error fetching skill badges:', error);
     throw error;
   }
 };

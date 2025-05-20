@@ -1,6 +1,6 @@
-import apiClient from "@services/login/ApiClient";
-import { JobData, JobCounts } from "@models/Model";
-import { fetchCompanyLogo } from "./AppliedJob";
+import apiClient from '@services/login/ApiClient';
+import {JobData, JobCounts} from '@models/Model';
+import {fetchCompanyLogo} from './AppliedJob';
 const API_URLS = {
   recommendedJobs: (userId: number | null, size: number = 300) =>
     `/recommendedjob/findrecommendedjob/${userId}?page=${0}&size=${size}`,

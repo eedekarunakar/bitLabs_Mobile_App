@@ -1,13 +1,13 @@
-import React from "react";
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/AntDesign";
+import React from 'react';
+import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface NavbarProps {
   title: string;
   onBackPress?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ title, onBackPress }) => {
+const Navbar: React.FC<NavbarProps> = ({title, onBackPress}) => {
   return (
     <View>
       {/* Logo Section */}
@@ -38,37 +38,37 @@ const Navbar: React.FC<NavbarProps> = ({ title, onBackPress }) => {
 const styles = StyleSheet.create({
   navbar: {
     height: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
     marginBottom: 16,
     marginTop: 10,
   },
   logo: {
     width: 120,
     height: 40,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   separator: {
     height: 1,
-    backgroundColor: "#D3D3D3",
-    width: "100%",
+    backgroundColor: '#D3D3D3',
+    width: '100%',
     marginTop: 8,
   },
   headerContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
     height: 50,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   backButton: {
-    position: "absolute",
+    position: 'absolute',
     left: 15,
   },
   title: {
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
-    color: "#495057",
+    color: '#495057',
     lineHeight: 25,
     marginLeft: 50,
   },

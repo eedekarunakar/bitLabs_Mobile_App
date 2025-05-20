@@ -1,4 +1,4 @@
-import * as CryptoJS from "crypto-js";
+import * as CryptoJS from 'crypto-js';
 
 export const encryptPassword = (password: string, secretkey: string) => {
   const iv = CryptoJS.lib.WordArray.random(16); // Generate a random IV (16 bytes for AES)
@@ -7,7 +7,7 @@ export const encryptPassword = (password: string, secretkey: string) => {
     mode: CryptoJS.mode.CBC,
     padding: CryptoJS.pad.Pkcs7,
   }).toString();
-  return { encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64) };
+  return {encryptedPassword, iv: iv.toString(CryptoJS.enc.Base64)};
 };
 
 export default encryptPassword;

@@ -1,23 +1,23 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 
-import { View, Image, StyleSheet, Dimensions, TouchableOpacity, Modal, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "@context/Authcontext";
-import { useJobAlerts } from "@viewmodel/Alert/Notificationmodel";
-import { useProfilePhoto } from "@context/ProfilePhotoContext";
-import useGoogleSignIn from "@services/google/google";
-import Notification from "@assests/icons/notification";
+import {View, Image, StyleSheet, Dimensions, TouchableOpacity, Modal, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '@context/Authcontext';
+import {useJobAlerts} from '@viewmodel/Alert/Notificationmodel';
+import {useProfilePhoto} from '@context/ProfilePhotoContext';
+import useGoogleSignIn from '@services/google/google';
+import Notification from '@assests/icons/notification';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 const Navbar = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { logout } = useAuth();
-  const { unseenCount } = useJobAlerts();
-  const { photo } = useProfilePhoto();
-  const { signOut } = useGoogleSignIn();
+  const {logout} = useAuth();
+  const {unseenCount} = useJobAlerts();
+  const {photo} = useProfilePhoto();
+  const {signOut} = useGoogleSignIn();
 
   const handleProfilePress = () => {
     setModalVisible(true);
@@ -35,7 +35,7 @@ const Navbar = () => {
       <View style={styles.rightContainer}>
         {/* Notification Bell */}
         <View style={styles.notificationContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
             <Notification width={28} heigth={22} />
           </TouchableOpacity>
           {unseenCount > 0 && (
@@ -46,7 +46,7 @@ const Navbar = () => {
         </View>
         <TouchableOpacity onPress={handleProfilePress} style={styles.profilePicContainer}>
           <Image
-            source={photo ? { uri: photo } : require("../../assests/profile/profile.png")}
+            source={photo ? {uri: photo} : require('../../assests/profile/profile.png')}
             style={styles.profilePic}
           />
         </TouchableOpacity>
@@ -55,35 +55,31 @@ const Navbar = () => {
           transparent={true}
           animationType="slide"
           visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
+          onRequestClose={() => setModalVisible(false)}>
           <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
-            onPress={() => setModalVisible(false)}
-          >
+            onPress={() => setModalVisible(false)}>
             <View style={styles.modalView5}>
               <View style={styles.modalCard5}>
                 <TouchableOpacity
                   style={styles.customButton}
                   onPress={() => {
-                    navigation.navigate("Profile");
+                    navigation.navigate('Profile');
                     setModalVisible(false);
-                  }}
-                >
+                  }}>
                   <Text style={styles.buttonText1}>View Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.customButton1}
                   onPress={() => {
-                    navigation.navigate("ChangePassword");
+                    navigation.navigate('ChangePassword');
                     setModalVisible(false);
-                  }}
-                >
+                  }}>
                   <Text style={styles.buttonText1}>Change password</Text>
                 </TouchableOpacity>
               </View>
-              <View style={[styles.modalCard6, { marginTop: 10 }]}>
+              <View style={[styles.modalCard6, {marginTop: 10}]}>
                 <TouchableOpacity style={styles.modalButton7} onPress={handleLogout}>
                   <Text style={styles.modalButtonText7}>Logout</Text>
                 </TouchableOpacity>
@@ -98,78 +94,78 @@ const Navbar = () => {
 
 const styles = StyleSheet.create({
   navbar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: screenWidth * 0.02,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
 
     height: screenHeight * 0.08,
   },
   logo1Image: {
     width: screenWidth * 0.4,
     height: screenHeight * 0.04,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   logoContainer: {
     flex: 1,
   },
   rightContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   notificationContainer: {
-    position: "relative",
+    position: 'relative',
     marginRight: 15, // Space between notification and profile picture
   },
   notification: {
     width: 24,
     height: 24,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   notificationBadge: {
-    position: "absolute",
+    position: 'absolute',
     top: -5, // Adjust position of the badge
     right: -5,
-    backgroundColor: "#FFA726", // Orange color
+    backgroundColor: '#FFA726', // Orange color
     borderRadius: 12, // Circular shape
     height: 18,
     width: 18,
 
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#fff", // Optional: Border to make it stand out
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#fff', // Optional: Border to make it stand out
   },
   notificationText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   profilePic: {
     width: screenWidth * 0.08,
     height: screenWidth * 0.08,
     borderRadius: (screenWidth * 0.08) / 2,
-    backgroundColor: "#ccc",
+    backgroundColor: '#ccc',
   },
   modalView5: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalCard5: {
-    width: "95%",
-    marginHorizontal: "5%",
-    backgroundColor: "white",
+    width: '95%',
+    marginHorizontal: '5%',
+    backgroundColor: 'white',
     borderRadius: 10,
     paddingVertical: 2,
     paddingHorizontal: 3,
     paddingLeft: 5,
   },
   modalCard6: {
-    width: "95%",
-    marginHorizontal: "5%",
-    backgroundColor: "white",
+    width: '95%',
+    marginHorizontal: '5%',
+    backgroundColor: 'white',
     borderRadius: 10,
     paddingVertical: 2,
     paddingHorizontal: 3,
@@ -177,46 +173,46 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   customButton: {
-    width: "100%",
-    backgroundColor: "white",
+    width: '100%',
+    backgroundColor: 'white',
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderColor: "#ccc",
-    justifyContent: "center",
+    borderColor: '#ccc',
+    justifyContent: 'center',
   },
   customButton1: {
-    width: "100%",
-    backgroundColor: "white",
+    width: '100%',
+    backgroundColor: 'white',
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderBottomWidth: 0,
-    borderColor: "#ccc",
-    justifyContent: "center",
+    borderColor: '#ccc',
+    justifyContent: 'center',
   },
   modalButton7: {
-    width: "100%",
+    width: '100%',
     fontSize: 18,
     paddingVertical: 15,
     paddingHorizontal: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   modalButtonText7: {
-    color: "#E35D6A", // Text color for the Cancel button
+    color: '#E35D6A', // Text color for the Cancel button
     fontWeight: 400,
     fontSize: 14,
-    fontFamily: "PlusJakartaSans-Medium", // Set font to Jakarta Sans
+    fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
   },
 
   buttonText1: {
     fontWeight: 400,
     fontSize: 14,
-    fontFamily: "PlusJakartaSans-Medium", // Set font to Jakarta Sans
-    color: "#2f2f2f",
+    fontFamily: 'PlusJakartaSans-Medium', // Set font to Jakarta Sans
+    color: '#2f2f2f',
   },
   buttonText: {
-    color: "black",
-    textAlign: "center",
+    color: 'black',
+    textAlign: 'center',
   },
   modalOverlay: {
     flex: 1,

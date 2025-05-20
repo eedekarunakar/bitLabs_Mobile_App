@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import ProfileService from "../services/profile/ProfileService";
+import React, {createContext, useContext, useState, useEffect, ReactNode} from 'react';
+import ProfileService from '../services/profile/ProfileService';
 
 interface ProfilePhotoContextProps {
   photo: string | null;
@@ -32,7 +32,7 @@ export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({
         setPhoto(null); //Reset photo if not found
       }
     } catch (error) {
-      console.error("Error fetching profile photo:", error);
+      console.error('Error fetching profile photo:', error);
     }
   };
 
@@ -47,7 +47,7 @@ export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({
   }, [userToken, userId]);
 
   return (
-    <ProfilePhotoContext.Provider value={{ photo, fetchProfilePhoto, resetPhoto }}>
+    <ProfilePhotoContext.Provider value={{photo, fetchProfilePhoto, resetPhoto}}>
       {children}
     </ProfilePhotoContext.Provider>
   );
@@ -56,7 +56,7 @@ export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({
 export const useProfilePhoto = () => {
   const context = useContext(ProfilePhotoContext);
   if (!context) {
-    throw new Error("useProfilePhoto must be used within a ProfilePhotoProvider");
+    throw new Error('useProfilePhoto must be used within a ProfilePhotoProvider');
   }
   return context;
 };

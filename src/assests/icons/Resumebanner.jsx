@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { G, Path, Mask, Defs, ClipPath, Rect } from "react-native-svg";
+import * as React from 'react';
+import Svg, {G, Path, Mask, Defs, ClipPath, Rect} from 'react-native-svg';
 const Resumebanner = props => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
@@ -7,8 +7,7 @@ const Resumebanner = props => (
     height={135}
     viewBox="0 0 140 135"
     fill="none"
-    {...props}
-  >
+    {...props}>
     <G clipPath="url(#clip0_6561_3214)">
       <G opacity={0.4}>
         <Path
@@ -104,14 +103,13 @@ const Resumebanner = props => (
       <Mask
         id="mask0_6561_3214"
         style={{
-          maskType: "luminance",
+          maskType: 'luminance',
         }}
         maskUnits="userSpaceOnUse"
         x={28}
         y={17}
         width={83}
-        height={108}
-      >
+        height={108}>
         <Path d="M110.466 17.7927H28.1929V124.916H110.466V17.7927Z" fill="white" />
       </Mask>
       <G mask="url(#mask0_6561_3214)">
@@ -133,14 +131,13 @@ const Resumebanner = props => (
       <Mask
         id="mask1_6561_3214"
         style={{
-          maskType: "luminance",
+          maskType: 'luminance',
         }}
         maskUnits="userSpaceOnUse"
         x={38}
         y={34}
         width={15}
-        height={20}
-      >
+        height={20}>
         <Path
           d="M46.8613 47.1601V47.8855C47.473 48.8866 46.5655 52.7454 46.1662 53.5297C45.0354 51.6183 41.8284 49.2363 40.5904 47.3702C41.4668 47.2211 41.4495 45.189 41.4454 43.1847C40.3952 44.0587 38.9635 43.1796 38.842 41.9574C38.6497 40.1797 40.1941 39.333 41.549 40.1921L41.7829 36.9724C41.8788 35.651 42.8899 34.5797 44.2018 34.4094H48.6638C50.6906 34.4094 52.358 36.0078 52.4466 38.0356L52.465 38.4565C52.4806 38.8121 52.5068 39.1672 52.5336 39.5222C52.828 43.421 51.1295 47.3218 46.8613 47.1599V47.1601Z"
           fill="white"
@@ -324,14 +321,13 @@ const Resumebanner = props => (
       <Mask
         id="mask2_6561_3214"
         style={{
-          maskType: "luminance",
+          maskType: 'luminance',
         }}
         maskUnits="userSpaceOnUse"
         x={99}
         y={15}
         width={7}
-        height={11}
-      >
+        height={11}>
         <Path
           d="M102.824 17.4238L105.402 17.3207V15.8242H99.9854V25.9155H103.463V18.414L102.824 17.4238Z"
           fill="white"

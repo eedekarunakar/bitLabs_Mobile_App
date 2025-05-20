@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "@context/Authcontext";
-import { fetchJobAlerts, markAlertAsSeen, JobAlert } from "@services/Alert/NotificationServieces";
+import {useState, useEffect} from 'react';
+import {useAuth} from '@context/Authcontext';
+import {fetchJobAlerts, markAlertAsSeen, JobAlert} from '@services/Alert/NotificationServieces';
 
 export const useJobAlerts = () => {
-  const { userId, userToken } = useAuth(); // Getting userId and userToken from useAuth context
+  const {userId, userToken} = useAuth(); // Getting userId and userToken from useAuth context
   const [jobAlerts, setJobAlerts] = useState<JobAlert[]>([]);
   const [unseenCount, setUnseenCount] = useState<number>(0);
 
@@ -14,7 +14,7 @@ export const useJobAlerts = () => {
 
         setJobAlerts(alerts);
       } catch (error) {
-        console.error("Error fetching job alerts:", error);
+        console.error('Error fetching job alerts:', error);
       }
     };
 
@@ -32,13 +32,13 @@ export const useJobAlerts = () => {
     try {
       await markAlertAsSeen(alertId, userToken);
       const updatedJobAlerts = jobAlerts.map(jobAlert =>
-        jobAlert.alertsId === alertId ? { ...jobAlert, seen: true } : jobAlert,
+        jobAlert.alertsId === alertId ? {...jobAlert, seen: true} : jobAlert,
       );
       setJobAlerts(updatedJobAlerts);
     } catch (error) {
-      console.error("Error marking alert as seen:", error);
+      console.error('Error marking alert as seen:', error);
     }
   };
 
-  return { jobAlerts, unseenCount, handleMarkAsSeen };
+  return {jobAlerts, unseenCount, handleMarkAsSeen};
 };

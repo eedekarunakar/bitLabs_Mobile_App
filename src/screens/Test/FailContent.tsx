@@ -1,14 +1,14 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, BackHandler } from "react-native";
-import GradientButton from "@components/styles/GradientButton";
-import { useFocusEffect } from "@react-navigation/native";
-const FailureScreen = ({ navigation }: any) => {
+import React from 'react';
+import {View, Text, Image, StyleSheet, BackHandler} from 'react-native';
+import GradientButton from '@components/styles/GradientButton';
+import {useFocusEffect} from '@react-navigation/native';
+const FailureScreen = ({navigation}: any) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => true; // Returning true disables back action
 
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, []),
   );
   return (
@@ -17,7 +17,7 @@ const FailureScreen = ({ navigation }: any) => {
       <View style={styles.card}>
         {/* Illustration Image */}
         <Image
-          source={require("../../assests/Images/Test/failed.png")} // Replace with your image path
+          source={require('../../assests/Images/Test/failed.png')} // Replace with your image path
           style={styles.image}
           resizeMode="contain"
         />
@@ -28,13 +28,13 @@ const FailureScreen = ({ navigation }: any) => {
         </Text>
 
         {/* Retake Info */}
-        <Text style={styles.retakeText}>You Can Retake The Test{"\n"}After 7 Days</Text>
+        <Text style={styles.retakeText}>You Can Retake The Test{'\n'}After 7 Days</Text>
 
         {/* Exit Button with Gradient */}
         <GradientButton
           title="Exit"
           onPress={() =>
-            navigation.navigate("BottomTab", { screen: "Badges", isTestComplete: false })
+            navigation.navigate('BottomTab', {screen: 'Badges', isTestComplete: false})
           }
         />
       </View>
@@ -47,20 +47,20 @@ export default FailureScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
 
-    width: "100%", // Increased the width of the container
+    width: '100%', // Increased the width of the container
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "95%",
-    height: "90%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '95%',
+    height: '90%',
   },
   image: {
     width: 228,
@@ -69,33 +69,33 @@ const styles = StyleSheet.create({
   },
   message: {
     marginBottom: 10,
-    color: "#000",
-    textAlign: "center",
-    fontFamily: "PlusJakartaSans-Bold", // Ensure the font is linked properly
+    color: '#000',
+    textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-Bold', // Ensure the font is linked properly
     fontSize: 22,
-    fontStyle: "normal",
+    fontStyle: 'normal',
     lineHeight: 34,
   },
   retakeText: {
-    color: "#F97316",
+    color: '#F97316',
     fontSize: 20,
-    fontWeight: "600",
-    fontFamily: "PlusJakartaSans-Medium",
-    textAlign: "center",
-    fontStyle: "normal",
+    fontWeight: '600',
+    fontFamily: 'PlusJakartaSans-Medium',
+    textAlign: 'center',
+    fontStyle: 'normal',
     marginBottom: 20,
     marginTop: 15,
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
   },
   buttonContainer: {
     borderRadius: 7.68,
-    overflow: "hidden",
-    width: "100%",
+    overflow: 'hidden',
+    width: '100%',
     marginTop: 10,
   },
   gradientButton: {
     paddingVertical: 12,
-    alignItems: "center",
+    alignItems: 'center',
     borderRadius: 7.68,
   },
 });

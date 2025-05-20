@@ -1,4 +1,4 @@
-// TestViewModel.ts
+
 import { useState } from "react";
 import { submitTestResult } from "@services/Test/testService"; // Import the service
 import { TestDetails } from "@models/Model"; // Assuming you have a model for test details
@@ -6,6 +6,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "@models/model"; // Define your stack param list
 import { updateLead,searchLead } from "@services/ZohoCrm";
 import { useAuth } from "@context/Authcontext";
+
 // Type the navigation object with your stack's params
 
 export const useTestViewModel = (
@@ -20,7 +21,7 @@ export const useTestViewModel = (
   const { leadId , setLeadId,userEmail} = useAuth();
   const submitTest = async (finalScore: number, isEarlySubmission: boolean) => {
     const testStatus = isEarlySubmission
-      ? "F" // Early submission fails by default
+      ? 'F' // Early submission fails by default
       : finalScore >= 70
         ? "P" // Pass if score >= 70
         : "F"; // Fail otherwise
@@ -29,7 +30,7 @@ export const useTestViewModel = (
       testScore: isEarlySubmission ? 0 : finalScore,
       testStatus: testStatus,
       testDateTime: new Date().toISOString(),
-      applicant: { id: userId },
+      applicant: {id: userId},
     };
 
     try {
@@ -87,13 +88,13 @@ export const useTestViewModel = (
         if (finalScore >= 70) {
           navigation.navigate("passContent", { finalScore, testName });
         } else {
-          navigation.navigate("FailContent");
+          navigation.navigate('FailContent');
         }
       } else {
         console.error("Error during test submission:");
       }
     } catch (error) {
-      console.error("Error during test submission:", error);
+      console.error('Error during test submission:', error);
     }
   };
 

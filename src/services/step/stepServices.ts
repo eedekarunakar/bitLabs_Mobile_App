@@ -1,4 +1,4 @@
-import apiClient from "../login/ApiClient";
+import apiClient from '../login/ApiClient';
 
 export const ProfileModel = {
   createProfile: async (userId: number | null, userToken: string | null, requestData: any) => {
@@ -10,7 +10,7 @@ export const ProfileModel = {
 
       return response.data;
     } catch (error) {
-      throw new Error("Error creating profile");
+      throw new Error('Error creating profile');
     }
   },
 
@@ -18,13 +18,13 @@ export const ProfileModel = {
     try {
       const response = await apiClient.post(`/applicantprofile/uploadresume/${userId}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
 
       return response.data;
     } catch (error) {
-      throw new Error("Error uploading resume");
+      throw new Error('Error uploading resume');
     }
   },
 };

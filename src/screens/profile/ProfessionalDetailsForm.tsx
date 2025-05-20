@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import {
   View,
@@ -11,10 +11,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   FlatList,
-} from "react-native";
-import { useProfessionalDetailsFormViewModel } from "@viewmodel/Professionalformviewmodel";
-import GradientButton from "@components/styles/GradientButton";
-import Icon from "react-native-vector-icons/AntDesign"; // Assuming you're using AntDesign for icons
+} from 'react-native';
+import {useProfessionalDetailsFormViewModel} from '@viewmodel/Professionalformviewmodel';
+import GradientButton from '@components/styles/GradientButton';
+import Icon from 'react-native-vector-icons/AntDesign'; // Assuming you're using AntDesign for icons
 
 interface Skill {
   id: number;
@@ -106,27 +106,23 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
   });
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{flex: 1}}>
       <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
         <TouchableWithoutFeedback onPress={closeAllDropdowns}>
           <View style={styles.modalView}>
             <View style={styles.modalCard}>
-              <View style={{ alignItems: "flex-end" }}>
+              <View style={{alignItems: 'flex-end'}}>
                 <TouchableOpacity onPress={onClose}>
-                  <Icon name="close" size={20} color={"0D0D0D"} />
+                  <Icon name="close" size={20} color={'0D0D0D'} />
                 </TouchableOpacity>
               </View>
               {/* <ScrollView contentContainerStyle={{ padding: 10 }}> */}
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
                 <Text style={styles.modalTitle}>Professional Details</Text>
               </View>
 
@@ -148,21 +144,20 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <Text style={styles.errorText}>{validationErrors.qualification}</Text>
                 )}
                 {showQualificationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                  <View style={[styles.dropdown, {zIndex: 1000}]}>
                     <FlatList
                       data={qualificationsOptions.filter(qual =>
                         qual.toLowerCase().includes(qualificationQuery.toLowerCase()),
                       )}
                       keyExtractor={item => item}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             setQualification(item);
                             setQualificationQuery(item);
                             setShowQualificationList(false);
-                            setValidationErrors(({ qualification, ...restErrors }) => restErrors);
-                          }}
-                        >
+                            setValidationErrors(({qualification, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -191,7 +186,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <Text style={styles.errorText}>{validationErrors.specialization}</Text>
                 )}
                 {showSpecializationList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                  <View style={[styles.dropdown, {zIndex: 1000}]}>
                     <FlatList
                       data={(
                         specializationsByQualification[
@@ -201,15 +196,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                         spec.toLowerCase().includes(specializationQuery.toLowerCase()),
                       )}
                       keyExtractor={item => item}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             setSpecialization(item);
                             setSpecializationQuery(item);
                             setShowSpecializationList(false);
-                            setValidationErrors(({ specialization, ...restErrors }) => restErrors);
-                          }}
-                        >
+                            setValidationErrors(({specialization, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.suggestionItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -243,15 +237,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                     style={[
                       styles.dropdown,
                       {
-                        position: "absolute",
+                        position: 'absolute',
                         top: 50,
                         left: 0,
                         right: 0,
                         maxHeight: 200,
                         zIndex: 1000,
                       },
-                    ]}
-                  >
+                    ]}>
                     <FlatList
                       data={
                         skillQuery.length > 0
@@ -260,27 +253,26 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                                 s.toLowerCase().includes(skillQuery.toLowerCase()) &&
                                 !skills.some(skill => skill.skillName === s) &&
                                 !skillBadgesState.some(
-                                  badge => badge.skillBadge.name === s && badge.flag === "added",
+                                  badge => badge.skillBadge.name === s && badge.flag === 'added',
                                 ),
                             )
                           : skillsOptions.filter(
                               s =>
                                 !skills.some(skill => skill.skillName === s) &&
                                 !skillBadgesState.some(
-                                  badge => badge.skillBadge.name === s && badge.flag === "added",
+                                  badge => badge.skillBadge.name === s && badge.flag === 'added',
                                 ),
                             )
                       }
                       keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             addSkill(item);
-                            setSkillQuery(""); // Clear input after selection
+                            setSkillQuery(''); // Clear input after selection
                             // setShowSkillsList(true); // Keep dropdown open
-                            setValidationErrors(({ skills, ...restErrors }) => restErrors);
-                          }}
-                        >
+                            setValidationErrors(({skills, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -294,18 +286,16 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                 {/* Selected Skills Section */}
                 <View style={styles.selectedItems}>
                   {skillBadgesState
-                    .filter(badge => badge.flag === "added")
+                    .filter(badge => badge.flag === 'added')
                     .map(badge => (
                       <View
                         key={badge.skillBadge.id}
-                        style={[styles.selectedItem, { backgroundColor: "#334584" }]}
-                      >
+                        style={[styles.selectedItem, {backgroundColor: '#334584'}]}>
                         <Text style={styles.selectedItemText}>{badge.skillBadge.name}</Text>
                         <TouchableOpacity
                           onPress={() => {
                             removeSkill(badge.skillBadge.id, true, badge.skillBadge.name);
-                          }}
-                        >
+                          }}>
                           <Text style={styles.removeText}>x</Text>
                         </TouchableOpacity>
                       </View>
@@ -313,14 +303,12 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   {skills.map(skill => (
                     <View
                       key={skill.id}
-                      style={[styles.selectedItem, { backgroundColor: "#334584" }]}
-                    >
+                      style={[styles.selectedItem, {backgroundColor: '#334584'}]}>
                       <Text style={styles.selectedItemText}>{skill.skillName}</Text>
                       <TouchableOpacity
                         onPress={() => {
                           removeSkill(skill.id, false, skill.skillName);
-                        }}
-                      >
+                        }}>
                         <Text style={styles.removeText}>x</Text>
                       </TouchableOpacity>
                     </View>
@@ -349,15 +337,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                     style={[
                       styles.dropdown,
                       {
-                        position: "absolute",
+                        position: 'absolute',
                         top: 50,
                         left: 0,
                         right: 0,
                         maxHeight: 200,
                         zIndex: 1000,
                       },
-                    ]}
-                  >
+                    ]}>
                     <FlatList
                       data={
                         locationQuery.length > 0
@@ -369,15 +356,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                           : cities.filter(loc => !locations.includes(loc))
                       }
                       keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             addLocation(item);
-                            setLocationQuery(""); // Clear input after selection
+                            setLocationQuery(''); // Clear input after selection
                             // setShowLocationList(true); // Keep dropdown open
-                            setValidationErrors(({ locations, ...restErrors }) => restErrors);
-                          }}
-                        >
+                            setValidationErrors(({locations, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -392,8 +378,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   {locations.map(location => (
                     <View
                       key={location}
-                      style={[styles.selectedItem, { backgroundColor: "#334584" }]}
-                    >
+                      style={[styles.selectedItem, {backgroundColor: '#334584'}]}>
                       <Text style={styles.selectedItemText}>{location}</Text>
                       <TouchableOpacity onPress={() => removeLocation(location)}>
                         <Text style={styles.removeText}>x</Text>
@@ -421,7 +406,7 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                   <Text style={styles.errorText}>{validationErrors.experience}</Text>
                 )}
                 {showExperienceList && (
-                  <View style={[styles.dropdown, { zIndex: 1000 }]}>
+                  <View style={[styles.dropdown, {zIndex: 1000}]}>
                     <FlatList
                       data={
                         experienceQuery.length > 0
@@ -431,15 +416,14 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
                           : experienceOptions
                       }
                       keyExtractor={item => item}
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
                             setExperience(item);
                             setExperienceQuery(item);
                             setShowExperienceList(false);
-                            setValidationErrors(({ experience, ...restErrors }) => restErrors);
-                          }}
-                        >
+                            setValidationErrors(({experience, ...restErrors}) => restErrors);
+                          }}>
                           <Text style={styles.autocompleteItem}>{item}</Text>
                         </TouchableOpacity>
                       )}
@@ -466,115 +450,115 @@ const ProfessionalDetailsForm: React.FC<ProfessionalDetailsFormProps> = React.me
 const styles = StyleSheet.create({
   modalView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalCard: {
-    width: "90%",
-    backgroundColor: "white",
+    width: '90%',
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
   },
   inputContainer: {
-    position: "relative",
+    position: 'relative',
     marginBottom: 10,
   },
   modalTitle: {
     fontSize: 20,
     marginBottom: 20,
-    textAlign: "center",
-    color: "#666666",
-    fontFamily: "PlusJakartaSans-Bold",
+    textAlign: 'center',
+    color: '#666666',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   input: {
-    backgroundColor: "#E5E5E5",
+    backgroundColor: '#E5E5E5',
     borderWidth: 1,
-    width: "100%",
-    borderColor: "#ccc",
+    width: '100%',
+    borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    color: "#0D0D0D",
-    fontFamily: "PlusJakartaSans-Medium",
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   errorInput: {
-    borderColor: "red",
+    borderColor: 'red',
   },
   errorText: {
-    fontFamily: "PlusJakartaSans-Medium",
-    color: "red",
+    fontFamily: 'PlusJakartaSans-Medium',
+    color: 'red',
     fontSize: 12,
     marginBottom: 10,
   },
   dropdown: {
-    position: "absolute",
+    position: 'absolute',
     top: 50,
     left: 0,
     right: 0,
     maxHeight: 150,
     borderWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "white",
+    borderColor: '#ccc',
+    backgroundColor: 'white',
     borderRadius: 5,
     zIndex: 1000,
-    overflow: "hidden",
+    overflow: 'hidden',
     elevation: 5, // Added elevation for better visibility
   },
   suggestionItem: {
     padding: 10,
     fontSize: 16,
-    backgroundColor: "#FFFF",
+    backgroundColor: '#FFFF',
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    color: "#0D0D0D",
-    fontFamily: "PlusJakartaSans-Medium",
+    borderBottomColor: '#ccc',
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   autocompleteItem: {
     padding: 10,
     fontSize: 16,
-    backgroundColor: "#FFFF",
+    backgroundColor: '#FFFF',
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    color: "#0D0D0D",
-    fontFamily: "PlusJakartaSans-Medium",
+    borderBottomColor: '#ccc',
+    color: '#0D0D0D',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   noMatchText: {
     padding: 10,
     fontSize: 16,
-    color: "#bbb",
-    fontFamily: "PlusJakartaSans-Medium",
+    color: '#bbb',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   selectedItems: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginBottom: 10,
     marginTop: 8,
   },
   selectedItem: {
-    backgroundColor: "#334584",
+    backgroundColor: '#334584',
     padding: 5,
     marginRight: 10,
     marginBottom: 5,
     borderRadius: 5,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   selectedItemText: {
-    color: "white",
+    color: 'white',
     fontSize: 14,
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   removeText: {
-    color: "white",
+    color: 'white',
     fontSize: 14,
     marginLeft: 5,
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   button: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 40,
-    width: "100%",
+    width: '100%',
     borderRadius: 5,
     marginTop: 8,
   },

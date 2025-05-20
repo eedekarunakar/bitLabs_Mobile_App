@@ -1,4 +1,4 @@
-import apiClient from "./login/ApiClient";
+import apiClient from './login/ApiClient';
 // Base URL for the API
 
 // Function to fetch mobile number from API
@@ -12,7 +12,7 @@ export const getMobileNumber = async (id: number | null): Promise<string | null>
     }
     return null;
   } catch (error) {
-    console.error("Error fetching mobile number:", error);
+    console.error('Error fetching mobile number:', error);
     return null;
   }
 };

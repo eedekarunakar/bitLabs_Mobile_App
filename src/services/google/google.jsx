@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
-import { useAuth } from "@context/Authcontext";
-import { showToast } from "../login/ToastService";
-import { CLIENT_ID } from "@env";
+import {useState, useEffect} from 'react';
+import {GoogleSignin, statusCodes} from '@react-native-google-signin/google-signin';
+import {useAuth} from '@context/Authcontext';
+import {showToast} from '../login/ToastService';
+import {CLIENT_ID} from '@env';
 
 const useGoogleSignIn = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const { Glogin } = useAuth();
+  const {Glogin} = useAuth();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -25,9 +25,9 @@ const useGoogleSignIn = () => {
       const email = user?.data.user?.email;
 
       await Glogin(email);
-      showToast("success", "Login Successful");
+      showToast('success', 'Login Successful');
     } catch (error) {
-      console.error("Google Sign-In Error:", error);
+      console.error('Google Sign-In Error:', error);
     }
   };
 
@@ -39,7 +39,7 @@ const useGoogleSignIn = () => {
       setIsSignedIn(false);
       setUserInfo(null);
     } catch (error) {
-      console.error("Sign out error:", error);
+      console.error('Sign out error:', error);
     }
   };
 

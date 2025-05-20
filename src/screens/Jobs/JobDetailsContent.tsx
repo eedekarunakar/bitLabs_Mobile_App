@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
-import JobCard from "./Jobcard"; // Import the JobCard component
-import SkillMatchProbability from "./Skillmatch"; // Import the SkillMatchProbability component
-import SuggestedCourses from "./Suggestedcourses"; // Import the SuggestedCourses component
+import React from 'react';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import JobCard from './Jobcard'; // Import the JobCard component
+import SkillMatchProbability from './Skillmatch'; // Import the SkillMatchProbability component
+import SuggestedCourses from './Suggestedcourses'; // Import the SuggestedCourses component
 
 type JobDetailsContentProps = {
   job: {
@@ -57,7 +57,7 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
 
       <View style={styles.jobCard}>
         <Text style={styles.jobdestitle}>Full Job Description</Text>
-        <Text style={styles.description}>{job.description.replace(/<[^>]+>/g, "")}</Text>
+        <Text style={styles.description}>{job.description.replace(/<[^>]+>/g, '')}</Text>
       </View>
 
       {suggestedCourses.length > 0 && <SuggestedCourses suggestedCourses={suggestedCourses} />}
@@ -67,7 +67,7 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
 
 const styles = StyleSheet.create({
   jobCard: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
     margin: 12,
@@ -75,17 +75,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   jobdestitle: {
-    color: "#F46F16",
+    color: '#F46F16',
     fontSize: 16,
     marginBottom: 8,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   description: {
     fontSize: 14,
-    color: "#666",
+    color: '#666',
     marginBottom: 8,
     flexShrink: 1,
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
   },
 });
 

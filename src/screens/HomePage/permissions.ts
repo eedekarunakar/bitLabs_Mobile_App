@@ -1,7 +1,7 @@
-import { PermissionsAndroid, Platform } from "react-native";
+import {PermissionsAndroid, Platform} from 'react-native';
 
 export const requestStoragePermission = async () => {
-  if (Platform.OS !== "android") return true; // No need for iOS
+  if (Platform.OS !== 'android') return true; // No need for iOS
 
   try {
     if (Platform.Version >= 33) {
@@ -18,7 +18,7 @@ export const requestStoragePermission = async () => {
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     }
   } catch (error) {
-    console.warn("Permission error:", error);
+    console.warn('Permission error:', error);
     return false;
   }
 };

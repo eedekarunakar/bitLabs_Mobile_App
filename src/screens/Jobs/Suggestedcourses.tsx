@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from "react-native";
+import React from 'react';
+import {View, Text, Image, TouchableOpacity, StyleSheet, Linking} from 'react-native';
 
 type SuggestedCoursesProps = {
   suggestedCourses: string[];
@@ -16,16 +16,16 @@ const courseImages: Record<string, any> = {
 };
 
 const courseUrlMap: Record<string, any> = {
-  "HTML&CSS": "https://upskill.bitlabs.in/course/view.php?id=9",
-  JAVA: "https://upskill.bitlabs.in/course/view.php?id=22",
-  PYTHON: "https://upskill.bitlabs.in/course/view.php?id=7",
-  MYSQL: "https://upskill.bitlabs.in/course/view.php?id=8",
-  JAVASCRIPT: "https://upskill.bitlabs.in/course/view.php?id=47",
-  REACT: "https://upskill.bitlabs.in/course/view.php?id=21",
-  "SPRING BOOT": "https://upskill.bitlabs.in/course/view.php?id=23",
+  'HTML&CSS': 'https://upskill.bitlabs.in/course/view.php?id=9',
+  JAVA: 'https://upskill.bitlabs.in/course/view.php?id=22',
+  PYTHON: 'https://upskill.bitlabs.in/course/view.php?id=7',
+  MYSQL: 'https://upskill.bitlabs.in/course/view.php?id=8',
+  JAVASCRIPT: 'https://upskill.bitlabs.in/course/view.php?id=47',
+  REACT: 'https://upskill.bitlabs.in/course/view.php?id=21',
+  'SPRING BOOT': 'https://upskill.bitlabs.in/course/view.php?id=23',
 };
 
-const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({ suggestedCourses }) => {
+const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({suggestedCourses}) => {
   return (
     <View style={styles.jobCard}>
       <Text style={styles.jobdestitle}>Suggested Courses</Text>
@@ -39,7 +39,7 @@ const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({ suggestedCourses })
               >
                 <Image source={courseImages[course]} style={styles.courseImage}  resizeMode="contain"/>
                 <Image
-                  source={require("@assests/Images/external-link2.png")}
+                  source={require('@assests/Images/external-link2.png')}
                   style={styles.externalLinkIcon}
                 />
               </TouchableOpacity>
@@ -55,7 +55,7 @@ const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({ suggestedCourses })
 
 const styles = StyleSheet.create({
   jobCard: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 10,
     margin: 12,
@@ -63,27 +63,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   jobdestitle: {
-    color: "#F46F16",
+    color: '#F46F16',
     fontSize: 16,
     marginBottom: 8,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   courseCard: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
   imageRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
     paddingRight: 10,
   },
   courseImage: {
     width: '50%',
     height: 50,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   externalLinkIcon: {
     width: 24,
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
   },
   fallbackText: {
     fontSize: 12,
-    color: "red",
-    fontFamily: "PlusJakartaSans-Medium",
+    color: 'red',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
 });
 

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { AppState, BackHandler } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
@@ -5,6 +6,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useTestViewModel } from "@viewmodel/Test/TestViewModel"; // Import the useTestViewModel hook
 import { useSkillTestViewModel } from "@viewmodel/Test/skillViewModel"; // Import the useSkillTestViewModel hook
 import { TestData } from "@models/Model";
+
 
 export const useSubmissionModel = (
   userId: number | null,
@@ -15,14 +17,14 @@ export const useSubmissionModel = (
 ) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [answers, setAnswers] = useState<{[key: number]: string}>({});
   const [timeLeft, setTimeLeft] = useState(2 * 60); // 2 minutes for testing
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [testDataAPI, setTestDataAPI] = useState<{ questions: any[] }>({ questions: [] });
   const [isNetworkAvailable, setIsNetworkAvailable] = useState<boolean>(true);
   const [hasExceededTimeout, setHasExceededTimeout] = useState(false);
   const [isTestSubmitted, setIsTestSubmitted] = useState(false);
-  const { submitSkillTest } = useSkillTestViewModel(userId, userToken, testName);
+  const {submitSkillTest} = useSkillTestViewModel(userId, userToken, testName);
   const {
     isTestComplete,
     showEarlySubmissionModal,
@@ -34,7 +36,7 @@ export const useSubmissionModel = (
   const formatTime = (timeInSeconds: number) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   let timerInterval: NodeJS.Timeout;
@@ -44,17 +46,17 @@ export const useSubmissionModel = (
     let backgroundStartTime: number | null = null;
 
     const handleAppStateChange = (nextAppState: string) => {
-      if (nextAppState === "background") {
+      if (nextAppState === 'background') {
         backgroundStartTime = Date.now();
         clearInterval(timerInterval);
-      } else if (nextAppState === "active" && backgroundStartTime) {
+      } else if (nextAppState === 'active' && backgroundStartTime) {
         const elapsedTime = Math.floor((Date.now() - backgroundStartTime) / 1000);
         setTimeLeft(prevTime => Math.max(0, prevTime - elapsedTime));
         backgroundStartTime = null;
       }
     };
 
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription.remove();
   }, []);
 
@@ -94,7 +96,7 @@ export const useSubmissionModel = (
         return true;
       };
 
-      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
       return () => backHandler.remove();
     }, []),
   );
@@ -135,9 +137,9 @@ export const useSubmissionModel = (
       const value = parseInt(match[1], 10);
       const unit = match[2].toLowerCase();
 
-      if (unit.includes("hr")) {
+      if (unit.includes('hr')) {
         return value * 3600;
-      } else if (unit.includes("min")) {
+      } else if (unit.includes('min')) {
         return value * 60;
       }
     }
@@ -161,7 +163,7 @@ export const useSubmissionModel = (
     setShowEarlySubmissionModal(false);
     clearInterval(timerInterval);
     const finalScore = 0; // Score is 0 for early submission
-    if (testName === "Technical Test" || testName === "General Aptitude Test") {
+    if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
       await submitTest(finalScore, true);
     } else {
       await submitSkillTest(finalScore, true);
@@ -177,8 +179,8 @@ export const useSubmissionModel = (
 
   const handleAnswerSelect = (index: number, answer: string) => {
     setSelectedAnswer(answer);
-    setAnswers(prevAnswers => ({ ...prevAnswers, [index]: answer }));
-    setErrorMessage("");
+    setAnswers(prevAnswers => ({...prevAnswers, [index]: answer}));
+    setErrorMessage('');
   };
 
   const goToPreviousQuestion = () => {
@@ -186,13 +188,13 @@ export const useSubmissionModel = (
       const previousAnswer = answers[currentQuestionIndex - 1] || null;
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       setSelectedAnswer(previousAnswer);
-      setErrorMessage("");
+      setErrorMessage('');
     }
   };
 
   const goToNextQuestion = async () => {
     if (!selectedAnswer) {
-      setErrorMessage("Please provide your answer before moving to the next question.");
+      setErrorMessage('Please provide your answer before moving to the next question.');
       return;
     }
     const updatedAnswers = {
@@ -206,14 +208,14 @@ export const useSubmissionModel = (
       const nextAnswer = updatedAnswers[currentQuestionIndex + 1] || null;
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(nextAnswer);
-      setErrorMessage("");
+      setErrorMessage('');
     } else {
       setIsTestSubmitted(true);
       const finalScore = calculateScore(updatedAnswers , testDataAPI.questions);
       const percentageScore = parseFloat(
         ((finalScore / testDataAPI.questions.length) * 100).toFixed(2),
       );
-      if (testName === "Technical Test" || testName === "General Aptitude Test") {
+      if (testName === 'Technical Test' || testName === 'General Aptitude Test') {
         await submitTest(percentageScore, false);
       } else {
         await submitSkillTest(percentageScore, false);

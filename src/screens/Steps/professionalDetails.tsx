@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,74 +8,74 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-} from "react-native";
-import ProgressBar from "@components/progessBar/ProgressBar";
-import DropDownPicker from "react-native-dropdown-picker";
-import LinearGradient from "react-native-linear-gradient";
+} from 'react-native';
+import ProgressBar from '@components/progessBar/ProgressBar';
+import DropDownPicker from 'react-native-dropdown-picker';
+import LinearGradient from 'react-native-linear-gradient';
 
 const getSpecializationOptions = (qualification: string | any): string[] => {
   switch (qualification) {
-    case "B.Tech":
+    case 'B.Tech':
       return [
-        "Computer Science and Engineering (CSE)",
-        "Electronics and Communication Engineering (ECE)",
-        "Electrical and Electronics Engineering (EEE)",
-        "Mechanical Engineering (ME)",
-        "Civil Engineering (CE)",
-        "Aerospace Engineering",
-        "Information Technology (IT)",
-        "Chemical Engineering",
-        "Biotechnology Engineering",
+        'Computer Science and Engineering (CSE)',
+        'Electronics and Communication Engineering (ECE)',
+        'Electrical and Electronics Engineering (EEE)',
+        'Mechanical Engineering (ME)',
+        'Civil Engineering (CE)',
+        'Aerospace Engineering',
+        'Information Technology (IT)',
+        'Chemical Engineering',
+        'Biotechnology Engineering',
       ];
-    case "MCA":
+    case 'MCA':
       return [
-        "Software Engineering",
-        "Data Science",
-        "Artificial Intelligence",
-        "Machine Learning",
-        "Information Security",
-        "Cloud Computing",
-        "Mobile Application Development",
-        "Web Development",
-        "Database Management",
-        "Network Administration",
-        "Cyber Security",
-        "IT Project Management",
+        'Software Engineering',
+        'Data Science',
+        'Artificial Intelligence',
+        'Machine Learning',
+        'Information Security',
+        'Cloud Computing',
+        'Mobile Application Development',
+        'Web Development',
+        'Database Management',
+        'Network Administration',
+        'Cyber Security',
+        'IT Project Management',
       ];
-    case "Degree":
+    case 'Degree':
       return [
-        "Bachelor of Science (B.Sc) Physics",
-        "Bachelor of Science (B.Sc) Mathematics",
-        "Bachelor of Science (B.Sc) Statistics",
-        "Bachelor of Science (B.Sc) Computer Science",
-        "Bachelor of Science (B.Sc) Electronics",
-        "Bachelor of Science (B.Sc) Chemistry",
-        "Bachelor of Commerce (B.Com)",
+        'Bachelor of Science (B.Sc) Physics',
+        'Bachelor of Science (B.Sc) Mathematics',
+        'Bachelor of Science (B.Sc) Statistics',
+        'Bachelor of Science (B.Sc) Computer Science',
+        'Bachelor of Science (B.Sc) Electronics',
+        'Bachelor of Science (B.Sc) Chemistry',
+        'Bachelor of Commerce (B.Com)',
       ];
-    case "Intermediate":
-      return ["MPC", "BiPC", "CEC", "HEC"];
-    case "Diploma":
+    case 'Intermediate':
+      return ['MPC', 'BiPC', 'CEC', 'HEC'];
+    case 'Diploma':
       return [
-        "Mechanical Engineering",
-        "Civil Engineering",
-        "Electrical Engineering",
-        "Electronics and Communication Engineering",
-        "Computer Engineering",
-        "Automobile Engineering",
-        "Chemical Engineering",
-        "Information Technology",
-        "Instrumentation Engineering",
-        "Mining Engineering",
-        "Metallurgical Engineering",
-        "Agricultural Engineering",
-        "Textile Technology",
-        "Architecture",
-        "Interior Designing",
-        "Fashion Designing",
-        "Hotel Management and Catering Technology",
-        "Pharmacy",
-        "Medical Laboratory Technology",
-        "Radiology and Imaging Technology",
+        'Mechanical Engineering',
+        'Civil Engineering',
+        'Electrical Engineering',
+        'Electronics and Communication Engineering',
+        'Computer Engineering',
+        'Automobile Engineering',
+        'Chemical Engineering',
+        'Information Technology',
+        'Instrumentation Engineering',
+        'Mining Engineering',
+        'Metallurgical Engineering',
+        'Agricultural Engineering',
+        'Textile Technology',
+        'Architecture',
+        'Interior Designing',
+        'Fashion Designing',
+        'Hotel Management and Catering Technology',
+        'Pharmacy',
+        'Medical Laboratory Technology',
+        'Radiology and Imaging Technology',
       ];
     default:
       return [];
@@ -83,48 +83,48 @@ const getSpecializationOptions = (qualification: string | any): string[] => {
 };
 
 const skillOptions = [
-  "Java",
-  "C",
-  "C++",
-  "C Sharp",
-  "Python",
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "TypeScript",
-  "Angular",
-  "React",
-  "Vue",
-  "JSP",
-  "Servlets",
-  "Spring",
-  "Spring Boot",
-  "Hibernate",
-  ".Net",
-  "Django",
-  "Flask",
-  "SQL",
-  "MySQL",
-  "SQL-Server",
-  "Mongo DB",
-  "Selenium",
-  "Regression Testing",
-  "Manual Testing",
+  'Java',
+  'C',
+  'C++',
+  'C Sharp',
+  'Python',
+  'HTML',
+  'CSS',
+  'JavaScript',
+  'TypeScript',
+  'Angular',
+  'React',
+  'Vue',
+  'JSP',
+  'Servlets',
+  'Spring',
+  'Spring Boot',
+  'Hibernate',
+  '.Net',
+  'Django',
+  'Flask',
+  'SQL',
+  'MySQL',
+  'SQL-Server',
+  'Mongo DB',
+  'Selenium',
+  'Regression Testing',
+  'Manual Testing',
 ];
 const locationOptions = [
-  "Chennai",
-  "Thiruvananthapuram",
-  "Bangalore",
-  "Hyderabad",
-  "Coimbatore",
-  "Kochi",
-  "Madurai",
-  "Mysore",
-  "Thanjavur",
-  "Pondicherry",
-  "Vijayawada",
-  "Pune",
-  "Gurgaon",
+  'Chennai',
+  'Thiruvananthapuram',
+  'Bangalore',
+  'Hyderabad',
+  'Coimbatore',
+  'Kochi',
+  'Madurai',
+  'Mysore',
+  'Thanjavur',
+  'Pondicherry',
+  'Vijayawada',
+  'Pune',
+  'Gurgaon',
 ];
 interface FormData {
   qualification: string;
@@ -134,23 +134,23 @@ interface FormData {
   preferredLocation: string[];
 }
 
-const { height } = Dimensions.get("window");
-const Dummystep2: React.FC = ({ route, navigation }: any) => {
+const {height} = Dimensions.get('window');
+const Dummystep2: React.FC = ({route, navigation}: any) => {
   const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState<FormData>({
-    qualification: route.params?.formData?.qualification || "",
-    specialization: route.params?.formData?.specialization || "",
+    qualification: route.params?.formData?.qualification || '',
+    specialization: route.params?.formData?.specialization || '',
     skills: route.params?.formData?.skills || [],
-    experience: route.params?.formData?.experience || "",
+    experience: route.params?.formData?.experience || '',
     preferredLocation: route.params?.formData?.preferredLocation || [],
   });
 
   const [errors, setErrors] = useState({
-    qualification: "",
-    specialization: "",
-    skills: "",
-    experience: "",
-    preferredLocation: "",
+    qualification: '',
+    specialization: '',
+    skills: '',
+    experience: '',
+    preferredLocation: '',
   });
 
   const [specialization, setSpecialization] = useState<string>(formData.specialization);
@@ -199,31 +199,31 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
-      qualification: "",
-      specialization: "",
-      skills: "",
-      experience: "",
-      preferredLocation: "",
+      qualification: '',
+      specialization: '',
+      skills: '',
+      experience: '',
+      preferredLocation: '',
     };
 
     if (!formData.qualification) {
-      newErrors.qualification = "Qualification is required.";
+      newErrors.qualification = 'Qualification is required.';
       isValid = false;
     }
     if (!formData.specialization) {
-      newErrors.specialization = "Specialization is required.";
+      newErrors.specialization = 'Specialization is required.';
       isValid = false;
     }
     if (selectedSkills.length === 0) {
-      newErrors.skills = "Skills are required.";
+      newErrors.skills = 'Skills are required.';
       isValid = false;
     }
     if (!formData.experience || isNaN(Number(formData.experience))) {
-      newErrors.experience = "Experience is required.";
+      newErrors.experience = 'Experience is required.';
       isValid = false;
     }
     if (selectedLocations.length === 0) {
-      newErrors.preferredLocation = "Preferred location is required.";
+      newErrors.preferredLocation = 'Preferred location is required.';
       isValid = false;
     }
 
@@ -234,12 +234,12 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
   const handleNext = () => {
     if (validateForm()) {
       setCurrentStep(prevStep => Math.min(prevStep + 1, 3));
-      navigation.navigate("Step3", {
+      navigation.navigate('Step3', {
         firstName: route.params.firstName,
         lastName: route.params.lastName,
         alternatePhoneNumber: route.params.whatsappNumber, // Map whatsappNumber here
         email: route.params.email,
-        skillsRequired: selectedSkills.map(skill => ({ skillName: skill })),
+        skillsRequired: selectedSkills.map(skill => ({skillName: skill})),
         experience: formData.experience,
         qualification: formData.qualification,
         specialization: formData.specialization,
@@ -250,7 +250,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
 
   const handleBack = () => {
     navigation.goBack();
-    navigation.navigate("Step1", {
+    navigation.navigate('Step1', {
       formData: formData,
     });
   };
@@ -272,22 +272,22 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
           </View>
 
           <ProgressBar initialStep={currentStep} />
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             <DropDownPicker
               open={openQualificationDropdown}
               value={qualification}
               items={[
-                { label: "B.Tech", value: "B.Tech" },
-                { label: "MCA", value: "MCA" },
-                { label: "Degree", value: "Degree" },
-                { label: "Intermediate", value: "Intermediate" },
-                { label: "Diploma", value: "Diploma" },
+                {label: 'B.Tech', value: 'B.Tech'},
+                {label: 'MCA', value: 'MCA'},
+                {label: 'Degree', value: 'Degree'},
+                {label: 'Intermediate', value: 'Intermediate'},
+                {label: 'Diploma', value: 'Diploma'},
               ]}
               setOpen={setOpenQualificationDropdown}
               onOpen={handleOpenQualification}
               setValue={value => {
                 setQualification(value);
-                setErrors(prev => ({ ...prev, qualification: "" })); // Clear the error if input is valid
+                setErrors(prev => ({...prev, qualification: ''})); // Clear the error if input is valid
               }}
               placeholder="*Qualification"
               style={styles.dropdown}
@@ -309,7 +309,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               onOpen={handleOpenSpecialization}
               setValue={value => {
                 setSpecialization(value);
-                setErrors(prev => ({ ...prev, specialization: "" })); // Clear error dynamically
+                setErrors(prev => ({...prev, specialization: ''})); // Clear error dynamically
               }}
               placeholder="*Specialization"
               disabled={!qualification} // Disable dropdown if qualification is not selected
@@ -326,14 +326,14 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
               multiple={true}
               open={openSkillsDropdown}
               value={selectedSkills}
-              items={skillOptions.map(skill => ({ label: skill, value: skill }))}
+              items={skillOptions.map(skill => ({label: skill, value: skill}))}
               setOpen={setOpenSkillsDropdown}
               onOpen={handleOpenSkills}
               setValue={value => {
                 setSelectedSkills(value);
                 setErrors(prev => ({
                   ...prev,
-                  skills: value.length > 0 ? "" : "Skills are required.",
+                  skills: value.length > 0 ? '' : 'Skills are required.',
                 })); // Clear error dynamically
               }}
               placeholder="*Skills"
@@ -361,7 +361,7 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
                 setSelectedLocations(value);
                 setErrors(prev => ({
                   ...prev,
-                  preferredLocation: value.length > 0 ? "" : "Preferred location is required.",
+                  preferredLocation: value.length > 0 ? '' : 'Preferred location is required.',
                 })); // Clear error dynamically
               }}
               placeholder="*Preferred Job Locations"
@@ -384,10 +384,10 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             value={formData.experience}
             keyboardType="numeric" // Ensure only numeric input
             onChangeText={text => {
-              const numericValue = text.replace(/[\D]/g, ""); // Remove non-numeric characters
-              setFormData(prev => ({ ...prev, experience: numericValue }));
+              const numericValue = text.replace(/[\D]/g, ''); // Remove non-numeric characters
+              setFormData(prev => ({...prev, experience: numericValue}));
               if (numericValue) {
-                setErrors(prev => ({ ...prev, experience: "" })); // Clear the error if input is valid
+                setErrors(prev => ({...prev, experience: ''})); // Clear the error if input is valid
               }
             }}
           />
@@ -401,12 +401,12 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.backButton, { borderWidth: 0 }]} onPress={handleNext}>
+          <TouchableOpacity style={[styles.backButton, {borderWidth: 0}]} onPress={handleNext}>
             <LinearGradient
-              colors={["#F97316", "#FAA729"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.nextButton, { borderRadius: 6 }]} // Apply border radius to match
+              colors={['#F97316', '#FAA729']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={[styles.nextButton, {borderRadius: 6}]} // Apply border radius to match
             >
               <Text style={styles.nextButtonText}>Next</Text>
             </LinearGradient>
@@ -419,9 +419,9 @@ const Dummystep2: React.FC = ({ route, navigation }: any) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
     paddingBottom: 75,
   },
@@ -429,27 +429,27 @@ const styles = StyleSheet.create({
     width: 150, // Decreased width
     height: 45,
     marginBottom: 20,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   container: {
-    width: "100%",
+    width: '100%',
     height: height * 1.05,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 10,
     marginBottom: 40,
   },
   footer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     paddingVertical: 17,
-    borderTopColor: "#ccc",
+    borderTopColor: '#ccc',
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     gap: 13,
   },
   header: {
@@ -457,82 +457,82 @@ const styles = StyleSheet.create({
   },
   completeProfile: {
     fontSize: 18,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: "black",
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: 'black',
     marginBottom: 8,
   },
   subHeader: {
     fontSize: 11,
-    color: "black",
-    fontFamily: "PlusJakartaSans-Medium",
+    color: 'black',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#E5E5E5",
+    borderColor: '#E5E5E5',
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
-    color: "black",
-    backgroundColor: "#F5F5F5",
-    fontFamily: "PlusJakartaSans-Medium",
+    color: 'black',
+    backgroundColor: '#F5F5F5',
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   backButton: {
     borderWidth: 1,
-    borderColor: "#F97316",
+    borderColor: '#F97316',
     borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "45%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '45%',
   },
   backButtonText: {
-    color: "#F97316",
+    color: '#F97316',
     fontSize: 16,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   nextButton: {
     padding: 10,
     borderRadius: 6, // Consistent with backButton
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%", // Ensure it fits the wrapping TouchableOpacity
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%', // Ensure it fits the wrapping TouchableOpacity
   },
   gradientTouchable: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   nextButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   errorText: {
-    color: "red",
+    color: 'red',
     fontSize: 12,
     marginTop: -8,
     marginBottom: 8,
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: "#E5E5E5",
+    borderColor: '#E5E5E5',
     borderRadius: 5,
     marginVertical: 10,
-    backgroundColor: "#F5F5F5",
-    fontFamily: "PlusJakartaSans-Bold",
+    backgroundColor: '#F5F5F5',
+    fontFamily: 'PlusJakartaSans-Bold',
     marginTop: 0,
   },
   dropdownContainer: {
     borderWidth: 1,
-    borderColor: "#E5E5E5",
-    backgroundColor: "#F5F5F5",
+    borderColor: '#E5E5E5',
+    backgroundColor: '#F5F5F5',
   },
   placeholderText: {
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 14,
   },
   dropdownText: {
-    fontFamily: "PlusJakartaSans-Medium",
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 14,
   },
   scrollView: {
