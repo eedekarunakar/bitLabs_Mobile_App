@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import JobCard from './Jobcard'; // Import the JobCard component
 import SkillMatchProbability from './Skillmatch'; // Import the SkillMatchProbability component
 import SuggestedCourses from './Suggestedcourses'; // Import the SuggestedCourses component
+import { useAuth } from '@context/Authcontext';
+import { fetchJobDetails } from '@services/Alert/NotificationServieces';
 
 type JobDetailsContentProps = {
   job: {
+    id : number;
     jobTitle: string;
     companyname: string;
     location: string;
@@ -15,7 +18,7 @@ type JobDetailsContentProps = {
     maxSalary: number;
     employeeType: string;
     creationDate: [number, number, number];
-    description: string;
+    description?: string;
   };
   companyLogo: string | undefined;
   percent: number;
@@ -34,6 +37,29 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
   unmatchedSkills,
   suggestedCourses,
 }) => {
+  const [jobDescription, setJobDescription] = useState<string | undefined>(job.description);
+  const {userId, userToken} = useAuth();
+  useEffect(() => {
+    // Fetch job description from API
+    const fetchJobDescription = async () => {
+      try {
+         const jobData = await fetchJobDetails(Number(job.id), userId, userToken);
+        setJobDescription(jobData.description);
+        console.log("Fetched Job Description:", jobData.description);
+      } catch (error) {
+        console.error("Error fetching job description:", error);
+      }
+    };
+ 
+    if (!job.description) {
+      fetchJobDescription();
+    }
+  }, [job.id, job.description]);
+ 
+  useEffect(() => {
+    // Log the job description to the console
+    console.log("Job Description sghdethetqwhe:", job.description,job.creationDate);
+  }, [job.description]);
   return (
     <ScrollView>
       <JobCard
@@ -57,7 +83,7 @@ const JobDetailsContent: React.FC<JobDetailsContentProps> = ({
 
       <View style={styles.jobCard}>
         <Text style={styles.jobdestitle}>Full Job Description</Text>
-        <Text style={styles.description}>{job.description.replace(/<[^>]+>/g, '')}</Text>
+       <Text>{jobDescription?.replace(/<[^>]*>/g, "") ?? "Loading job description..."}</Text>
       </View>
 
       {suggestedCourses.length > 0 && <SuggestedCourses suggestedCourses={suggestedCourses} />}
