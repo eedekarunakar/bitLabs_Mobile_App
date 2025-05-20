@@ -11,7 +11,7 @@ type JobCardProps = {
   minSalary: number;
   maxSalary: number;
   employeeType: string;
-  creationDate: [number, number, number];
+  creationDate: string;
   logoUrl?: string;
   truncateTitle?: boolean;
 };
@@ -44,9 +44,18 @@ const JobCard: React.FC<JobCardProps> = ({
     'December',
   ];
 
-  const formatDate = (dateArray: [number, number, number]): string => {
-    const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`;
+  const formatCreationDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (e) {
+      console.error("Error formatting date:", e);
+      return dateString; // Return original string if formatting fails
+    }
   };
 
   return (
@@ -110,7 +119,7 @@ const JobCard: React.FC<JobCardProps> = ({
         </View>
       </View>
       <View>
-        <Text style={styles.postedOn}>Posted on {formatDate(creationDate)}</Text>
+        <Text style={styles.postedOn}>Posted on {formatCreationDate(creationDate)}</Text>
       </View>
     </View>
   );

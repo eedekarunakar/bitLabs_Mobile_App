@@ -110,7 +110,6 @@ function Dashboard() {
         </View>
         <Text style={styles.textBelowNavbar1}>
           {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
-          {setmsg ? 'Welcome' : 'Welcome back'} {/* Conditional rendering */}
         </Text>
  
  
