@@ -135,7 +135,7 @@ const LandingPage = () => {
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.innercontainer}>
             <View style={styles.header}>
-              <Image source={require('../../assests/LandingPage/logo.png')} style={styles.logo} />
+              <Image source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} style={styles.logo} />
             </View>
 
             <View style={styles.welcome}>
@@ -261,8 +261,8 @@ const LandingPage = () => {
                   style={styles.input}
                   value={signupName}
                   onChangeText={text => {
-                    setSignupName;
-                    handleChange('name', text);
+                    setSignupName(text);
+                    handleChange("name", text);
                   }}
                   allowFontScaling={false}
                 />
@@ -303,8 +303,8 @@ const LandingPage = () => {
                     secureTextEntry={!isSignupPasswordVisible}
                     value={signupPassword}
                     onChangeText={text => {
-                      setSignupPassword;
-                      handleChange('password', text);
+                      setSignupPassword(text);
+                      handleChange("password", text);
                     }}
                     onBlur={() => {
                       SetIsSignupPasswordVisible(false);

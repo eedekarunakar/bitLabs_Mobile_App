@@ -50,6 +50,7 @@ export const ProfileService = {
         updatedProfileData,
       );
       if (response.status !== 200) {
+        
         return false;
       } else if (response.data?.formErrors) {
         // If the API returns form errors, return them so that they can be displayed in the UI

@@ -10,8 +10,8 @@ export const fetchTestStatus = async (userId: number | null, userToken: string |
     const data = response.data;
     return data;
   } catch (error) {
-    console.error('Error fetching test status:', error);
-    throw error;
+    console.error("Error fetching test status:", error);
+
   }
 };
 

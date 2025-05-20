@@ -263,7 +263,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
   return (
     <View style={styles.screen}>
       <ScrollView scrollEnabled={!isAnyDropdownOpen} style={styles.scrollView}>
-        <Image style={styles.logo} source={require('../../assests/LandingPage/logo.png')} />
+        <Image style={styles.logo} source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} />
 
         <View style={styles.container}>
           <View style={styles.header}>
@@ -296,7 +296,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               textStyle={styles.dropdownText}
               zIndex={1000}
             />
-            {errors.qualification && <Text style={styles.errorText}>{errors.qualification}</Text>}
+            {Boolean(errors.qualification) && <Text style={styles.errorText}>{errors.qualification}</Text>}
 
             <DropDownPicker
               open={openSpecializationDropdown}
@@ -320,7 +320,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               dropDownDirection="BOTTOM"
               zIndex={990}
             />
-            {errors.specialization && <Text style={styles.errorText}>{errors.specialization}</Text>}
+            {Boolean(errors.specialization) && <Text style={styles.errorText}>{errors.specialization}</Text>}
 
             <DropDownPicker
               multiple={true}
@@ -345,7 +345,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               mode="BADGE"
               showBadgeDot={false}
             />
-            {errors.skills && <Text style={styles.errorText}>{errors.skills}</Text>}
+            {Boolean(errors.skills) && <Text style={styles.errorText}>{errors.skills}</Text>}
 
             <DropDownPicker
               multiple={true} // Allow multiple selection
@@ -373,7 +373,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               mode="BADGE"
               showBadgeDot={false}
             />
-            {errors.preferredLocation && (
+            {Boolean(errors.preferredLocation) && (
               <Text style={styles.errorText}>{errors.preferredLocation}</Text>
             )}
           </View>
@@ -391,7 +391,7 @@ const Dummystep2: React.FC = ({route, navigation}: any) => {
               }
             }}
           />
-          {errors.experience && <Text style={styles.errorText}>{errors.experience}</Text>}
+            {Boolean(errors.experience) && <Text style={styles.errorText}>{errors.experience}</Text>}
         </View>
       </ScrollView>
 

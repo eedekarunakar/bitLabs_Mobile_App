@@ -28,6 +28,8 @@ export const ProfilePhotoProvider: React.FC<ProfilePhotoProviderProps> = ({
       const result = await ProfileService.fetchProfilePhoto(token, id);
       if (result.success && result.photoUrl) {
         setPhoto(result.photoUrl);
+      }else {
+        setPhoto(null); //Reset photo if not found
       }
     } catch (error) {
       console.error('Error fetching profile photo:', error);

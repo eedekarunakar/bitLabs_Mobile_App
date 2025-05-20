@@ -16,7 +16,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
 
   const {userId, userToken} = useAuth();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!resumeFile) {
       return; // Prevent calling saveProfile or navigating further
     }
@@ -45,7 +45,7 @@ const Step3: React.FC = ({route, navigation}: any) => {
     <View style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.logoContainer}>
-          <Image style={styles.logo} source={require('@assests/LandingPage/logo.png')} />
+          <Image style={styles.logo} source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} />
         </View>
 
         <View style={styles.container}>
@@ -222,11 +222,10 @@ const Step3: React.FC = ({route, navigation}: any) => {
         <TouchableOpacity
           style={[styles.saveButton, {borderWidth: 0}]}
           disabled={isUploadComplete}
-          onPress={() => {
-            handleSaveResume();
+          onPress={async () => {
+            await handleSaveResume();
             if (resumeFile) {
-              handleAPI();
-              handleSave();
+              await handleAPI().then(async ()=>await handleSave());
             }
           }}>
           {isUploadComplete ? (

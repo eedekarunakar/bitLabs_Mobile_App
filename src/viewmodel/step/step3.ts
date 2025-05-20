@@ -1,9 +1,12 @@
-import {useState, useContext} from 'react';
-import UserContext from '@context/UserContext';
-import {ProfileModel} from '@services/step/stepServices';
-import Toast from 'react-native-toast-message';
-import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
-import ProfileService from '@services/profile/ProfileService';
+
+import { useState, useContext } from "react";
+import UserContext from "@context/UserContext";
+import { ProfileModel } from "@services/step/stepServices";
+import Toast from "react-native-toast-message";
+import DocumentPicker, { DocumentPickerResponse } from "react-native-document-picker";
+import ProfileService from "@services/profile/ProfileService";
+import { updateLead,searchLead } from "@services/ZohoCrm";
+import { useAuth } from "@context/Authcontext";
 
 export const useStep3ViewModel = (
   userId: number | null,
@@ -19,9 +22,9 @@ export const useStep3ViewModel = (
   const [progress, setProgress] = useState(0);
   const [showBorder, setShowBorder] = useState(false);
   const [bgcolor, setbgcolor] = useState(false);
-  const {setPersonalName, refreshJobCounts, refreshVerifiedStatus} = useContext(UserContext);
-
-  const toastmsg = (type1: 'success' | 'error', message: string) => {
+  const { setPersonalName, refreshJobCounts, refreshVerifiedStatus } = useContext(UserContext);
+  const { leadId } = useAuth();
+  const toastmsg = (type1: "success" | "error", message: string) => {
     Toast.show({
       type: type1,
       text1: '',
@@ -52,11 +55,56 @@ export const useStep3ViewModel = (
           skillName: skill.skillName,
         })),
       };
+      
+    // Step 1: Search for the Lead by Email
+    const searchResponse = await searchLead(requestData.basicDetails.email);
+    console.log("Search Response:", searchResponse);
+    let leadIdToUpdate = leadId; // Default leadId from Auth Context
+    console.log("Lead ID from Auth Context:", leadId);
 
+    if (searchResponse) {
+      leadIdToUpdate = searchResponse; // Extract the lead ID
+      console.log("Lead ID from search response:", leadIdToUpdate);
+      
+    } else {
+      console.log("Lead not found with the provided email.");
+      return; // Stop execution if no lead is found
+    }
+
+      const leadData = {
+        data: [
+          {
+            Owner: { id: "4569859000019865042" },
+            Last_Name: requestData.basicDetails.lastName,
+            First_Name: requestData.basicDetails.firstName,
+            Email: requestData.basicDetails.email,
+            Phone: requestData.basicDetails.alternatePhoneNumber,
+            Lead_Status: "completed profile",
+            Status_TS: "Completed Profile",
+            Industry: "Software",
+            Technical_Skills: requestData.skillsRequired.map((skill: any) => ({
+              skillName: skill.skillName,
+            })),
+            Specialization: requestData.specialization,
+            Education_Qualifications: requestData.qualification,
+            Degree_level: requestData.qualification,
+            Total_work_experience_in_years: requestData.experience,
+            Preferred_Job_Locations: requestData.preferredJobLocations.join(", "),
+            Platform:"mobile app",
+          },
+        ],
+      };
+      console.log("Lead ID:", leadIdToUpdate);
+      const res= await updateLead(leadIdToUpdate, leadData);
+      
+    if(res?.status){
+      console.log("Lead updated status", res?.status);
+    }      
       const response = await ProfileModel.createProfile(userId, userToken, requestData);
 
-      if (response) {
+      if (response.status===200) {
         if (route?.params?.firstName) {
+          console.log(route.params.firstName)
           setPersonalName(route.params.firstName);
         }
         refreshJobCounts();
@@ -80,10 +128,10 @@ export const useStep3ViewModel = (
       }
 
       const selectedFile: DocumentPickerResponse = result[0];
-      const maxSize = 1048576;
+      const maxSize = 5 * 1024 * 1024;
 
       if (selectedFile.size && selectedFile.size > maxSize) {
-        toastmsg('error', 'File size exceeds the 1MB limit.');
+        toastmsg("error", "File size exceeds the 5MB limit.");
         setIsUploadComplete(false);
         return;
       }

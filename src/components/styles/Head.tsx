@@ -12,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({title, onBackPress}) => {
     <View>
       {/* Logo Section */}
       <View style={styles.navbar}>
-        <Image source={require('../../assests/Images/logo.png')} style={styles.logo} />
+        <Image source={{ uri: "https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/logo.png" }} style={styles.logo} />
       </View>
 
       <View style={styles.separator} />

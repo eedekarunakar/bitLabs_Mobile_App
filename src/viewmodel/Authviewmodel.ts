@@ -1,9 +1,13 @@
-import {useState, useRef} from 'react';
-import {handleSignup, handleOTP} from '../services/login/Authservice';
-import {LoginErrors, SignupErrors} from '../models/Model';
-import {useAuth} from '@context/Authcontext';
-import useOtpManager from '../hooks/useOtpManager';
-import Toast from 'react-native-toast-message';
+
+import { useState, useRef } from "react";
+import { handleSignup, handleOTP } from "../services/login/Authservice";
+import { LoginErrors, SignupErrors } from "../models/Model";
+import { useAuth } from "@context/Authcontext";
+import useOtpManager from "../hooks/useOtpManager";
+import Toast from "react-native-toast-message";
+import { createLead, searchLead } from "@services/ZohoCrm";
+
+
 
 const useLoginViewModel = () => {
   const {login} = useAuth();
@@ -13,6 +17,7 @@ const useLoginViewModel = () => {
   const [loginMessage, setLoginMessage] = useState('');
   const notificationMessage = useRef('');
   const showNotification = useRef(false);
+  const {setLeadId} = useAuth();
   //declare in a use ref
   const notificationType = useRef('');
   const showToast = (type: 'success' | 'error', message: string) => {
@@ -56,7 +61,38 @@ const useLoginViewModel = () => {
       if (validateLogin()) {
         const result = await login(loginUserName, loginPassword);
         if (result.success) {
-          showToast('success', 'Login successful');
+          showToast("success", "Login successful");
+
+        const leadId = await searchLead(loginUserName);
+
+        if (leadId) {
+          console.log("Lead exists");
+        } 
+        else {
+          // If lead does not exist, create one
+          const leadData = {
+            data: [
+              {
+                Last_Name: loginUserName.split("@")[0].replace(/\d+/g, ""), // Extracting name from email
+                Email: loginUserName,
+                Phone: '',
+                Status_TS: "Signed-Up",
+                Lead_Source: '',  
+                Industry: "Software",
+                Mobile: '',
+                Utm_Source_TS: '',
+                Utm_Medium_TS: '',
+                Utm_Campaign_TS: '',
+                Utm_Content_TS: '',
+                Utm_Term_TS: '',
+                Platform:"mobile app"
+              },
+            ],
+          };
+          const leadId=await createLead(leadData);
+          setLeadId(leadId);
+        }
+      
         } else {
           if (result.message !== null && result.message !== undefined) {
             setLoginMessage(result.message);
@@ -81,10 +117,12 @@ const useLoginViewModel = () => {
     validateLogin,
     validateAndLogin,
     setLoginErrors,
+
   };
 };
 
 const useSignupViewModel = () => {
+  const {setLeadId} = useAuth();
   const otpManager = useOtpManager(); //Re-use otp states
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
@@ -203,7 +241,31 @@ const useSignupViewModel = () => {
       if (result.success) {
         setRegistration(true);
         otpManager.setTimer(0);
-        showToast('success', 'User Registered Succesfully');
+        showToast("success", "User Registered Succesfully");
+
+        const leadData ={
+        data : [
+          {
+            Last_Name: signupName,
+            Email: signupEmail,  
+            Phone: '',
+            Status_TS: "Signed-Up",
+            Lead_Source: '',  
+            Industry: "Software",
+            Mobile: signupNumber,
+            Utm_Source_TS: '',
+            Utm_Medium_TS: '',
+            Utm_Campaign_TS: '',
+            Utm_Content_TS: '',
+            Utm_Term_TS: '',
+            Platform:"mobile app"
+          }
+        ]
+      };
+      const newLeadId =  await createLead(leadData);
+      console.log("New lead created with ID:", newLeadId);
+      setLeadId(newLeadId);
+      console.log("Lead ID set in AuthContext:", newLeadId);
       } else {
         otpManager.setIsOtpValid(false);
         setTimeout(() => otpManager.setIsOtpValid(true), 3000);

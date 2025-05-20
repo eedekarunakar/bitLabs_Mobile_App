@@ -1,9 +1,12 @@
-// TestViewModel.ts
-import {useState} from 'react';
-import {submitTestResult} from '@services/Test/testService'; // Import the service
-import {TestDetails} from '@models/Model'; // Assuming you have a model for test details
-import {useNavigation, NavigationProp} from '@react-navigation/native';
-import {RootStackParamList} from '@models/model'; // Define your stack param list
+
+import { useState } from "react";
+import { submitTestResult } from "@services/Test/testService"; // Import the service
+import { TestDetails } from "@models/Model"; // Assuming you have a model for test details
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "@models/model"; // Define your stack param list
+import { updateLead,searchLead } from "@services/ZohoCrm";
+import { useAuth } from "@context/Authcontext";
+
 // Type the navigation object with your stack's params
 
 export const useTestViewModel = (
@@ -15,13 +18,13 @@ export const useTestViewModel = (
   const [isTestComplete, setIsTestComplete] = useState(false);
   const [showEarlySubmissionModal, setShowEarlySubmissionModal] = useState(false);
   const [showTimeUpModal, setShowTimeUpModal] = useState(false);
-
+  const { leadId , setLeadId,userEmail} = useAuth();
   const submitTest = async (finalScore: number, isEarlySubmission: boolean) => {
     const testStatus = isEarlySubmission
       ? 'F' // Early submission fails by default
       : finalScore >= 70
-      ? 'P' // Pass if score >= 70
-      : 'F'; // Fail otherwise
+        ? "P" // Pass if score >= 70
+        : "F"; // Fail otherwise
     const testDetails: TestDetails = {
       testName: testName,
       testScore: isEarlySubmission ? 0 : finalScore,
@@ -36,20 +39,59 @@ export const useTestViewModel = (
       if (response.status) {
         // Handle success
         setIsTestComplete(true);
-
-        if (finalScore >= 70) {
-          if (testName === 'General Aptitude Test') {
-            navigation.navigate('passContent', {finalScore, testName});
-          } else if (testName === 'Technical Test') {
-            // Assuming the bottom tab is part of the navigation stack
-            navigation.navigate('passContent', {finalScore, testName}); // Adjust the tab name as needed
+        let leadData = {};
+        if (testName === "General Aptitude Test") {
+          leadData = {
+            data: [
+              {
+                Owner: { id: "4569859000019865042" },
+                GAT: finalScore >= 70 ? 'cleared' : 'failed',
+                GAT_Score: Math.round(testDetails.testScore),
+              },
+            ],
+          };
+        }
+        else if (testName === "Technical Test") {
+          leadData = {
+            data: [
+              {
+                Owner: { id: "4569859000019865042" },
+                TT: finalScore >= 70 ? 'cleared' : 'failed',
+                TT_Score: Math.round(testDetails.testScore),
+              },
+            ],
+          };
+        }
+        // Attempt to update lead in Zoho CRM
+        try {
+          console.log("Searching for lead using email:", userEmail);
+          const fetchedLeadId = await searchLead(userEmail);
+  
+          if (fetchedLeadId) {
+            console.log("Lead found with ID:", fetchedLeadId);
+            setLeadId(fetchedLeadId); // Update the leadId state
+  
+            // Step 2: Update the Lead in Zoho CRM
+            console.log("Updating Lead with ID:", fetchedLeadId);
+            const res = await updateLead(fetchedLeadId, leadData);
+            if (res?.status) {
+              console.log("Lead update status:", res?.status);
+            }
+          } else {
+            console.log("No lead found for email:", userEmail);
           }
+        } catch (error) {
+          console.error("Error updating lead:", error);
+        }
+
+        // Navigation logic
+        if (finalScore >= 70) {
+          navigation.navigate("passContent", { finalScore, testName });
         } else {
           navigation.navigate('FailContent');
         }
       } else {
-        // Handle fail case
-        console.error('Error during test submission:');
+        console.error("Error during test submission:");
       }
     } catch (error) {
       console.error('Error during test submission:', error);

@@ -6,13 +6,13 @@ type SuggestedCoursesProps = {
 };
 
 const courseImages: Record<string, any> = {
-  'HTML&CSS': require('@assests/Images/Html&Css.png'),
-  JAVA: require('@assests/Images/Java1.png'),
-  JAVASCRIPT: require('@assests/Images/JavaScript.png'),
-  MYSQL: require('@assests/Images/Mysql.png'),
-  REACT: require('@assests/Images/React.png'),
-  'SPRING BOOT': require('@assests/Images/SpringBoot.png'),
-  PYTHON: require('@assests/Images/python.png'),
+  "HTML&CSS": { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/Html&Css_Course.png"},
+  JAVA: { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/Java1_Course.png"},
+  JAVASCRIPT: { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/JavaScript_Course.png"},
+  MYSQL: { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/Mysql_Course.png"},
+  REACT: { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/python_Course.png"},
+  "SPRING BOOT": { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/React_Course.png"},
+  PYTHON: { uri:"https://bitlabs-app.s3.ap-south-1.amazonaws.com/bitlabs-skill-images/SpringBoot_Course.png"},
 };
 
 const courseUrlMap: Record<string, any> = {
@@ -35,8 +35,9 @@ const SuggestedCourses: React.FC<SuggestedCoursesProps> = ({suggestedCourses}) =
             {courseImages[course] ? (
               <TouchableOpacity
                 style={styles.imageRow}
-                onPress={() => Linking.openURL(courseUrlMap[course])}>
-                <Image source={courseImages[course]} style={styles.courseImage} />
+                onPress={() => Linking.openURL(courseUrlMap[course])}
+              >
+                <Image source={courseImages[course]} style={styles.courseImage}  resizeMode="contain"/>
                 <Image
                   source={require('@assests/Images/external-link2.png')}
                   style={styles.externalLinkIcon}
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   courseImage: {
+    width: '50%',
     height: 50,
     resizeMode: 'contain',
   },
