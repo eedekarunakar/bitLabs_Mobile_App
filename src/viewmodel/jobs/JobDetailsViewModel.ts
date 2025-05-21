@@ -5,7 +5,7 @@ import {JobDetails} from '@models/Model';
 type JobStatus = {
   id: number;
   status: string;
-  changeDate: [number, number, number];
+  changeDate: string;
 };
 
 export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
@@ -15,7 +15,7 @@ export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
   useEffect(() => {
     const getJobStatus = async () => {
       try {
-        const body = await fetchJobStatus(job.applyJobId, userToken);
+        const body = await fetchJobStatus(job.id, userToken);
         setLoading(false);
 
         if (Array.isArray(body) && body.length > 0) {
@@ -48,10 +48,19 @@ export const useJobDetailsViewModel = (job: JobDetails, userToken: string) => {
     'December',
   ];
 
-  const formatDate = (dateArray: [number, number, number]): string => {
-    const [year, month, day] = dateArray;
-    return `${monthNames[month - 1]} ${day}, ${year}`;
-  };
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (e) {
+      console.error("Error formatting date:", e);
+      return dateString; // Return original string if formatting fails
+    }
+  }
 
   const formatDates = (dateArray: [number, number, number]): string => {
     const [year, month, day] = dateArray;
