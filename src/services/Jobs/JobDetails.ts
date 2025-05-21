@@ -7,8 +7,8 @@ const getAuthHeader = (userToken: string | null) => {
 };
 
 export const saveJob = async (
-  jobId: number,
   applicantId: number | null,
+  jobId: number,
   userToken: string | null,
 ) => {
   try {

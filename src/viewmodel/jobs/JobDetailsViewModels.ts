@@ -61,7 +61,9 @@ const useJobDetailsViewModel = (jobId: string) => {
 
   const handleSaveJob = async (JobIndex: number) => {
     try {
-      const result = await saveJob(Number(jobId), userId, userToken);
+
+      const result = await saveJob(userId, Number(jobId),userToken);
+      
       if (result) {
         setIsJobSaved(true);
         setIsJobsLoaded(false);
